@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/webuploader.css"/>
+    	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/upload.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>数据集管理</span> &gt; <span>新建数据集</span> &gt; <span class="page-title-scend">关联目录</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div id="unit" class="view_item minHeight360">
+								<table class="table default-table tab-border-no-layer">
+									<tbody>
+										<tr>
+											<th width="120">关联目录：</th>
+											<td>
+												<input type="text" name="setName" id="selCatalog" class="form-control" autocomplete="off"/>
+											</td>
+										</tr>
+										<tr>
+											<th>文件上传：</th>
+											<td>
+												<div class="pull-left downFileText">
+													<div id="uploadFileName" class="form-control text-left"></div>
+												</div>
+												<div class="pull-right downFileBtn">
+													<div id="filePicker" class="filePicker photoFilePicker"></div>
+		                                            <div id="uploader" class="uploader photoUploader hidden">
+		                                                <div class="queueList">
+		                                                    <ul id="file_html" class="filelist">
+		                                                    </ul>
+		                                                    <div id="dndArea" class="placeholder dndArea" style="padding-top: 85px;">
+
+		                                                        <p> </p>
+		                                                    </div>
+		                                                </div>
+		                                                <div class="statusBar" style="display:none;">
+		                                                    <div class="progress">
+		                                                        <span class="text">0%</span> <span class="percentage"></span>
+		                                                    </div>
+		                                                    <div class="info"></div>
+		                                                    <div class="btns">
+		                                                        <div id="jxButton" class="jxButton"></div>
+		                                                        <div class="uploadBtn">开始上传</div>
+		                                                    </div>
+		                                                </div>
+		                                            </div>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="pad_left">
+									<h3 class="tle">文件列表
+										<div class="pull-right">
+					                        <button type="button" class="btn btn-primary btn-sm">全部删除</button>
+					                    </div>
+									</h3>
+									<table id="fileList" class="default-table tab-title-top">
+										<thead>
+											<tr>
+												<th>序号</th>
+												<th>文件名称</th>
+												<th>文件编号</th>
+												<th width="100">操作</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</div>
+							</div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-primary" onclick="PrePage()">上一步</button>
+                                <button type="button" class="btn btn-primary" onclick="save()">提交</button>
+                                <button type="button" class="btn btn-primary btn-cancel" onclick="history.go(-2)">取消</button>
+                            </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+		<script>
+            var _GATE_URL = "${_gate_url}";
+		</script>
+		<script src="${_static}/js/lib/webuploader/webuploader.js" type="text/javascript" ></script>
+		<script src="${_static}/js/lib/webuploader/HYCore.js" type="text/javascript" ></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var type="${type}";
+			var directoryId=[];
+            $("#selCatalog").click(function(){
+                parent.layer.open({
+                    id: 'openZtree',
+                    type: 2,
+                    anim:6,
+                    title: '目录选择',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['750px', '600px'],
+                    shade: [0.9, '#000'],
+                    content: "${_cp}/module/dataSetCatalogZtree?type="+type,
+                    btn: ['确定','取消'],
+                    yes: function (index, layero) {
+                        var html=layero.context;
+                        var Id=html.getElementById("openZtree");
+                        var iframe=$(Id).find("iframe").attr("name");
+                        var rowData = parent[iframe].save(index);
+                    },
+                });
+            });
+            function setCatalog(catalogId,catalogName){
+                $("#selCatalog").val(catalogName.join(","));
+                directoryId=catalogId;
+			}
+            /* 附件上传 begin */
+            var token = $.cookie("_token");
+            var folderId="-1";
+            var dataType="";
+            loadFile();
+            function loadFile() {
+                fileUpload = new FileUpload({
+                    "filePicker" : "filePicker",
+                    "dndArea" : "dndArea",
+                    "uploader" : "uploader",
+                    "jxButton" : "jxButton",
+                    "folderId":folderId,
+                    "dataType":dataType,
+                    "token":token,
+                    "_isAdmin":true
+                });
+            }
+            var files=[];
+            function successUploadFile(rows) {
+                if(rows.data.list.length>0){
+                    var html="";
+                    var file={};
+                    for(var i in rows.data.list){
+                        file.filePath=rows.data.list[i].url;
+                        file.oldName=rows.data.list[i].submittedFileName;
+                        file.busId=rows.data.list[i].id;
+                        html+='<tr>';
+                        html+='<td class="xh">'+i+'</td>';
+                        html+='<td>'+rows.data.list[i].submittedFileName+'</td>';
+                        html+='<td>'+rows.data.list[i].id+'</td>';
+                        html+='<td>';
+                        html+='<a href="javascript:void(0);" onclick="downLoadFolder(\''+rows.data.list[i].url+'\',\''+rows.data.list[i].submittedFileName+'\')">下载</a>';
+                        html+='<a href="javascript:void(0);" onclick="removeFile(this,'+rows.data.list[i].url+')">删除</a>';
+                        html+='</td>';
+                        html+='</tr>';
+                        files.push(file);
+                        var uploadFileNameText=$("#uploadFileName").text();
+                        if(!uploadFileNameText){
+                            $("#uploadFileName").text(rows.data.list[i].submittedFileName);
+                        }else{
+                            $("#uploadFileName").text(uploadFileNameText+'，'+rows.data.list[i].submittedFileName);
+                        }
+                    };
+                    $("#fileList tbody").append(html);
+                    reloadxh();
+                    updateIformHeight();
+                }
+            };
+            function downLoadFolder(url, folderName){//文件下载
+                var urlDownload = "${_gate_url}/api/file/file/download?url=" + url + "&filename=" + folderName;
+                window.open(urlDownload);
+            }
+            function removeFile(ele,id){//文件删除
+                files.forEach(function(value,index){
+                    if(value.busId==id){
+                        $(ele).parent().parent().remove();
+                        reloadxh();
+                        files.splice(index,1);
+                    }
+                })
+            };
+            function reloadxh(){//表格序号加载
+                var trList = $("#fileList tbody tr");
+                if(trList.length>0){
+                    trList.each(function(index,value){
+                       $(value).find(".xh").text(index+1);
+                    });
+                }
+            }
+            function save() {//提交
+                if(directoryId.length<1){
+                    parent.layer.msg("请选择关联目录！",{time:1500});
+                }
+                if(files.length<1){
+                    parent.layer.msg("请上传文件！",{time:1500});
+                }
+                var dataDTO = {};
+                dataDTO.editType = 1;
+                dataDTO.files = files;
+                dataDTO.id = "${id}";
+                dataDTO.directoryId = directoryId;
+                ajaxHengyun({
+                    type: "POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: "${_gate_url}/api/exchange/set/createFileDataSetSecond",
+                    data: JSON.stringify(dataDTO),
+                    success: function (res) {
+                        if (res.data) {
+                            parent.layer.msg("新增成功！",{time:1000});
+                            window.location.href="${_cp}/module/dataSetManageList?pageNo=1";
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    }
+                });
+            }
+            function PrePage(){//上一步
+				window.location.href=history.back();
+			}
+		</script>
+	</body>
+</html>

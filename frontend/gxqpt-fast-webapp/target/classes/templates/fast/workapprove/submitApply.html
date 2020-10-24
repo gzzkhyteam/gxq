@@ -1,0 +1,1309 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+    <!-- 引入meta -->
+
+    <!-- begin 外部CSS引入 -->
+    <link type="text/css" rel="stylesheet"  href="${_lib }/jqgrid/css/ui.jqgrid.css">
+    <link type="text/css" rel="stylesheet" href="${_lib }/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_lib }/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_lib }/layer/skin/layer.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=1.0.0">
+    <link rel="stylesheet" href="${_static}/css/app.css?v=1.0.0">
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+    <link href="${_js}/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${_js}/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+
+    <!-- end 外部CSS引入 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        label.control-label {
+            width: 100px;
+            text-align: right;
+        }
+
+        table.infoList tr th {
+            border: 1px solid #e1e6eb;
+            padding: 10px 12px;
+            vertical-align: middle;
+            width: 180px;
+            font-weight: normal;
+        }
+
+        table.infoListTab tr th {
+            width: auto;
+        }
+
+        .upuserhead{
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .uploader {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td input.form-control {
+            width: 100%;
+        }
+        table.infoList tbody tr td select.form-control {
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5 id="titleChange">基本信息</h5>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-default go-back">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            取消
+                        </button>
+                    </div>
+                </div>
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <input type="hidden" id="aproveType" value="">
+                                <form action="" id="qingjiaData">
+                                    <div class="qingjia">
+                                        <fieldset class="div1">
+                                            <input type="hidden" name="id" value="">
+                                            <input type="hidden" name="aproveId" value="">
+                                            <fieldset>
+                                                <div class="col-sm-12">
+                                                    <div class="form-field">
+                                                        <div class="form-group">
+                                                            <label class="control-label">
+                                                                <span class="text-danger">*</span>
+                                                                <span>请假类型</span>
+                                                                <span>：</span>
+                                                            </label>
+                                                            <div class="form-control-wrap">
+                                                                <select id="leaveType" name="leaveType" class="form-control w153">
+                                                                    <option value="">请选择请假类型</option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <div class="form-group">
+                                                            <label class="control-label">
+                                                                <span class="text-danger">*</span>
+                                                                <span>工作代理人</span>
+                                                                <span>：</span>
+                                                            </label>
+                                                            <div class="form-control-wrap">
+                                                                <select id="leaWorkAgent" name="workAgent" class="form-control w153">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <div class="form-group">
+                                                            <label class="control-label" >
+                                                                <span class="text-danger">*</span>
+                                                                <span>请假时间</span>
+                                                                <span>：</span>
+                                                            </label>
+                                                            <div class="form-control-wrap">
+                                                                <input id="startTime1" class="form-control Tdate"
+                                                                       style="width: 205px;"
+                                                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH',maxDate:getStarTime('endTime1')})"
+                                                                       name="startTime"
+                                                                       value=''
+                                                                />
+                                                                至
+                                                                <input id="endTime1" class="form-control Tdate"
+                                                                       style="width: 205px;"
+                                                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH',minDate:getStarTime('startTime1')})"
+                                                                       name="endTime"
+                                                                       value=''
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <div class="form-group">
+                                                            <label class="control-label">
+                                                                <span class="text-danger">*</span>
+                                                                <span>审批人</span>
+                                                                <span>：</span>
+                                                            </label>
+                                                            <div id="addPerson_qjsp" class="form-control-wrap input-group">
+                                                                <input type="text" class="form-control imgs"
+                                                                       id="addPerson_qjspEmpName"
+                                                                       name="addPerson_qjspEmpName" value=""
+                                                                       style="width: 384px;">
+                                                                <span class="input-group-btn">
+								                            	<button class="btn btn-primary" type="button"><span
+                                                                        class="glyphicon glyphicon-plus"></span></button>
+								                         </span>
+                                                            </div>
+                                                            <input class="form-control" type="hidden" id="addPerson_qjspEmp"
+                                                                   name="addPerson_qjspEmp" value=""/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <div class="form-group">
+                                                            <label class="control-label">
+                                                                <span>抄送范围</span>
+                                                                <span>：</span>
+                                                            </label>
+                                                            <div id="addPerson_qjcs" class="form-control-wrap input-group">
+                                                                <input type="text" class="form-control imgs"
+                                                                       id="addPerson_qjcsEmpName"
+                                                                       name="addPerson_qjcsEmpName" value=""
+                                                                       style="width: 384px;">
+                                                                <span class="input-group-btn">
+								                	        <button class="btn btn-primary" type="button"><span
+                                                                    class="glyphicon glyphicon-plus"></span></button>
+												            </span>
+                                                            </div>
+                                                            <input class="form-control" type="hidden" id="addPerson_qjcsEmp"
+                                                                   name="addPerson_qjcsEmp" value=""/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <div class="form-group">
+                                                            <label class="control-label">
+                                                                <span class="text-danger">*</span>
+                                                                <span>请假事由</span>
+                                                                <span>：</span>
+                                                            </label>
+                                                            <div class="form-control-wrap">
+                                                             <textarea class="form-control" style="width: 430px;" id="leaveRenson" name="leaveRenson"
+                                                                       rows="5" cols=""></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clear"></div>
+
+                                                    <div>
+                                                        <label class="control-label w84 pull-left">
+                                                            <span class="text-danger">*</span>
+                                                            <span>附件上传</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="wrapper1" class="pull-left"
+                                                             style="margin:0;width:calc(100%  - 153px);">
+                                                            <div id="container1" style="margin: 0;padding: 0;">
+                                                                <div id="uploader1" class="uploader">
+                                                                    <ul class="show-file">
+                                                                    </ul>
+                                                                    <!--头部，相册选择和格式选择-->
+                                                                    <div class="queueList">
+                                                                        <div id="dndArea1" class="placeholder dndArea"
+                                                                             style="padding-top: 85px;">
+                                                                            <div id="filePicker1" class="filePicker"></div>
+                                                                            <p>或将文件拖到这里，单次最多可选300</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="statusBar" style="display:none;">
+                                                                        <div class="progress">
+                                                                            <span class="text">0%</span> <span
+                                                                                class="percentage"></span>
+                                                                        </div>
+                                                                        <div class="info"></div>
+
+                                                                        <div class="btns">
+                                                                            <div id="jxButton1" class="jxButton"></div>
+                                                                            <div class="uploadBtn">开始上传</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                                        <div>
+                                                                            <h5>审批意见</h5>
+                                                                            <table class="table defaultTable defaultTableTop">
+                                                                                <tbody>
+                                                                                <tr>
+                                                                                    <th>审批意见</th>
+                                                                                    <td>
+                                                                                        同意!
+                                                                                        驳回!
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th>说明</th>
+                                                                                    <td></td>
+                                                                                </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                    <div class="text-center">
+                                                        <button class="btn btn-primary btn-submit" type="button" onclick="saveData();">
+                                                            <span class="glyphicon glyphicon-ok"></span>
+                                                            提交
+                                                        </button>
+                                                    </div>
+
+
+                                                </div>
+                                            </fieldset>
+                                        </fieldset>
+                                    </div>
+                                </form>
+                                <form action="" id="chuchaiData">
+                                    <div class="chuchai">
+                                        <input type="hidden" name="id" value="">
+                                        <input type="hidden" name="aproveId" value="">
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>出差类型</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <select id="businessType" name="businessType" class="form-control w153">
+                                                                <option value="">请选择出差类型</option>
+                                                                    <option value=""
+                                                                    ></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>工作代理人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <select id="busWorkAgent" name="workAgent" class="form-control w153">
+
+                                                                    <option value=""
+                                                                    ></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>出差地点</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control " id="businessAddr" name="businessAddr"
+                                                                   value=""/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>交通工具</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control " id="businessVehicle" name="businessVehicle" dataType="*"
+                                                                   value=""
+                                                                   nullmsg="请填写交通工具" errormsg="请填写交通工具"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>随行人员</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control " id="accompanyUser" name="accompanyUser"
+                                                                   value=""/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>联系电话</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control " id="accompanyUserPhone" name="accompanyUserPhone"
+                                                                   value=""/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="div1">
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>出差时间</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input id="starTime2" class="form-control Tdate" style="width: 205px;"
+                                                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH',maxDate:getStarTime('endTime2')})"
+                                                                   name="startTime"
+                                                                   value=""
+                                                            />
+                                                            至
+                                                            <input id="endTime2" class="form-control Tdate" style="width: 205px;"
+                                                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH',minDate:getStarTime('starTime2')})"
+                                                                   name="endTime"
+                                                                   value=""
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>出差事由</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                <textarea class="form-control" style="width: 430px;" id="businessRenson" name="businessRenson"
+                                                          rows="5" cols=""></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+
+                                            <div>
+                                                <label class="control-label w84 pull-left">
+                                                    <span class="text-danger">*</span>
+                                                    <span>附件上传</span>
+                                                    <span>：</span>
+                                                </label>
+                                                <div id="wrapper2" class="pull-left"
+                                                     style="margin:0;width:calc(100%  - 153px);">
+                                                    <div id="container2" style="margin: 0;padding: 0;">
+                                                        <div id="uploader2" class="uploader">
+                                                            <ul class="show-file">
+
+                                                            </ul>
+                                                            <!--头部，相册选择和格式选择-->
+                                                            <div class="queueList">
+                                                                <div id="dndArea2" class="placeholder dndArea"
+                                                                     style="padding-top: 85px;">
+                                                                    <div id="filePicker2" class="filePicker"></div>
+                                                                    <p>或将文件拖到这里，单次最多可选300</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="statusBar" style="display:none;">
+                                                                <div class="progress">
+                                                                    <span class="text">0%</span> <span
+                                                                        class="percentage"></span>
+                                                                </div>
+                                                                <div class="info"></div>
+
+                                                                <div class="btns">
+                                                                    <div id="jxButton2" class="jxButton"></div>
+                                                                    <div class="uploadBtn">开始上传</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>审批人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_ccsp" class="form-control-wrap input-group">
+                                                            <input type="text" class="form-control imgs" id="addPerson_ccspEmpName"
+                                                                   name="addPerson_ccspEmpName"
+                                                                   style="width: 384px;" value="">
+                                                            <span class="input-group-btn">
+								                	<button class="btn btn-primary" type="button"><span
+                                                            class="glyphicon glyphicon-plus"></span></button>
+								                </span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden" id="addPerson_ccspEmp"
+                                                               name="addPerson_ccspEmp" value=""/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>抄送范围</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_cccs" class="form-control-wrap input-group">
+                                                            <input type="text" class="form-control imgs" id="addPerson_cccsEmpName"
+                                                                   name="addPerson_cccsEmpName" style="width: 384px;"
+                                                                   value="">
+                                                            <span class="input-group-btn">
+								                	<button class="btn btn-primary" type="button"><span
+                                                            class="glyphicon glyphicon-plus"></span></button>
+												</span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden"
+                                                               id="addPerson_cccsEmp" name="addPerson_cccsEmp"
+                                                               value=""/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                        <fieldset>
+                                                                <div>
+                                                                    <h5>审批意见</h5>
+                                                                    <table class="table defaultTable defaultTableTop">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <th>审批意见</th>
+                                                                            <td>
+                                                                               同意!
+                                                                               驳回!
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>说明</th>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                        </fieldset>
+                                        <div class="text-center">
+                                            <button class="btn btn-primary btn-submit" type="button" onclick="saveData();">
+                                                <span class="glyphicon glyphicon-ok"></span>
+                                                提交
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <form id="putongData" method="post">
+                                    <input type="hidden" name="id" value="">
+                                    <input type="hidden" name="aproveId" value="">
+                                    <div class="putong">
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>审批人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_ptsp" class="form-control-wrap input-group">
+                                                            <input type="text" class="form-control imgs" id="addPerson_ptspEmpName"
+                                                                   name="addPerson_ptspEmpName" value=""
+                                                                   style="width: 384px;">
+                                                            <span class="input-group-btn">
+								                	<button class="btn btn-primary" type="button"><span
+                                                            class="glyphicon glyphicon-plus"></span></button>
+								                </span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden" id="addPerson_ptspEmp"
+                                                               name="addPerson_ptspEmp" value=""/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>抄送范围</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_ptcs" class="form-control-wrap input-group">
+                                                            <input type="text" class="form-control imgs" id="addPerson_ptcsEmpName"
+                                                                   name="addPerson_ptcsEmpName" value=""
+                                                                   style="width: 384px;">
+                                                            <span class="input-group-btn">
+								                	<button class="btn btn-primary" type="button"><span
+                                                            class="glyphicon glyphicon-plus"></span></button>
+												</span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden" id="addPerson_ptcsEmp"
+                                                               name="addPerson_ptcsEmp" value=""/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="div1">
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>审批内容</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                <textarea class="form-control" style="width: 430px;"
+                                                         id="ordinaryContent" name="ordinaryContent" rows="5"
+                                                          cols=""></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+
+                                            <div>
+                                                <label class="control-label w84 pull-left">
+                                                    <span class="text-danger">*</span>
+                                                    <span>附件上传</span>
+                                                    <span>：</span>
+                                                </label>
+                                                <div id="wrapper3" class="pull-left"
+                                                     style="margin:0;width:calc(100%  - 153px);">
+                                                    <div id="container3" style="margin: 0;padding: 0;">
+                                                        <div id="uploader3" class="uploader">
+                                                            <ul class="show-file">
+
+                                                            </ul>
+                                                            <!--头部，相册选择和格式选择-->
+                                                            <div class="queueList">
+                                                                <div id="dndArea3" class="placeholder dndArea"
+                                                                     style="padding-top: 85px;">
+                                                                    <div id="filePicker3" class="filePicker"></div>
+                                                                    <p>或将文件拖到这里，单次最多可选300</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="statusBar" style="display:none;">
+                                                                <div class="progress">
+                                                                    <span class="text">0%</span> <span
+                                                                        class="percentage"></span>
+                                                                </div>
+                                                                <div class="info"></div>
+
+                                                                <div class="btns">
+                                                                    <div id="jxButton3" class="jxButton"></div>
+                                                                    <div class="uploadBtn">开始上传</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+
+                                                                <div>
+                                                                    <h5>审批意见</h5>
+                                                                    <table class="table defaultTable defaultTableTop">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <th>审批意见</th>
+                                                                            <td>
+                                                                               同意!
+                                                                               驳回!
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>说明</th>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                        </fieldset>
+                                        <div class="text-center">
+                                            <button class="btn btn-primary btn-submit" type="button" onclick="saveData();">
+                                                <span class="glyphicon glyphicon-ok"></span>
+                                                提交
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                                <form id="jiabanData" class="dataForm" method="post">
+                                    <div class="jiaban">
+                                        <div class="pull-left">
+                                        </div>
+                                        <fieldset class="div1">
+                                            <input type="hidden" name="id" value="">
+                                            <input type="hidden" name="approveId" value="">
+                                            <div class="col-sm-12">
+                                                <div class="form-field" style="margin: 0;">
+                                                    <div class="form-group" style="margin: 0">
+                                                        <label class="control-label w120" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>加班日期</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input id='extraDate'class="form-control Tdate" style="width: 205px;"
+                                                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                                                                   name="endTime"
+                                                                   value=""
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>加班内容</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                             <textarea id="content" class="form-control"
+                                                                       style="width: 430px;"
+                                                                       name="content"
+                                                                       rows="5" cols="" dataType="*" nullmsg="请填写加班内容"
+                                                                       errormsg="请填写加班内容"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>审批人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_jbsp" class="form-control-wrap input-group">
+                                                            <input type="text" class="form-control imgs"
+                                                                   id="addPerson_jbspEmpName"
+                                                                   name="addPerson_jbspEmpName"
+                                                                   style="width: 384px;" value="">
+                                                            <span class="input-group-btn">
+								                	    <button class="btn btn-primary" type="button"><span
+                                                                class="glyphicon glyphicon-plus"></span></button>
+								                            </span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden" id="addPerson_jbspEmp"
+                                                               name="addPerson_jbspEmp" value=""/>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="control-label w84 pull-left">
+                                                        <span class="text-danger">*</span>
+                                                        <span>附件上传</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div id="wrapper4" class="pull-left"
+                                                         style="margin:0;width:calc(100%  - 153px);">
+                                                        <div id="container4" style="margin: 0;padding: 0;">
+                                                            <div id="uploader4" class="uploader">
+                                                                <ul class="show-file">
+
+                                                                </ul>
+                                                                <!--头部，相册选择和格式选择-->
+                                                                <div class="queueList">
+                                                                    <div id="dndArea4" class="placeholder dndArea"
+                                                                         style="padding-top: 85px;">
+                                                                        <div id="filePicker4" class="filePicker"></div>
+                                                                        <p>或将文件拖到这里，单次最多可选300</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="statusBar" style="display:none;">
+                                                                    <div class="progress">
+                                                                        <span class="text">0%</span> <span
+                                                                            class="percentage"></span>
+                                                                    </div>
+                                                                    <div class="info"></div>
+
+                                                                    <div class="btns">
+                                                                        <div id="jxButton4" class="jxButton"></div>
+                                                                        <div class="uploadBtn">开始上传</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                                    <div>
+                                                                        <h5>审批意见</h5>
+                                                                        <table class="table defaultTable defaultTableTop">
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <th>审批意见</th>
+                                                                                <td>
+                                                                                   同意!
+                                                                                   驳回!
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th>说明</th>
+                                                                                <td></td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+
+                                                <div class="text-center">
+                                                    <button class="btn btn-primary btn-submit" type="button" onclick="saveData();">
+                                                        <span class="glyphicon glyphicon-ok"></span>
+                                                        提交
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </form>
+                                <form id="waiqinData" method="post">
+                                    <input type="hidden" name="id" value="">
+                                    <input type="hidden" name="aproveId" value="">
+                                    <div class="waiqin">
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>申请时间</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input id="starTime3" class="form-control Tdate" style="width: 205px;"
+                                                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH'})"
+                                                                   name="startTime"
+                                                                   value=''
+                                                            />
+                                                            至
+                                                            <input id="endTime3" class="form-control Tdate" style="width: 205px;"
+                                                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH'})"
+                                                                   name="endTime"
+                                                                   value=''
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>审批人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_wqsp" class="form-control-wrap input-group">
+                                                            <input type="text" class="form-control imgs" id="addPerson_wqspEmpName"
+                                                                   name="addPerson_ptspEmpName" value=""
+                                                                   style="width: 384px;">
+                                                            <span class="input-group-btn">
+								                	<button class="btn btn-primary" type="button"><span
+                                                            class="glyphicon glyphicon-plus"></span></button>
+								                </span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden" id="addPerson_wqspEmp"
+                                                               name="addPerson_wqspEmp" value=""/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="div1">
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>描述</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                <textarea class="form-control" style="width: 430px;"
+                                                          id="descript"
+                                                          name="descript" rows="5"
+                                                          cols=""></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </fieldset>
+                                        <fieldset>
+                                                                <div>
+                                                                    <h5>审批意见</h5>
+                                                                    <table class="table defaultTable defaultTableTop">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <th>审批意见</th>
+                                                                            <td>
+                                                                               同意!
+                                                                               驳回!
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>说明</th>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+
+                                        </fieldset>
+                                        <div class="text-center">
+                                            <button class="btn btn-primary btn-submit" type="button" onclick="saveData();">
+                                                <span class="glyphicon glyphicon-ok"></span>
+                                                提交
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- end 页面内容主体 -->
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <!-- begin 页面内容主体 -->
+        </div>
+    </div>
+</div>
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+<script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="${_js}/lib/webuploader/webuploader.js"></script>
+    <script type="text/javascript" src="${_js}/lib/webuploader/HYCore.js"></script>
+<!--end 外部JS引入 -->
+
+<!--begin 自定义JS -->
+<script type="text/javascript">
+    $(function(){
+
+
+    });
+    function loadFile() {
+        //请假文件
+        fileUpload1 = new FileUpload({
+            "filePicker" : "filePicker1",
+            "dndArea" : "dndArea1",
+            "uploader" : "uploader1",
+            "jxButton" : "jxButton1",
+            "busType" : "b_work_appr_leave"
+        });
+        //请假文件
+        fileUpload2 = new FileUpload({
+            "filePicker" : "filePicker1",
+            "dndArea" : "dndArea2",
+            "uploader" : "uploader2",
+            "jxButton" : "jxButton2",
+            "busType" : "b_work_appr_leave"
+        });
+        //出差文件
+        fileUpload3 = new FileUpload({
+            "filePicker" : "filePicker3",
+            "dndArea" : "dndArea3",
+            "uploader" : "uploader3",
+            "jxButton" : "jxButton3",
+            "busType" : "b_work_appr_business"
+        });
+        //普通文件
+        fileUpload4 = new FileUpload({
+            "filePicker" : "filePicker4",
+            "dndArea" : "dndArea4",
+            "uploader" : "uploader4",
+            "jxButton" : "jxButton4",
+            "busType" : "b_work_appr_ordinary"
+        });
+        //外勤文件
+        fileUpload5= new FileUpload({
+            "filePicker" : "filePicker5",
+            "dndArea" : "dndArea5",
+            "uploader" : "uploader5",
+            "jxButton" : "jxButton5",
+            "busType" : "b_work_appr_outside"
+        });
+
+
+    }
+    var fileList = new Array();
+    function successUpload(json) {
+        debugger;
+        var fileInfo = json.fileInfo;
+        fileList.push(fileInfo);
+    }
+    var radioVal = $("#aproveType").val();
+    if ("1" == radioVal) {
+        fileUpload1 = new FileUpload({
+            "filePicker" : "filePicker1",
+            "dndArea" : "dndArea1",
+            "uploader" : "uploader1",
+            "jxButton" : "jxButton1",
+            "busType" : "b_work_appr_leave"
+        });
+        $("#titleChange").html("基本信息");
+        $(".jiaban").css("display", "none");
+        $(".chuchai").css("display", "none");
+        $(".putong").css("display", "none");
+        $(".qingjia").css("display", "block");
+        $(".waiqin").css("display", "none");
+    } else if ("2" == radioVal) {
+        fileUpload2 = new FileUpload({
+            "filePicker" : "filePicker2",
+            "dndArea" : "dndArea2",
+            "uploader" : "uploader2",
+            "jxButton" : "jxButton2",
+            "busType" : "b_work_appr_business"
+        });
+        $("#titleChange").html("基本信息");
+        $(".jiaban").css("display", "none");
+        $(".chuchai").css("display", "block");
+        $(".putong").css("display", "none");
+        $(".qingjia").css("display", "none");
+        $(".waiqin").css("display", "none");
+    } else if ("3" == radioVal) {
+        //普通文件
+        fileUpload3 = new FileUpload({
+            "filePicker" : "filePicker3",
+            "dndArea" : "dndArea3",
+            "uploader" : "uploader3",
+            "jxButton" : "jxButton3",
+            "busType" : "b_work_appr_ordinary"
+        });
+        $("#titleChange").html("");
+        $(".jiaban").css("display", "none");
+        $(".chuchai").css("display", "none");
+        $(".putong").css("display", "block");
+        $(".qingjia").css("display", "none");
+        $(".waiqin").css("display", "none");
+    } else if ("4" == radioVal) {
+        fileUpload4 = new FileUpload({
+            "filePicker" : "filePicker4",
+            "dndArea" : "dndArea4",
+            "uploader" : "uploader4",
+            "jxButton" : "jxButton4",
+            "busType" : "b_work_appr_extra_work"
+        });
+        $("#titleChange").html("加班审批修改");
+        $(".jiaban").css("display", "block");
+        $(".chuchai").css("display", "none");
+        $(".putong").css("display", "none");
+        $(".qingjia").css("display", "none");
+        $(".waiqin").css("display", "none");
+
+    } else {
+        fileUpload5= new FileUpload({
+            "filePicker" : "filePicker5",
+            "dndArea" : "dndArea5",
+            "uploader" : "uploader5",
+            "jxButton" : "jxButton5",
+            "busType" : "b_work_appr_outside"
+        });
+        $("#titleChange").html("外勤申报审批修改");
+        $(".jiaban").css("display", "none");
+        $(".chuchai").css("display", "none");
+        $(".putong").css("display", "none");
+        $(".qingjia").css("display", "none");
+        $(".waiqin").css("display", "block");
+    }
+    var person = {};
+    //添加请假审批人
+    $("#addPerson_qjsp").click(function () {
+        var personIdList = $("#addPerson_qjspEmp").val();
+        debugger;
+        personId = "addPerson_qjsp";
+        addsendPerson(personIdList,1);
+    });
+    //添加请假抄送人
+    $("#addPerson_qjcs").click(function () {
+        var personIdList = $("#addPerson_qjcsEmp").val();
+        personId = "addPerson_qjcs";
+        addsendPerson(personIdList,2);
+    });
+    //添加出差审批人
+    $("#addPerson_ccsp").click(function () {
+        var personIdList = $("#addPerson_ccspEmp").val();
+        personId = "addPerson_ccsp";
+        addsendPerson(personIdList,1);
+    });
+    //添加出差抄送人
+    $("#addPerson_cccs").click(function () {
+        var personIdList = $("#addPerson_cccsEmp").val();
+        personId = "addPerson_cccs";
+        addsendPerson(personIdList,2);
+    });
+    //添加普通审批人
+    $("#addPerson_ptsp").click(function () {
+        var personIdList = $("#addPerson_ptspEmp").val();
+        personId = "addPerson_ptsp";
+        addsendPerson(personIdList,1);
+    });
+    //添加普通抄送人
+    $("#addPerson_ptcs").click(function () {
+        var personIdList = $("#addPerson_ptcsEmp").val();
+        personId = "addPerson_ptcs";
+        addsendPerson(personIdList,2);
+    });
+    //添加外勤审批人
+    $("#addPerson_wqsp").click(function () {
+        var personIdList = $("#addPerson_wqspEmp").val();
+        personId = "addPerson_wqsp";
+        addsendPerson(personIdList,1);
+    });
+    //添加加班审批人
+    $("#addPerson_jbsp").click(function () {
+        debugger;
+        var personIdList = $("#addPerson_jbspEmp").val();
+        personId = "addPerson_jbsp";
+        addsendPerson(personIdList,1);
+    });
+    function addsendPerson(personIdList,type) {
+        var title ="添加审批人";
+        if(type == 2){
+            title = "添加抄送人";
+        }
+        debugger;
+        parent.layer.open({
+            type: 2,
+            title: title,
+            shadeClose: false,
+            scrollbar: false,
+            shade: 0.6,
+            area: ['80%', '88%'],
+            content: "addPerson.do?personIdList=" + personIdList,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 添加', '<span class="glyphicon glyphicon-backward"></span> 取消'],
+            yes: function (index, layero) {
+                var iframe = "layui-layer-iframe" + index;
+                parent[iframe].loaderParentPage();
+            }
+        });
+    }
+
+    var empLists = [];
+    function getPerson(datas) {
+        debugger;
+        document.getElementById(personId + "Emp").value = datas.checkEmpId;
+        document.getElementById(personId + "EmpName").value = datas.name;
+        if (datas.empObj != undefined && datas.empObj.length > 0) {
+            for (var i in datas.empObj) {
+                empLists.push(datas.empObj[i]);
+            }
+        }
+
+    }
+
+    function addPersonWhenSum(type, empIdsJson) {
+        console.log(type);
+        console.log(empIdsJson);
+        var approvePersons = [];
+        var sortId = 1;
+        var empIds = empIdsJson.split(",");
+        for (var i = 0; i < empIds.length; i++) {
+            var personName = null;
+            for (var j in empLists) {
+                if (empLists[j].id == empIds[i]) {
+                    personName = empLists[j].empName;
+                    break;
+                }
+            }
+            var approvePerson = {
+                personType: type,
+                personId: empIds[i],
+                personName: personName
+            };
+            if (approvePerson.personType == '1') {
+                approvePerson.approveSortId = sortId;
+                sortId++;
+            }
+            approvePersons.push(approvePerson);
+
+        }
+        return approvePersons;
+    }
+
+    function saveData() {
+        var o = {};
+        o.attrs = fileList;
+        var url = null;
+        var approvePersonList = [];
+        var ccPersonList = [];
+        var radioVal = $("#aproveType").val();
+        if ("1" == radioVal) {
+            approvePersonList = addPersonWhenSum('1', $("#addPerson_qjspEmp").val());
+            ccPersonList = addPersonWhenSum('2', $("#addPerson_qjcsEmp").val());
+            o.aproveId = "";
+            o.id = "";
+            o.leaveType = $("#leaveType").val();
+            o.workAgent = $("#leaWorkAgent").val();
+            o.startTime = $("#startTime1").val()+":00:00";
+            o.endTime = $("#endTime1").val()+":00:00";
+            o.leaveReason = $("#leaveRenson").val();
+            o.attrs = fileList;
+            o.apprPersonList = approvePersonList;
+            o.ccPersonList = ccPersonList;
+            o = JSON.stringify(o);
+            url = "updateLeave.do";
+        } else if ("2" == radioVal) {
+            approvePersonList = addPersonWhenSum('1', $("#addPerson_ccspEmp").val());
+            ccPersonList = addPersonWhenSum('2', $("#addPerson_cccsEmp").val());
+            o.aproveId = "";
+            o.id = "";
+            o.businessType = $("#businessType").val();
+            o.workAgent = $("#busWorkAgent").val();
+            o.trainName = $("#trainName").val();
+            o.businessVehicle = $("#businessVehicle").val();
+            o.accompanyUser = $("#accompanyUser").val();
+            o.accompanyUserPhone = $("#accompanyUserPhone").val();
+            o.starTime = $("#starTime2").val()+":00:00";
+            o.endTime = $("#endTime2").val()+":00:00";
+            o.businessRenson = $("#businessRenson").val();
+            o.addrType = $("input[name='addrType']").val();
+            o.attrs = fileList;
+            o.apprPersonList = approvePersonList;
+            o.ccPersonList = ccPersonList;
+            o = JSON.stringify(o);
+            url = "updateBusiness.do?" + o;
+        } else if ("3" == radioVal) {
+            approvePersonList = addPersonWhenSum('1', $("#addPerson_ptspEmp").val());
+            ccPersonList = addPersonWhenSum('2', $("#addPerson_ptcsEmp").val());
+            o.aproveId = "";
+            o.id = "";
+            o.ordinaryContent = $("#ordinaryContent").val();
+            o.attrs = fileList;
+            o.apprPersonList = approvePersonList;
+            o.ccPersonList = ccPersonList;
+            o = JSON.stringify(o);
+            url = "updateOrdinary.do";
+        } else if ("4" == radioVal) {
+            var personIdList0 = $("#addPerson_jbsprEmp").val();//请假
+            if (personIdList0 == "") {
+                $(this).alertInfo("请选择审批人");
+                return false;
+            }
+            approvePersonList = addPersonWhenSum('1', $("#addPerson_jbspEmp").val());
+            o.approveId = "";
+            o.id = "";
+            o.endTime = $("#extraDate").val();
+            o.content = $("#content").val();
+            o.attrs = fileList;
+            o.apprPersonList = approvePersonList;
+            o = JSON.stringify(o);
+            url = "updateExtraWork.do";
+        } else {
+            var personIdList0 = $("#addPerson_wqspEmp").val();//请假
+            if (personIdList0 == "") {
+                $(this).alertInfo("请选择审批人");
+                return false;
+            }
+            debugger;
+            approvePersonList = addPersonWhenSum('1', $("#addPerson_wqspEmp").val());
+            o.apprId = "";
+            o.id = "";
+            o.startTime = $("#starTime3").val()+":00:00";
+            o.endTime = $("#endTime3").val()+":00:00";
+            o.descript = $("#descript").val();
+            o.attrs = fileList;
+            o.apprPersonList = approvePersonList;
+            o = JSON.stringify(o);
+            url = "updateOutside.do";
+        }
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: o,
+            contentType: 'application/json;charset=utf-8', //设置请求头信息
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                if (data.result == "faild") {
+                    $(this).alertInfo(data.msg);
+                } else {
+                    layer.closeAll();
+                    window.location.href = "list.do";
+                }
+            },
+            error: function () {
+                parent.layer.closeAll();
+            }
+        });
+    }
+</script>
+<!--end 自定义JS -->
+</body>
+</html>
+
+
+
+
+

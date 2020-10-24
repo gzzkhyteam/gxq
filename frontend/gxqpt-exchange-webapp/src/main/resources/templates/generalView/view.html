@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>整体概览</span> &gt; <span class="page-title-scend">详情</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a id="dataView" class="btn_back" href="javascript:void(0);" onclick="openDataView()">数据预览</a>
+                <a class="btn_back" href="javascript:void(0);" onclick="toBack()">返回上一页</a>
+            </div>
+        </div>
+        <div class="view_container view_container_first row" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="main_right pull-right">
+                <div id="secondPage" class="secondPage">
+                    <div id="unit" class="view_item">
+                        <h3 class="tle">{{app.dirName}}</h3>
+                        <table class="table default-table tab-border-no-layer borderCollapse">
+                            <tbody>
+                            <tr>
+                                <th width="120">主题分类：</th>
+                                <td class="viewTd">{{app.themeThreeName}}</td>
+                                <th width="120">行业分类：</th>
+                                <td class="viewTd">{{app.industryThreeName}}</td>
+                            </tr>
+                            <tr>
+                                <th>服务分类：</th>
+                                <td class="viewTd">{{app.serviceThreeName}}</td>
+                                <th>更新时间：</th>
+                                <td class="viewTd">{{app.updateTime}}</td>
+                            </tr>
+                            <tr>
+                                <th>下载量：</th>
+                                <td class="viewTd">{{app.downCount}}</td>
+                                <th>访问量：</th>
+                                <td class="viewTd">{{app.seeCount}}</td>
+                            </tr>
+                            <tr>
+                                <th>数据提供单位：</th>
+                                <td colspan="3" class="viewTd">{{app.unitName}}</td>
+                            </tr>
+                            <tr>
+                                <th>目录描述：</th>
+                                <td colspan="3" class="viewTd">{{app.desc}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <h3 class="tle">相关API</h3>
+                        <table id="systemList" class="default-table tab-title-top">
+                            <thead>
+                            <tr>
+                                <th width="80">序号</th>
+                                <th>API名称</th>
+                                <th>API编号</th>
+                                <th>API地址</th>
+                                <th>支持格式</th>
+                                <th>是否可用</th>
+                                <th width="130">创建时间</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="apiHtml">
+
+
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <ul class="pagination" id="pagination" ></ul>
+                            <p class="pull-right currentPage">当前第<i id="pageNum" class="colorBlue"></i>页/共<i id="totalPages"  class="colorBlue">10</i>页</p>
+                        </div>
+                        <div class="applybtnContainer">
+                            <button id="applyBtn" type="button" class="btn btn-primary applybtn">数据申请</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+<script type="text/javascript" src="${_static}/js/com_base.js"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $(function () {
+        var html = $(".applybtnContainer").html();
+        $(parent.document.body).append(html);
+        window.onbeforeunload = function () {
+            $("#applyBtn", window.parent.document).remove();
+        };
+    });
+</script>
+</body>
+<script type="text/javascript">
+    var parm={
+        data:{},
+        pageNo:1,
+        pageSize:10
+    };
+    function  getList(parm) {
+        getApiList(id, parm.pageNo, parm.pageSize);
+    };
+    var id = '${id}';
+    var dirId = '${id}';
+    var unitId = sessionStorage.getItem('unitIdCatalog');
+    var app = angular.module('app', []);
+    var shareUnitId = null;
+    getUnitList();
+
+    function getUnitList() {
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            url: '${_gate_url}/api/exchange//directory/getUnitList',
+            data: {dirId: dirId, unitId: unitId},
+            success: function (rows) {
+                if (rows.data) {
+                    shareUnitId = rows.data.unitId;
+                }
+            }
+        });
+    }
+
+    var openWay;//是否开放 1,开放；2，不开放'
+    var shareWay; //1,共享；2，有条件共享；3，不共享',
+    var unitId;//当前登录单位Id
+    var dirUitId;//目录所属单位Id
+    var canApply = '1';
+    var dataType;//数据类型:1,结构化数据；2，非结构化数据
+    var shareUnit; //是否共享单位 1：是，0：否
+    var setId ;
+    app.controller('controller', function ($scope, $http) {
+        getApp();
+
+        function getApp() {
+            $http.get('${_gate_url}/api/exchange/overview/getDirView', {
+                params: {id: id},
+                headers: getHeaders()
+            }).success(function (res) {
+                var dataSetAudio = res.data.dataSetIsAudio;
+                openWay = res.data.openWay;
+                shareWay = res.data.shareWay;
+                unitId = res.data.loginUnitId;
+                shareUnit = res.data.shareUnit;
+                dirUitId = res.data.unitId;
+                dataType = res.data.dataType;
+                if(dataType == 2){
+                    $("#dataView").css("display","none");
+                }
+                setId = res.data.setId;
+                // if(!dataSetAudio){
+                //    $("#applyBtn", window.parent.document).remove();
+                // }else{
+                //    if (shareUnitId==null) {
+                //        $("#applyBtn", window.parent.document).remove();
+                //    }
+                // }
+
+                $scope.app = res.data;
+                if ((openWay == 2 && shareWay == 3) //不开放不共享
+                    || (openWay == 1)  //开放
+                    || (openWay == 2 && shareWay == 1) //不开放无条件共享
+                    || (openWay == 2 && shareWay == 2 && shareUnit == 1) //不开放有条件共享，
+                    || (unitId == dirUitId) //登录单位Id与目录单位Id相等
+                ) {
+                    $("#applyBtn", window.parent.document).remove();
+                    canApply = '0';
+                }
+                if(res.data.dataType == 2){
+                    $("#applyBtn", window.parent.document).remove();
+                }
+                sessionStorage.getItem("generalPageNo");
+                var isback = sessionStorage.getItem("isback");
+                if(setId){
+                    if(isback=="true"){
+                        getApiList(id, sessionStorage.getItem("generalPageNo")?sessionStorage.getItem("generalPageNo"):1, 10);
+                    }else{
+                        getApiList(id, 1, 10);
+                    };
+                }
+
+            })
+        }
+    });
+
+    function dataApplyFirst() {//数据申请第一步返回数据字段选择
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            url: '${_gate_url}/api/exchange/dataapi/api/savedirectorychosen',
+            data: {dirId: "${id}", type: 3},
+            success: function (rows) {
+                if (rows.data) {
+
+                    window.location.href = "${_cp}/module/generalFirst?dataId=" + rows.data.apiId + "&catalogId=${id}&applyId=" + rows.data.applyId + "&pageType=apiApply";
+                } else {
+                    parent.layer.msg(rows.errmsg, {time: 1500});
+                }
+            }
+        });
+    }
+
+    $(function () {
+        // getApiList(id, 1, 6);
+    });
+    $(window).bind('beforeunload', function() {
+        sessionStorage.setItem("isback","false");
+    });
+
+    //api列表
+    function getApiList(id, pageNo, pageSize) {
+
+        var apiHtml = "";
+        ajaxHengyun({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({data: {id: id}, pageNo: pageNo, pageSize: pageSize}),
+            url: '${_gate_url}/api/exchange/overview/getApiList',
+            success: function (rows) {
+                if (rows.data) {
+                    console.log(rows.data);
+                    rows.data.list.forEach(function (value, index) {
+                        var indexNo = index + 1;
+                        var data_fmat = '';
+                        var api_status = '';
+                        if (value.dataFmat == 1) {
+                            data_fmat = 'json';
+                        } else {
+                            data_fmat = 'xml';
+                        }
+                        if (value.apiStatus == 1) {
+                            api_status = '启用';
+                        } else {
+                            api_status = '禁用';
+                        }
+                        var isShow = true;
+                        if (openWay == 2 && shareWay == 3) {//不开放不共享，判断当前登录单位是否与目录单位一致，
+                            // 如果不同，则不显示
+                            if (unitId != value.unitId) {
+                                isShow = false;
+                            }
+                        }
+                        // else if (openWay == 2 && shareWay == 1) {//不开放无条件共享，判断登录单位是否存在于目录共享单位中，
+                        //     // // 如果不存在，则不显示
+                        //     // if(shareUnit == 0){
+                        //     //     isShow = false;
+                        //     // }
+                        // }
+                        if (isShow == true) {
+                            apiHtml += '<tr>';
+                            apiHtml += '<td>' + indexNo + '</td>';
+                            apiHtml += '<td>' + value.apiName + '</td>';
+                            apiHtml += '<td>' + value.apiCode + '</td>';
+                            apiHtml += '<td>' + value.apiUrl + '</td>';
+                            apiHtml += '<td>' + data_fmat + '</td>';
+                            apiHtml += '<td>' + api_status + '</td>';
+                            apiHtml += '<td>' + fmtDate(value.createTime) + '</td>';
+                            //如果为开放目录,则可以查看详情，不能申请
+                            if (openWay == 1 || (openWay == 2 && (shareWay != 3))) {
+                                if(dataType == 1){
+                                    apiHtml += '<td class="detailBtn"><a href="${_cp}/module/generalApiView?id=' + value.id + '&catalogId=${id}&canApply=' + canApply + '">API详情</a></td>';
+                                }else {
+                                    apiHtml += '<td class="detailBtn"><a href="${_cp}/module/generalUnstructuredApiView?id=' + value.id + '&catalogId=${id}&canApply=' + canApply + '">API详情</a></td>';
+                                }
+                            } else {
+                                if((openWay == 2 && shareWay == 3) && unitId == value.unitId) {
+                                    if(dataType == 1){
+                                        apiHtml += '<td class="detailBtn"><a href="${_cp}/module/generalApiView?id=' + value.id + '&catalogId=${id}&canApply=' + canApply + '">API详情</a></td>';
+                                    }else {
+                                        apiHtml += '<td class="detailBtn"><a href="${_cp}/module/generalUnstructuredApiView?id=' + value.id + '&catalogId=${id}&canApply=' + canApply + '">API详情</a></td>';
+                                    }
+                                }else
+                                apiHtml += '<td></td>';
+                            }
+                            apiHtml += '</tr>';
+                        }
+                    });
+                    $("#apiHtml").html(apiHtml);
+                    $('#totalPages').text(rows.data.pages);
+                    jqPaginator(rows.data);
+                    updateIformHeight();
+                }
+                // if ((openWay == 2 && shareWay == 3) //不开放不共享
+                //     || (openWay == 1)  //开放
+                //     ||(openWay == 2 && shareWay == 1) //不开放无条件共享
+                // ) {
+                //     $("#applyBtn", window.parent.document).remove();
+                // }
+
+
+            }
+        });
+
+    }
+
+    function toBack() {
+        var pageType = "${pageType}";
+        if (pageType == "unit"){
+            window.location.href = "${_cp}/module/generalList?unitId=${unitId}";
+        }else if (pageType == "apiApply"){
+            window.location.href = "${_cp}/module/shareMagSetApiCatalog?dirId="+dirId;
+        }else {
+            var busCode = "${busCode}";
+            var busKey = "${busKey}";
+            window.location.href = "${_cp}/module/libraryList?busCode="+busCode+"&busKey="+busKey;
+        }
+    };
+
+    function openDataView() {//预览数据
+        parent.layer.open({
+            id: 'applyDownload',
+            type: 2,
+            anim: 6,
+            title: '数据预览',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['830px', '450px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/shareManageDataView?setId="+dirId+"&type=2",
+            btn: ['关闭'],
+        });
+    }
+    $("body").on("click",".detailBtn a",function(){
+        sessionStorage.setItem("generalPageNo",parm.pageNo);
+    })
+
+</script>
+</html>

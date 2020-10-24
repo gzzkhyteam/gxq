@@ -1,0 +1,665 @@
+<!doctype html>
+<html>
+<head>
+    <base href="<%=basePath%>">
+
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- begin 外部CSS引入 -->
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+
+    <!-- end 外部CSS引入 -->
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/echarts/echarts.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+        }
+        .list-zx
+        {
+
+            width:100%;
+            height:100%;
+        }
+
+        .list-section {
+            width:40%;
+            height:340px;
+            float:left;
+            border: solid 1px black;
+            background: #fff;
+            margin-left: 70px;
+            margin-right: 70px;
+            margin-top: 30px;
+        }
+
+        .list-content {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        .grid-section {
+        }
+
+        .ui-jqgrid .ui-jqgrid-btable tbody tr.jqgrow td, .ui-jqgrid {
+            background: #fff;
+        }
+
+        .ui-th-ltr, .ui-jqgrid .ui-jqgrid-htable th.ui-th-ltr, .ui-jqgrid .ui-jqgrid-btable
+        {
+            text-align: center;
+        }
+        .task-box{
+            height: 90px;
+            line-height: 90px;
+            text-align: center;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            width: 24%;
+            margin-right: 1%;
+        }
+        .task-box img{
+            margin-top:-15px;
+        }
+        .task-box span{
+            display: inline-block;
+            width: 120px;
+            height: 30px;
+            background: rgba(0,0,0,0.4);
+            color: #fff;
+            font-weight: bold;
+            line-height: 30px;
+            position: absolute;
+            transform: rotate(45deg);
+            text-align: center;
+            top: 10px;
+            right: -35px;
+            letter-spacing: 5px;
+
+        }
+        .task-box em{
+            font-size: 36px;
+            color: #fff;
+            font-style: normal;
+            padding:0 20px;
+        }
+        .fl{
+            float: left;
+            align:left;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        日志管理系统 &gt; 日志数据可视化 &gt; <span class="page-title-scend">访问日志分析</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <div style="height:78px;margin-left: 68px;margin-bottom: -8px;">
+            <form action="" class="form-inline search-form">
+                <div class="form-field">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <span class="text-danger"></span>
+                            <span>日志告警时间：</span>
+                        </label>
+                        <div class="form-control-wrap">
+                            <input id="startTime" name="startTime" class="Wdate"
+                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',readOnly:true,maxDate:'#F{$dp.$D(\'endTime\')}'})"/>
+                        </div>
+                        <span>~</span>
+                        <div class="form-control-wrap">
+                            <input id="endTime" name="endTime" class="Wdate"
+                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',readOnly:true,minDate:'#F{$dp.$D(\'startTime\')}',startDate:'#F{$dp.$D(\'startTime\',{d:+1})}'})"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <span class="text-danger"></span>
+                            <span>应用系统：</span>
+                        </label>
+                        <div class="form-control-wrap">
+                            <select id="appId" name="appId"  class="form-control chosen-select selWid-form-search" style="width: 100%">
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <span class="text-danger"></span>
+                            <span>日志类型：</span>
+                        </label>
+                        <div class="form-control-wrap">
+                            <select id="logType" name="logType"  class="form-control chosen-select selWid-form-search" style="width: 100%">
+                                <option value=""></option>
+                                <option value="APACHE">APACHE日志</option>
+                                <option value="TOMCAT">TOMCAT日志</option>
+                                <option value="NGINX">NGINX日志</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <div class="form-group">
+                        <div class="form-control-wrap text-right">
+                            <button type="button" class="btn btn-primary search-button" onclick="search()">
+                                <span class="glyphicon glyphicon-search"></span> 查询
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+
+            <div id="left-box" class="list-section">
+                <div id="left-boxzx" class="list-zx">
+
+                </div>
+            </div>
+
+            <div id="right-box" class="list-section">
+                <div id="right-boxzx" class="list-zx">
+
+
+                </div>
+            </div>
+            <div id="leftdown-box" class="list-section">
+                <div id="leftdown-boxzx" class="list-zx">
+
+
+                </div>
+            </div>
+
+            <div id="rightdown-box" class="list-section">
+                <div id="rightdown-boxzx" class="list-zx">
+
+
+                </div>
+            </div>
+
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+
+</body>
+</html>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart1 = echarts.init(document.getElementById('left-boxzx'));
+    var myChart2 = echarts.init(document.getElementById('right-boxzx'));
+    var myChart3 = echarts.init(document.getElementById('leftdown-boxzx'));
+    var myChart4 = echarts.init(document.getElementById('rightdown-boxzx'));
+    //获取应用系统
+    getSystemList();
+    /* 获取应用系统*/
+    function getSystemList() {
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            url: "${_gate_url}/api/developer/application/findList",
+            data:{type:1},
+            success: function (rows) {
+                if (rows.data) {
+                    $('#appId').append('<option value=""></option>');
+                    var arr = rows.data;
+                    for(var i=0;i<arr.length;i++){
+                        var appId = arr[i].appId;
+                        var name = arr[i].name;
+                        $('#appId').append('<option value='+appId+'>'+name+'</option>');
+
+                    }
+                }
+            }
+        });
+    }
+
+    var myDate = new Date();
+    var currentyear=myDate.getFullYear();
+    var currentmonth=myDate.getMonth()+1;
+    if(currentmonth<10)
+    {
+        currentmonth="0"+currentmonth.toString();
+    }
+    var currentday=myDate.getDate();
+    $(document).ready(function(){
+        var startTime = currentyear+"-"+currentmonth+"-"+currentday+" 00:00";
+        var endTime = currentyear+"-"+currentmonth+"-"+currentday+" 23:59";
+        $('#startTime').val(startTime);
+        $('#endTime').val(endTime);
+        var appId = $('#appId').val();
+        var logType = $('#logType').val();
+        loadOption1(startTime,endTime,appId,logType);
+        loadOption2(startTime,endTime,appId,logType);
+        loadOption3(startTime,endTime,appId,logType);
+        loadOption4(startTime,endTime,appId,logType);
+    });
+
+    function search()
+    {
+        var startTime=$("#startTime").val();
+        var endTime=$("#endTime").val();
+        var appId = $("#appId").val();
+        var logType = $('#logType').val();
+        loadOption1(startTime,endTime,appId,logType);
+        loadOption2(startTime,endTime,appId,logType);
+        loadOption3(startTime,endTime,appId,logType);
+        loadOption4(startTime,endTime,appId,logType);
+    }
+    option1 = {
+        title : {
+            text:'热门访问页面访问次数',
+            x:'center'
+        },
+        color: ['#3398DB'],
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '13%',
+            bottom: '3%',
+            containLabel: true
+        },
+        yAxis : [
+            {
+                type : 'category',
+                data : [],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        xAxis : [
+            {
+                type : 'value',
+                name:'次数'
+            }
+        ],
+        series : [
+            {
+                name:'时间',
+                type:'bar',
+                barWidth: '30%',
+                data:[]
+            }
+        ]
+    };
+    option2 = {
+        title : {
+            text:'HTTP状态数量',
+            x:'center'
+        },
+        color: ['#3398DB'],
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '8%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                name:'状态',
+                type : 'category',
+                data : [],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis : [
+            {
+                name:'数量',
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'数量',
+                type:'bar',
+                barWidth: '30%',
+                data:[]
+            }
+        ],
+    };
+
+
+    option3 = {
+        title: {
+            text: '浏览器类型占比分析',
+            left: 'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            // orient: 'vertical',
+            // top: 'middle',
+            bottom: 10,
+            left: 'center',
+            data: []
+        },
+        series : [
+            {
+                type: 'pie',
+                radius : '65%',
+                center: ['50%', '50%'],
+                selectedMode: 'single',
+                data:[],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    option4 = {
+        title: {
+            text: '访问PV/UV统计',
+            left:'center'
+        },
+        tooltip : {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985'
+                }
+            }
+        },
+        legend: {
+            data:['PV','UV'],
+            bottom:10
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '12%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'category',
+
+                data : [],
+                //设置字体倾斜
+                axisLabel:{
+                    interval:0,
+                    rotate:45,//倾斜度 -90 至 90 默认为0
+                    margin:2,
+                    textStyle:{
+                        fontWeight:"bolder",
+                        color:"#000000"
+                    }
+                }
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'',
+                type:'line',
+                stack: '总量',
+                areaStyle: {normal: {}},
+                data:[]
+            },
+            {
+                name:'',
+                type:'line',
+                stack: '总量',
+                areaStyle: {normal: {}},
+                data:[],
+                //配置样式
+                itemStyle: {
+                    //通常情况下：
+                    normal:{
+                        //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                        color: function (params){
+                            var colorList = ['#FF8000','#00EC00'];
+                            return colorList[params.dataIndex];
+                        }
+                    }
+                }
+            }
+        ]
+    };
+
+
+    // 使用刚指定的配置项和数据显示图表。
+    //myChart1.setOption(option1);
+    //myChart2.setOption(option2);
+    //myChart3.setOption(option3);
+    //myChart4.setOption(option4);
+
+    function loadOption1(startTime,endTime,appId,logType){
+        ajaxHengyun({
+            type: "POST",
+            async:false,
+            dataType: 'json',
+            data: {startTime:startTime,endTime:endTime,applyId:appId,logType:logType},
+            url: "${_gate_url}/api/logs/count/PageAccess",
+            success: function (rows) {
+                if(rows.data){
+                    var  ydates= new Array();
+                    var numdates = new Array();
+                    //先解析json数据进行分层
+                    $.each(rows.data, function(key, val) {
+                        var ydate = val.logTypeName;//登录的账号
+                        var numdate = val.number;//登录的次数
+                        ydates.push(ydate);
+                        numdates.push(numdate);
+                    });
+                }
+                myChart1.setOption(option1);
+                myChart1.setOption({
+                    yAxis: {
+                        data:ydates
+                    },
+                    series : {
+                        data: numdates
+                    }
+
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+            }
+        });
+
+    }
+    function loadOption2(startTime,endTime,appId,logType){
+        ajaxHengyun({
+            type: "POST",
+            async:false,
+            dataType: 'json',
+            data: {startTime:startTime,endTime:endTime,applyId:appId,logType:logType},
+            url: "${_gate_url}/api/logs/count/HttpStatus",
+            success: function (rows) {
+                if(rows.data){
+                    var  names= new Array();
+                    var dates = new Array();
+                    //先解析json数据进行分层
+                    $.each(rows.data, function(key, val) {
+                        var name = val.logTypeName;//登录的账号
+                        var numdate = val.number;//登录的次数
+                        names.push(name);
+                        dates.push(numdate);
+                    });
+                }
+
+                myChart2.setOption(option2);
+                myChart2.setOption({
+                    xAxis: {
+                        data:names
+                    },
+                    series: {
+                        data:dates
+                    }
+
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+            }
+        });
+
+    }
+    function loadOption3(startTime,endTime,appId,logType){
+        ajaxHengyun({
+            type: "POST",
+            async:false,
+            dataType: 'json',
+            data: {startTime:startTime,endTime:endTime,applyId:appId,logType:logType},
+            url: "${_gate_url}/api/logs/count/BrowserType",
+            success: function (rows) {
+                if (rows.data) {
+                    //先解析json数据进行分层
+                    var names=new Array();
+                    var nums=new Array();
+                    //先解析json数据进行分层
+                    $.each(rows.data, function(key, val) {
+                        names.push(val.logTypeName);
+                        var obj = new Object();
+                        obj.name=val.logTypeName;
+                        obj.value=val.number;
+                        nums.push(obj);
+
+                    });
+                    //初始化全量数据框架
+                    myChart3.setOption(option3);
+                    myChart3.setOption({
+                        legend: {
+                            data: names
+                        },
+                        series :
+                            {
+                                data: nums
+                            }
+                    });
+                } else {
+                    layer.msg("数据加载失败，请稍后重试！", {time: 1000});
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+            }
+        });}
+    function loadOption4(startTime,endTime,appId,logType){
+        ajaxHengyun({
+            type: "POST",
+            async:false,
+            dataType: 'json',
+            data: {startTime:startTime,endTime:endTime,applyId:appId,logType:logType},
+            url: "${_gate_url}/api/logs/count/PvToUvCount",
+            success: function (rows) {
+                if(rows.data){
+                    var times = new Array();
+                    var pvdates = new Array();
+                    var uvdates = new Array();
+                    //先解析json数据进行分层
+                    $.each(rows.data, function(key, val) {
+                        for (var i=0;i<val.length;i++) {
+                            if(i==0){
+                                var time = val[i].time;
+                                var number = val[i].number;
+                                times.push(time);
+                                pvdates.push(number)
+                            }else if(i==1){
+                                var number = val[i].number;
+                                uvdates.push(number)
+                            }
+                        }
+                    });
+                }
+
+                myChart4.setOption(option4);
+                myChart4.setOption({
+                    xAxis: {
+                        data:times
+                    },
+                    series :[
+                        {
+                            name: 'PV',
+                            data: pvdates
+                        },
+                        {
+                            name: 'UV',
+                            data: uvdates
+                        }
+                    ]
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+            }
+        });
+
+    }
+</script>

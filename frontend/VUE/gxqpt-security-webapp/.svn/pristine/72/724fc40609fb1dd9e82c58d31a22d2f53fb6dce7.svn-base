@@ -1,0 +1,147 @@
+<template>
+  <Layout>
+    <Content>
+      <Breadcrumb>
+        <BreadcrumbItem>接入管理</BreadcrumbItem>
+        <BreadcrumbItem>应用分析</BreadcrumbItem>
+      </Breadcrumb>
+      <Card>
+        <Form
+          ref="formValidate"
+          inline
+          :label-width="100"
+          :model="searchCondition">
+          <FormItem label="时间：">
+            <Select v-model="searchCondition.time" style="width:200px">
+              <Option v-for="item in timeList" :value="item.value" :key="item.value">{{item.label}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem>
+            <Button type="default" @click="goBack">返回</Button>
+          </FormItem>
+        </Form>
+        <Row>
+          <Col span="6" :offset="1">
+            <Gauge id="appRate" :gaugeOption="gaugeOption">
+              <div id="appRate"></div>
+            </Gauge>
+          </Col>
+          <Col span="6" :offset="1">
+            <Gauge id="bugDealTime" :gaugeOption="gaugeOption">
+              <div id="bugDealTime"></div>
+            </Gauge>
+          </Col>
+          <Col span="6" :offset="1">
+            <Gauge id="bugNum" :gaugeOption="gaugeOption">
+              <div id="bugNum"></div>
+            </Gauge>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="10" :offset="1">
+            <ChartLine id="bugNumAna" :lineOption="lineOption">
+              <div id="bugNumAna"></div>
+            </ChartLine>
+          </Col>
+          <Col span="10" :offset="1">
+            <ChartLine id="bugTypeAna" :lineOption="lineOption">
+              <div id="bugTypeAna"></div>
+            </ChartLine>
+          </Col>
+        </Row>
+      </Card>
+    </Content>
+  </Layout>
+</template>
+
+<script>
+// 仪表盘
+import Gauge from './../echarts/Gauge.vue'
+// 折线
+import ChartLine from './../echarts/ChartLine.vue'
+
+const timeList = [{
+  label: '最近一天',
+  value: 1
+}, {
+  label: '最近一周',
+  value: 2
+}, {
+  label: '最近一月',
+  value: 3
+}, {
+  label: '最近一年',
+  value: 4
+}]
+
+const gaugeOption = {
+  tooltip: {
+    formatter: 9999
+  },
+  series: [{
+    name: '业务指标',
+    type: 'gauge',
+    detail: {formatter:'{value}%'},
+    data: [{value: 50, name: '完成率'}],
+    axisLine:{
+      show: true,
+      lineStyle:{
+        width: '10',
+        color: [[0.2, '#3E8BFF'], [0.4, '#00D39F'], [0.6, '#FFCA4B'], [0.8, '#FF790D'], [1, '#FF5A00']]
+      }
+    }
+  }]
+}
+
+const lineOption = {
+  xAxis: {
+    type: 'category',
+    data: ['1', '2', '3', '4', '5', '6', '7']
+  },
+  series: [{
+    data: [820, 600, 570, 409, 322, 310, 200],
+    type: 'line'
+  }]
+}
+
+export default {
+  components: {
+    Gauge,
+    ChartLine
+  },
+  data () {
+    return {
+      gaugeOption,
+      lineOption,
+      timeList,
+      searchCondition: {
+        // 部署内容
+        time: ''
+      }
+    }
+  },
+  methods: {
+    search () {
+      alert()
+    },
+    goBack() {
+      this.$router.go(-1)
+    }
+  }
+}
+</script>
+
+<style lang='less'>
+.access-upgrade{
+  span.handle{
+    margin: 0 5px;
+    display: inline-block;
+  }
+}
+</style>
+
+<style lang='less' scoped>
+#appRate, #bugDealTime, #bugNum, #bugNumAna, #bugTypeAna{
+  height: 200px;
+}
+</style>

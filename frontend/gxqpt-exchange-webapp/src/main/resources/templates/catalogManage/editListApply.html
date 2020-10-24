@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>交换共享系统</title>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+</head>
+<body>
+<div id="container" class="container">
+	<div class="main clearfix">
+		<div class="row">
+			<div class="current pull-left">
+				<h3 class="page-title">
+					<span>目录管理</span> &gt; <span class="page-title-scend">目录发布申请</span>
+				</h3>
+			</div>
+			<div class="back pull-right">
+				<a class="btn_back" href="javascript:void(0);" onclick="goBack()">返回上一页</a>
+			</div>
+		</div>
+		<div class="view_container  view_container_first row">
+			<div class="main_right pull-right">
+				<div id="secondPage" class="secondPage">
+					<div id="unit" class="view_item">
+						<h3 class="tle">目录修改记录</h3>
+						<table id="catalogHistory" class="default-table tab-title-top">
+							<thead>
+							<tr>
+								<th width="60">序号</th>
+								<th width="150">目录名称</th>
+								<th width="100">目录标识</th>
+								<th width="100">修改类型</th>
+								<th>主题分类</th>
+								<th>行业分类</th>
+								<th>服务分类</th>
+							</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<h3 class="tle">字段修改记录</h3>
+						<table id="fieldHistory" class="default-table tab-title-top">
+							<thead>
+							<tr>
+								<th width="60">序号</th>
+								<th>字段名称</th>
+								<th>字段标识</th>
+								<!--<th>字段类型</th>-->
+								<th>所属目录</th>
+								<th>操作类型</th>
+								<th>更新时间</th>
+								<th>更新人</th>
+							</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<h3 class="tle"><span class="requiredSpan">*</span>申请理由</h3>
+						<table class="table default-table tab-border-no-layer">
+							<tbody>
+							<tr>
+								<td>
+									<textarea id="applicationReasons" rows="5" cols="" class="form-control"></textarea>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+						<div class="text-center">
+							<button type="button" class="btn btn-primary" onclick="save()">提交申请</button>
+							<button type="button" class="btn btn-primary" onclick="goBack()">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var unitId="${unitId}";
+    var fieldType=[];
+    getFieldType();
+    function getFieldType(){//获取数据类型
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/dataapi/api/findByDictCode',
+            data:{pId: "date_type"},
+            datatype: "json",
+            success: function (rows) {
+                if(rows.data){
+                    fieldType=rows.data;
+                }
+            }
+        });
+    }
+    getDirectoryChangeList();
+    /*获取目录修改信息*/
+    function getDirectoryChangeList(){
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/directory/getDirectoryChangeListApply',
+            datatype: "json",
+            data:{unitId:unitId.toString(),status:1},
+            success: function (rows) {
+                if(rows.data){
+                    if(rows.data){
+                        var html="";
+                        rows.data.forEach(function(value,index){
+                            value= dealElement(value);
+                            var num = index+1;
+                            html+='<tr>';
+                            html+='<td>'+num+'</td>';
+                            html+='<td>'+value.dirName+'</td>';
+                            html+='<td>'+value.dirType+'</td>';
+                            var optTypeName = "";
+                            switch(value.optType){
+                                case 1:
+                                    optTypeName = "新增";
+                                    break;
+                                case 2:
+                                    optTypeName = "修改";
+                                    break;
+                                case 3:
+                                    optTypeName = "删除";
+                                    break;
+                                case 4:
+                                    optTypeName = "禁用";
+                                    break;
+                                case 6:
+                                    optTypeName = "启用";
+                                    break;
+                                default:
+                                    optTypeName = "";
+                            };
+                            html+='<td>'+optTypeName+'</td>';
+                            var themeName="";
+                            if(value.themeThree!=""){
+                                themeName+=value.themeThree;
+                               /* if(value.themeTwo!=""){
+                                    themeName+=">"+value.themeTwo;
+                                    if(value.themeThree!=""){
+                                        themeName+=">"+value.themeThree;
+                                    }
+                                }*/
+                            }
+                            html+='<td>'+themeName+'</td>';
+                            var industryName="";
+                            if(value.industryThree!=""){
+                                industryName+=value.industryThree;
+                               /* if(value.industryTwo!=""){
+                                    industryName+=">"+value.industryTwo;
+                                    if(value.industryThree!=""){
+                                        industryName+=">"+value.industryThree;
+                                    }
+                                }*/
+                            }
+                            html+='<td>'+industryName+'</td>';
+                            var serviceName="";
+                            if(value.serviceThree!=""){
+                                serviceName+=value.serviceThree;
+                               /* if(value.serviceTwo!=""){
+                                    serviceName+=">"+value.serviceTwo;
+                                    if(value.serviceThree!=""){
+                                        serviceName+=">"+value.serviceThree;
+                                    }
+                                }*/
+                            }
+                            html+='<td>'+serviceName+'</td>';
+                            html+='</tr>';
+                        });
+                        $("#catalogHistory tbody").html(html);
+                        updateIformHeight();
+                    }
+                }
+            }
+        });
+    }
+    getElementChangeList();
+    /*获取字段修改信息*/
+    function getElementChangeList(){
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/element/getElementChangeListApply',
+            datatype: "json",
+            data:{unitId:unitId.toString(),status:1},
+            success: function (rows) {
+                if(rows.data){
+                    var html="";
+                    rows.data.forEach(function(value,index){
+                        value= dealElement(value);
+                        var num = index+1;
+                        html+='<tr>';
+                        html+='<td>'+num+'</td>';
+                        html+='<td>'+value.fieldName+'</td>';
+                        html+='<td>'+value.fieldCode+'</td>';
+                       /* var fieldTypeName="";
+                        for(var i in fieldType){
+                            if(fieldType[i].id==parseInt(value.fieldType)){
+                                fieldTypeName=fieldType[i].dictName;
+                            }
+						}*/
+                        // html+='<td>'+value.fieldType+'</td>';
+                        html+='<td>'+value.dirId+'</td>';
+                        var optTypeName = "";
+                        switch(value.optType){
+                            case 1:
+                                optTypeName = "新增";
+                                break;
+                            case 2:
+                                optTypeName = "修改";
+                                break;
+							case 3:
+                                optTypeName = "删除";
+                                break;
+                            case 4:
+                                optTypeName = "禁用";
+                                break;
+                            case 6:
+                                optTypeName = "启用";
+                                break;
+                            default:
+                                optTypeName = "";
+                        };
+                        var updateTime=fmtDateTime(value.updateTime);
+                        html+='<td>'+optTypeName+'</td>';
+                        html+='<td>'+updateTime+'</td>';
+							html+='<td>'+value.updateUser +'</td>';
+                        html+='</tr>';
+                    });
+                    $("#fieldHistory tbody").html(html);
+                    updateIformHeight();
+                }
+            }
+        });
+    };
+    function save(){
+		var reasons=$("#applicationReasons").val();
+		if(!reasons|| reasons==""){
+		    parent.layer.msg("请填写申请理由！",{time:1000});
+		}else{
+		    if(reasons.length>1000){
+                parent.layer.msg("申请理由不能超过1000字！",{time:3000});
+                return false
+			};
+            parent.layer.load(2, {shade: [0.4, '#000']});
+            ajaxHengyun({
+                type:"POST",
+                dataType: 'json',
+                url:'${_gate_url}/api/exchange/directory/updateRasons ',
+                data:{unitId:unitId.toString(),reasons:reasons},
+                success:function(rows){
+                    if(rows.data){
+                        parent.layer.closeAll();
+                        parent.layer.msg("发布成功！",{time:2000});
+                        if("${pageType}"=="1"){
+                            window.location.href="${_cp}/module/applyCreate";
+						}else{
+                            window.location.href="${_cp}/module/dataCatalogManage";
+						}
+                        // window.location.href=history.back();
+                    }else{
+                        parent.layer.closeAll();
+                        parent.layer.msg(rows.errmsg,{time:2000});
+					}
+                }
+            });
+		}
+	}
+	function goBack(){
+        if("${pageType}"=="1"){
+            window.location.href="${_cp}/module/applyCreate";
+        }else{
+            window.location.href="${_cp}/module/dataCatalogManage";
+        }
+	};
+</script>
+</body>
+</html>

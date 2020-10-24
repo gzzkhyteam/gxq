@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>共享管理</span> &gt; <span class="page-title-scend">详情</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+            </div>
+        </div>
+        <div class="view_container view_container_first row">
+            <div class="main_right pull-right">
+                <div id="secondPage" class="secondPage">
+                    <div id="unit" class="view_item">
+                        <h3 class="tle">API接口信息</h3>
+                        <table class="table default-table tab-border-no">
+                            <tbody>
+                            <tr>
+                                <th width="120">API名称：</th>
+                                <td id="apiName"></td>
+                            </tr>
+                            <tr>
+                                <th>API编号：</th>
+                                <td id="apiCode"></td>
+                            </tr>
+                            <tr>
+                                <th>创建人：</th>
+                                <td id="createUserName"></td>
+                            </tr>
+                            <tr>
+                                <th>创建时间：</th>
+                                <td id="createTime"></td>
+                            </tr>
+                            <tr>
+                                <th>API描述：</th>
+                                <td id="apiDesc"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <h3 class="tle">相关文件列表
+                            <div class="pull-right">
+                                <button id="applyDownload" type="button" class="btn btn-primary btn-applyDownload"
+                                        onclick="applyDownload()">申请下载
+                                </button>
+                                <button id="downloadBtn" type="button" class="btn btn-primary"
+                                        onclick="downloadPackage()">批量下载
+                                </button>
+                            </div>
+                        </h3>
+                        <table id="fileList" class="default-table tab-title-top">
+                            <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>文件名称</th>
+                                <th width="200">文件编号</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <!--<div class="applybtnContainer">-->
+                            <!--<button id="applyBtn" type="button" class="btn btn-primary applybtn">申请API</button>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $(function () {
+        var html = $(".applybtnContainer").html();
+        $(parent.document.body).append(html);
+        window.onbeforeunload = function () {
+            $("#applyBtn", window.parent.document).remove();
+        };
+        $("#applyDownload").css('display', 'none');
+        $("#downloadBtn").css('display', 'none');
+    });
+
+
+    var id = "${id}";
+    var ids = [];
+
+
+    var openWay;//是否开放 1,开放；2，不开放'
+    var shareWay; //1,共享；2，有条件共享；3，不共享',
+    var setId;
+    var canApply = 0;//是否可以申请  1:是 0：否
+    var unitId;//api所属单位
+    var loginUnitId; //登录用户Id
+    var shareUnit;//是否共享单位 1：是，0：否
+    getInfo(id);
+    function getInfo(id) {//获取详情
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: '${_gate_url}/api/exchange/dataapi/api/detail',
+            data: {id: id},
+            success: function (rows) {
+                if (rows.data) {
+                    $("#apiName").text(rows.data.apiName);
+                    $("#apiCode").text(rows.data.apiCode);
+                    $("#createUserName").text(rows.data.createUserName);
+                    $("#createTime").text(fmtDate(rows.data.createTime));
+                    $("#apiDesc").text(rows.data.apiDesc);
+                    loginUnitId = rows.data.loginUnitId;
+                    unitId = rows.data.unitId;
+                    shareUnit = rows.data.shareUnit;
+                    openWay = rows.data.openWay;
+                    shareWay = rows.data.shareWay;
+                    if (openWay == 1  //开放
+                        || (openWay == 2 && shareWay == 1) //开放无条件共享
+                        || shareUnit == 1 //是共享单位
+                        || (openWay == 2 && shareWay == 3) //开放不共享
+                        || loginUnitId==unitId
+                    ) {
+                        $("#downloadBtn").css('display', 'block');
+                    }else {
+                        $("#applyDownload").css('display', 'block');
+                    }
+
+
+                    var height = document.getElementById("container").scrollHeight;
+                    $("#home", window.parent.document).height(height);
+                    setId = rows.data.setId;
+                    getDataSetView(setId);
+                }
+                ;
+            }
+        });
+    };
+
+
+    function getDataSetView(setId) {//获取详情
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/getBaseInfo",
+            data: {setId: setId},
+            success: function (rows) {
+                if (rows.data) {
+                    var filesList = dealElement(rows.data.files);
+                    var html = "";
+                    var file = {};
+                    var status=rows.data.status;
+                    if(status != 3){
+                        $("#downloadBtn").css('display','none');
+                    }
+                    for (var i in filesList) {
+                        file.filePath = filesList[i].filePath;
+                        file.oldName = filesList[i].oldName;
+                        file.busId = filesList[i].busId;
+                        if (openWay == 2 && shareWay == 3 && loginUnitId != unitId) {
+                            html += '<td></td>';
+                        } else {
+                            html += '<tr>';
+                            html += '<td class="xh">' + (i + 1) + '</td>';
+                            html += '<td>' + filesList[i].oldName + '</td>';
+                            html += '<td>' + filesList[i].busId + '</td>';
+                            if (openWay == 1  //开放
+                                || (openWay == 2 && shareWay == 1) //开放无条件共享
+                                || shareUnit == 1 //是共享单位
+                                ||  loginUnitId == unitId//是创建单位
+                            ) {
+                                if(status == 3){
+                                    html += '<td>';
+                                    html += '<a href="javascript:void(0);" onclick="downLoadFolder(\'' + filesList[i].filePath + '\',\'' + filesList[i].oldName + '\')">下载</a>';
+                                    html += '</td>';
+                                }else {
+                                    html += '<td></td>';
+                                }
+                            } else {
+                                html += '<td></td>';
+                            }
+                            html += '</tr>';
+                            ids.push(filesList[i].busId);
+                        }
+
+                    }
+                    ;
+
+                } else {
+                    $("#applyDownload").css('display', 'none');
+
+                }
+                ;
+                $("#fileList tbody").append(html);
+                updateIformHeight();
+            }
+        });
+    };
+
+    /* 批量下载文件 */
+    function downloadPackage() {
+        var urlDownload = "${_gate_url}/api/file/file/downloadpackage?ids[]=" + ids;
+        window.open(urlDownload);
+    };
+
+
+    //单个文件下载
+    function downLoadFolder(url, filename) {
+        var urlDownload = "${_gate_url}/api/file/file/download?url=" + url + "&filename=" + filename;
+        window.open(urlDownload);
+    }
+
+    function applyDownload() {
+        window.location.href = "${_cp}/module/generalApplyDownload?catalogId=${id}";
+    }
+
+</script>
+</body>
+</html>

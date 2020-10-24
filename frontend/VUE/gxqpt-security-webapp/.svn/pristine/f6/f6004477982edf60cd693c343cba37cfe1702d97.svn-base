@@ -1,0 +1,147 @@
+<template>
+  <Layout>
+    <Content>
+      <Breadcrumb>
+        <BreadcrumbItem>咨询管理</BreadcrumbItem>
+        <BreadcrumbItem>咨询详情</BreadcrumbItem>
+      </Breadcrumb>
+      <Card>
+        <Row>
+          <Col span="12">
+            <Form
+              ref="formValidate"
+              :label-width="100"
+              :model="detail"
+              id="referDetail"
+              width="300px">
+              <FormItem label="咨询名称：">
+                <Input
+                  type="text"
+                  v-model="detail.name"
+                  disabled>
+                </Input>
+              </FormItem>
+              <FormItem label="咨询时间：">
+                <Input
+                  type="text"
+                  v-model="detail.referTime"
+                  disabled>
+                </Input>
+              </FormItem>
+              <FormItem label="咨询内容：">
+                <Input
+                  type="textarea"
+                  v-model="detail.content"
+                  disabled
+                  :rows="5">
+                </Input>
+              </FormItem>
+              <h4>处理详情</h4>
+              <FormItem label="处理结果：">
+                <Input
+                  type="text"
+                  v-model="detail.content"
+                  disabled>
+                </Input>
+              </FormItem>
+              <FormItem label="处理意见：">
+                <Input
+                  type="textarea"
+                  v-model="detail.content"
+                  disabled
+                  :rows="5">
+                </Input>
+              </FormItem>
+              <FormItem label="咨询人：">
+                <Input
+                  type="text"
+                  v-model="detail.content"
+                  disabled>
+                </Input>
+              </FormItem>
+              <FormItem label="职位：">
+                <Input
+                  type="text"
+                  v-model="detail.content"
+                  disabled>
+                </Input>
+              </FormItem>
+              <FormItem label="联系方式：">
+                <Input
+                  type="text"
+                  v-model="detail.content"
+                  disabled>
+                </Input>
+              </FormItem>
+              <FormItem label="主要工作内容：">
+                <Input
+                  type="textarea"
+                  v-model="detail.content"
+                  disabled
+                  :rows="5">
+                </Input>
+              </FormItem>
+              <FormItem label="协助人：">
+                <Input
+                  type="text"
+                  v-model="detail.content"
+                  disabled>
+                </Input>
+              </FormItem>
+              <h4>咨询反馈</h4>
+              <h5>评分</h5>
+              <FormItem label="服务态度：">
+                <Rate allow-half v-model="detail.rate" disabled></Rate>
+              </FormItem>
+              <FormItem label="服务效率：">
+                <Rate allow-half v-model="detail.rate" disabled></Rate>
+              </FormItem>
+              <FormItem label="服务质量：">
+                <Rate allow-half v-model="detail.rate" disabled></Rate>
+              </FormItem>
+              <FormItem label="咨询建议：">
+                <Input
+                  type="textarea"
+                  v-model="detail.content"
+                  disabled
+                  :rows="5">
+                </Input>
+              </FormItem>
+            </Form>
+          </Col>
+        </Row>
+      </Card>
+    </Content>
+  </Layout>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      detail: {
+        // 咨询时间
+        referTime: '2018-07-07--2019-07-08',
+        // 咨询名称
+        name: 'name',
+        // 状态
+        status: '',
+        // 咨询内容
+        content: '这里是内容',
+        // 评分
+        rate: 3.5
+      }
+    }
+  },
+  mounted () {
+    const id = this.$route.params.id
+  },
+  methods: {}
+}
+</script>
+
+<style lang="less">
+#referDetail .ivu-form-item-content{
+  height: auto !important;
+}
+</style>

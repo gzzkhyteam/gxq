@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+
+    <style type="text/css">
+        #right-box {
+            width: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body" style="overflow: hidden">
+    <div style="height: 100%;width: 30%;float: left;border-right:1px solid #E8E8E8;" >
+        <div style="height: 45px;border-bottom: 1px solid #fff;background-color:#E8E8E8;font-size:22px;text-align:center;line-height:40px;">
+            原始数据
+        </div>
+        <div>
+            <table style='margin-left:120px;margin-top: 150px;'>
+                <tr>
+                    <td>
+                        <button class="btn btn-primary btnh" id="treeSearch" type="button"
+                                onclick="down()">
+                            下载日志
+                        </button>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    <div style="height: 100%;width: 70%;float: right;border-left:1px solid #E8E8E8;" >
+        <div style="height: 45px;border-bottom: 1px solid #fff;background-color:#E8E8E8;font-size:22px;text-align:center;line-height:40px;">
+            解析数据
+        </div>
+        <div style="height: 94%; overflow: auto">
+            <div class="list-section" style="height: 100%;">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <form id="myForm" action="" method="post">
+                            <table class="table default-table table-title-left" style="word-wrap:break-word;word-break:break-all;">
+                                <tbody>
+                                <tr>
+                                    <th width="150">参数名称</th>
+                                    <th width="150">参数值</th>
+                                    <th width="200">参数说明</th>
+                                </tr>
+                                <tr>
+                                    <th>应用程序名称</th>
+                                    <td name="appId"></td>
+                                    <td>应用程序名称</td>
+                                </tr>
+                                <tr>
+                                    <th>$remote_addr</th>
+                                    <td name="remoteAddr"></td>
+                                    <td>客户端地址</td>
+                                </tr>
+                                <tr>
+                                    <th>$remote_user</th>
+                                    <td name="remoteUser"></td>
+                                    <td>客户端用户名</td>
+                                </tr>
+                                <tr>
+                                    <th>$time_local</th>
+                                    <td name="localTime"></td>
+                                    <td>访问时间和时区</td>
+                                </tr>
+                                <tr>
+                                    <th>$request</th>
+                                    <td name="requestAgreen"></td>
+                                    <td>请求的URI和HTTP协议</td>
+                                </tr>
+                                <tr>
+                                    <th>$http_host</th>
+                                    <td name="requestUrl"></td>
+                                    <td>请求地址，即浏览器中你输入的地址（IP或域名）</td>
+                                </tr>
+                                <tr>
+                                    <th>$status</th>
+                                    <td name="status"></td>
+                                    <td>HTTP请求状态</td>
+                                </tr>
+                                <tr>
+                                    <th>$upstream_status</th>
+                                    <td name="upstreamStatus"></td>
+                                    <td>upstream状态</td>
+                                </tr>
+                                <tr>
+                                    <th>$body_bytes_sent</th>
+                                    <td name="bodyBytesSent"></td>
+                                    <td>发送给客户端文件内容大小</td>
+                                </tr>
+                                <tr>
+                                    <th>$http_referer</th>
+                                    <td name="httpReferer"></td>
+                                    <td>url跳转来源</td>
+                                </tr>
+                                <tr>
+                                    <th>$http_user_agent</th>
+                                    <td name="httpUserAgent"></td>
+                                    <td>用户终端浏览器等信息</td>
+                                </tr>
+                                <tr>
+                                    <th>$ssl_protocol</th>
+                                    <td name="sslProtocol"></td>
+                                    <td>SSL协议版本</td>
+                                </tr>
+                                <tr>
+                                    <th>$ssl_cipher</th>
+                                    <td name="sslSipher"></td>
+                                    <td>交换数据中的算法</td>
+                                </tr>
+                                <tr>
+                                    <th>$upstream_addr</th>
+                                    <td name="upstreamAddr"></td>
+                                    <td>后台upstream的地址，即真正提供服务的主机地址</td>
+                                </tr>
+                                <tr>
+                                    <th>$request_time</th>
+                                    <td name="timeConsum"></td>
+                                    <td>整个请求的总时间（消耗时间）</td>
+                                </tr>
+                                <tr>
+                                    <th>$upstream_response_time</th>
+                                    <td name="upstreamResponseTime"></td>
+                                    <td>请求过程中，upstream响应时间</td>
+                                </tr>
+                                <tr>
+                                    <th>$bytes_sent</th>
+                                    <td name="bytesSent"></td>
+                                    <td>发送给客户端的字节数</td>
+                                </tr>
+                                <tr>
+                                    <th>$connection</th>
+                                    <td name="connection"></td>
+                                    <td>连接数</textarea></td>
+                                </tr>
+                                <tr>
+                                    <th>$connection_requests</th>
+                                    <td name="connectionRequests"></td>
+                                    <td>目前通过一个连接请求数（1.1.18）</textarea></td>
+                                </tr>
+                                <tr>
+                                    <th>$msec</th>
+                                    <td name="msec"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>$pipe</th>
+                                    <td name="pipe"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>$request_length</th>
+                                    <td name="requestLength"></td>
+                                    <td>请求长度（包括请求行、标头和请求正文）</textarea></td>
+                                </tr>
+                                <tr>
+                                    <th>$time_iso8601</th>
+                                    <td name="timeIso8601"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>$time_local</th>
+                                    <td name="timeLocal"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>采集渠道</th>
+                                    <td name="dataChannel"></td>
+                                    <td>采集渠道</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    var id = "${id}";
+    var documentId = "${documentId}";
+    var userId = "${userId}";
+    var token = "${token}";
+    ajaxHengyun({
+        type: 'GET',
+        async: false,
+        url: "${_gate_url}/api/logs/log/getNginx",
+        data: {id: id},
+        success: function (rows) {
+            var objectRoew = rows;
+            var appName = getSystemName(rows.data.appId);
+            $('[name="appId"]').text(appName || "");
+            $('[name="remoteAddr"]').text(rows.data.remoteAddr || "");
+            $('[name="remoteUser"]').text(rows.data.remoteUser || "");
+            $('[name="localTime"]').text(rows.data.localTime || "");
+            $('[name="requestAgreen"]').text(rows.data.requestAgreen || "");
+            $('[name="requestUrl"]').text(rows.data.requestUrl || "");
+            $('[name="status"]').text(rows.data.status || "");
+            $('[name="upstreamStatus"]').text(rows.data.upstreamStatus || "");
+            $('[name="bodyBytesSent"]').text(rows.data.bodyBytesSent || "");
+            $('[name="httpReferer"]').text(rows.data.httpReferer || "");
+            $('[name="httpUserAgent"]').text(rows.data.httpUserAgent || "");
+            $('[name="sslProtocol"]').text(rows.data.sslProtocol || "");
+            $('[name="sslCipher"]').text(rows.data.sslCipher || "");
+            $('[name="upstreamAddr"]').text(rows.data.upstreamAddr || "");
+            $('[name="timeConsum"]').text(rows.data.timeConsum || "");
+            $('[name="upstreamResponseTime"]').text(rows.data.upstreamResponseTime || "");
+            $('[name="bytesSent"]').text(rows.data.bytesSent || "");
+            $('[name="connection"]').text(rows.data.connection || "");
+            $('[name="connectionRequests"]').text(rows.data.connectionRequests || "");
+            $('[name="msec"]').text(rows.data.msec || "");
+            $('[name="pipe"]').text(rows.data.pipe || "");
+            $('[name="requestLength"]').text(rows.data.requestLength || "");
+            $('[name="timeIso8601"]').text(rows.data.timeIso8601 || "");
+            $('[name="timeLocal"]').text(rows.data.timeLocal || "");
+            $('[name="dataChannel"]').text(rows.data.dataChannel || "");
+        }
+    });
+    function getSystemName(appId) {
+        var appName="";
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            url: "${_gate_url}/api/developer/application/findList",
+            data:{type:1},
+            success: function (rows) {
+                if (rows.data) {
+                    var arr = rows.data;
+                    for(var i=0;i<arr.length;i++){
+                        if(appId==arr[i].appId){
+                            appName = arr[i].name;
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        return appName;
+    }
+    function down(){
+        // window.location.href="${_gate_url}/api/zuul/file/p/file/down?id="+documentId+'&userId='+userId+'&token='+token;
+        window.location.href="${_gate_url}/api/file/p/file/down?id="+documentId+'&userId='+userId+'&token='+token;
+    }
+</script>
+</body>
+</html>

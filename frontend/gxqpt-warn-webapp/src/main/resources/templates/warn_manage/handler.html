@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/webuploader.css">
+    <style>
+        .file {
+            filter: alpha(opacity:0);
+            opacity: 0;
+            width: 0px;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12" style="margin-top:30px;">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <form id="dataForm" action="" method="post"><!--enctype="multipart/form-data"-->
+                            <input id="id" class="form-control inp-form" name="id" value="${id}" type="hidden"/>
+                            <table class="table default-table table-title-left">
+                                <tbody>
+                                <tr>
+                                    <th width="130">指定预警处理人</th>
+                                    <td colspan="3">
+                                        <select id="handler" name="handler" class="form-control  set-form" dataType="*" nullmsg="预警处理人不能为空！">
+                                        </select>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <th>处理备注</th>
+                                    <td colspan="3">
+                                        <textarea rows="6" class="form-control textarea-form" id="processNotes"
+                                                  name="processNotes"></textarea>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn-submit hidden"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+<!-- <script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreFile.js"></script>-->
+<script src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript">
+
+    $(function(){
+        openValidator({
+            type:"post",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/warn/warn/updateHandlerById",
+        },"#dataForm",{
+            attrName:"id",
+            prefix:"",
+            suffix:"",
+        });
+    })
+    var index;
+    var id="${id}";
+
+    function save(num) {
+        index = num;
+        $('.btn-submit').click();
+    }
+
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            saveObj();
+        }
+    });
+
+    $(function(){
+        Handler();
+    });
+
+    /* 获取处理人 */
+    function Handler(){
+        ajaxHengyun({
+            type: 'GET',
+            async:false,
+            url: '${_gate_url}/api/warn/warn/getHandler',
+            success: function (rows) {
+                if (rows.data) {
+                    var items = rows.data;;
+                    var html="";
+                    jQuery.each(items, function(key, val) {
+                        html+='<option value="'+val.id+'">'+val.rec_name+'</option>';
+                    });
+                    $("#handler").html(html);
+                };
+            }
+        })
+    }
+
+
+    function saveObj(index) {
+        var data = $('#dataForm').serializeJSON();
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/warn/warn/updateHandlerById',
+            data: JSON.stringify(data),
+            success: function (rows) {
+                if (rows.data) {
+                   //parent.home.reloadJqgrid();
+                    parent.layer.msg("指定处理人成功！", {icon: 6, time: 1000});
+                    setTimeout(function(){
+                        top.layer.closeAll();
+                    },1500);
+                } else {
+                    parent.layer.msg("指定处理人出错，请重试！", {time: 1000});
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<template>
+  <Layout>
+    <hengyun-header logoClass="logo-supervise"></hengyun-header>
+    <Layout class="ivu-layout-has-sider">
+      <hengyun-sidebar :menus="menus" />
+      <router-view></router-view>
+    </Layout>
+  </Layout>
+</template>
+<script>
+// 头部
+import header from '@/components/hengyun/header'
+// 侧边栏
+import siderBar from '@/components/hengyun/sideBar'
+
+const menus = [{
+  name: '预警台账',
+  link: '/earlyWarning',
+  icon: 'icon-quanxian'
+}, {
+  name: '预警处理台账',
+  link: '/earlyWarningDeal',
+  icon: 'icon-quanxian'
+}, {
+  name: '预警处理结果台账',
+  link: '/earlyWarningResult',
+  icon: 'icon-quanxian'
+}, {
+  name: '预警分析',
+  icon: 'icon-beifen',
+  subMenu: [{
+    name: '领导驾驶舱',
+    link: '/leaderCockpit'
+  }, {
+    name: '单位预警分析',
+    link: '/unitWarnAnalyze'
+  }, {
+    name: '部门预警分析',
+    link: '/departmentWarnAnalyze'
+  }, {
+    name: '人员预警分析',
+    link: '/personnelAnalyze'
+  }, {
+    name: '应用预警分析',
+    link: '/applicationWarnAnalyze'
+  }]
+}]
+
+export default {
+  components: {
+    'hengyun-sidebar': siderBar,
+    'hengyun-header': header
+  },
+  data() {
+    return {
+      menus: menus
+    }
+  }
+}
+</script>

@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+</head>
+<body class="bgNone">
+<div class="workspace-body">
+    <div id="console-container" class="clearfix">
+        <div class="col-sm-12">
+            <div class="general_list_main clearfix">
+                <div class="main_bottom col-lg-12 col-sm-12">
+                    <div class="view_item">
+                        <form id="dataForm" action="">
+                            <input type="hidden" id="catalogPid" name="catalogPid" value="${catalogPid}">
+                            <div class="view_item">
+                                <table class="table default-table tab-border-no-layer">
+                                    <tbody>
+                                    <tr>
+                                        <th width="100">创建方式：</th>
+                                        <td>
+                                            <select id="type" name="" class="form-control chosen-select selWid-form-search" onchange="createType()">
+                                                <!--<option value="0">API调用</option>-->
+                                                <option value="1">数据库读取</option>
+                                                <option value="2">数据集读取</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--<div class="view_item apiCreate">
+                                <table class="table default-table tab-border-no-layer">
+                                    <tbody>
+                                    <tr>
+                                        <th width="100"><span class="requiredSpan">*</span>接口地址：</th>
+                                        <td>
+                                            <input type="text" name="url" id="url" class="form-control"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>返回值类型：</th>
+                                        <td>
+                                            <select id="resType" name="resType" class="form-control chosen-select selWid-form-search">
+                                                <option value="1">JSON</option>
+                                                <option value="2">XML</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>-->
+                            <div class="view_item database">
+                                <table class="table default-table tab-border-no-layer">
+                                    <tbody>
+                                    <tr>
+                                        <th width="100"><span class="requiredSpan">*</span>数据源名称：</th>
+                                        <td>
+                                            <input type="hidden" name="dbId" id="dbId"/>
+                                            <input type="text" name="dbIdName" id="dbIdName" class="form-control" placeholder="请单击选择数据源名称" onclick="dataSourceSet()"/>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="view_item dataSet" style="display: none;">
+                                <table class="table default-table tab-border-no-layer">
+                                    <tbody>
+                                    <tr>
+                                        <th width="100"><span class="requiredSpan">*</span>数据集名称：</th>
+                                        <td>
+                                            <input type="hidden" name="dataSetId" id="dataSetId"/>
+                                            <input type="text" name="dataSetName" id="dataSetName" class="form-control" placeholder="请单击选择数据集名称" onclick="dataSet()"/>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" class="btn-submit hidden"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript">
+    var dataType=1;
+    function createType () {
+        var typeVal = $("#type").val();
+        if(typeVal && typeVal=="0"){
+            $(".apiCreate").css("display","block");
+            $(".database,.dataSet").css("display","none");
+        }else if(typeVal && typeVal=="1"){
+            $(".apiCreate,.dataSet").css("display","none");
+            $(".database").css("display","block");
+        }else if(typeVal && typeVal=="2"){
+            $(".apiCreate,.database").css("display","none");
+            $(".dataSet").css("display","block");
+        }
+    }
+    function dataSourceSet() {//数据源选择
+        layer.open({
+            id: 'dataSourceSet',
+            type: 2,
+            anim: 6,
+            title: '数据源选择',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['90%', '90%'],
+            shade: [0.6, '#000'],
+            content: "${_cp}/module/autoDataSourceSet?pageNo=1",
+            btn: ['确定','取消'],
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.save(index);
+            },
+        });
+    }
+    function setDataSource(id,name){
+        $("#dbId").val(id);
+        $("#dbIdName").val(name);
+        $("#dbIdName").blur();
+    }
+    function dataSet() {//数据源选择
+        layer.open({
+            id: 'dataSet',
+            type: 2,
+            anim: 6,
+            title: '数据集选择',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['90%', '90%'],
+            shade: [0.6, '#000'],
+            content: "${_cp}/module/autoDataSet?pageNo=1",
+            btn: ['确定','取消'],
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.save(index);
+            },
+        });
+    }
+    function setDataSet(id,name,dataType){
+        $("#dataSetId").val(id);
+        $("#dataSetName").val(name);
+        $("#dataSetId").blur();
+        if(dataType!=1){
+            dataType=1;
+        }else{
+            dataType=2;
+        };
+
+    }
+    function save(index){
+        var typeVal = $("#type").val();
+        if(typeVal && typeVal=="0"){
+            var url = $("#url").val();
+            if(!url){
+                top.layer.msg("API地址不能为空！",{time:1000});
+                return false;
+            }else{
+                var resType = $("#resType").val();
+                window.location.href="${_cp}/module/autoCreateFieldSet?catalogPid=${catalogPid}&autoCatalogUnitId=${autoCatalogUnitId}&resType="+resType+"&url="+url;
+            }
+        }else if(typeVal && typeVal=="1"){
+            var dbId = $("#dbId").val();
+            if(!dbId){
+                top.layer.msg("数据源名称不能为空！",{time:1000});
+                return false;
+            }else{
+                window.location.href="${_cp}/module/autoCreateTableSet?catalogPid=${catalogPid}&autoCatalogUnitId=${autoCatalogUnitId}&dbId="+dbId+"&catalogPname=${catalogPname}";
+            }
+        }else if(typeVal && typeVal=="2"){
+            var dataSetId = $("#dataSetId").val();
+            if(!dataSetId){
+                top.layer.msg("数据集名称不能为空！",{time:1000});
+                return false;
+            }else{
+                window.location.href="${_cp}/module/autoCreateFieldSetThree?catalogPid=${catalogPid}&autoCatalogUnitId=${autoCatalogUnitId}&setId="+dataSetId+"&dataType="+dataType+"&catalogPname=${catalogPname}";
+            }
+        }
+    }
+</script>
+</body>
+</html>

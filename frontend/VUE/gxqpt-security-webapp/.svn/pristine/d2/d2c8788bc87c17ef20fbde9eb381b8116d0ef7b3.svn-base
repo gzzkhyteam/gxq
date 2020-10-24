@@ -1,0 +1,170 @@
+<!--
+  服务器配置项，根据hidecode来判断隐藏哪些项
+  itemCode = [
+    'CPU',
+    '内存',
+    '操作系统',
+    '所属网络',
+    '网络带宽',
+    '网关描述',
+    '数据盘',
+    '申请数量'
+  ]
+-->
+<template>
+  <Form
+    ref="applyServer"
+    :label-width="100"
+    :model="applyServerData">
+    <FormItem label="CPU：" v-if="!hidecode.includes('CPU')">
+      <RadioGroup v-model="applyServerData.cpuCount">
+        <Radio label="2">2核</Radio>
+        <Radio label="4">4核</Radio>
+        <Radio label="8">8核</Radio>
+        <Radio label="16">16核</Radio>
+      </RadioGroup>
+    </FormItem>
+    <FormItem label="内存：" v-if="!hidecode.includes('内存')">
+      <RadioGroup v-model="applyServerData.memorySize">
+        <Radio label="2">2GB</Radio>
+        <Radio label="4">4GB</Radio>
+        <Radio label="8">8GB</Radio>
+        <Radio label="16">16GB</Radio>
+        <Radio label="32">32GB</Radio>
+        <Radio label="64">64GB</Radio>
+      </RadioGroup>
+    </FormItem>
+    <FormItem label="操作系统：" v-if="!hidecode.includes('操作系统')">
+      <Cascader :data="systemData" @on-change="handleChange" trigger="hover"></Cascader>
+    </FormItem>
+    <FormItem label="所属网络：" v-if="!hidecode.includes('所属网络')">
+      <!-- <Select v-model="applyServerData.netScope">
+        <Option v-for="item in categoryList" :value="item.value" :key="item.value">{{item.label}}</Option>
+      </Select> -->
+      <Select class="queryItem" v-model="applyServerData.netScope">
+        <Option value="-1">全部</Option>
+        <Option v-for="netsItem in netScopeArray" :key="netsItem.id" :value="netsItem.name">{{netsItem.name}}</Option>
+      </Select>
+    </FormItem>
+    <FormItem label="网络带宽：" v-if="!hidecode.includes('网络带宽')">
+      <Select v-model="applyServerData.netWide">
+        <Option v-for="item in netWideData" :value="item.value" :key="item.value">{{item.label}}</Option>
+      </Select>
+    </FormItem>
+    <FormItem label="网关描述：" v-if="!hidecode.includes('网关描述')">
+      <Input
+        type="textarea"
+        v-model="applyServerData.gatewayDesc"
+        :rows="5">
+      </Input>
+    </FormItem>
+     <FormItem label="系统盘大小" v-if="!hidecode.includes('系统盘大小')">
+      <Input type="text" v-model="applyServerData.sysDisksize"><span slot="append">GB</span></Input>
+    </FormItem>
+    <FormItem label="数据盘：" v-if="!hidecode.includes('数据盘')">
+      <Button style="float: right;" type="primary" @click="addDisk(disksData.length)">+添加</Button>
+      <div class="disk" v-for="(item, idx) in disksData" :key="idx">
+        <FormItem v-model="item.diskName" :label="item.diskName || `数据磁盘${idx+1}：`" :label-width="100">
+          <Col span="12">
+            <Input
+              type="text"
+              v-model="item.diskSize">
+              <span slot="append">GB</span>
+            </Input>
+          </Col>
+          <Col span="4" offset="1">
+            <a @click="handleRemove(idx)">删除</a>
+          </Col>
+        </FormItem>
+      </div>
+    </FormItem>
+    <FormItem label="申请数量：" v-if="!hidecode.includes('申请数量')">
+      <InputNumber v-model="applyServerData.applyCount" :editable="false" :min='0'></InputNumber>
+      <!-- <Input v-model="applyServerData.applyCount" id="applyCount" style="width:120px;">
+        <span slot="prepend" @click="changeCount(0)">-</span>
+        <span slot="append" @click="changeCount(1)">+</span>
+      </Input> -->
+    </FormItem>
+  </Form>
+</template>
+
+<script>
+export default {
+  props: {
+    applyServer: {
+      type: Object,
+    },
+    disks:{
+      type:Array,
+    },
+    hidecode: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
+  },
+  mounted(){
+    console.log(this.applyServer);
+    console.log(this.disks);
+    // if(this.applyServer)this.applyServerData = this.applyServer;
+  },
+  data () {
+    return {
+      systemData:this.$store.state.systemArray,//操作系统
+      netScopeArray:this.$store.state.netScopeArray,//所属网络
+      applyServerData:{
+          cpuCount:this.applyServer.cpuCount,
+          memorySize:this.applyServer.memorySize,
+          system:this.applyServer.system,
+          netScope:this.applyServer.netScope,
+          netWide:this.applyServer.netWide,
+          content:this.applyServer.content,
+          sysDisksize:this.applyServer.sysDisksize,
+          applyCount: this.applyServer.applyCount,
+      },
+      disksData: this.disks,
+      netWideData: [{//网络带宽
+        value: 1,
+        label: '分类1'
+      }]
+    }
+  },
+  methods: {
+    changeCount (type) {
+      if (type === 1) {
+        this.applyServer.applyCount++
+      } else {
+        this.applyServer.applyCount > 0 ? this.applyServer.applyCount-- : ''
+      }
+    },
+    addDisk (len) {
+      let diskItem = {diskSize:'', diskName:''};
+      this.applyServerData.disks.push(diskItem);
+    },
+    handleRemove (idx) {
+      this.applyServerData.disks.splice(idx,1);
+    },
+    handleChange(value, selecteddata) {
+      if(selecteddata.length>0){
+        let val = selecteddata.map(o => o.value).reverse();
+        this.applyServerData.system = val[0];
+      }else{
+        this.applyServerData.system = "";
+      }
+    },
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.disk{
+  margin: 0 70px 10px 0;
+}
+</style>
+
+<style lang="less">
+#applyCount div{
+  cursor: pointer;
+}
+</style>

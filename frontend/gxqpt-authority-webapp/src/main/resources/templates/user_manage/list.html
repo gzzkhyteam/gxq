@@ -1,0 +1,361 @@
+<!doctype html>
+<html>
+
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        权限管理系统 &gt; 权限管理 &gt; <span class="page-title-scend">用户管理</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main clearfix">
+            <div class="list-section">
+                <form autocomplete="off" id="myForm" action="" class="form-inline search-form clearfix">
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>姓名：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input name="name" class="form-control" placeholder=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>账号：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input name="account" class="form-control" placeholder=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>登录权限：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <select name="loginable"
+                                        class="form-control chosen-select selWid-form-search">
+                                    <option value="">所有</option>
+                                    <option value="true">允许登录</option>
+                                    <option value="false">禁止登录</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="form-field pull-right">
+                        <div class="form-group">
+                            <div class="form-control-wrap text-right">
+                                <button type="button" class="btn btn-primary search-button"
+                                        onclick="createPage()">新增
+                                </button>
+                            </div>
+                        </div>
+                    </div>-->
+                    <div class="form-field">
+                        <div class="form-group">
+                            <div class="form-control-wrap text-right">
+                                <button type="button" class="btn btn-primary search-button"
+                                        onclick="reloadTable()">
+                                    <span class="glyphicon glyphicon-search"></span> 查询
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <!--<button type="button" class="btn btn-default" onclick="createPage()">新增</button>-->
+                            <!--<button type="button" class="btn btn-default btnIn">导入</button>-->
+                            <!--<button type="button" class="btn btn-default">导出</button>-->
+                            <!--<button type="button" class="btn btn-default">打印</button>-->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="list-section">
+                <div class="grid-section">
+                    <table id="list">
+                    </table>
+                    <div id="pager"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end 页面内容主体 -->
+</div>
+</div>
+<script type="text/javascript">
+    var tableObj = null;//jqgrid表对象
+    //获取部门
+    getUser();
+
+    function getUser() {
+        tableObj = $("#list").jqGrid({
+            mtype: 'POST',
+            url: "${_gate_url}/api/admin/user/page",
+            // url: "http://192.168.1.124:9770/api/admin/user/page",
+            postData: {pageNo: 1, pageSize: 20},
+            dataType: 'json',
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                return JSON.stringify(postData);
+            },
+            colNames: ['账号', '姓名', '电话', '工作描述', '是否可登录', '存在体系', '操作'],
+            colModel: [{
+                name: 'account',
+                index: 'account'
+            }, {
+                name: 'name',
+                index: 'name',
+            }, {
+                name: 'phone',
+                index: 'phone'
+            }, {
+                name: 'workDesc',
+                index: 'workDesc'
+            }, {
+                name: 'loginable',
+                index: 'loginable',
+                formatter: formatterLoginable
+            }, {
+                name: 'ownSystem',
+                index: 'ownSystem',
+            }, {
+                name: 'act',
+                index: 'act',
+                title: false,
+                width: '425',
+                align: 'center',
+                formatter: formatterAct
+            }],
+            jsonReader: {
+                root: "data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            pager: '#pager',
+            height: 'auto',
+            onPaging: function (pgButton) {
+                var pageNo = $(".ui-pg-input").val();
+                pageNo = parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total = parseInt(total);
+                if (pgButton == "next") {
+                    if (pageNo >= total) {
+                        return false;
+                    } else {
+                        pageNo += 1;
+                    }
+                } else if (pgButton == "prev") {
+                    if (pageNo > 1) {
+                        pageNo -= 1;
+                    } else {
+                        return false;
+                    }
+                } else if (pgButton == "last") {
+                    pageNo = total;
+                } else if (pgButton == "first") {
+                    pageNo = 1;
+                }
+                var pageSize = $(".ui-pg-selbox").val();
+                if (pageNo != 0) {
+                    $("#list").setGridParam({
+                        postData: {
+                            pageNo: pageNo,
+                            pageSize: pageSize
+                        }
+                    }).trigger("reloadGrid");
+                    return false;
+                }
+            }
+        });
+    };
+
+    function formatterAct(cellvalue, options, rawObject) {
+        var returnValue = "";
+        /*returnValue += '<a class="ui-button" href="javascript:" onclick="editPage(' + rawObject.id + ')">';
+        returnValue += '修改</a>';
+        returnValue += '<span class="oper-separator"></span>';*/
+        /*按钮权限开始*/
+        // returnValue += resourceJs.init("${_gate_url!''}", "${_app_id!''}", "${l_u_i_s.id!''}").containButton({
+        //     resource_code: "authority_user_update",
+        //     //btnHtml :"<a class=\"ui-button\" href=\"javascript:\" onclick=\"editPage("+rawObject.id+")\">修改</a><span class=\"oper-separator\"></span>",
+        //     btnHtml: '<a class="ui-button" href="javascript:" onclick="editPage(' + rawObject.id + ')">{{name}}</a><span class="oper-separator"></span>',
+        //     htmlInsert: false
+        // });
+        /*按钮权限end*/
+        if (rawObject.loginable == true) {
+            /* returnValue += '<a class="ui-button marginLeft" href="javascript:" onclick="loginToggle(' + [rawObject.id, 0] + ')">';
+             returnValue += '禁止登录</a>';*/
+            /*按钮权限开始*/
+            returnValue += resourceJs.init("${_gate_url!''}", "${_app_id!''}", "${l_u_i_s.id!''}").containButton({
+                resource_code: "authority_user_dislogin",
+                //btnHtml :"<a class=\"ui-button marginLeft \" href=\"javascript:\" onclick=\"loginToggle("+[rawObject.id, 0]+")\">禁止登录</a>",
+                btnHtml: '<a class="ui-button marginLeft" href="javascript:" onclick="loginToggle(\'' + rawObject.id + '\', false )">禁止登录</a>',
+                htmlInsert: false
+            });
+            /*按钮权限end*/
+        } else {
+            /* returnValue += '<a class="ui-button marginLeft" href="javascript:" onclick="loginToggle(' + [rawObject.id, 1] + ')">';
+             returnValue += '允许登录</a>';*/
+            /*按钮权限开始*/
+            returnValue += resourceJs.init("${_gate_url!''}", "${_app_id!''}", "${l_u_i_s.id!''}").containButton({
+                resource_code: "authority_user_dislogin",
+                //btnHtml :"<a class=\"ui-button marginLeft \" href=\"javascript:\" onclick=\"loginToggle("+[rawObject.id, 1]+")\">允许登录</a>",
+                btnHtml: '<a class="ui-button marginLeft" href="javascript:" onclick="loginToggle(\'' + rawObject.id + '\', true )">允许登录</a>',
+                htmlInsert: false
+            });
+            /*按钮权限end*/
+        }
+        /* returnValue += '<span class="oper-separator"></span>';
+         returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick=relationUser(' + rawObject.id + ',\"'+rawObject.ownSystem+'\")>';
+         returnValue += '查看关联用户</a>';*/
+        /*按钮权限开始*/
+        returnValue += resourceJs.init("${_gate_url!''}", "${_app_id!''}", "${l_u_i_s.id!''}").containButton({
+            resource_code: "authority_user_relative",
+            //btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button marginLeft \" href=\"javascript:\" onclick=\"relationUser("+rawObject.id +",\'"+rawObject.ownSystem+"\')\">查看关联用户</a>",
+            btnHtml: '<span class="oper-separator" ></span><a class="ui-button marginLeft" href="javascript:" onclick= relationUser(\'' + rawObject.id + '\',\"' + rawObject.ownSystem + '\")>{{name}}</a>',
+            htmlInsert: false
+        });
+        /*按钮权限end*/
+        return returnValue;
+    }
+
+    function formatterLoginable(cellvalue, options, rawObject) {
+        var returnValue = "";
+        if (cellvalue == true) {
+            returnValue += '<i class="fa fa-check text-success"></i>'
+        } else {
+            returnValue += '<i class="fa fa-close text-danger"></i>'
+        }
+        return returnValue;
+    }
+
+    //刷新用户列表
+    function reloadTable() {
+        var data = $('#myForm').serializeJSON();
+        var pageNo = 1;
+        var pageSize = $(".ui-pg-selbox").val();
+        tableObj.setGridParam({
+            postData: {pageNo: pageNo, pageSize: pageSize, data: data}
+        }, true).trigger("reloadGrid");
+    }
+
+    /*弹出新增界面*/
+    function createPage() {
+        parent.layer.open({
+            id: 'create',
+            type: 2,
+            anim: 6,
+            title: '修改用户信息',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '65%'],
+            content: "${_cp}/power/userCreate",
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 添加', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("create");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    }
+
+    /* 弹出修改页面 */
+    function editPage(id) {
+        parent.layer.open({
+            id: 'edit',
+            type: 2,
+            anim: 6,
+            title: '修改用户信息',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '65%'],
+            content: "${_cp}/power/userEdit?id=" + id,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 更新', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("edit");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    }
+
+    /*禁止登录*/
+    function loginToggle(id, flag) {
+        var loginable = false;
+        if (flag) loginable = true;
+        ajaxHengyun({
+            type: 'POST',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/admin/user/update',
+            // url:'http://192.168.1.124:9770/api/admin/user/update',
+            data: JSON.stringify({id: id, loginable: loginable}),
+            success: function (res) {
+                if (res.data) {
+                    parent.home.reloadTable();
+                    parent.layer.msg("操作成功！", {icon: 6, time: 1000});
+                } else {
+                    parent.layer.msg("操作失败，请重试！", {time: 1000});
+                }
+            }
+        })
+    }
+
+    /* 弹出关联用户页面 */
+    function relationUser(id, systemCode) {
+        parent.layer.open({
+            id: 'relationUser',
+            type: 2,
+            anim: 6,
+            title: '关联用户信息',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['60%', '60%'],
+            content: "${_cp}/power/relationUser?id=" + id + "&systemCode=" + systemCode,
+            btn: ['<span class="glyphicon glyphicon-remove"></span> 关闭']
+        });
+    }
+</script>
+</body>
+
+</html>

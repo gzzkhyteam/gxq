@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>目录审核</span>
+						</h3>
+					</div>
+				</div>
+				<div class="main_container row">
+					<!--<input type="hidden" name="applyCode" id="applyCode"  value=""/>-->
+					<form id="searchDataForm" action="" class="search-form" autocomplete="off">
+						<ul class="clearfix">
+							<li class="pull-left">
+								<label class="control-label">申请单位：</label>
+								<select id="unitId"  name="unitId" class="chosen-select">
+									<option value="">全部</option>
+								</select>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">处理状态：</label>
+								<select  name="status" class="chosen-select">
+									<option value="">全部</option>
+									<option value="4">未处理</option>
+									<option value="3">已通过</option>
+									<option value="2">已驳回</option>
+								</select>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">申请时间：</label>
+								<input type="text" id="startTime" name="startTime" class="Tdate w180" placeholder=""/>
+								<span class="color-warning">-</span>
+								<input type="text" id="endTime" name="endTime" class="Tdate w180" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<!--<button type="button" class="btn btn-primary search-button" onclick="searchBtn()">
+									<span class="glyphicon glyphicon-search"></span> 查询
+								</button>-->
+								<script type="text/javascript" id="exchange_audit_query">
+                                    resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_audit_query",
+                                        btnHtml :"<button type=\"button\" class=\"btn btn-primary search-button\" onclick=\"searchBtn()\">{{name}}</button>",
+                                        htmlInsert: true
+                                    });
+								</script>
+							</li>
+						</ul>
+                    </form>
+					<table id="dataDirectoryList" class="default-table tab-title-top">
+						<thead>
+							<tr>
+								<th width="60">序号 </th>
+								<th>申请单位</th>
+								<th>申请时间</th>
+								<th>申请理由</th>
+								<th>申请人</th>
+								<th>处理状态</th>
+								<th class="text-left" width="130">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<div class="text-center">
+						<ul class="pagination" id="pagination" ></ul>
+						<p class="pull-right currentPage">共<i id="totalNum" class="colorBlue"></i>条数据，当前第<i id="pageNum" class="colorBlue"></i>页/共<i id="totalPages"  class="colorBlue"></i>页</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+            var parm={
+                data:{},
+                pageNo:1,
+                pageSize:10
+            };
+            if("${pageNo}"){
+                parm.pageNo = "${pageNo}";
+			}
+            var unitNames=[];
+            getUnitList();
+            function getUnitList(){//获取单位列表
+                ajaxHengyun({
+                    type: 'GET',
+                    url: '${_gate_url}/api/exchange/directory/getOrgList ',
+                    datatype: "json",
+                    success: function (rows) {
+                        if(rows.data){
+                            unitNames=rows.data;
+                            var html="";
+                            rows.data.forEach(function(value,index){
+                                html+='<option value="'+value.id+'">'+value.name_+'</option>';
+                            });
+                            $("#unitId").append(html);
+                        }
+                    }
+                });
+            }
+            searchBtn();
+            function searchBtn(){//查询
+                var dataDTO =$("#searchDataForm").serializeJSON();
+                if(dataDTO){
+                    dataDTO.status=parseInt(dataDTO.status);
+                };
+                parm.data=dataDTO;
+                parm.pageNo = 1;
+                getList(parm);
+            }
+            /*获取数据源列表*/
+            function  getList(parm) {
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/task/getDirectoryTask',
+                    data:JSON.stringify(parm),
+                    success:function(rows){
+                        var html=""
+                        if (rows.data){
+                            rows.data.list.forEach(function(value,index){
+                                value=dealElement(value);
+                                var optTypeName="",statusName="";
+
+                                if(value.status==3){
+                                    statusName="已通过";
+                                };
+                                if(value.status==2){
+                                    statusName="已驳回";
+                                };
+                                if(value.status==4||value.status==1){
+                                    statusName="未处理";
+                                };
+                                var num = index+1;
+                                var unitName="";
+                                var ret = jQuery.inArray(value.unitId,unitNames);
+                                for(var ret in unitNames){
+									if(unitNames[ret].id==value.unitId){
+										unitName=unitNames[ret].name_;
+									}
+								}
+                               /* var isPtadminText="";
+                                if(value.isPtadmin==1){
+                                    isPtadminText="平台管理员直接发布";
+								}else{
+                                    isPtadminText="单位管理员申请";
+								}*/
+                                value.applicationReasons = value.applicationReasons.replace(/"([^"]*)"/g ,"“$1”");
+                                html+='<tr>';
+                                html+='<td>'+num+'</td>';
+                                html+='<td>'+unitName+'</td>';
+                                html+='<td>'+value.optTime+'</td>';
+                                html+='<td title="'+value.applicationReasons+'">'+value.applicationReasons+'</td>';
+                                html+='<td>'+value.userName+'</td>';
+                                html+='<td>'+statusName+'</td>';
+                                html+='<td>';
+                                html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                    resource_code : "exchange_directory_detail",
+                                    btnHtml :'<a class="ui-button" href="${_cp}/module/editList?applyCode='+value.applyCode+'&pageNo='+parm.pageNo+'">{{name}}</a>',
+                                    htmlInsert: false
+                                });
+
+                                if(value.isPtadmin==1){
+                                    html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_deal_detail",
+                                        btnHtml :'<span class="oper-separator" ></span><a class="ui-button" href="javascript:void(0);" onclick="ptAdmindealView(\''+value.optTime+'\')">{{name}}</a>',
+                                        htmlInsert: false
+                                    });
+								}else{
+
+                                    if(value.status==2 || value.status==3){
+                                        //html+='<a href="javascript:void(0);" onclick="dealView('+value.auditId+')">处理详情</a>';
+                                        html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "exchange_deal_detail",
+                                            btnHtml :'<span class="oper-separator" ></span><a class="ui-button" href="javascript:void(0);" onclick="dealView(\''+value.auditId+'\')">{{name}}</a>',
+                                            htmlInsert: false
+                                        });
+                                    }else if(value.status==4||value.status==1){
+                                        // html+='<a href="javascript:void(0);" onclick="auditPage('+value.taskId+','+value.unitId+')">处理</a>';
+
+                                        html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "exchange_audit_deal",
+                                            btnHtml :'<span class="oper-separator" ></span><a class="ui-button" href="javascript:void(0);" onclick="auditPage(\''+value.taskId+'\',\''+value.unitId+'\')">{{name}}</a>',
+                                            htmlInsert: false
+                                        });
+                                    }
+								}
+                                html+='</td>';
+                                html+='</tr>';
+                            });
+                            if(rows.data.list.length==0){
+                                html+="<tr><td class='text-center' colspan='7'>暂无数据</td></tr>"
+                                $(".pagination,.currentPage").css("display","none");
+                            } else {
+                                $(".pagination,.currentPage").css("display","block");
+                            };
+                            $("#dataDirectoryList tbody").html(html);
+                            $('#totalPages').text(rows.data.pages);
+                            $('#totalNum').text(rows.data.total);
+                            jqPaginator(rows.data);
+                            updateIformHeight();
+                        }else{
+                            var html='<tr><td colspan="7" class="text-center">暂无数据</td></tr>';
+                            $("#dataDirectoryList tbody").html(html);
+                            $(".pagination,.currentPage").css("display","none");
+						}
+                    }
+                });
+            };
+		    
+		    function dealView(id){
+		    	parent.layer.open({
+                    id: 'dataApplySecond',
+                    type: 2,
+                    anim:6,
+                    title: '处理详情',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['750px', '400px'],
+                    shade: [0.5, '#000'],
+                    content: "${_cp}/module/applyDealView?id="+id,
+                    btn: ['关闭'],
+                });
+		    }
+            function ptAdmindealView(optTime){
+		        optTime = (new Date(optTime)).getTime();
+                parent.layer.open({
+                    id: 'dataApplySecond',
+                    type: 2,
+                    anim:6,
+                    title: '处理详情',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['750px', '400px'],
+                    shade: [0.5, '#000'],
+                    content: "${_cp}/module/ptAdminDealView?optTime="+optTime,
+                    btn: ['关闭'],
+                });
+            }
+		    function auditPage(taskId,unitId){//处理
+				var pageNo=$("#pageNum").text();
+				parent.layer.open({
+                    id: 'auditPage',
+                    type: 2,
+                    anim:6,
+                    title: '处理',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['600px', '350px'],
+                    shade: [0.5, '#000'],
+                    content: "${_cp}/module/auditPage?taskId="+taskId+"&pageNo="+pageNo+"&unitId="+unitId,
+                    btn: ['提交','取消'],
+                    yes: function (index, layero) {
+                        var html=layero.context;
+                        var Id=html.getElementById("auditPage");
+                        var iframe=$(Id).find("iframe").attr("name");
+                        var rowData = parent[iframe].save(index);
+                    },
+                });
+			}
+            $('#startTime').off('focus').on('focus',function(){
+                WdatePicker({skin:'twoer', lang:'zh-cn',maxDate:getTime("endTime"), dateFmt:'yyyy-MM-dd HH:mm:ss'});
+            });
+            $('#endTime').off('focus').on('focus',function(){
+                WdatePicker({skin:'twoer', lang:'zh-cn',minDate:getTime("startTime"), dateFmt:'yyyy-MM-dd HH:mm:ss'});
+            });
+            function reloadPage(pageNo){
+                parm.pageNo=pageNo;
+                searchBtn();
+			}
+		</script>
+	</body>
+</html>

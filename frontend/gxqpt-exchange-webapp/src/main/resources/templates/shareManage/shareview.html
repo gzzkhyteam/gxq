@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>共享管理</span> &gt; <span class="page-title-scend">详情</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a id="dataView" class="btn_back" href="javascript:void(0);" onclick="openDataView()">数据预览</a>
+                <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+            </div>
+        </div>
+        <div class="view_container view_container_first row">
+            <div class="main_right pull-right">
+                <div id="secondPage" class="secondPage">
+                    <div id="unit" class="view_item">
+                        <h3 class="tle">API接口信息</h3>
+                        <table class="table default-table tab-border-no">
+                            <tbody>
+                            <tr>
+                                <th width="120">API名称：</th>
+                                <td id="apiName"></td>
+                            </tr>
+                            <tr>
+                                <th>API编号：</th>
+                                <td id="apiCode"></td>
+                            </tr>
+                            <tr>
+                                <th>API地址：</th>
+                                <td id="apiUrl"></td>
+                            </tr>
+                            <tr>
+                                <th>支持格式：</th>
+                                <td id="dataFmat"></td>
+                            </tr>
+                            <tr>
+                                <th>创建人：</th>
+                                <td id="createUserName"></td>
+                            </tr>
+                            <tr>
+                                <th>创建时间：</th>
+                                <td id="createTime"></td>
+                            </tr>
+                            <tr>
+                                <th>API描述：</th>
+                                <td id="apiDesc"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <h3 id="returnField" class="tle">返回字段说明</h3>
+                        <table id="elementTable" class="default-table tab-title-top">
+                            <thead>
+                            <tr>
+                                <th width="160">名称</th>
+                                <th>字段标志</th>
+                                <th width="120">类型</th>
+                                <th>说明</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        <h3 id="selectField" class="tle">查询参数</h3>
+                        <table id="filterTable" class="default-table tab-title-top">
+                            <thead>
+                            <tr>
+                                <th>字段名称</th>
+                                <th>字段标志</th>
+                                <th>字段类型</th>
+                                <th>字段描述</th>
+                                <th>规则</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        <h3 class="tle">申请信息</h3>
+                        <table class="table default-table tab-border-no">
+                            <tbody>
+                            <tr>
+                                <th width="120">申请时间：</th>
+                                <td id="applyTime"></td>
+                            </tr>
+                            <tr>
+                                <th width="120">申请原因：</th>
+                                <td id="reason"></td>
+                            </tr>
+                            <tr>
+                                <th width="120">授权有效时间：</th>
+                                <td id="limitTime"></td>
+                            </tr>
+                            <tr>
+                                <th width="120">附件：</th>
+                                <td id="fileContainer" style="vertical-align: top"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var id = "${id}";
+    var apiId = "${apiId}";
+    var FieldType = [];
+    getFieldType()
+
+    function getFieldType() {//获取字段类型
+        ajaxHengyun({
+            type: 'GET',
+            async: false,
+            url: '${_gate_url}/api/exchange/dataapi/api/findByDictCode',
+            data: {pId: "date_type"},
+            datatype: "json",
+            success: function (rows) {
+                if (rows.data) {
+                    FieldType = rows.data;
+                }
+            }
+        });
+    }
+
+
+    function getApplyInfo() {//获取申请信息
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/exchange/apply/detail',
+            data: {id: id},
+            datatype: "json",
+            success: function (rows) {
+                if (rows.data) {
+                    rows.data = dealElement(rows.data);
+                    $("#reason").text(rows.data.reason);
+                    $("#applyTime").text(fmtDateTime(rows.data.applyTime));
+                    $("#limitTime").text(fmtDate(rows.data.limitTime));
+                    var secretKey = rows.data.secretKey;
+                    var apiUrl = $("#apiUrl").text();
+                    if(secretKey){
+                        $("#apiUrl").text(apiUrl+"/"+secretKey);
+                    }else {
+                        $("#dataView").css("display","none");
+                    }
+                    var fileArray = [];
+                    rows.data.fileList.forEach(function(res, index){
+                        var fileItem = '<p><a href="'+res.filePath +'" target="_blank">'+res.oldName +'</a></p>'
+                        fileArray.push(fileItem)
+                    })
+                    $("#fileContainer").html(fileArray.join(''));
+                    updateIformHeight();
+                }else {
+                    $("#dataView").css("display","none");
+                }
+            }
+        });
+    }
+
+    getInfo(apiId);
+
+    function getInfo(apiId) {//获取详情
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: '${_gate_url}/api/exchange/dataapi/api/detail',
+            data: {id: apiId},
+            success: function (rows) {
+                if (rows.data) {
+                    rows.data = dealElement(rows.data);
+                    $("#apiName").text(rows.data.apiName);
+                    $("#apiCode").text(rows.data.apiCode);
+                    $("#apiUrl").text(rows.data.apiUrl);
+                    $("#dataFmat").text(rows.data.dataFmat);
+                    $("#createUserName").text(rows.data.createUserName);
+                    $("#createTime").text(fmtDate(rows.data.createTime));
+
+                    $("#apiDesc").text(rows.data.apiDesc);
+                    var elementList = rows.data.elementList;
+                    if (elementList.length > 0) {
+                        var html = ""
+                        elementList.forEach(function (value, index) {
+                            value = dealElement(value);
+                            html += '<tr>';
+                            html += '<td>' + value.fieldName + '</td>';
+                            html += '<td>' + value.fieldCode + '</td>';
+                            html += '<td>';
+                            html += value.fieldType;
+                            html += '</td>';
+                            html += '<td>' + value.desc + '</td>';
+                            html += '</tr>';
+                        })
+                        $("#elementTable tbody").html(html);
+                    }
+                    ;
+                    var filterList = rows.data.filterList;
+                    if (filterList.length > 0) {
+                        var html = ""
+                        filterList.forEach(function (value, index) {
+                            value = dealElement(value);
+                            html += '<tr>';
+                            html += '<td>' + value.fieldName + '</td>';
+                            html += '<td>' + value.fieldCode + '</td>';
+                            html += '<td>';
+                            html += value.fieldType;
+                            html += '</td>';
+                            html += '<td>' + value.desc + '</td>';
+                            html += '<td>';
+                            if (value.scrRule == "1") {
+                                html += '大于';
+                            } else if (value.scrRule == "2") {
+                                html += '小于';
+                            } else if (value.scrRule == "3") {
+                                html += '等于';
+                            } else if (value.scrRule == "4") {
+                                html += '模糊';
+                            }
+                            html += '</td>';
+                            html += '<td>' + value.scrValue + '</td>';
+                            html += '</tr>';
+                        })
+                        $("#filterTable tbody").html(html);
+                    }
+                    ;
+                    var height = document.getElementById("container").scrollHeight;
+                    $("#home", window.parent.document).height(height);
+                    getApplyInfo();
+                }
+                ;
+            }
+        });
+    };
+
+    function openDataView() {//预览数据
+        parent.layer.open({
+            id: 'applyDownload',
+            type: 2,
+            anim: 6,
+            title: '数据预览',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['830px', '450px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/shareManageDataView?setId="+apiId+"&type=1",
+            btn: ['关闭'],
+        });
+    }
+
+</script>
+</body>
+</html>

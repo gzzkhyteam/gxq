@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>共享管理</span> &gt; <span>新增</span> &gt; <span class="page-title-scend">选择目录</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div id="unit" class="view_item minHeight360">
+								<table class="table default-table tab-border-no-layer">
+									<tbody>
+									<tr>
+										<th width="80">目录名称：</th>
+										<td class="catalog_td">
+											<input type="text"  name="" id="selCatalog"   class="form-control" readonly="readonly" autocomplete="off"/>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="text-center">
+								<button type="button" class="btn btn-primary seeFlow" onclick="openFlow()">查看流程</button>
+								<!--<button type="button" class="btn btn-primary seeFlow" onclick="openDataView()">预览数据</button>-->
+								<button type="button" class="btn btn-primary" onclick="save()">下一步</button>
+								<button type="button" class="btn btn-primary" onclick="history.back()">取消</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/com.js" charset="utf-8"></script>
+		<script type="text/javascript">
+            var catalogId = "${dirId}" ;
+            var apiId = "${apiId}";
+            var applyId="${applyId}";
+			var loginUnitId;
+            var pageType="${pageType}";
+            var dirDataType;
+			if (catalogId){
+                ajaxHengyun({
+                    type: 'GET',
+                    url: '${_gate_url}/api/exchange/directory/get',
+                    data:{id: catalogId},
+                    datatype: "json",
+                    success: function (rows) {
+                        if (rows.data) {
+                            $("#selCatalog").val(rows.data.dirName);
+                        }
+                    }
+
+                });
+                $("#selCatalog").val(rows.data.dirName);
+			}
+            if(pageType=="api"){
+                $(".seeFlow").addClass("hidden");
+			}
+            getLoginUnitId();
+            if(apiId){
+                getApiInfo();
+            }else {
+                apiId = null;
+			}
+			$("#selCatalog").click(function(){
+                parent.layer.open({
+                    id: 'openZtree',
+                    type: 2,
+                    anim:6,
+                    title: '目录选择',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['750px', '600px'],
+                    shade: [0.9, '#000'],
+                    content: "${_cp}/module/shareMagOpenZtree.do?pageType=${pageType}",
+                    btn: ['确定','取消'],
+                    yes: function (index, layero) {
+                        var html=layero.context;
+                        var Id=html.getElementById("openZtree");
+                        var iframe=$(Id).find("iframe").attr("name");
+                        var rowData = parent[iframe].save(index);
+                    },
+                });
+			});
+
+            function getApiInfo(){//
+                ajaxHengyun({
+                    type: 'POST',
+                    url: '${_gate_url}/api/exchange/dataapi/api/getBaseApiInfo',
+                    data:{apiId: apiId},
+                    datatype: "json",
+                    success: function (rows) {
+                        if (rows.data) {
+							catalogId = rows.data.dirId;
+                            $("#selCatalog").val(rows.data.dirName);
+                        }
+                    }
+
+                });
+            };
+
+            function getLoginUnitId(){//
+                ajaxHengyun({
+                    type: 'GET',
+                    url: '${_gate_url}/api/exchange/dataapi/api/getLoginUnitId',
+                    datatype: "json",
+                    success: function (rows) {
+                        if (rows.data) {
+                          loginUnitId = rows.data;
+                        }
+                    }
+
+                });
+            };
+            function setCatalog(id,dictName,dataType,unitId){
+                $("#selCatalog").val(dictName);
+                dirDataType = dataType;
+                catalogId=id;
+            };
+			function save(){
+			    if(pageType =='apiApply'){
+                    window.location.href='${_cp}/module/generalView?id='+catalogId+'&unitId='+loginUnitId+"&pageType=apiApply";
+                }else {
+                    if(!catalogId){
+                        parent.layer.msg("请选择目录！",{time:1500});
+                        return false;
+                    }
+                    var type = 1;
+                    if(pageType == "demand"){
+                        type =4;
+                    }else if(pageType == "apiApply"){
+                        type =2;
+                    }
+                    if(apiId =='null'){
+                        apiId = null;
+					}
+                    ajaxHengyun({
+                        type: "POST",
+                        async: false,
+                        dataType: 'json',
+                        url: '${_gate_url}/api/exchange/dataapi/api/savedirectorychosen',
+                        data: {dirId:catalogId,type:type,apiId:apiId,busId:applyId},
+                        success: function (rows) {
+                            if (rows.data) {
+                                window.location.href="${_cp}/module/shareMagApplyFirst?pageType=${pageType}"+"&dataId="+rows.data.apiId+"&catalogId="+catalogId+"&applyId="+rows.data.applyId;
+                            }else{
+                                parent.layer.msg(rows.errmsg,{time:1500});
+                            }
+                        }
+                    });
+                }
+			};
+            function openFlow() {//查看流程
+                parent.layer.open({
+                    id: 'applyDownload',
+                    type: 2,
+                    anim: 6,
+                    title: '流程查看',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['820px', '450px'],
+                    shade: [0.9, '#000'],
+                    content: "${_cp}/module/shareManageFlow",
+                    btn: ['关闭'],
+                });
+            }
+            function openDataView() {//预览数据
+                if (catalogId){
+                    parent.layer.open({
+                        id: 'applyDownload',
+                        type: 2,
+                        anim: 6,
+                        title: '数据预览',
+                        maxmin: false, //开启最大化最小化按钮
+                        area: ['830px', '450px'],
+                        shade: [0.9, '#000'],
+                        content: "${_cp}/module/shareManageDataView?setId="+catalogId+"&type=2",
+                        btn: ['关闭'],
+                    });
+				}else {
+                    parent.layer.msg("请先选择目录！",{time:1500});
+				}
+
+            }
+		</script>
+	</body>
+</html>

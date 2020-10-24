@@ -1,0 +1,199 @@
+<template>
+  <Layout>
+    <Content>
+      <Breadcrumb>
+        <BreadcrumbItem>部门用户</BreadcrumbItem>
+        <BreadcrumbItem>服务器详情</BreadcrumbItem>
+      </Breadcrumb>
+      <Card>
+        <Form
+          inline
+          ref="formValidate"
+          :label-width="100"
+          :model="formInfo">
+          <Row>
+            <FormItem label="申请单位：">
+              <Input
+                type="text"
+                v-model="formInfo.applyOrgname"
+                disabled>
+              </Input>
+            </FormItem>
+            <FormItem label="申请人：">
+              <Input
+                type="text"
+                v-model="formInfo.applyUname"
+                disabled>
+              </Input>
+            </FormItem>
+            <Button type="default" @click="quit" style="float: right;">返回</Button>
+          </Row>
+          <Row>
+            <FormItem label="申请人邮箱：">
+              <Input
+                type="text"
+                v-model="formInfo.applyEmail"
+                disabled>
+              </Input>
+            </FormItem>
+          </Row>
+          <Row>
+            <Col span="22" :offset="1">
+              <hy-table
+                highlight-row
+                :columns="tableList.columns"
+                :data="tableList.data"
+                :needPage="false" />
+            </Col>
+          </Row>
+          <FormItem label="申请原因：">
+            <Input
+              type="textarea"
+              v-model="formInfo.applyReason"
+              :rows="5"
+              disabled
+              style="width: 400px;">
+            </Input>
+          </FormItem>
+          <Row>
+            <FormItem label="附件说明：" v-for="(item,idx) in formInfo.attachment" :key="idx">
+              <Input
+                type="text"
+                v-model="item.fileName"
+                disabled
+                style="width: 400px;">
+              </Input>
+              <Button type="primary" style="float: right;" @click="downLoad(item.fileUrl)">下载</Button>
+            </FormItem>
+          </Row>
+        </Form>
+      </Card>
+    </Content>
+  </Layout>
+</template>
+
+<script>
+// 服务器配置表单
+import serverConfig from './../common/serverConfig'
+import api from '@/api/axiosApi'
+import softhardApiList from '@/api/softhardApiList'
+const hidecode = ['操作系统', '网关描述', '申请数量'];
+window.downloadFile = function (sUrl) {
+    //If in Chrome or Safari - download via virtual link click
+    if (window.downloadFile.isChrome || window.downloadFile.isSafari) {
+        //Creating new link node.
+        var link = document.createElement('a');
+        link.href = sUrl;
+        if (link.download !== undefined) {
+            //Set HTML5 download attribute. This will prevent file from opening if supported.
+            var fileName = sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.length);
+            link.download = fileName;
+        }
+        //Dispatching click event.
+        if (document.createEvent) {
+            var e = document.createEvent('MouseEvents');
+            e.initEvent('click', true, true);
+            link.dispatchEvent(e);
+            return true;
+        }
+    }
+    // Force file download (whether supported by server).
+    if (sUrl.indexOf('?') === -1) {
+        sUrl += '?download';
+    }
+    window.open(sUrl, '_self');
+    return true;
+}
+export default {
+  components: {
+    serverConfig
+  },
+  data () {
+    return {
+      hidecode,
+      formInfo: {
+        name: '',
+        content: ''
+      },
+      tableList: {
+        columns: [
+          {
+            type: 'index',
+            title: '序号',
+            width: 60,
+            align: 'center'
+          },
+          {
+            title: 'CPU核数',
+            key: 'cpuCount'
+          },
+          {
+            title: '内存',
+            key: 'memorySize'
+          },
+          {
+            title: '操作系统',
+            key: 'system'
+          },
+          {
+            title: '网络区域',
+            key: 'netScope'
+          },
+          {
+            title: '网络宽带',
+            key: 'netWide'
+          },
+          {
+            title: '大小',
+            key: 'sysDisksize'
+          },
+          {
+            title: '申请数量',
+            key: 'applyCount'
+          },
+          {
+            title: '磁盘列表',
+            key: 'disks',
+            align: 'center',
+            width: 300,
+            render: (h, params) => {
+              return h('Table', {
+                class:'server-list',
+                props: {
+                  columns: this.diskColumns,
+                  data:params.row.disksData
+                }
+              })
+            }
+          }
+        ],
+        data: []
+      }
+    }
+  },
+  mounted(){
+    this.getApplyManageById();
+  },
+  methods: {
+    getApplyManageById() { // 查询服务分配管理分页
+      api(softhardApiList.getApplyManageById,{id:this.$route.params.departData.id}).then((res) => {
+        if(res.data.errcode == 0){
+          this.formInfo = res.data.data;
+          this.tableList.data = res.data.data.applyServer
+        }else{
+          console.log(res.data.errmsg);
+        }
+      }, (err) => {
+        //dong something...
+      })
+    },
+    downLoad(fileUrl){
+      window.downloadFile(fileUrl);
+    },
+    // 返回
+    quit () {
+      this.$router.go(-1)
+    }
+  }
+}
+</script>

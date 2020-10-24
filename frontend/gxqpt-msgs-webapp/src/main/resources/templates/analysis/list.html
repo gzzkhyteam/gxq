@@ -1,0 +1,396 @@
+<!doctype html>
+<html>
+<head>
+	<base href="<%=basePath%>">
+
+	<!--<title>短信平台</title>-->
+	<meta http-equiv="Expires" content="0" />
+	<meta name="renderer" content="webkit" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- begin 外部CSS引入 -->
+
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<script type="text/javascript" src="${_static}/js/lib/echarts/echarts.js"></script>
+	<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+	<script type="text/javascript" src="${_static}/js/app.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+	<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+	<style type="text/css">
+
+
+
+		.list-zx
+		{
+
+			width:100%;
+			height:100%;
+		}
+
+		.list-section {
+			width:41%;
+			height:350px;
+			float:left;
+			border: solid 1px black;
+			background: #fff;
+			margin-left: 70px;
+			margin-right: 70px;
+			margin-top: 30px;
+		}
+
+	</style>
+</head>
+<body>
+<div class="workspace-body">
+	<div class="console-container clearfix">
+
+		<div style="margin-left:70px">
+			<label>开始时间</label>
+			<input id="createTimeStart" class="Wdate" style="width: 170px" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true})"/>
+			<span>~</span>
+			<label>截止时间</label>
+			<input id="createTimeEnd" class="Wdate"  style="width: 170px" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true})"/>
+			<button onclick="search()">查询</button>
+		</div>
+		<!-- begin 页面内容主体 -->
+		<div class="main">
+
+
+			<div id="leftdown-box" class="list-section">
+
+
+			</div>
+
+			<!--<div id="rightdown-box" class="list-section">-->
+
+
+
+			</div>
+		</div>
+		<!-- end 页面内容主体 -->
+	</div>
+</div>
+
+</body>
+</html>
+<script type="text/javascript">
+
+	$('.title_first',parent.document).text("统计分析");
+	$(".title_second",parent.document).text("消息发送情况分析");
+    var myChart3 = echarts.init(document.getElementById('leftdown-box'));
+    //var myChart4 = echarts.init(document.getElementById('rightdown-box'));
+    var myDate = new Date();
+    var currentyear=myDate.getFullYear();
+    var currentmonth=myDate.getMonth()+1;
+    if(currentmonth<10)
+    {
+        currentmonth="0"+currentmonth.toString();
+    }
+    var yymm=currentyear.toString()+currentmonth.toString();
+    console.log("=========================="+currentmonth);
+
+    var   option3 = {                               //渠道平台消息量分析
+        title : {
+            text: '渠道平台消息量分析',
+            textStyle: {
+                color: '#333',
+                fontStyle: 'italic',
+                fontSize:'25'
+            },
+            top:'3',
+
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+
+        calculable : true,
+
+        xAxis : [
+            {
+                type : 'category',
+                data : ['微信公众号','微博','短信','APP','网站']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                name : '消息量',
+                axisLabel : {
+                    formatter: '{value} '
+                }
+            }
+        ],
+        series : [
+
+            {
+                name:'消息量',
+                type:'bar',
+                color: ['#37A2DA', '#32C5E9', '#67E0E3', '#9FE6B8', '#FFDB5C','#ff9f7f', '#fb7293', '#E062AE', '#E690D1', '#e7bcf3', '#9d96f5', '#8378EA', '#96BFFF'],
+                itemStyle: {
+                    normal: {
+                        label : {
+                            show: true,
+                            position: 'insideTop'
+                        }
+                    }
+                },
+                data:[2.0, 4.9, 7.0, 23.2, 25.6]
+
+            }
+        ]
+    };
+    var   option4 = {                                   //发布商活跃度分析改成横向柱状图
+        title : {
+            text: '发布商活跃度分析',
+            textStyle: {
+                color: '#333',
+                fontStyle: 'italic',
+                fontSize:'25'
+            },
+            top:'1',
+
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+
+        },
+        legend: {
+            data: ['渠道1', '渠道2','渠道3','渠道4','渠道5'],
+            top:'25',
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '30',
+            containLabel: true
+        },
+        xAxis:  {
+            type: 'value'
+        },
+        yAxis: {
+            type: 'category',
+            data: ['发布商1','发布商2','发布商3','发布商5','发布商5','发布商6','发布商7']
+        },
+        series: [
+            {
+                name: '渠道1',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'insideRight'
+                    }
+                },
+                data: [320, 302, 301, 334, 390, 330, 320]
+            },
+            {
+                name: '渠道2',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'insideRight'
+                    }
+                },
+                data: [120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: '渠道3',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'insideRight'
+                    }
+                },
+                data: [220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+                name: '渠道4',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'insideRight'
+                    }
+                },
+                data: [150, 212, 201, 154, 190, 330, 410]
+            },
+            {
+                name: '渠道5',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'insideRight'
+                    }
+                },
+                data: [820, 832, 901, 934, 1290, 1330, 1320]
+            }
+        ]
+    };
+
+    $(document).ready(function(){
+        //加载load效果
+
+        //假数据显示
+        myChart3.showLoading();
+        myChart3.setOption(option3);
+        myChart3.hideLoading();
+
+        // myChart4.showLoading();
+        // myChart4.setOption(option4);
+        // myChart4.hideLoading();
+
+
+        //bar1(yymm);
+        //bar2(yymm);
+
+
+        //$(".ui-jqgrid-toppager").css('display','none');
+        //$(".ui-jqgrid .ui-jqgrid-bdiv").css('overflow','hidden');
+
+    });
+    function search()
+    {
+
+        var createTimeStart=$("#createTimeStart").val();
+        var createTimeEnd =$("#createTimeEnd").val();
+        bar1(createTimeStart,createTimeEnd);//渠道平台消息量分析获取数据
+        //bar2(createTimeStart,createTimeEnd);//发布商活跃度分析
+    }
+    function bar1(createTimeStart,createTimeEnd){
+        myChart3.showLoading();//渠道平台消息量分析
+        ajaxHengyun({
+
+            type: "POST",
+            async:false,
+            dataType: 'json',
+            data: {startDate:createTimeStart,endDate:createTimeEnd},
+            url: "${_gate_url}/api/msgs/analysis/channelType",//改url
+            success: function (rows) {
+                if (rows.data) {
+                    //先解析json数据进行分层
+                    var refreshname=new Array();
+                    var refreshdata=new Array();
+                    /*var refreshname=[];
+                    var refreshdata=[];*/
+                    //先解析json数据进行分层
+                    var i=0;
+                    $.each(rows.data, function(key, val) {
+
+                        /*refreshname[i]=val.name;
+                        refreshdata[i]=val.count;
+                        i++;*/
+                        refreshname.push(val.name);
+                        refreshdata.push(val.count);
+                    });
+                    //refreshname = refreshname.substr(0, refreshname.length - 1);
+                    //refreshdata = refreshdata.substr(0, refreshdata.length - 1);
+					console.log(refreshname);
+                    console.log(refreshdata);
+
+                    //初始化全量数据框架
+                    myChart3.setOption(option3);
+                    myChart3.setOption({
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data : refreshname
+                            }
+                        ],
+                        series: [{
+                           data:refreshdata
+
+                        }]
+                    });
+
+                    //根据json数据解析动态数据填充表格
+
+                    //解除loading效果
+                    myChart3.hideLoading();
+
+
+                } else {
+                    layer.msg("数据加载失败，请稍后重试！", {time: 1000});
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+
+
+            }
+        });}
+
+    function bar2(createTimeStart,createTimeEnd){
+       myChart4.showLoading();
+
+        ajaxHengyun({				//技术柱状图
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            data: {createTimeStart:createTimeStart,createTimeEnd:createTimeEnd},
+            url: "${_gate_url}/api/standard/analysis/classify",
+            success: function (rows) {
+                if (rows.data) {
+
+                    var refreshname=new Array();
+                    var refreshdata=new Array();
+                    //先解析json数据进行分层
+                    $.each(rows.data, function(key, val) {
+
+                        refreshname.push(val.classifyName);
+                        refreshdata.push(val.downloadCount);
+
+                    });
+
+                    //初始化全量数据框架
+                    myChart4.setOption(option4);
+                    myChart4.setOption({
+                        xAxis : [
+                            {
+                                type : 'category',
+                                data : refreshname
+                            }
+                        ],
+                        series: [{
+                            data:refreshdata
+
+                        }]
+                    });
+                    //根据json数据解析动态数据填充表格
+
+                    //解除loading效果
+                    myChart4.hideLoading();
+
+
+                } else {
+                    layer.msg("数据加载失败，请稍后重试！", {time: 1000});
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+
+
+            }
+        });
+    }
+
+</script>

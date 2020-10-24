@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=0.1">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" href="${_static}/css/viewCss/applyManager/view.css">
+    <style type="text/css">
+        .table-title-left tbody tr td{
+            word-break: break-all;
+        }
+        ol, ul, li {
+            list-style: inherit;
+        }
+        .titlename{
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <!--标题-->
+            <div class="col-sm-12">
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5 class="page-title">
+                            应用程序管理 &gt; <span class="page-title-scend">详情</span>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <!--内容-->
+            <div class="col-sm-12">
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline">
+                            <div class="titlename">申请信息</div>
+                            <table class="table default-table table-title-left">
+                                <tbody>
+                                    <col width="120"/>
+                                    <col />
+                                    <col width="100"/>
+                                    <col />
+                                    <col width="100"/>
+                                    <col />
+                                    <tr>
+                                        <th>名称</th>
+                                        <td id="appName" colspan="3"></td>
+                                        <th>类型</th>
+                                        <td id="appType"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>应用路径</th>
+                                        <td id="appPath" colspan="3"></td>
+                                        <th>应用图标</th>
+                                        <td id="iconPath"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>登记日期</th>
+                                        <td id="createTime"></td>
+                                        <th>是否显示</th>
+                                        <td id="isShow"></td><th>排序</th>
+                                        <td id="appOrder"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>应用说明</th>
+                                        <td colspan="5" id="appDesc"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>申请组件</th>
+                                        <td colspan="5">
+                                            <table style="width: 500px; display: none;" id="component">
+                                                <thead>
+                                                    <th>组件名称</th>
+                                                    <th>操作</th>
+                                                </thead>
+                                            </table>
+                                            <p id="no-component" style="display: none;">暂无</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="titlename">当前信息</div>
+                            <table class="table default-table table-title-left">
+                                <tbody>
+                                <col width="120"/>
+                                <col />
+                                <col width="100"/>
+                                <col />
+                                <col width="100"/>
+                                <col />
+                                <tr>
+                                    <th>名称</th>
+                                    <td id="appName1" colspan="3"></td>
+                                    <th>类型</th>
+                                    <td id="appType1"></td>
+                                </tr>
+                                <tr>
+                                    <th>应用路径</th>
+                                    <td id="appPath1" colspan="3"></td>
+                                    <th>应用图标</th>
+                                    <td id="iconPath1"></td>
+                                </tr>
+                                <tr>
+                                    <th>登记日期</th>
+                                    <td id="createTime1"></td>
+                                    <th>是否显示</th>
+                                    <td id="isShow1"></td><th>排序</th>
+                                    <td id="appOrder1"></td>
+                                </tr>
+                                <tr>
+                                    <th>应用说明</th>
+                                    <td colspan="5" id="appDesc"></td>
+                                </tr>
+                                <tr>
+                                    <th>申请组件</th>
+                                    <td colspan="5">
+                                        <table style="width: 500px; display: none;" id="component1">
+                                            <thead>
+                                            <th>组件名称</th>
+                                            <th>操作</th>
+                                            </thead>
+                                        </table>
+                                        <p id="no-component1" style="display: none;">暂无</p>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="center">
+                                <button type="button" class="btn btn-default btn-back"> 返回</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var _cp = "${_cp}";
+    var _GATE_URL = "${_gate_url}";
+    var _id = "${id}";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/viewJs/apply/view.js?v=2"></script>
+</body>
+</html>

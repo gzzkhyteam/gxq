@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>数据源管理</span> &gt; <span class="page-title-scend">新增数据源</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div id="unit" class="view_item"  ng-app="dbsource" ng-controller="controller">
+								<form id="dataForm" action="" autocomplete="off">
+									<table class="table default-table tab-border-no-layer">
+										<tbody>
+											<tr>
+												<th width="130"><span class="requiredSpan">*</span>数据源名称：</th>
+												<td>
+													<input type="text" ng-dbsource = "rows.sourceName" name="sourceName" id="sourceName" class="form-control" datatype="*" nullmsg="请填写数据源名称"/>
+												</td>
+											</tr>
+											<tr>
+												<th>数据库类型：</th>
+												<td>
+													<ul class="elementData  clearfix">
+														<li class="pull-left clearfix">
+															<input type="radio" name="dbType" class="hidden" value="2"/>
+															<span class="selectno dbTypeSet"></span>
+															<label class="pull-left">MySQL</label>
+														</li>
+														<li class="pull-left clearfix">
+															<input type="radio" name="dbType" class="hidden" value="1" />
+															<span class="selectno dbTypeSet"></span>
+															<label class="pull-left">Oracle</label>
+														</li>
+														<!--<li class="pull-left clearfix">
+															<input type="radio" name="dbType" class="hidden" value="3" />
+															<span class="selectno dbTypeSet"></span>
+															<label class="pull-left">PostgreSQL</label>
+														</li>-->
+														<li class="pull-left clearfix">
+															<input type="radio" name="dbType" class="hidden" value="3" />
+															<span class="selectno dbTypeSet"></span>
+															<label class="pull-left">SQL Server</label>
+														</li>
+														<!--<li class="pull-left clearfix">
+															<input type="radio" name="dbType" class="hidden" value="5" />
+															<span class="selectno dbTypeSet"></span>
+															<label class="pull-left">MariaDB</label>
+														</li>
+														<li class="pull-left clearfix">
+															<input type="radio" name="dbType" class="hidden" value="6" />
+															<span class="selectno dbTypeSet"></span>
+															<label class="pull-left">SQLite</label>
+														</li>-->
+													</ul>
+												</td>
+											</tr>
+											<tr class="tr_hidden name">
+												<th><span class="requiredSpan">*</span>数据库名称：</th>
+												<td>
+													<input type="text" ng-dbsource = "rows.dbName" name="dbName" id="dbName" class="form-control" oninput="setServerName()" datatype="*" nullmsg="请填写数据库名称"/>
+												</td>
+											</tr>
+											<tr class="tr_hidden typeConnect">
+												<th><span class="requiredSpan">*</span>连接类型：</th>
+												<td>
+													<select id="contType" ng-dbsource = "rows.contType" name="contType" class="form-control">
+														<option value="0">basic</option>
+													</select>
+												</td>
+											</tr>
+											<tr class="tr_hidden ipAddress">
+												<th><span class="requiredSpan">*</span>主机名或IP地址：</th>
+												<td>
+													<input type="text" ng-dbsource = "rows.dbAddress" name="dbAddress" id="dbAddress" class="form-control" datatype="*" nullmsg="请填写主机名或IP地址"/>
+												</td>
+											</tr>
+											<tr class="tr_hidden port">
+												<th><span class="requiredSpan">*</span>端口：</th>
+												<td>
+													<input type="text" ng-dbsource = "rows.dbPort" name="dbPort" id="dbPort" class="form-control" datatype="*" nullmsg="请填写端口号"/>
+												</td>
+											</tr>
+											<tr class="tr_hidden serverOrSid">
+												<th></th>
+												<td>
+													<ul class="elementData  clearfix">
+														<li class="pull-left clearfix">
+															<input type="radio" name="serverType" class="hidden" value="0" checked/>
+															<span class="selectno serverTypeSet checked"></span>
+															<label class="pull-left">服务名</label>
+														</li>
+														<li class="pull-left clearfix">
+															<input type="radio" id="serverType" name="serverType" class="hidden" value="1" />
+															<span class="selectno serverTypeSet"></span>
+															<label class="pull-left">SID</label>
+														</li>
+													</ul>
+												</td>
+											</tr>
+											<tr class="tr_hidden serverOrSid">
+												<th>服务名或SID：</th>
+												<td>
+													<input type="text" ng-dbsource = "rows.serverName" name="serverName" id="serverName" class="form-control" disabled/>
+												</td>
+											</tr>
+											<!--<tr class="tr_hidden database">
+												<th>初始数据库：</th>
+												<td>
+													<input type="text" name="" id="" class="form-control"/>
+												</td>
+											</tr>
+											<tr class="tr_hidden Verification">
+												<th>验证：</th>
+												<td>
+													<select name="" class="form-control">
+														<option value="">请选择</option>
+														<option value="">******</option>
+													</select>
+												</td>
+											</tr>-->
+											<tr class="tr_hidden userName">
+												<th><span class="requiredSpan">*</span>用户名：</th>
+												<td>
+													<input type="text" ng-dbsource = "rows.dbAccount" name="dbAccount" id="dbAccount" class="form-control" datatype="*" nullmsg="请填写用户名"/>
+												</td>
+											</tr>
+											<tr class="tr_hidden password">
+												<th><span class="requiredSpan">*</span>密码：</th>
+												<td>
+													<input type="password" ng-dbsource = "rows.dbPassword" name="dbPassword" id="dbPassword" class="form-control" datatype="*" nullmsg="请填写密码"/>
+												</td>
+											</tr>
+											<!--<tr class="tr_hidden SQLite">
+												<th>类型：</th>
+												<td>
+													<select name="" class="form-control">
+														<option value="">请选择</option>
+														<option value="">******</option>
+													</select>
+												</td>
+											</tr>
+											<tr class="tr_hidden SQLite">
+												<th>数据库文件：</th>
+												<td>
+													<input type="text" name="" id="" class="form-control"/>
+												</td>
+											</tr>-->
+											<tr>
+												<th>关联系统：</th>
+												<td>
+													<select id="unitId"  ng-dbsource = "rows.unitId" name="unitId" class="form-control">
+														<option value="-1">请选择</option>
+													</select>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="text-center">
+										<button type="button" class="btn btn-primary btn-save">提交</button>
+										<button type="button" class="btn btn-primary" onclick="history.back()">取消</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/com_base.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+		
+		
+	<script type="text/javascript">
+		
+		var dbsource = angular.module('dbsource', []);
+		$(function () {
+			openValidator({
+                type:"POST",
+                dataType: 'json',
+                contentType : 'application/json',
+                url: "${_gate_url}/api/exchange/dataapi/dbSource/save",
+            },"#dataForm",{
+                attrName:"name",
+                prefix:"",
+                suffix:"",
+            });
+        });
+		
+		dbsource.controller('controller', function ($scope,$http,token) {
+                var urlPrev ='${_gate_url}';
+                $scope.submit = function () {
+                    $('.btn-submit').click();
+                };
+                $scope.save = function () {
+                	saveObj();
+                }
+            }).service('token',function () {
+                this.token = function () {
+                    return getToken();
+                }
+            });
+         
+         
+			$(".serverTypeSet").click(function(){
+                if($(this).hasClass("checked")){
+                    return false;
+                }else{
+                    $(this).addClass("checked");
+                    var ipt = $(this).parent().find("input");
+                    $(ipt).prop("checked",true);
+                    var ele_li = $(this).parent().siblings();
+                    if(ele_li.length>0){
+                        $(ele_li).each(function(index,value){
+                            $(value).find(".selectno").removeClass("checked");
+                        });
+                    };
+				}
+                
+			});
+			$(".dbTypeSet").click(function(){
+				if($(this).hasClass("checked")){
+					return false;
+				}else{
+					var sourceNameVal=$("#sourceName").val();
+                    $("#dataForm")[0].reset();
+                    $("#sourceName").val(sourceNameVal);
+					$(this).addClass("checked");
+					var ipt = $(this).parent().find("input");
+					$(ipt).prop("checked",true);
+					var val = $(ipt).val();
+					var ele_li = $(this).parent().siblings();
+					if(ele_li.length>0){
+						$(ele_li).each(function(index,value){
+							$(value).find(".selectno").removeClass("checked");
+						});
+					};
+
+					if(val=="2"){
+						$(".tr_hidden").css("display","none");
+						$(".name, .ipAddress, .port, .userName, .password").css("display","table-row");
+					}else if(val=="1"){
+						$(".tr_hidden").css("display","none");
+						$(".name,.serverOrSid, .typeConnect, .ipAddress, .port, .userName, .password").css("display","table-row");
+					}else if(val=="3"){
+						$(".tr_hidden").css("display","none");
+						$(".name, .ipAddress, .port, .Verification, .userName, .password").css("display","table-row");
+					}
+					var height=document.getElementById("container").scrollHeight;
+					$("#home", window.parent.document).height(height);
+					$(".Validform_info").remove();
+					$("input").removeClass("Validform_error");
+				};
+			});
+			function setServerName(){//写入服务名或SID名称
+				var textVal = $("#dbName").val();
+				$("#serverName").val(textVal);
+			}
+			/*获取关联系统*/
+            getSystemList();
+            function getSystemList(){
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/dataapi/system/findSelectInfo',
+                    success:function(rows){
+                    	if(rows.data){
+                    	    var html="";
+                    	    rows.data.forEach(function(value,index){
+                                html+='<option value="'+value.id+'">'+value.sysName+'</option>';
+							});
+                    	    $("#unitId").append(html);
+						}
+                    }
+                });
+            };
+            /*提交方法*/
+            $('.btn-save').valid({
+                form: '#dataForm',
+                //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+                //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+                showAllError: true,
+                ignoreHidden: true,
+                checkpassed: function () {
+                    //saveObj();
+                	var appElement = document.querySelector('[ng-controller=controller]');
+                    var $scope = angular.element(appElement).scope();
+                    $scope.save();
+                }
+            });
+            function saveObj(){
+                var gxqptDutiesDTO =$("#dataForm").serializeJSON();
+				/*if(gxqptDutiesDTO.dbType=="2"){
+                    gxqptDutiesDTO.serverType=gxqptDutiesDTO.serverType+","+gxqptDutiesDTO.serverTypeName;
+				}*/
+				if(!gxqptDutiesDTO.dbType){
+                    parent.layer.msg("请选择数据库类型！",{time:1000});
+                    return false;
+				}
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/dataapi/dbSource/save',
+                    data:JSON.stringify(gxqptDutiesDTO),
+                    success:function(rows){
+                        if (rows.data){
+                            parent.layer.msg("新增成功！",{time:1000});
+                            window.location.href="${_cp}/module/dataSourceList?pageNo=1";
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    }
+                });
+			}
+		</script>
+	</body>
+</html>

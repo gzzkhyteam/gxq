@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>贵阳国家高新区数聚高新一体化基础系统平台</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/adminIndex.css"/>
+    <style>
+        body{
+            background: #e2e3e7;
+        }
+        .container{
+            height: auto;
+        }
+        footer{
+            position: relative;
+        }
+        .hidden{
+            display: none;
+        }
+        .ptListA{
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header_left">
+        <div class="logo">
+            <a href="/gxqpt-center/admin/index">
+                <img src="${_static}/images/adminImg/logo_01.png"/>
+            </a>
+        </div>
+    </div>
+    <div class="header_right clearfix">
+        <div class="search left clearfix">
+            <input class="left" type="text" onfocus="searchTxt()" name="searchTxt" id="searchTxt" placeholder="搜索帮助文档\API\数据目录" />
+            <lable class="right" for="searchTxt" id="searchBtn"><img src="${_static}/images/adminImg/icon0_01.png"/>
+            </lable>
+            <div class="searchList">
+                <ul>
+                </ul>
+            </div>
+        </div>
+        <div class="infoTip">
+            <img src="${_static}/images/adminImg/infoIcon.png"/>
+            <span id="infoTotal"></span>
+        </div>
+        <div class="userInfo right clearfix">
+            <div class="userImg left">
+                <img alt="" src="${l_u_i_s.photo!''}" onerror="this.onerror='';src='${_static}/images/adminImg/icon0_02.png'" , id="user_photo">
+            </div>
+            <div class="userTxt right">
+                <input type="hidden" value="${l_u_i_s.id}" id="userId">
+                <input type="hidden" value="${l_u_i_s.ownSystem}" id="systemCode">
+                <label class="userName">${l_u_i_s.name!''}</label>
+                <span class="chevronDown"><img id="rotate" class=""
+                                               src="${_static}/images/adminImg/icon0_03.png"/></span>
+            </div>
+            <ul>
+                <li><a href="javascript:void(0);" onclick="personInfoPage()">基本信息</a></li>
+                <li><a href="javascript:void(0);" onclick="repassword()">密码修改</a></li>
+                <li><a href="${_cp}/logout">退出</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="main clearfix">
+        <div class="main_left left">
+            <ul id="appList" class="nav_list clearfix">
+            </ul>
+        </div>
+        <div class="main_right right">
+            <h3 class="main_left_title clearfix">
+                <span class="left">消&nbsp;&nbsp;息</span>
+                <a class="more" href="javascript:void(0);" data-conditions="message">更多</a>
+            </h3>
+            <ul id="ul_list" class="ul_list clearfix">
+
+            </ul>
+        </div>
+        <div class="main_center">
+            <div class="main_center_top">
+                <a class="pzBtn" href="javascript:void(0);" onclick="configure()">配置</a>
+                <ul class="ptList clearfix">
+
+                </ul>
+            </div>
+            <div class="main_center_top centerSecond">
+                <ul class="lava_with_border fix" id="main_center_top_ul">
+                    <li class="current active"><a href="javascript:void(0);" data-type="matter">待办事项</a></li>
+                </ul>
+                <a class="more" href="javascript:void(0);" data-conditions="needHandle">更多</a>
+                <hr/>
+                <table id="matter" class="table">
+                    <thead>
+                    <tr>
+                        <th width="50">序号</th>
+                        <th>标题内容</th>
+                        <th width="140">来源</th>
+                        <th width="100">类型</th>
+                        <th width="140">时间</th>
+                        <th width="80">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <ul class="clearfix">
+        <li><img src="${_static}/images/adminImg/icon_gz_01.png"/></li>
+        <li><img src="${_static}/images/adminImg/icon_gz_02.png"/></li>
+        <li>
+            <p>主办：贵阳国家高新技术产业开发区管委会</p>
+            <p>备案序号：黔ICP备54815478号</p>
+        </li>
+        <li>
+            <p>技术支持单位：中科恒运股份有限公司</p>
+            <p><img class="left" src="${_static}/images/adminImg/icon_gz_03.png"/>黔公网安备：12135401101120</p>
+        </li>
+    </ul>
+</footer>
+<script>
+    var _cp = "${_cp}";
+    var urlPrev = '${_gate_url}';
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/jquery.easing.min.js"></script>
+<script type="text/javascript" src="${_static}/js/jquery.lavalamp.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script src="${_static}/js/viewJs/common.js"></script>
+<script>
+    var num = 6;
+    window.onresize = function(){
+        setHeight();
+    };
+    setHeight();
+    function setHeight(){
+        var width = $("body").width()-45;
+        var height = $("body").height();
+        if(height-275<650){
+            $(".main_center").css("height","650px");
+            $(".main_left, .main_right").css("height","665px");
+        }else{
+            $(".main_center").css("height",height-275);
+            $(".main_left, .main_right").css("height",height-261);
+        }
+        num = Math.floor((height-261)/75) - 1;
+        $(".container").css({"width":width});
+    };
+    var userId=$("#userId").val();
+    var systemCode=$("#systemCode").val();
+    if (window.top!=window.self){
+        top.location.href="${_cp}/admin/index";
+    }
+    $(".configure").click(function () {
+        var displayVal = $(".create").css("display");
+        if (displayVal == "none") {
+            $(".create,.edit,.delete").css("display", "inline-block");
+        } else {
+            $(".create,.edit,.delete").css("display", "none");
+        }
+    });
+    /*搜索框事件*/
+    /*$("#searchTxt").focus(function () {
+        $(".search").css("width", "400px");
+        $("#searchTxt").css("width", "320px");
+    }).blur(function () {
+        $("#searchTxt").css("width", "160px");
+        $(".search").css("width", "240px");
+        $(".searchList").css("display", "none");
+        $("#searchTxt").val("");
+    });
+    $("body").on("mousedown",function(e){
+        if(!e){
+            var e = window.event;
+        }
+        var targ = e.target;
+        var tname = targ.className;
+        if(tname=='searchVal'){
+            targ.click();
+        }
+    });*/
+    /* 跳转配置新增页面 */
+    function configure() {
+        if(!$(".ptListp").length>0){
+            return false;
+        };
+        var ishidden = $(".ptListp").hasClass("hidden");
+        if (ishidden) {
+            $(".ptListp").removeClass("hidden");
+            if($(".ptListp").length<12){
+                var html = "";
+                html += '<li class="pull-left"><a class="ptListA" href="javascript:" onclick="configureCreate()">';
+                html += '<img src="${_static}/images/icon_add.png">';
+                html += '<p>添加</p>';
+                html += '</li>';
+                $(".ptList").append(html);
+            }
+        } else {
+            $(".ptListp").addClass("hidden");
+            if($(".ptListp").length<12) {
+                $(".ptList li").last().remove();
+            }
+        };
+    };
+    function configureCreate() {
+        layer.open({
+            id: 'configureCreate',
+            type: 2,
+            anim: 6,
+            title: '快速入口新增',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['720px', '80%'],
+            content: "${_cp}/admin/configureCreate",
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 提交', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.save(index);
+            }
+        });
+    };
+
+    /*获取消息列表*/
+    getMessageList();
+    function getMessageList() {
+        ajaxHengyun({
+            type: 'post',
+            url: urlPrev + '/api/msgs/bbs/msg/getNotReadMsg',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                pageNo: 1,
+                pageSize: num,
+                data: {
+                    conditions:"message",
+                    userId: userId
+                }
+            }),
+            success: function (res) {
+                if(res.errmsg=="ok"){
+                    var html="";
+                    res.data.list.forEach(function(val,index){
+                        html+='<li class="item" title=\''+val.content+'\'>';
+                        html+='<a data-id='+val.recId+'  href="javascript:" onclick="readed(this)">';
+                        html+='<p class="ptitle">( '+val.detailedTypeDesc +' )'+val.content+'</p>';
+                        html+='<p class="clearfix">';
+                        html+='<span class="pull-left time">'+val.updateTime+'</span>';
+                        html+='<span class="pull-right systemName">'+val.appName+'</span>';
+                        html+='</p>';
+                        html+='</a>';
+                        html+='</li>';
+                    });
+                    $("#ul_list").html(html);
+                    var ps =  $("#ul_list li p.ptitle");
+                    for (var i = 0; i < ps.length; i++) {
+                        if(ps[i].offsetHeight > 40){
+                            var html = ps[i].innerText;
+                            var temp = "";
+                            ps[i].innerText = temp;
+                            var j = 0;
+                            while(ps[i].offsetHeight <= 40){
+                                temp = html.substring(0, j+1);
+                                j++;
+                                ps[i].innerText = temp;
+                            }
+                            var leng = temp.length-2;
+                            ps[i].innerText=temp.substring(0,leng)+"···";
+                        }
+                    }
+                }else{
+                    var str = '<li class="item"><p>无待办理事项</p></li>';
+                    $('#ul_list').html(str);
+                };
+            }
+        })
+    };
+    /*获取待办消息*/
+    getMatter();
+    function getMatter() {
+        ajaxHengyun({
+            type: 'post',
+            url: urlPrev + '/api/msgs/bbs/msg/getNotReadMsg',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                pageNo: 1,
+                pageSize:6,
+                data: {
+                    conditions:"needHandle",
+                    userId: userId
+                }
+            }),
+            success: function (res) {
+                if (res.data && res.data.list.length) {
+                    var str = '';
+                    var n = 0;
+                    $.each(res.data.list, function (index, value) {
+                        var actHtml = "";
+                        if(value.handlerUrl=="" || value.handlerUrl==null){
+                            actHtml= '<td><a data-id='+value.recId+'  href="javascript:" onclick="readedOnly(this)">标记已读</a></td>';
+                        }else{
+                            actHtml= '<td><a data-id='+value.recId+'  href="javascript:" onclick="readed(this)">查看</a></td>';
+                        }
+                        value.content = value.content.replace(/"([^"]*)"/g ,"“$1”")
+                        n++;
+                        str += '<tr>\n' +
+                            '<td>' + n + '</td>\n' +
+                            '<td title=\''+value.content+'\'>' + value.content + '</td>\n' +
+                            '<td>' + value.appName  + '</td>\n' +
+                            '<td title=\''+value.detailedTypeDesc+'\'>' + value.detailedTypeDesc + '</td>\n' +
+                            '<td>' + value.updateTime + '</td>\n' +
+                            actHtml+'\n' +
+                            '</tr>';
+                    })
+                    $('#matter tbody').html(str);
+                    //添加数量角标
+                    $('a[data-type="matter"]').append('<sup>' + res.data.total + '</sup>');
+                }else{
+                    var str = '<tr><td colspan="6">无待办理事项</td></tr>';
+                    $('#matter tbody').html(str);
+                }
+            }
+        })
+    };
+    function readedOnly(ele){//单个标记已读
+        var ids = [];
+        var idItem = $(ele).attr("data-id");
+        ids.push(idItem);
+        ajaxHengyun({
+            type:"post",
+            dataType: 'json',
+            url: urlPrev+ '/api/msgs/bbs/msg/updateMsgsReaded',
+            data:{ids:ids},
+            success:function(rows){
+                if (rows.data){
+                    ids=[];
+                    parent.layer.msg("成功标记为已读！",{time:1000});
+                    getList(parm);
+                    getTotalFun();
+                    $(".setact li.all input").removeProp("checked");
+                }else{
+                    parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                }
+            }
+        });
+    };
+    function readeInfo(ids){
+        ajaxHengyun({
+            type:"post",
+            dataType: 'json',
+            url: urlPrev+ '/api/msgs/bbs/msg/updateMsgsReaded',
+            data:{ids:ids},
+            success:function(rows){
+                if (rows.data){
+                    parent.layer.msg("该信息已标记为已读！",{time:1000});
+                    getList(parm);
+                    getTotalFun();
+                    getMessageList();
+                }else{
+                    parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                }
+            }
+        });
+    }
+    function readed(ele){
+        var e=arguments.callee.caller.arguments[0] || window.event;
+        e.stopPropagation();
+        var id=$(ele).attr("data-id");
+        ajaxHengyun({
+            type: 'get',
+            url: urlPrev+'/api/msgs/bbs/msg/flagReadedAndGetUrl',
+            data: {recvMsgId:id},
+            success: function (res) {
+                if (res.errmsg=="ok") {
+                    if(res.data){
+                        var newTab=window.open('${_cp}/admin/index');
+                        newTab.location.href=res.data;
+                    }else{
+                        var ids = []
+                        ids.push(id)
+                        readeInfo(ids)
+                    }
+                }
+            }
+        })
+
+    };
+    /*获取快捷入口列表*/
+    getInfoList();
+    function getInfoList() {
+        ajaxHengyun({
+            type: 'get',
+            url: urlPrev + '/api/admin/fastEntry/getList',
+            success: function (res) {
+                if(res.errmsg=="ok"){
+                    var html="";
+                    if(!res.data){
+                        res.data=[];
+                    };
+                    res.data.forEach(function(val,index){
+                        if(index>=12){
+                            return false;
+                        }
+                        html+='<li class="pull-left"><a class="ptListA" href="'+val.url+'" target="_blank">';
+                        html+='<p class="ptListp clearfix hidden"><i class="fa fa-trash-o pull-right" title="删除" onclick="deleteFastentry(\''+val.id+'\')"></i><i class="fa fa-pencil-square-o pull-right editPtList" title="编辑" onclick="configureEdit(\''+val.id+'\')"></i></p>';
+                        if(!val.icon){
+                            val.icon="${_static}/images/icon_default.png"
+                        };
+                        html+='<img src="'+val.icon+'">';
+                        html+='<p>'+val.appResourceName+'</p>';
+                        html+='</a></li>';
+                    });
+                    var isConfigure= false;
+                    if($(".ptList li").length>0){
+                        isConfigure= true;
+                    };
+                    $(".ptList").html(html);
+                    if(res.data.length<1){
+                        var html = "";
+                        html += '<li class="pull-left"><a class="ptListA" href="javascript:" onclick="configureCreate()">';
+                        html += '<img src="${_static}/images/icon_add.png">';
+                        html += '<p>添加</p>';
+                        html += '</li>';
+                        $(".ptList").append(html);
+                    };
+                    if(isConfigure){
+                        configure();
+                    }
+                };
+            }
+        })
+    };
+    /*获取左边菜单列表*/
+    getNavList();
+    function getNavList() {
+        ajaxHengyun({
+            type: 'get',
+            url: urlPrev + '/api/developer/application/findFiveSupport',
+            success: function (res) {
+                if(res.errmsg=="ok"){
+                    var html="";
+                    var data = res.data;
+                    for(var key in data){
+                        html+='<li><a href="javascript:" onclick="tonav(this)"><span>'+key+'</span><i class="pull-right fa fa-angle-down"></i></a>';
+
+                        if(data[key].length>0){
+                            html+='<ul class="navChildren">';
+                            data[key].forEach(function(val,index){
+                                var logoUrl = "${_static}/images/adminImg/icon2_3.png";
+                                if(val.logoUrl){
+                                    logoUrl = val.logoUrl;
+                                }
+                                var indexUrl = val.indexUrl;
+                                if(key == "接入应用"){
+                                    var userId = $("#userId").val();
+                                    if(indexUrl != null){
+                                        if(indexUrl.indexOf("?") > -1){
+                                            indexUrl += "&userId=" + userId;
+                                        } else {
+                                            indexUrl += "?userId=" + userId;
+                                        }
+                                    }
+                                }
+                                html+='<li><a href="'+indexUrl+'" target="_blank"><img src="'+logoUrl+'"/>'+val.name+'</a></li>';
+                            });
+                            html+='</ul>';
+                        };
+                        html+='</li>';
+                    };
+                    $("#appList").html(html);
+                };
+            }
+        })
+    };
+
+    /* 跳转配置编辑页面 */
+    function configureEdit(id) {
+        e=arguments.callee.caller.arguments[0] || window.event;
+        e.stopPropagation();
+        e.preventDefault();
+        layer.open({
+            id: 'configureEdit',
+            type: 2,
+            anim: 6,
+            title: '快速入口编辑',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['720px', '80%'],
+            content: "${_cp}/admin/configureEdit?id=" + id,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 提交', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.save(index);
+            }
+        });
+    };
+    /*删除快速入口*/
+    function deleteFastentry(id) {
+        e=arguments.callee.caller.arguments[0] || window.event;
+        e.stopPropagation();
+        e.preventDefault();
+        ajaxHengyun({
+            type: "POST",
+            url: "${_gate_url}/api/admin/fastEntry/delete",
+            data: {id: id},
+            datatype: 'json',
+            success: function (rows) {
+                if (rows.data) {
+                    getInfoList();
+                    layer.msg("删除成功！", {time: 1500});
+                }
+            },
+        });
+    }
+
+    $(".more").click(function () {
+        var conditions = $(this).attr("data-conditions");
+        var url = "${_cp}/admin/pageMore?type="+conditions;
+        window.location.href="${_cp}/admin/home?type="+conditions;
+    });
+
+    function tonav(ele){
+        var url = $(ele).attr('href');
+        if(url=="javascript:"){
+            var ishave = $(ele).parent().hasClass("active");
+            $("#appList>li").removeClass("active");
+            $("#appList>li>a>i").removeClass("fa-angle-down").addClass("fa-angle-right");
+            if(!ishave){
+                $(ele).parent().addClass("active");
+                $(ele).find("i").removeClass("fa-angle-right").addClass("fa-angle-down");
+            }
+        }
+    }
+    getTotal();
+    function getTotal() {//获取未读信息总数
+        var parm={
+            pageNo: 1,
+            pageSize:1,
+            data: {
+                conditions:"all",
+                userId: userId
+            }
+        };
+        ajaxHengyun({
+            type: 'post',
+            url: '${_gate_url}/api/msgs/bbs/msg/getNotReadMsg',
+            contentType: 'application/json',
+            data: JSON.stringify(parm),
+            success: function (res) {
+                if (res.data && res.data.list.length) {
+                    if(res.data.total && res.data.total>0){
+                        if(res.data.total>99){
+                            $("#infoTotal").text("99+");
+                        }else{
+                            $("#infoTotal").text(res.data.total);
+                        }
+                        $("#infoTotal").css("display","inline-block");
+                    }
+                }
+            }
+        })
+    };
+
+    function searchTxt(){
+    	
+    	window.location.href="${_cp}/admin/search";
+    }
+    //搜索结果跳转
+    $("#searchBtn").click(function(){
+
+        window.location.href="${_cp}/admin/search";
+    });
+    $(document).keypress(function(e) {// 回车键事件
+        if(e.which == 13) {
+            var isFocus=$("#searchTxt").is(":focus");
+            if(true==isFocus){
+                var type = $("#searchTxt").val();
+                if(type){
+                    window.location.href="${_cp}/admin/search?type="+type;
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

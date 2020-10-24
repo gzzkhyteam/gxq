@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>数据集管理</span> &gt; <span>新增数据集</span> &gt; <span class="page-title-scend">定义查询参数</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+            </div>
+        </div>
+        <div class="view_container view_container_first row">
+            <div class="main_right pull-right">
+                <div id="secondPage" class="secondPage minHeight360">
+                    <table class="table default-table tab-border-no-layer">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">参数样例：</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <textarea name="" rows="5" cols="" class="form-control" disabled></textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table id="databaseTab" class="table default-table tab-title-top">
+                        <thead>
+                        <tr>
+                            <th width="200">字段名称</th>
+                            <th width="160">字段类型</th>
+                            <th>字段描述</th>
+                            <th width="160">规则</th>
+                            <th width="160">默认值</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                    </table>
+                </div>
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" onclick="history.back()">上一步</button>
+                    <button type="button" class="btn btn-primary" onclick="save()">下一步</button>
+                    <!--<a href="${_cp}/module/dataSetCreateRelation" class="btn btn-primary">下一步</a>-->
+                    <button type="button" class="btn btn-primary" onclick="history.go(-3)">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    getFieldInfo();
+    function getFieldInfo(){//获取字段信息
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/getTableInfo",
+            data: {tableCode:"${tableCode}",dataSourcId:"${dataSourcId}"},
+            success: function (rows) {
+                if (rows.data) {
+                    var html="";
+                    var fields=rows.data.fieldList;
+                    for(var i in fields){
+                        html+='<tr>';
+                        html+='<td class="fieldCode">'+fields[i].fieldCode+'</td>';
+                        html+='<td class="fieldType">'+fields[i].fieldType+'</td>';
+                        html+='<td class="fieldName">'+fields[i].fieldName+'</td>';
+                        html+='<td>';
+                        html+='<select class="form-control fieldRould">';
+                        html+='<option value="">请选择</option>';
+                        html+='<option value="1">大于</option>';
+                        html+='<option value="2">小于</option>';
+                        html+='<option value="3">等于</option>';
+                        html+='<option value="4">模糊</option>';
+                        html+='<option value="5">小于等于</option>';
+                        html+='<option value="6">大于等于</option>';
+                        html+='</select>';
+                        html+='</td>';
+                        html+='<td>';
+                        html+='<input type="text" class="form-control setField" autocomplete="off"/>';
+                        html+='</td>';
+                        html+='</tr>';
+                    }
+                    $("#databaseTab tbody").append(html);
+                    updateIformHeight();
+                }
+            }
+        });
+    };
+    function save(){
+        var dataDTO={};
+        dataDTO.id="${id}";
+        dataDTO.paramFileds=[];
+        dataDTO.editType = 1;
+        var trEle = $("#databaseTab tbody tr");
+        if(trEle){
+            var ruleLenght=0;
+            var valueTxtLenght=0;
+            var errorField="";
+            var saveError=false;
+            trEle.each(function(no,ele){
+                var paramFiledsItem={};
+                var rule = $(ele).find(".fieldRould").val();
+                paramFiledsItem.rule = rule;
+                var valueTxt = $(ele).find(".setField").val();
+                paramFiledsItem.value = valueTxt;
+                var fieldCode = $(ele).find(".fieldCode").text();
+                paramFiledsItem.fieldCode = fieldCode;
+                if(rule && rule!=""){
+                    ruleLenght+=1;
+                }
+                if(valueTxt && valueTxt!=""){
+                    valueTxtLenght+=1;
+                }
+                if(ruleLenght!=valueTxtLenght){
+                    errorField=fieldCode;
+                    saveError=true;
+                    return false;
+                }
+                if(rule && valueTxt && rule!="" && valueTxt!=""){
+                    dataDTO.paramFileds.push(paramFiledsItem);
+                }
+            });
+            if(saveError){
+                parent.layer.msg("字段"+errorField+"查询参数设置错误！",{time:1500});
+                return false;
+            }
+        }
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url:  '${_gate_url}/api/exchange/set/createDatabaseDataSetThird',
+            data:JSON.stringify(dataDTO),
+            success:function(rows){
+                if (rows.data){
+                    window.location.href="${_cp}/module/dataSetCreateDbRelation?id="+rows.data.id+"&tableCode="+rows.data.tableCode+"&dataSourcId="+rows.data.dbId;
+                }else{
+                    parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

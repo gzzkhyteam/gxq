@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+		<meta name="renderer" content="webkit"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+		<link rel="stylesheet" href="${_static}/css/core/module.css">
+	</head>
+
+	<body>
+		<div class="zTreeDemoBackground left">
+			<ul id="ztree" class="ztree"></ul>
+		</div>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+        <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+		<script type="text/javascript" src="${_static}/js/module.js"></script>
+		<script type="text/javascript">
+            var id="${id}";
+            var appId="${appId}";
+            var checkedId=[];
+            var addArray=[];
+            var removeArray=[];
+            var countDownLat = new CountDownLatch(2,initCheckNode);
+            var setting = {
+                check: {
+                    enable: true,
+                    chkStyle: "checkbox"
+                },
+
+                data: {
+                    key: {
+                        name: 'name'
+                    },
+                    simpleData: {
+                        idKey: 'id',
+                        enable: true,
+                    }
+                },
+
+                callback:{
+                    onCheck: checkZtree,
+                    onClick: onClick
+
+                }
+            };
+            /*  获取角色资源 */
+            getowerresource();
+            /*  获取资源数 */
+            getTree();
+            function getTree(){
+                ajaxHengyun({
+                    type:"GET",
+             
+                    url: "${_gate_url}/api/admin/resource/getTree",
+                    data:{appId:appId, isenable: 1},
+                    datatype:'json',
+                    success:function(rows){
+                        if (rows.data){
+                            //资源树配置
+                            deleteResourceIcon(rows.data);
+                            $.fn.zTree.init($("#ztree"), setting, rows.data);
+                            setCheck();
+                            countDownLat.countDown();
+                        }
+                    },
+                });
+            }
+            
+            function deleteResourceIcon(resourceTree){
+            	 //因为ztree会使用资源的icon来做展示图标，若没有icon  则使用默认的。故我将所有的icon都设置为""   都是用默认的图标
+            	if(!resourceTree){
+            		return ;
+            	}
+            	resourceTree.forEach(function (val){
+            		
+            		val.icon = "";
+            		deleteResourceIcon(resourceTree.children);
+            	})
+            }
+
+			function setCheck() {
+				var zTree = $.fn.zTree.getZTreeObj("ztree"),
+					type = {
+						"Y": 'ps',
+						"N": 'ps'
+					};
+				zTree.setting.check.chkboxType = type;
+			}
+            function onClick(event, treeId, treeNode, clickFlag) {
+                event.preventDefault();
+                var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                var node = treeObj.getNodeByParam("id", treeNode.id, null);
+                if(treeNode.checked){
+                    treeObj.checkNode(node, false, true);
+                }else{
+                    treeObj.checkNode(node, true, true);
+                };
+                //checkedNode();
+                return false;
+            };
+            
+            function getowerresource(){
+                ajaxHengyun({
+                    type:"GET",
+            
+                    url: "${_gate_url}/api/admin/role/getowerresource",
+                    data:{appId:appId,id:id},
+                    datatype:'json',
+                    success:function(rows){
+                    	if(rows.data && rows.data.length > 0){
+                    		checkedId = rows.data;
+                    	}
+                    	countDownLat.countDown();
+                    },
+                });
+            }
+            
+            //初始化选择节点
+            function initCheckNode(){
+            	
+            	if (checkedId){
+                    //资源树配置
+                    var zTree = $.fn.zTree.getZTreeObj('ztree');
+                    checkedId.forEach(function(value, index){
+                        var node = zTree.getNodeByParam("id", value, null);
+                        
+                        if(node && (!node.children || node.children.length < 1)){
+                        	//只有为叶子节点才可以进行勾选     
+                            zTree.checkNode(node, true, true);
+						}
+                    });
+                }
+            }
+
+            /* 资源树勾选 */
+            function checkZtree(event, treeId, treeNode){
+                //checkedNode();
+            };
+            function checkedNode(){
+                addArray=[];
+                var treeObj=$.fn.zTree.getZTreeObj("ztree");
+                nodes=treeObj.getCheckedNodes(true);
+                nodesFalse=treeObj.getCheckedNodes(false);
+                if(nodes.length>0){
+                    nodes.forEach(function(value,index){
+                    	addArray.push(value.id);
+                    });
+                };
+            };
+   
+            /* 资源授权 */
+            function save(index){
+            	checkedNode();
+                var zTree = $.fn.zTree.getZTreeObj('ztree');
+                var addArrayExt = [];
+                addArray.forEach(function(value, index){
+                	addArrayExt.push(value);
+                    var node = zTree.getNodeByParam("id", value, null);
+                    var parentNode = node.getParentNode();
+                    while(parentNode){
+                    	//父节点有时候没有被选中，导致我们的权限中不存在父节点的权限。菜单展示的时候就将子节点直接展示到父节点所在的位置
+                    	addArrayExt.push(parentNode.id);
+                    	parentNode = parentNode.getParentNode();
+                    }
+                });
+                addArray = removeDuplicatedItem(addArrayExt);
+                
+                checkedId.forEach(function(value,index){
+                    // if(addArray.length>0){
+                        var val = jQuery.inArray(value,addArray);
+                        if(val>=0){
+                            addArray.splice(val,1);
+                        }else{
+                            removeArray.push(value);
+                        }
+                    // }
+				});
+
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: "${_gate_url}/api/admin/role/roleauth",
+                    data:JSON.stringify({roleId:id,resourceAddIdList:addArray,resourceRemoveIdList:removeArray}),
+                    success:function(rows){
+                        if (rows.data){
+                            parent.layer.msg("角色授权成功！",{icon:6,time:1000});
+                            parent.layer.close(index);
+                        }else{
+                            parent.layer.msg("角色授权出错，请重试！",{time:1000});
+                        }
+                    }
+                });
+            }
+            
+            function CountDownLatch( count, callBack){
+            	
+            	this.count = count;
+            	this.callBack = callBack;
+            	
+            	this.countDown = function (){
+            		
+            		this.count--;
+            		if(this.count < 1){
+
+            			this.callBack();
+            		}
+            	}
+            }
+		</script>
+	</body>
+</html>

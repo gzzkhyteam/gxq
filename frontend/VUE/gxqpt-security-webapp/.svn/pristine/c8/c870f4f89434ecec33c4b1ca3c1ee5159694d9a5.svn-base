@@ -1,0 +1,539 @@
+<template>
+  <Card>
+    <Form
+      ref="configInfo"
+      inline
+      :label-width="100"
+      :model="configInfo">
+      <FormItem label="申请单位：">
+        <Select v-model="configInfo.applyOrgid" style="width:200px" :disabled='disabled'>
+          <Option v-for="item in unitList" :value="item.id" :key="item.id">{{item.name}}</Option>
+        </Select>
+      </FormItem>
+      <FormItem v-if="idType==4" label="申请人：">
+        <Input type="text" v-model="configInfo.applyUname" style="width:140px" :disabled='disabled'></Input>
+      </FormItem>
+      <FormItem label="申请人邮箱：">
+        <Input type="text" v-model="configInfo.applyEmail" style="width:140px" :disabled='disabled'></Input>
+      </FormItem>
+      <FormItem v-if="!disab">
+        <Button type="primary" @click="popModal">+添加</Button>
+      </FormItem>
+    </Form>
+    <hy-table
+      highlight-row
+      :columns="tableList.columns"
+      :data="tableList.data"
+      class="server-list"
+      @on-page-change="getList"
+      :needPage="false" />
+    <Row style="margin-top: 20px;">
+      <Form
+      ref="configInfo"
+      :label-width="100"
+      :model="configInfo">
+        <FormItem label="申请原因：">
+          <Input
+            type="textarea"
+            style="width: 400px;"
+            v-model="configInfo.applyReason"
+            :disabled='disabled'>
+          </Input>
+        </FormItem>
+        <FormItem v-if="idType==4" label="附件说明：" v-for="(item,idx) in configInfo.attachment" :key="idx">
+          <Input
+            type="text"
+            v-model="item.fileName"
+            disabled
+            style="width: 400px;">
+          </Input>
+          <Button type="primary" @click="downLoad(item.fileUrl)">下载</Button>
+        </FormItem>
+        <FormItem v-if="idType!=4" label="附件说明：" style="margin-top: 40px;">
+          <hy-upload ref="evalReport" multiple :on-success="setEvalReport" :on-remove="removeEvalReport" :before-upload="evalBeforeUpload" :defaultFileList="configInfo.attachment"></hy-upload>
+        </FormItem>
+      </Form>
+    </Row>
+    <Row class="bottom-bar" style="text-align: center">
+      <Col>
+        <Button type="default" @click="quit">取消</Button>
+        <Button v-if="idType!=4 && idType!=5" type="primary" @click="submit(1)">保存</Button>
+        <Button v-if="idType!=4 && idType!=5" type="primary" @click="submit(2)">提交</Button>
+        <Button v-if="idType==4" type="primary" @click="audit">审批</Button>
+        <Button v-if="idType==5" type="primary" @click="resources(0)">配置资源</Button>
+        <Button v-if="idType==5" type="primary" @click="resources(1)">资源不足</Button>
+      </Col>
+    </Row>
+    <Modal
+      v-model="showModal"
+      title="服务器资源资源配置"
+      @on-ok="doAddServer">
+      <server-config ref="serverConfig" :applyServer="configInfo.applyServer"/>
+    </Modal>
+    <Modal
+      v-model="auditModal"
+      title="审批"
+      @on-ok="auditBtn">
+        <Form
+        ref="auditInfo"
+        :label-width="100"
+        :model="auditInfo">
+          <FormItem label="审批结果">
+            <Select v-model="auditInfo.passFlag" style="width:200px">
+              <Option :value="1">通过</Option>
+              <Option :value="2">不通过</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="审批意见">
+            <Input
+              type="textarea"
+              style="width: 400px;"
+              v-model="auditInfo.apprOpinion">
+            </Input>
+          </FormItem>
+        </Form>
+    </Modal>
+  </Card>
+</template>
+
+<script>
+import serverConfig from './../common/serverConfig'
+import api from '@/api/axiosApi'
+import softhardApiList from '@/api/softhardApiList'
+import superviseApiList from '@/api/superviseApiList'
+import hyUpload from '@/components/hengyun/hyUpload'
+window.downloadFile = function (sUrl) {
+    //If in Chrome or Safari - download via virtual link click
+    if (window.downloadFile.isChrome || window.downloadFile.isSafari) {
+        //Creating new link node.
+        var link = document.createElement('a');
+        link.href = sUrl;
+        if (link.download !== undefined) {
+            //Set HTML5 download attribute. This will prevent file from opening if supported.
+            var fileName = sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.length);
+            link.download = fileName;
+        }
+        //Dispatching click event.
+        if (document.createEvent) {
+            var e = document.createEvent('MouseEvents');
+            e.initEvent('click', true, true);
+            link.dispatchEvent(e);
+            return true;
+        }
+    }
+    // Force file download (whether supported by server).
+    if (sUrl.indexOf('?') === -1) {
+        sUrl += '?download';
+    }
+    window.open(sUrl, '_self');
+    return true;
+}
+function getConfigInfo() {
+  return {
+    cpuCount:'',
+    memorySize:'',
+    system:'',
+    netScope:'',
+    netWide:'',
+    content:'',
+    sysDisksize:0,
+    applyCount: 1,
+    disks: [
+      {
+        diskSize:'',
+        diskName:''
+      }
+    ],
+  }
+}
+
+export default {
+  components: {
+    serverConfig,
+    hyUpload
+  },
+  props: {
+     disab: {
+      type: Boolean,
+      default:false
+    }
+  },
+  data () {
+    return {
+      isEdit:false,
+      idx:0,
+      disabled:false,
+      idType:0,
+      auditInfo:{},
+      diskColumns:[
+        {
+          title:'磁盘',
+          key:'diskName',
+          width: 150,
+        },
+        {
+          title:'大小',
+          key:'diskSize',
+          width: 110,
+        },
+      ],
+      unitList:[],//单位列表
+      tableList: {
+        columns: [
+          {
+            type: 'index',
+            title: '序号',
+            width: 60,
+            align: 'center'
+          },
+          {
+            title: 'CPU核数',
+            key: 'cpuCount'
+          },
+          {
+            title: '内存',
+            key: 'memorySize'
+          },
+          {
+            title: '操作系统',
+            key: 'system'
+          },
+          {
+            title: '网络区域',
+            key: 'netScope'
+          },
+          {
+            title: '网络宽带',
+            key: 'netWide'
+          },
+          {
+            title: '大小',
+            key: 'sysDisksize'
+          },
+          {
+            title: '申请数量',
+            key: 'applyCount'
+          },
+          {
+            title: '磁盘列表',
+            key: 'disks',
+            align: 'center',
+            width: 300,
+            render: (h, params) => {
+              return h('Table', {
+                class:'server-list',
+                props: {
+                  columns: this.diskColumns,
+                  data:params.row.disks
+                }
+              })
+            }
+          },
+          {
+            title: '操作',
+            key: 'address',
+            render: (h, params) => {
+              const vm = this
+              const age = params.row.age
+              const id = params.row.age
+              const edit = h('span', {
+                class: 'handle',
+                domProps: {
+                  innerHTML: '修改'
+                },
+                on: {
+                  click () {
+                    console.log(params);
+                    vm.gotoCtrl(1, params.index)
+                  }
+                }
+              })
+              const deleteServer = h('span', {
+                class: 'handle',
+                domProps: {
+                  innerHTML: '删除'
+                },
+                on: {
+                  click () {
+                    vm.gotoCtrl(0, params.index)
+                  }
+                }
+              })
+              switch (this.disab) {
+                case true:
+                  return h('div', ['--'])
+                default:
+                  return h('div', [edit, deleteServer])
+              }
+            }
+          }
+        ],
+        data: []
+      },
+      categoryList: [{
+        value: 1,
+        label: '分类1'
+      }],
+      typeList: [{
+        value: 2,
+        label: '类型1'
+      }],
+      providerList: [{
+        value: 3,
+        label: '提供方1'
+      }],
+      showModal: false,
+      auditModal:false,
+      // 修改时服务器配置的一些信息
+      configInfo:{
+        applyServer: getConfigInfo()
+      }
+    }
+  },
+  mounted () {
+    this.getUnitData();
+    console.log(this.$route.params.id);
+    this.idType = this.$route.params.id;
+    if(this.$route.params.id==3 || this.$route.params.id==4 || this.$route.params.id==5){ //1:新建, 3:修改,4:审批,5:处理
+      this.disabled = true;
+      this.getApplyManageById();//变更参数，获取数据
+    }
+    this.disabled = this.disab;
+    console.log("传参：");
+    console.log(this.$route.params.departData);
+  },
+  methods: {
+    getUnitData(){//获取基本单位id
+      api(superviseApiList.findOrgByUser).then((res) => {
+          console.log(res);
+          if(res.data.errcode == 0) {
+            this.unitList = res.data.data;
+          }else{
+              this.$Message.error(res.data.errmsg);
+          }
+      }, (error) => {})
+    },
+    getApplyManageById() { // 查询服务分配管理分页
+      api(softhardApiList.getApplyManageById,{id:this.$route.params.departData.id}).then((res) => {
+        if(res.data.errcode == 0){
+          res.data.data.applyServer.forEach(item => {
+            if(item.disks.length == 0){
+              item.disks.push({diskSize:'',diskName:''});
+            }else{
+              item.disks.forEach(diskItem => {
+                diskItem.diskName = '数据磁盘' + (diskItem.order+1)
+              })
+            }
+          })
+          console.log(res.data.data.applyServer);
+          this.tableList.data = res.data.data.applyServer;
+          this.configInfo = res.data.data;
+          this.configInfo.applyServer = {};
+          if(this.configInfo.attachment.length != 0){
+            this.configInfo.attachment.forEach(item => {
+              item.name = item.fileName;
+              item.url = item.fileUrl;
+            })
+          }
+        }else{
+          this.$Message.error(res.data.errmsg);
+        }
+      }, (err) => {
+        //dong something...
+      })
+    },
+    validForm() {
+      this.$refs['configInfo'].validate();
+    },
+    evalBeforeUpload() { //文件上传前清空
+      // this.$refs.evalReport.$children[0].clearFiles();
+    },
+    setEvalReport(response, file, fileList) {
+      if(this.$route.params.id != 3){
+        this.configInfo.attachment = [];
+      }
+      console.log(fileList);
+      fileList.forEach(item => {
+        let obj = {};
+        if(item.response){
+          obj.busType = 'hd_applymanage_upload';
+          obj.fileName = item.response.data.list[0].submittedFileName;
+          obj.fileSize = item.response.data.list[0].size;
+          obj.fileType = item.response.data.list[0].mime;
+          obj.fileUrl = item.response.data.list[0].url;
+          obj.name = item.response.data.list[0].submittedFileName;
+          obj.url = item.response.data.list[0].url;
+          this.configInfo.attachment.push(obj);
+        }
+      });
+      console.log(this.configInfo);
+      this.validForm();
+    },
+    removeEvalReport(file, fileList) {
+      this.configInfo.attachment = [];
+      this.configInfo.attachment = fileList;
+      this.validForm();
+    },
+    // 从服务端获取列表数据
+    getList (pageNo, pageSize) {
+      console.log(pageNo)
+      console.log(pageSize)
+    },
+    // 操作
+    gotoCtrl (type, idx) {
+      this.idx = idx;
+      // 删除
+      if (type === 0) {
+        this.isEdit = false;
+        this.tableList.data.splice(idx, 1)
+      } else {
+      // 修改
+        this.isEdit = true;
+        const data = JSON.parse(JSON.stringify(this.tableList.data[idx]))
+        this.configInfo.applyServer = {...getConfigInfo(), ...data}
+        console.log(this.configInfo);
+        this.popModal(true)
+      }
+    },
+    // 点击添加按钮
+    popModal (isEdit) {
+      // 非编辑
+      if (isEdit !== true) {
+        this.configInfo.applyServer = getConfigInfo()
+      }
+      this.showModal = true
+    },
+    // 添加服务器确定按钮
+    doAddServer () {
+      this.configInfo.applyServer.disks.forEach((item,index) => {
+        item.order = index;
+        item.diskName = '数据磁盘' + (index+1);
+        item.diskSize = item.diskSize;
+      });
+      if(!this.isEdit){//判断是否编辑服务器资源配置
+        this.tableList.data.push(this.configInfo.applyServer)
+      }else{
+        this.$nextTick(() => {
+          this.tableList.data[this.idx] = this.configInfo.applyServer;
+        })
+      }
+      console.log(this.configInfo);
+      console.log(this.tableList.data);
+    },
+    audit(){//审批事件触发
+      this.auditModal = true;
+    },
+    auditBtn(){//确定审批
+      this.auditInfo.applyKeyid = this.$route.params.departData.id;
+      console.log(this.auditInfo);
+      api(softhardApiList.commApproveSubmit,this.auditInfo).then((res) => {
+          console.log(res);
+          if(res.data.errcode == 0) {
+            console.log("审批成功");
+            this.$router.go(-1);//返回上一页
+          }else{
+              this.$Message.error(res.data.errmsg);
+          }
+        }, (error) => {})
+    },
+    resources(type){//处理事件跳转选择
+      switch (type) {
+        case 0:
+          this.$router.push({//配置资源
+            name: 'allocation',
+            params: {table:this.tableList.data,departData:this.$route.params.departData}
+          })
+          break
+        case 1://资源不足
+          this.$router.push({
+            name: 'addApply',
+            params:{departData:this.$route.params.departData}
+          })
+          break
+      }
+    },
+    submit(type){//保存申请服务器
+      this.configInfo.type = type; //提交类型：1仅保存，2提交
+      this.configInfo.applyServer = [];
+      this.configInfo.applyServer = this.tableList.data;
+      this.unitList.forEach(item => {
+        if(item.id == this.configInfo.applyOrgid){
+          this.configInfo.applyOrgname = item.name;
+        }
+      })
+      console.log(this.configInfo);
+      if(this.$route.params.id==3){
+        this.configInfo.applyType = 1;
+        api(softhardApiList.updateApplyManage,this.configInfo).then((res) => {
+          console.log(res);
+          if(res.data.errcode == 0) {
+            this.$router.go(-1);//返回上一页
+          }else{
+              this.$Message.error(res.data.errmsg);
+          }
+        }, (error) => {})
+      }else{
+        this.configInfo.applyType = this.$route.params.id;
+        api(softhardApiList.saveMyApply,this.configInfo).then((res) => {
+          console.log(res);
+          if(res.data.errcode == 0) {
+            this.$router.go(-1);//返回上一页
+          }else{
+              this.$Message.error(res.data.errmsg);
+          }
+        }, (error) => {})
+      }
+    },
+    quit () {// 取消
+      this.$router.go(-1)
+    },
+    downLoad(fileUrl){//下载
+      window.downloadFile(fileUrl);
+    },
+  },
+}
+</script>
+
+<style lang='less'>
+.server-list{
+  span.handle{
+    margin: 0 5px;
+    display: inline-block;
+    cursor: pointer;
+    &:hover{
+      color: #57a3f3;
+    }
+  }
+}
+.upload-list{
+  margin-top: 8px;
+  .upload-list-file{
+    padding: 4px;
+    color: #495060;
+    border-radius: 4px;
+    transition: background-color .2s ease-in-out;
+    overflow: hidden;
+    position: relative;
+    span{
+      cursor: pointer;
+      transition: color .2s ease-in-out;
+      i{
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        color: #495060;
+        text-align: center;
+      }
+    }
+    .upload-list-remove{
+      opacity: 0;
+      font-size: 18px;
+      cursor: pointer;
+      float: right;
+      margin-right: 4px;
+      color: #999;
+      transition: all .2s ease;
+    }
+  }
+}
+</style>

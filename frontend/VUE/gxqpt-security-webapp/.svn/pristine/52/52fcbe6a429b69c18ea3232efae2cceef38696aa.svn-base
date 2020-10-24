@@ -1,0 +1,84 @@
+<template>
+    <Sider ref="side1" hide-trigger collapsible :collapsed-width="70" width="220" v-model="isCollapsed">
+        <Menu class="menu" width="auto" :class="menuitemClasses">
+            <MenuItem name="0" class="text-center" disabled @click.native="collapsedSider">
+                <Icon :class="rotateIcon" type="chevron-left" size="24"></Icon>
+            </MenuItem>
+            <template v-for="(menu, index) in menus">
+                <MenuItem :name="index" v-if="!menu.subMenu" :key="index" @click.native="goTo(menu.link)">
+                    <i class="iconfont" :class="menu.icon" v-if="menu.icon"></i>
+                    <span>{{menu.name}}</span>
+                </MenuItem>
+                <Submenu :name="index" v-else>
+                    <template slot="title">
+                        <i class="iconfont" :class="menu.icon" v-if="menu.icon"></i>
+                        <span>{{menu.name}}</span>
+                    </template>
+                    <MenuItem v-for="(subMenu, idx) in menu.subMenu" :key="idx"  @click.native="goTo(subMenu.link)" :name="`${index}-${idx}`">
+                        <i class="iconfont" :class="subMenu.icon" v-if="subMenu.icon"></i>
+                        <span>{{subMenu.name}}</span>
+                    </MenuItem>
+                </Submenu>
+            </template>
+        </Menu>
+    </Sider>
+</template>
+<script>
+export default {
+    props: [ 'menus' ],
+    data() {
+        return {
+            isCollapsed: false,
+            url:'',
+            route:''
+        }
+    },
+    inject:['reload'],
+    computed: {
+        rotateIcon() {
+            return [
+                'menu-icon',
+                this.isCollapsed ? 'rotate-icon' : ''
+            ];
+        },
+        menuitemClasses() {
+            return [
+                'menu-item',
+                this.isCollapsed ? 'collapsed-menu' : ''
+            ]
+        }
+    },
+    watch: {
+        '$route': function (route) {
+            console.log(route);
+            this.route = route.name;
+        },
+    },
+    methods: {
+        collapsedSider() {
+            this.$refs.side1.toggleCollapse();
+        },
+        getStatus (urlStr) {
+            var urlStrArr = urlStr.split('/')
+            return urlStrArr[urlStrArr.length - 1]
+        },
+        goTo(path){
+            // console.log(path);
+            // console.log(this.url);
+            if(this.url == path && this.url.indexOf(this.route) != -1){//判断是否当前页面刷新
+                this.reload();//右侧栏目重载
+            }else{
+                this.$router.push({
+                    path: path
+                });
+                this.url = path;
+            }
+        }
+    }
+}
+</script>
+<style type="text/css" scoped="scoped">
+	.menu /deep/ a.router-link-active{
+		color: #2d8cf0 !important;
+	}
+</style>

@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/sys_com/com.css"/>
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <form autocomplete="off" id="myForm" action="" method="post">
+                            <table class="table default-table table-title-left">
+                                <tbody>
+                                <tr>
+                                    <th width="130">密码</th>
+                                    <td><input class="form-control inp-form" name="password"/></td>
+                                    <th width="130" rowspan="3">照片</th>
+                                    <td rowspan="3">
+                                        <input id="photo" type="hidden" class="form-control inp-form" name="photo"/>
+                                        <img src="${_static}/images/nopic.jpg" id="nopic" class="nopic"/>
+                                        <div id="filePicker" class="filePicker photoFilePicker"></div>
+                                        <div id="uploader" class="uploader photoUploader">
+                                            <div class="queueList">
+                                                <ul id="file_html" class="filelist">
+                                                </ul>
+                                                <div id="dndArea" class="placeholder dndArea"
+                                                     style="padding-top: 85px;">
+
+                                                    <p></p>
+                                                </div>
+                                            </div>
+                                            <div class="statusBar" style="display:none;">
+                                                <div class="progress">
+                                                    <span class="text">0%</span> <span class="percentage"></span>
+                                                </div>
+                                                <div class="info"></div>
+                                                <div class="btns">
+                                                    <div id="jxButton" class="jxButton"></div>
+                                                    <div class="uploadBtn">开始上传</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>排序权重</th>
+                                    <td><input class="form-control inp-form" name="sortValue" dataType="integeP" errormsg="请输入整数！"/></td>
+                                </tr>
+                                <tr>
+                                    <th><sub class="required">*</sub>姓名</th>
+                                    <td><input class="form-control inp-form" name="name" dataType="*1-20" errormsg="姓名过长，不能超过20字符"/></td>
+                                </tr>
+                                <tr>
+                                    <th>性别</th>
+                                    <td><select name="sex" class="form-control set-form">
+                                        <option>男</option>
+                                        <option>女</option>
+                                    </select></td>
+                                    <th>生日</th>
+                                    <td><input id="birthday" class="form-control inp-form Wdate" name="birthday"/></td>
+                                </tr>
+                                <tr>
+                                    <th>民族</th>
+                                    <td>
+                                        <select id="nation" name="nation" class="form-control  set-form">
+                                        </select>
+                                    </td>
+                                    <th><sub class="required">*</sub>办公电话</th>
+                                    <td><input class="form-control inp-form" dataType="phone" errormsg="请输入正确的电话号码" name="officetel"/></td>
+                                </tr>
+                                <tr>
+                                    <th><sub class="required">*</sub>手机</th>
+                                    <td><input class="form-control inp-form" name="phone" dataType="phone" errormsg="请输入正确的电话号码"/></td>
+                                    <th><sub class="required">*</sub>工作描述</th>
+                                    <td><input class="form-control inp-form" name="workDesc" dataType="*1-30"/></td>
+                                </tr>
+                                <tr>
+                                    <th>工作状态</th>
+                                    <td><select name="workStatus" class="form-control  set-form">
+                                        <option value="1">在职</option>
+                                        <option value="2">离职</option>
+                                    </select>
+                                    </td>
+                                    <th><sub class="required">*</sub>是否可登录</th>
+                                    <td>
+                                        <select name="loginable" class="form-control  set-form">
+                                            <option value="true">是</option>
+                                            <option value="false">否</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>个人简介</th>
+                                    <td colspan="3"><input class="form-control inp-form" dataType="*0-300" name="descrption"/></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <button type="hidden" class="btn-submit"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreFile.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    var id = "${id}";
+    var Index = null;
+    $('input[type=number]').keypress(function(e) {
+        if (!String.fromCharCode(e.keyCode).match(/[0-9]/)) {
+            return false;
+        }
+    });
+    /* 获取民族 */
+    function getNation(nation) {
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/admin/dictionary/getCodeList?code=NATION',
+            success: function (rows) {
+                if (rows.data) {
+                    var items = rows.data;
+                    var html = "";
+                    items.forEach(function (val, index) {
+                        html += '<option value="' + val.name + '">' + val.name + '</option>';
+                    })
+                    $("#nation").html(html);
+                    $("#nation").val(nation);
+                }
+                ;
+            }
+        })
+    }
+    //获取部门的值
+    getUserInfo();
+    function getUserInfo() {
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/auth/user/getById',
+            // url: 'http://192.168.1.124:9770/api/admin/user/getById',
+            data: {id: id},
+            success: function (res) {
+                $('[name="name"]').val(res.data.name);
+                $('[name="phone"]').val(res.data.phone);
+                $('[name="workDesc"]').val(res.data.workDesc);
+                $('[name="sex"]').val(res.data.sex);
+                var d = new Date(res.data.birthday);
+                var month = '01';
+                if(d.getMonth()+1<10){
+                    month = '0' + (d.getMonth()+1);
+                }
+                var date = '01';
+                if(d.getDate()<10){
+                    date = '0' + (d.getDate());
+                }
+                $('[name="birthday"]').val(d.getFullYear() + '-' + month + '-' + date);
+                $('[name="officetel"]').val(res.data.officetel);
+                $('[name="workStatus"]').val(res.data.workStatus);
+                $('[name="loginable"]').val(res.data.loginable);
+                $('[name="descrption"]').val(res.data.descrption);
+                $('[name="sortValue"]').val(res.data.sortValue);
+                getNation(res.data.nation);
+                $('[name="photo"]').val(res.data.photo);
+                $('#nopic').attr("src", res.data.photo);
+            }
+        })
+    }
+
+    $('.btn-submit').valid({
+        form: '#myForm',
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+        var data = $('#myForm').serializeJSON();
+        data.id = id;
+        ajaxHengyun({
+            url: '${_gate_url}/api/admin/user/update',
+            // url:'http://192.168.1.124:9770/api/admin/user/update',
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify(data),
+            success: function (res) {
+                if (res.data) {
+                    parent.home.reloadTable();
+                    parent.layer.msg("修改用户信息成功！", {icon: 6, time: 1000});
+                    if (data.id == '${l_u_i_s.id}') {
+                        parent.$('#user_name').text(data.name);
+                        parent.updateUserName = data.name;
+                        parent.$('#user_photo').attr("src",data.photo);
+                        ajaxHengyun({
+                            url: '${_cp}/power/updateCookie.do',
+                            type: 'POST',
+                            data: {userId:'${l_u_i_s.id}'},
+                            success: function (userJson) {
+
+                            }
+                        });
+                    }
+                    parent.layer.close(Index);
+                } else {
+                    if (res.errcode == '-1') {
+                        parent.layer.msg("修改用户信息出错，请重试！", {time: 1000});
+                    }else {
+                        parent.layer.msg(res.errmsg, {time: 1000});
+                    }
+                }
+            }
+        })
+    }});
+
+    function save(index) {
+        Index = index;
+        $('.btn-submit').click();
+    }
+    // function setCookie(name,value) {
+    //     // 设置一个cookie
+    //     var exp = new Date();
+    //     var Days = 1;
+    //     exp.setTime(exp.getTime() + Days*24*60*60*1000);
+    //     document.cookie = name + "="+ value + ";expires=" + exp.toUTCString();
+    // }
+    // function delCookie(name) {                   //删除一个cookie
+    //     var exp = new Date();
+    //     exp.setTime(exp.getTime() - 1);
+    //     var cval=getCookie(name);
+    //     if(cval!=null)
+    //         document.cookie= name + "="+cval+";expires="+exp.toUTCString();
+    // }
+    // function getCookie(name) {
+    //     //获取一个cookie
+    //     var strCookie = document.cookie;
+    //     var arr = strCookie.split(';');
+    //     for (var i = 0; i < arr.length; i++) {
+    //         var t = arr[i].split("=");
+    //         if(t[0] == ' '+name) {
+    //             return t[1];
+    //         }
+    //     };
+    //     return null;
+    // }
+    /* 附件上传 begin */
+    var token = $.cookie("_token");
+    var folderId = "-1";
+    var dataType = "IMAGE";
+    loadFile();
+
+    function loadFile() {
+        fileUpload = new FileUpload({
+            "filePicker": "filePicker",
+            "dndArea": "dndArea",
+            "uploader": "uploader",
+            "jxButton": "jxButton",
+            "folderId": folderId,
+            "dataType": dataType,
+            "token": token,
+            "_isAdmin": true
+        });
+    }
+
+    function successUpload(json) {
+        var url = json.data.list[0].url;
+        $("#photo").val(url);
+        $("#nopic").attr("src", url);
+    };
+</script>
+</body>
+
+</html>

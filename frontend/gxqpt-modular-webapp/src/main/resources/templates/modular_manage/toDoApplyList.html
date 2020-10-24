@@ -1,0 +1,326 @@
+<!doctype html>
+<html>
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <style type="text/css">
+        #right-box {
+            width: 100%;
+            height: calc(100% - 65px);
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        模块监控系统 &gt;<span class="page-title-scend">待办事项</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="list-section">
+                <form action="" class="form-inline search-form" autocomplete="off">
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>申请类型：</span>
+                            </label>
+                            <select id="applyType" name="applyType" class="form-control chosen-select selWid-form-search">
+                                <option value="">请选择</option>
+                                <option value="CATEGORYAPPLY">Categories</option>
+                                <option value="TAGAPPLY">Tags</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>申请名称：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input name="name" id="name" class="form-control" placeholder=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>申请时间：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input id="createTimeStart" name="createTimeStart" class="Wdate"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'#F{$dp.$D(\'createTimeEnd\')}'})"/>
+                            </div>
+                            <span>~</span>
+                            <div class="form-control-wrap">
+                                <input id="createTimeEnd" name="createTimeEnd" class="Wdate"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'createTimeStart\')}',startDate:'#F{$dp.$D(\'createTimeStart\',{d:+1})}'})"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <div class="form-control-wrap text-right">
+                                <button type="button" class="btn btn-primary search-button" onclick="search()">
+                                    <span class="glyphicon glyphicon-search"></span> 查询
+                                </button>
+                            </div>
+                            <div class="form-control-wrap text-right">
+                                <button type="button" class="btn btn-primary search-button" onclick="reset()">
+                                    <span class="glyphicon glyphicon-refresh"></span> 重置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="right-box" class="list-section">
+                <div class="grid-section">
+                    <table id="list"></table>
+                    <div id="pager"></div>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    var tableObj = null;//jqgrid表对象
+    var id = "";
+    //获取待办列表
+    gettoDoApplyList();
+
+    function gettoDoApplyList() {
+        var height = $("#right-box").height() - 80;
+        tableObj = $("#list").jqGrid({
+            mtype: 'POST',
+            postData: {"pageNo": 1, "pageSize": 20},
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                return JSON.stringify(postData);
+            },
+            url: '${_gate_url}/api/modular/mdapply/pageToDo',
+            colNames: ['申请类别', '申请名称', '申请描述', '申请理由', '申请时间', '申请人', '处理操作' ],
+            colModel: [{
+                name: 'applyType',
+                index: 'applyType',
+                sortable: false,
+                formatter:formatterApplyType
+            }, {
+                name: 'name',
+                index: 'name',
+                sortable: false
+            }, {
+                name: 'description',
+                index: 'description',
+                sortable: false
+            }, {
+                name: 'reason',
+                index: 'reason',
+                sortable: false
+            }, {
+                name: 'createTime',
+                index: 'createTime',
+                sortable: false,
+                formatter: formatterCreateTime
+            }, {
+                name: 'createUserName',
+                index: 'createUserName',
+                sortable: false
+            }, {
+                name: 'act',
+                index: 'act',
+                title: false,
+                width: '350',
+                align: 'center',
+                sortable: false,
+                formatter: formatterAct
+            }],
+            jsonReader: {
+                root: "data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            loadComplete: function (data) {
+                if(data.data.list.length==0){
+                    parent.layer.msg("无查询数据！", {icon: 6, time: 2000});
+                }
+            },
+            pager: '#pager',
+            height: height,
+            onPaging: function (pgButton) {
+                var pageNo = $(".ui-pg-input").val();
+                pageNo = parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total = parseInt(total);
+                if (pgButton == "next") {
+                    if (pageNo >= total) {
+                        return false;
+                    } else {
+                        pageNo += 1;
+                    }
+                } else if (pgButton == "prev") {
+                    if (pageNo > 1) {
+                        pageNo -= 1;
+                    } else {
+                        return false;
+                    }
+                } else if (pgButton == "last") {
+                    pageNo = total;
+                } else if (pgButton == "first") {
+                    pageNo = 1;
+                }
+                var pageSize = $(".ui-pg-selbox").val();
+                if (pageNo != 0) {
+                    $("#list").setGridParam({postData: {pageNo: pageNo, pageSize: pageSize}}).trigger("reloadGrid");
+                    return false;
+                }
+            }
+        });
+    }
+
+    //申请类型格式化
+    function formatterApplyType(cellvalue, options, rawObject) {
+        if (cellvalue == "CATEGORYAPPLY") {
+            return "Categories";
+        } else if(cellvalue == "TAGAPPLY"){
+            return "Tags";
+        }else{
+            return "";
+        }
+    }
+
+    //操作列
+    function formatterAct(cellvalue, options, rawObject) {
+        var returnValue = "";
+        id = rawObject.id;
+        returnValue += '<a class="ui-button" href="javascript:" onclick= "pass(\'' + id + '\')">';
+        returnValue += '通过</a>';
+        returnValue += '<span class="oper-separator"></span>';
+        returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="reject(\'' + id + '\')">';
+        returnValue += '驳回</a>';
+        return returnValue;
+    }
+
+    //申请时间格式化
+    function formatterCreateTime(cellvalue, options, rawObject) {
+        return formatterTime(cellvalue);
+    }
+
+    //刷新表格
+    function reloadJqgrid() {
+        var p = $("#list").jqGrid('getGridParam', 'page');//获取当前页
+        var pageSize = $(".ui-pg-selbox").val();
+        $("#list").setGridParam({
+            postData: {pageNo: p, pageSize: pageSize},
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                return JSON.stringify(postData);
+            }
+        }, true).trigger('reloadGrid');
+    }
+
+    //模糊查询
+    function search() {
+        var applyType = $('#applyType').val();
+        var name = $('#name').val();
+        var createTimeStart = $("#createTimeStart").val();
+        if (createTimeStart != "") {
+            createTimeStart = createTimeStart + " 00:00:00";
+        }
+        var createTimeEnd = $("#createTimeEnd").val();
+        if (createTimeEnd != "") {
+            createTimeEnd = createTimeEnd + " 23:59:59";
+        }
+        tableObj.setGridParam({
+            postData: {
+                pageNo: 1, pageSize: 20, data: {
+                    applyType:applyType,name: name,createTimeStart: createTimeStart, createTimeEnd: createTimeEnd
+                }
+            },
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                return JSON.stringify(postData);
+            }
+        }, true).trigger('reloadGrid');
+    }
+
+    //通过
+    function pass(id){
+        parent.layer.open({
+            id: 'pass',
+            type: 2,
+            anim: 6,
+            title: '处理意见',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '50%'],
+            content: "${_cp}/modular/passApply?id="+id,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确定', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function(index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("pass");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    }
+
+    //驳回
+    function reject(id){
+        parent.layer.open({
+            id: 'reject',
+            type: 2,
+            anim: 6,
+            title: '处理意见',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '50%'],
+            content: "${_cp}/modular/rejectApply?id="+id,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确定', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function(index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("reject");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    }
+</script>
+</body>
+</html>

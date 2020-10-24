@@ -1,0 +1,918 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/common.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/zstyle.css"/>
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+    <link href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css"/>
+    <link href="${_static}/js/lib/addressee/css/reset.css" rel="stylesheet" type="text/css">
+    <link href="${_static}/js/lib/addressee/css/styles.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        .qudaoContainer{
+            width: 100%;
+            border:1px solid #d6d6d6;
+            min-height: 32px;
+            background: #fff;
+            text-align: left;
+        }
+        .qudaoItem{
+            margin: 9px;
+            display: inline-block;
+        }
+        .qudaoItem i{
+            color:#FF4400;
+            cursor: pointer;
+        }
+        .rlease-left ul li .qudao {
+            height: auto;
+        }
+        img{
+            max-width: 200px;
+        }
+        .searchMain {
+            display: block;
+            width: calc(100% - 40px);
+            margin-left: auto;
+            margin-right: auto;
+            height: 38px;
+            border: solid 1px #cccccc;
+            padding-right: 32px;
+        }
+        .searchMain{
+            padding-right: 0;
+        }
+        .searchInput{
+            width:calc(100% - 40px);
+            height: 36px;
+            padding: 0 8px;
+        }
+        .searchBtn{
+            display: inline-block;
+            width:40px;
+            height: 38px;
+            background: url('${_static}/images/searchicon.png') no-repeat center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<div class="col-lg-9 col-md-9 col-sm-9 hidden">
+    <div>
+        <form class="form-horizontal" id="dataForm">
+
+            <div class="form-group">
+                <div >
+                    <div id="filePicker2" class="filePicker photoFilePicker"></div>
+                    <div id="uploader2" class="uploader photoUploader">
+                        <div class="queueList">
+                            <ul id="file_html" class="filelist">
+                            </ul>
+                            <div id="dndArea2" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                <p></p>
+                            </div>
+                        </div>
+                        <div class="statusBar" style="display:none;">
+                            <div class="progress">
+                                <span class="text">0%</span> <span class="percentage"></span>
+                            </div>
+                            <div class="info"></div>
+                            <div class="btns">
+                                <div id="jxButton2" class="jxButton"></div>
+                                <div class="uploadBtn">开始上传</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="filePicker1" class="filePicker photoFilePicker"></div>
+                    <div id="uploader1" class="uploader photoUploader">
+                        <div class="queueList">
+                            <ul id="file_html1" class="filelist">
+                            </ul>
+                            <div id="dndArea1" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                <p></p>
+                            </div>
+                        </div>
+                        <div class="statusBar" style="display:none;">
+                            <div class="progress">
+                                <span class="text">0%</span> <span class="percentage"></span>
+                            </div>
+                            <div class="info"></div>
+                            <div class="btns">
+                                <div id="jxButton1" class="jxButton"></div>
+                                <div class="uploadBtn">开始上传</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-10">
+                <script id="editor" type="text/plain"></script>
+                <code id="testcon" style="display:none;"></code>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="zworkspace-body">
+    <div class="clear rleasebox">
+        <div class="rlease-left fl">
+            <ul>
+                <li>
+                    <span class="pull-left lineh">渠道：</span>
+                    <span class="qudao">
+                        <div class="qudaoContainer" id="qudaoContainerInput"></div>
+                    </span>
+                </li>
+                <li>
+                    <span class="pull-left lineh">标题：</span>
+                    <span class="qudao">
+                        <input id="qudaoTitle" class="qudaoinput" type="text">
+                    </span>
+                </li>
+            </ul>
+            <textarea class="myEditor" name="news_content"  id="myEditor"></textarea>
+            <textarea class="myTextArea hidden form-control" name="news_content"  id="myTextArea" rows="12"></textarea>
+            <div id="ueHtml" class="hidden"></div>
+            <div id="upFileBtn" style="margin-top: 10px;">
+                <!--<button type="button" class="btn btn-primary btn-upload">
+                    <span class="fa fa-upload"></span> 上传
+                </button>-->
+                <div id="filePicker3" class="filePicker photoFilePicker"></div>
+                <div id="uploader3" class="uploader photoUploader hidden">
+                    <div class="queueList">
+                        <ul id="file_html3" class="filelist">
+                        </ul>
+                        <div id="dndArea3" class="placeholder dndArea" style="padding-top: 85px;">
+
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="statusBar" style="display:none;">
+                        <div class="progress">
+                            <span class="text">0%</span> <span class="percentage"></span>
+                        </div>
+                        <div class="info"></div>
+                        <div class="btns">
+                            <div id="jxButton3" class="jxButton"></div>
+                            <div class="uploadBtn">开始上传</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="showFile"></div><!--上传展示-->
+        </div>
+        <div class="rlease-right fr">
+            <div class="rlease-search">
+                <span>渠道</span>
+                <div>
+                        <span class="searchMain">
+                           <input type="" id="contactEdit" class="searchInput pull-left" placeholder="查找渠道" >
+                            <span class="searchBtn pull-left" onclick="channelLike()"></span>
+                        </span>
+                    <div class="idulbox">
+                        <ul class="ztree" id="treeDemo">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="rlease-search">
+                <span>渠道群组</span>
+                <div>
+                    <span class="searchMain">
+                        <input type="" id="groupName" class="searchInput pull-left" placeholder="查找群组" >
+                        <span class="searchBtn pull-left" onclick="channelgroupQuery()"></span>
+                    </span>
+                    <div class="idulbox">
+                        <ul class="idul" id="channelgroup"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btnbox">
+            <span class="spancurrent"  id="sendbtn" onclick="getFormData('0','')">发送</span>
+            <span id="sendtime" onclick="setTimeSave()">定时发送</span>
+            <span id="caogao" onclick="getFormData('1','')">存草稿</span>
+
+        </div>
+    </div>
+
+    <!--文本编辑器上传图片 end-->
+
+</div>
+
+
+
+
+<script>
+    var urlPost ="${_gate_url}";//跳转后台
+    var _cp = "${_cp}";//跳转前台
+    var type = 1;//1发布0修改
+    var id = null;//新增id空，由于js与修改公用，要进行区分
+    //初始化渠道
+    var addList=new Array();
+    ///文本编辑器的赋值
+    var pageType="msgs";
+    var _GATE_URL = "${_gate_url}";
+    window.UEDITOR_HOME_URL = "${_static}/js/lib/ueditor/";
+</script>
+<script type="text/javascript" src="${_static}/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="${_static}/js/jquery.combobox.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreFile.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreImg.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.js"></script>
+<!--<script type="text/javascript" src="${_static}/js/create.js"></script>-->
+
+<script>
+	$('.title_first',parent.document).text("消息发布");
+    $(".title_second",parent.document).text("草稿箱>详情");
+    var qudaoTypeArray = [];//渠道类型数组
+    var wxfileArray = [];
+    /* 附件上传 begin */
+    var token = getCurToken();//getToken();getCurToken();
+    var folderId="-1";
+    var dataType="";
+    var wbFileUrl = "",wbFileSize=0;
+    var id = '${id}';
+    loadFile();
+    /*
+    *
+    *
+    *上传控件webupload初始化
+    *
+    *
+    **/
+    function loadFile() {
+        fileUpload = new FileUploadImg({
+            "filePicker" : "filePicker2",
+            "dndArea" : "dndArea2",
+            "uploader" : "uploader2",
+            "jxButton" : "jxButton2",
+            "folderId":folderId,
+            "dataType":dataType,
+            "token":token,
+            "_isAdmin":true,
+            callbackfun:successUpload
+        });
+        fileUpload3 = new FileUploadImg({
+            "filePicker" : "filePicker3",
+            "dndArea" : "dndArea3",
+            "uploader" : "uploader3",
+            "jxButton" : "jxButton3",
+            "folderId":folderId,
+            "dataType":dataType,
+            "token":token,
+            "_isAdmin":true,
+            callbackfun:successUploadImg
+        });
+        fileUpload = new FileUpload({
+            "filePicker" : "filePicker1",
+            "dndArea" : "dndArea1",
+            "uploader" : "uploader1",
+            "jxButton" : "jxButton1",
+            "folderId":folderId,
+            "dataType":dataType,
+            "token":token,
+            "_isAdmin":true
+        });
+    }
+    /*
+    *
+    *
+    *图片上传成功后回调
+    *
+    *
+    **/
+    function successUpload(json) {
+        wxfileArray.push(json.data.list[0]);
+        var url = json.data.list[0].url;
+        //得到图片路径，存放到微信中，图文json串中
+        var html = '<img src="'+url+'"/>';
+        UE.getEditor('myEditor').focus();
+        UE.getEditor('myEditor').execCommand('inserthtml',html);
+    };
+    /*
+    *
+    *
+    *微博图片上传成功后回调
+    *
+    *
+    **/
+    function successUploadImg(json) {
+        $("#showFile").html(json.data.list[0].submittedFileName);
+        wbFileUrl = json.data.list[0].url;
+        wbFileSize = json.data.list[0].size;
+    };
+    /*
+    *
+    *
+    *附件上传成功后回调
+    *
+    *
+    **/
+    function successUploadFile(json) {
+        var url = json.data.list[0].url;
+        var name = json.data.list[0].submittedFileName;
+        var urlDownload = "${_gate_url}/api/file/file/download?url=" + url + "&filename=" + name;
+        html='<a href="'+urlDownload+'">'+name+'</a>';
+        $("#testcon").html(html);
+        window.setTimeout(function(){
+            UE.getEditor('myEditor').focus();
+            UE.getEditor('myEditor').execCommand('inserthtml',$('#testcon').html());
+        },1000);
+    };
+    var ue = UE.getEditor('myEditor');//初始化富文本编辑器
+    /*
+    *
+    *
+    *自定义富文本编辑器中的上传图片按钮
+    *
+    *
+    **/
+    UE.registerUI('uploadimg', function(editor, uiName) {
+        //注册按钮执行时的command命令，使用命令默认就会带有回退操作
+        editor.registerCommand(uiName, {
+            execCommand: function() {
+                alert('execCommand:' + uiName)
+            }
+        });
+        //创建一个button
+        var uploadimg = new UE.ui.Button({
+            //按钮的名字
+            name: "uploadimg",
+            //提示
+            title: "图片上传",
+            //添加额外样式，指定icon图标，这里默认使用一个重复的icon
+            cssRules: 'background-position: -380px 0px;',
+            //点击时执行的命令
+            onclick: function() {
+                //这里可以不用执行命令,做你自己的操作也可
+                //editor.execCommand(uiName);
+                //弹出上传文件的窗口
+
+                $("#uploader1 .webuploader-element-invisible").click();
+            }
+        });
+        //当点到编辑内容上时，按钮要做的状态反射
+        editor.addListener('selectionchange', function() {
+            var state = editor.queryCommandState(uiName);
+            if (state == -1) {
+                uploadimg.setDisabled(true);
+                uploadimg.setChecked(false);
+            } else {
+                uploadimg.setDisabled(false);
+                uploadimg.setChecked(state);
+            }
+        });
+        //因为你是添加button,所以需要返回这个button
+        return uploadimg;
+    });
+    /*
+    *
+    *
+    *自定义富文本编辑器中的上传附件按钮
+    *
+    *
+    **/
+    UE.registerUI('uploadfiles', function(editor, uiName) {
+        //注册按钮执行时的command命令，使用命令默认就会带有回退操作
+        editor.registerCommand(uiName, {
+            execCommand: function() {
+                alert('execCommand:' + uiName)
+            }
+        });
+        //创建一个button
+        var uploadfiles = new UE.ui.Button({
+            //按钮的名字
+            name: "uploadfiles",
+            //提示
+            title: "附件上传",
+            //添加额外样式，指定icon图标，这里默认使用一个重复的icon
+            cssRules: 'background-position: -620px -40px;',
+            //点击时执行的命令
+            onclick: function() {
+                //这里可以不用执行命令,做你自己的操作也可
+                // editor.execCommand(uiName);
+                $("#filePicker1 .webuploader-element-invisible").click();
+            }
+        });
+        //当点到编辑内容上时，按钮要做的状态反射
+        editor.addListener('selectionchange', function() {
+            var state = editor.queryCommandState(uiName);
+            if (state == -1) {
+                uploadfiles.setDisabled(true);
+                uploadfiles.setChecked(false);
+            } else {
+                uploadfiles.setDisabled(false);
+                uploadfiles.setChecked(state);
+            }
+        });
+        //因为你是添加button,所以需要返回这个button
+        return uploadfiles;
+    });
+
+
+
+    /*
+    *
+    *
+    *ztree树配置
+    *
+    *
+    **/
+    var setting = {
+        view: {
+            showIcon: showIconForTree
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            onClick: onClick
+        }
+
+
+    };
+    var settingTwo = {
+        view: {
+            showIcon: showIconForTree
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            onClick: onClickTwo
+        }
+
+
+    };
+    function showIconForTree(treeId, treeNode) {//不显示节点图标
+        return false;
+    };
+    function onClick(event, treeId, treeNode, clickFlag) {
+        if(!treeNode.id){
+            return false;
+        };
+        if(treeNode.children){
+            return false;
+        };
+        for(var i in qudaoTypeArray){
+            if(qudaoTypeArray[i].id==treeNode.id){
+                return false;
+            }
+        };
+        if(treeNode.name){
+            var html='<span class="qudaoItem">'+treeNode.name+'<i class="fa fa-remove" onclick="removeQudaoItem(this,\''+treeNode.id+'\')"></i></span>';
+            $("#qudaoContainerInput").append(html);
+            var qudaoInfo={
+                id:treeNode.id,
+                channelType:treeNode.type,
+                name:treeNode.name
+            };
+            qudaoTypeArray.push(qudaoInfo);
+            isShowUe();
+        };
+    };
+    function onClickTwo(event, treeId, treeNode, clickFlag) {
+        if(!treeNode.id){
+            return false;
+        };
+        var id = treeNode.id;
+        ajaxHengyun({
+            type:"get",
+            dataType: 'json',
+            url:  '${_gate_url}/api/msgs/channelgroup/detail',
+            data:{id:id},
+            success:function(rows){
+                if(rows.data){
+                    rows.data.forEach(function(val,index){
+                        var qudaoInfo={
+                            id:val.id,
+                            channelType:val.type,
+                            name:val.name
+                        };
+                        var ishove = false;
+                        for(var i in qudaoTypeArray){
+                            if(qudaoTypeArray[i].id==val.id){
+                                ishove = true;
+                            }
+                        };
+                        if(!ishove){
+                            qudaoTypeArray.push(qudaoInfo);
+                            var html='<span class="qudaoItem">'+val.name+'<i class="fa fa-remove" onclick="removeQudaoItem(this,\''+val.id+'\')"></i></span>';
+                            $("#qudaoContainerInput").append(html);
+                        }
+                    });
+                    isShowUe();
+                }
+            }
+        });
+        /*if(treeNode.name){
+            var html='<span class="qudaoItem">'+treeNode.name+'<i class="fa fa-remove" onclick="removeQudaoItem(this,\''+treeNode.id+'\')"></i></span>';
+            $("#qudaoContainerInput").append(html);
+            var qudaoInfo={
+                id:treeNode.id,
+                channelType:treeNode.type,
+                name:treeNode.name
+        };
+            qudaoTypeArray.push(qudaoInfo);
+            isShowUe();
+        };*/
+    };
+    /*var zNodes =[
+        { id:1, name:"微信", type:"wx", open:true,
+            children: [
+                { id:11, name:"微信公众号1", type:"wx"},
+                { id:12, name:"微信公众号2", type:"wx"},
+                { id:13, name:"微信公众号3", type:"wx"},
+            ]},
+        { id:2, name:"微博", type:"wb",
+            children: [
+                { id:21, name:"官方微博1", type:"wb"},
+                { id:22, name:"官方微博2", type:"wb"},
+                { id:23, name:"官方微博3", type:"wb"},
+            ]},
+        { id:3, name:"公示平台", type:"gspt",
+            children: [
+                { id:31, name:"公示平台1", type:"gspt"},
+                { id:32, name:"公示平台2", type:"gspt"},
+                { id:33, name:"公示平台3", type:"gspt"},
+            ]},
+        { id:4, name:"移动终端", type:"ydzd",},
+
+    ];
+    $.fn.zTree.init($("#treeDemo"), setting, zNodes);*/
+
+    /*
+    *
+    *
+    *删除渠道项
+    *
+    *
+    **/
+    function removeQudaoItem(ele,id){
+        for(var i in qudaoTypeArray){
+            if(qudaoTypeArray[i].id==id){
+                $(ele).parent().remove();
+                qudaoTypeArray.splice(i,1);
+                isShowUe();
+            }
+        };
+    };
+
+    /*
+    *
+    *
+    *判断显示富文本还是纯文本
+    *
+    *
+    **/
+    function isShowUe(){
+        loadFile();
+        var isShowUe = true;
+        if(qudaoTypeArray.length>0){
+            for(var i in qudaoTypeArray){
+                if(qudaoTypeArray[i].channelType=="2"){
+                    isShowUe=false;
+                }
+            };
+            if(isShowUe){
+                $("#myTextArea,#upFileBtn").addClass("hidden");
+                $("#myEditor").removeClass("hidden");
+                $("#myTextArea").val("");
+                $("#showFile").html("");
+                wbFileUrl = "";
+            }else{
+                $("#myEditor").addClass("hidden");
+                ue.setContent("");
+                $("#myTextArea,#upFileBtn").removeClass("hidden");
+            }
+        }else{
+            $("#myTextArea,#upFileBtn").addClass("hidden");
+            $("#myEditor").removeClass("hidden");
+            $("#myTextArea").val("");
+        };
+    }
+    /*
+   *
+   *
+   *获取渠道信息
+   *
+   *
+   **/
+    function channelTree(){
+        ajaxHengyun({
+            type:"get",
+            dataType: 'json',
+            url:  '${_gate_url}/api/msgs/channel/tree',
+            data:{},
+            success:function(rows){
+                if( rows.data.length<1){
+                    zNodes =[
+                        { id:"", name:"暂无数据"},
+                    ];
+                    rows.data=zNodes;
+                }else{
+                    for(var i in rows.data){
+                        rows.data[i].open=true;
+                    };
+                };
+                $.fn.zTree.init($("#treeDemo"), setting, rows.data);
+            }
+        });
+    };
+    /*
+   *
+   *
+   *查询渠道信息
+   *
+   *
+   **/
+    function channelLike(){
+        ajaxHengyun({
+            type:"get",
+            dataType: 'json',
+            url:  '${_gate_url}/api/msgs/channel/like',
+            data:{name:$("#contactEdit").val()},
+            success:function(rows){
+                if( rows.data.length<1){
+                    zNodes =[
+                        { id:"", name:"暂无数据"},
+                    ];
+                    rows.data=zNodes;
+                };
+                $.fn.zTree.init($("#treeDemo"), setting, rows.data);
+            }
+        });
+    };
+    /*
+   *
+   *
+   *获取渠道群组信息
+   *
+   *
+   **/
+    function channelgroupAll(){
+        ajaxHengyun({
+            type:"get",
+            dataType: 'json',
+            url:  '${_gate_url}/api/msgs/channelgroup/all',
+            data:{name:null},
+            success:function(rows){
+                if(rows.data==null||rows.data.length<1){
+                    zNodes =[
+                        { id:"", name:"暂无数据"},
+                    ];
+                    rows.data=zNodes;
+                };
+                $.fn.zTree.init($("#channelgroup"), settingTwo, rows.data);
+            }
+        });
+    };
+    /*
+   *
+   *
+   *查询渠道群组信息
+   *
+   *
+   **/
+    function channelgroupQuery(){
+        ajaxHengyun({
+            type:"post",
+            dataType: 'json',
+            url:  '${_gate_url}/api/msgs/channelgroup/all',
+            data:{name:$("#groupName").val()},
+            success:function(rows){
+                if(rows.data==null||rows.data.length<1){
+                    zNodes =[
+                        { id:"", name:"暂无数据"},
+                    ];
+                    rows.data=zNodes;
+                };
+                $.fn.zTree.init($("#channelgroup"), settingTwo, rows.data);
+            }
+        });
+    };
+    /*
+   *
+   *
+   *定时发送
+   *
+   *
+   **/
+    function setTimeSave(){
+        var errorArray=[];
+
+        if(qudaoTypeArray.length==0){
+            errorArray.push("发送渠道不能为空");
+        };
+        if(!$("#qudaoTitle").val()){
+            errorArray.push("发送主题不能为空");
+        };
+        if(!$("#myTextArea").val() && !ue.getContent()){
+            errorArray.push("消息内容不能为空");
+        };
+        if(errorArray.length>0){
+            parent.layer.msg(errorArray.join(","),{time:3000});
+            return false;
+        };
+        parent.layer.open({
+            id: 'createFile',
+            type: 2,
+            anim: 6,
+            title: '定时发送',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['500px', '450px'],
+            content: "${_cp}/msgs/setTimeSave",
+            btn: ['<span class="glyphicon glyphicon-ok"></span>确定并发送', '<span class="glyphicon glyphicon-backward"></span>取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("createFile");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    };
+    /*
+     *修改方法
+     *
+     */
+    function update(dataDto){
+        ajaxHengyun({
+            type:"post",
+            dataType: 'json',
+            contentType: 'application/json',
+            url:  '${_gate_url}/api/msgs/message/update',
+            data:JSON.stringify(dataDto),
+            success:function(rows){
+                if(rows.data){
+                    parent.layer.msg("保存成功",{time:2000});
+                    if(dataDto.draft=="0"){
+                        if(!dataDto.startTime){
+                            window.location.href="${_cp}/msgs/publishSucess";
+                        }else{
+                            window.location.href="${_cp}/msgs/drafts";
+                        }
+                    }
+                    if(dataDto.draft=="1"){
+                        window.location.href="${_cp}/msgs/drafts";
+                    }
+                }else{
+                    parent.layer.msg(rows.errmsg,{time:3000});
+                }
+            }
+        });
+    };
+    /*
+     *获取保存数据
+     */
+    function getFormData(draftVal,time){
+        var dataDto={
+            "id": id,
+            "channelIds": qudaoTypeArray,//渠道集合
+            "draft": Number(draftVal),//发送状态，0发送，1存草稿
+            "fileUrl": "",//信息文件url
+            "filepath": "",//微信封面图片地址
+            "imgText": "",//消息内容
+            "startTime": time,//定时发送时间
+            "topic": $("#qudaoTitle").val()//信息的主题
+        };
+        //判断发送渠道中是否存在微信、微博
+        var wbIsExist=false,wxIsExist=false;
+        for(var i in qudaoTypeArray){
+            if(qudaoTypeArray[i].channelType=="2"){
+                wbIsExist=true;
+            };
+            if(qudaoTypeArray[i].channelType=="1"){
+                wxIsExist=true;
+            }
+        };
+        if(wbIsExist && !wxIsExist){//存在微博不存在微信的情况
+            dataDto.fileUrl=wbFileUrl;
+            dataDto.filepath="";
+            dataDto.imgText=$("#myTextArea").val();
+        }else if(wbIsExist && wxIsExist){//既存在微博也存在微信的情况
+            var num = 64* 1024
+            if(Number(wbFileSize)>num){
+                var errorInfo = "选择的发送渠道中存在微信公众号，上传的图片将在微信中作为封面图片使用，图片大小不能超过64KB！";
+                parent.layer.msg(errorInfo,{time:5000});
+                return false;
+            };
+            dataDto.fileUrl=wbFileUrl;
+            dataDto.filepath=wbFileUrl;
+            dataDto.imgText=$("#myTextArea").val();
+        }else if(!wbIsExist && wxIsExist){//不存在微博存在微信的情况
+            dataDto.fileUrl="";
+            dataDto.imgText=ue.getContent();
+            $("#ueHtml").html(dataDto.imgText);
+            var wxImg = $("#ueHtml img");
+            if(wxImg && wxImg.length>0){
+                var wxImgFilePath = $(wxImg[0]).attr("src");
+                var wxImgSize = "";
+                for(var j in wxfileArray){
+                    if(wxfileArray[j].url==wxImgFilePath){
+                        wxImgSize=wxfileArray[j].size;
+                    }
+                }
+                var num = 64* 1024;
+                if(Number(wxImgSize)>num){
+                    var errorInfo = "选择的发送渠道中存在微信公众号，富文本编辑器中的第一张图片将在微信中作为封面图片使用，因此第一张图片大小不能超过64KB！";
+                    parent.layer.msg(errorInfo,{time:5000});
+                    return false;
+                }else{
+                    dataDto.filepath=wxImgFilePath;
+                };
+            };
+        }else{//既不存在微博也不存在微信的情况
+            dataDto.fileUrl="";
+            dataDto.filepath="";
+            dataDto.imgText=ue.getContent();
+        };
+        dataDto.channelIds=qudaoTypeArray;
+        if(draftVal=="0"){
+            var errorArray=[];
+            if(dataDto.channelIds.length==0){
+                errorArray.push("发送渠道不能为空");
+            };
+            if(!dataDto.topic){
+                errorArray.push("发送主题不能为空");
+            };
+            if(!dataDto.imgText){
+                errorArray.push("消息内容不能为空");
+            };
+            if(errorArray.length>0){
+                parent.layer.msg(errorArray.join(","),{time:3000});
+                return false;
+            };
+        }
+        update(dataDto);
+    };
+    /*
+     *获取详情信息
+     **/
+    function getView(){
+        ajaxHengyun({
+            type:"get",
+            dataType: 'json',
+            url:  '${_gate_url}/api/msgs/drafts/detail',
+            data:{"msgId": "${id}"},
+            success:function(rows){
+                var channelsList = rows.data.channels;
+                for(var i in channelsList){
+                    var item = {
+                        id:channelsList[i].id,
+                        channelType:channelsList[i].type,
+                        name:channelsList[i].name
+                    };
+                    qudaoTypeArray.push(item);
+                    var html='<span class="qudaoItem">'+channelsList[i].name+'<i class="fa fa-remove" onclick="removeQudaoItem(this,\''+channelsList[i].id+'\')"></i></span>';
+                    $("#qudaoContainerInput").append(html);
+                };
+                $("#qudaoTitle").val(rows.data.title);//标题
+                $("#myTextArea").val(rows.data.content);//内容
+                $("#testcon").html(rows.data.content);
+                $("#showFile").html(rows.data.fileName);
+                UE.getEditor('myEditor').execCommand('inserthtml',$('#testcon').html());
+                isShowUe();
+                id = Number(rows.data.msgId);
+            }
+        });
+    };
+
+    $(function(){
+        
+        channelTree();
+        channelgroupAll();
+        getView();
+        UE.getEditor('myEditor').addListener('ready', function (editor) {
+            isShowUe();
+            if($('#testcon').html()){
+                UE.getEditor('myEditor').execCommand('inserthtml',$('#testcon').html());
+            }
+        });
+    });
+</script>
+</body>
+
+</html>

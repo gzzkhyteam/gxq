@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>草稿箱</title>
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/common.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/channel.css"/>
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/drafts.css">
+    <style>
+        #right-box{
+            height:calc(100% - 45px);
+            border: 0;
+        }
+        .combo{
+            border-radius: 0;
+        }
+        .combo .combo-text{
+            width: 125px!important;
+        }
+        .combo-arrow{
+            background: url(${_static}/images/combo_arrow.jpg) no-repeat center center;
+        }
+        .ui-jqgrid-hdiv .ui-jqgrid-htable .ui-th-div{
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body style="background: #ffffff;border: 1px solid #eee;padding: 2%;height: 98%;">
+<div class="draftsWrap">
+    <ul class="form-wrap">
+        <li>
+            <label for="">渠道类型：</label>
+            <input class="easyui-combobox" id="way_type">
+        </li>
+        <li>
+            <label for="">渠道：</label>
+            <input type="text" class="dr-ipt" >
+        </li>
+        <li>
+            <label for="">编辑时间：</label>
+            <input id="createTimeStart" name="createTimeStart" class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'#F{$dp.$D(\'createTimeEnd\')}'})" />
+            <span>至</span>
+            <input id="createTimeEnd" name="createTimeEnd" class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'createTimeStart\')}',startDate:'#F{$dp.$D(\'createTimeStart\',{d:+1})}'})" />
+        </li>
+        <li style="float: right;">
+            <input type="button" class="btn-query" value="查询" onclick="search()">
+        </li>
+        <div class="clearfix"></div>
+    </ul>
+    <!--<div>
+        草稿箱（共<span id="number"></span>封）&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="" class="delete">删除</a>
+    </div>-->
+    <div id="right-box" class="list-section">
+        <!--<div class="list-content">-->
+        <!--<div class="form-inline">-->
+        <!--<fieldset>-->
+        <div class="grid-section">
+            <table id="list">
+            </table>
+            <div id="pager"></div>
+        </div>
+        <!--</fieldset>-->
+        <!--</div>-->
+        <!--</div>-->
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${_static}/js/jquery-1.8.0.js"></script>
+<script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/jquery.combobox.js"></script>
+<script>
+
+    var tableObj = null;//jqgrid表对象
+    $(function(){
+        ajaxHengyun({
+            type: 'post',
+            url: "${_gate_url}/api/msgs/channeltype/querySelect",
+            dataType: "json",
+            contentType: "application/json",
+            cache: false,
+            success: function(res) {
+                res.data.list.unshift({
+                    name: '全部',
+                    id: ''
+                })
+                $("#way_type").combobox({
+                    disabled: false,
+                    editable: false, // 可编辑
+                    panelHeight: 'auto',
+                    valueField: 'id',
+                    textField: 'name',
+                    height: 32,
+                    multiple: false, // 单选复选
+                    data: res.data.list,
+                    onSelect: function(data) {
+                        $("#way_type").attr("id_find",$(this).combobox('getValues')[0]);
+                    },
+                    onLoadSuccess: function(data) {
+                        $("#way_type").attr("id_find","")
+                        //下拉框热区范围改为整个输入框
+                        $(".combo").click(function(){
+                            $(this).prev().combobox("showPanel");
+                        });
+                    }
+                });
+            },
+        });
+
+    })
+    //获取文档列表
+    window.onload=function(){
+        getdocumentList();
+    }
+    function getdocumentList() {
+        var height = $("#right-box").height() - 90;
+        tableObj = $("#list").jqGrid({
+            mtype: 'post',
+            datatype: "json",
+            postData: {
+                pageNo: 1,
+                pageSize: 10,
+                data: {
+                    msgStatus: 1
+                }
+            },
+            contentType: 'application/json',
+            serializeGridData:function(postData){
+            	$('.title_first',parent.document).text("消息发布");
+                $(".title_second",parent.document).text("草稿箱>列表");
+                return JSON.stringify(postData);
+            },
+            url: '${_gate_url}/api/msgs/message/query',
+            rowList : [10,15,20],
+            rowNum:10,
+            sortname: 'id', //初始化的时候排序的字段
+            colNames: ['渠道', '消息标题',"编辑时间","操作"],
+            colModel: [{
+                name: 'channelName',
+                index: 'channelName',
+                width: '70',
+            }, {
+                name: 'title',
+                index: 'title'
+            }, {
+                name: 'sendTime',
+                index: 'sendTime',
+                width: '70',
+            }, {
+                name: 'act',
+                index: 'act',
+                title: false,
+                width: '50',
+                align: 'center',
+                formatter: formatterAct
+            }],
+            jsonReader: {
+                root:"data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            onPaging: function(pgButton) {
+                var pageNo = $(".ui-pg-input").val();
+                pageNo = parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total = parseInt(total);
+                if(pgButton == "next") {
+                    if(pageNo >= total) {
+                        return false;
+                    } else {
+                        pageNo += 1;
+                    }
+                } else if(pgButton == "prev") {
+                    if(pageNo > 1) {
+                        pageNo -= 1;
+                    } else {
+                        return false;
+                    }
+                } else if(pgButton == "last") {
+                    pageNo = total;
+                } else if(pgButton == "first") {
+                    pageNo = 1;
+                }
+                var pageSize = $(".ui-pg-selbox").val();
+                if(pageNo != 0) {
+                    $("#list").setGridParam({
+                        postData: {
+                            pageNo: pageNo,
+                            pageSize: pageSize,
+                            msgStatus: 1
+                        }
+                    }).trigger("reloadGrid");
+                    return false;
+                }
+            },
+            pager: '#pager',
+            height: height
+        });
+
+    }
+    //上传时间
+    function formatterCreateTime(cellvalue, options, rawObject) {
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+        return new Date(cellvalue).Format("yyyy-MM-dd hh:mm:ss");
+    }
+    //是否过期
+    function formatterIsEnable(cellvalue, options, rawObject) {
+        if(cellvalue=="true"){
+            return "在用";
+        }else{
+            return "过期";
+        }
+    }
+    //操作列
+    var id;
+    function formatterAct(cellvalue, options, rawObject) {
+        var returnValue = "";
+        id=rawObject.id;
+        if (rawObject.fileType=="doc" || rawObject.fileType=="docx" || rawObject.fileType=="txt" ||
+            rawObject.fileType=="xls" || rawObject.fileType=="xlsx" || rawObject.fileType=="pdf"){
+            returnValue += '<a class="ui-button" href="javascript:" onclick="viewPage('+id+')">';
+            returnValue += '预览</a>';
+            returnValue += '<span class="oper-separator"></span>';
+        }
+        returnValue += '<a class="ui-button" href="${_cp}/msgs/draftsEdit?id='+id+'&type=0">';
+        returnValue += '详情</a>';
+        returnValue += '<span class="oper-separator"></span>';
+        returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick="deletePage(\''+id+'\')">';
+        returnValue += '删除</a>';
+        return returnValue;
+    }
+    //模糊查询
+    function search() {
+        var name = $('.dr-ipt').val();
+        var channetype_id=$("#way_type").attr("id_find")
+        var classifyId = $("#classifyId").val();
+        var createUserName = $("#createUserName").val();
+        var createTimeStart = $("#createTimeStart").val();
+        if(createTimeStart != "") {
+            createTimeStart = createTimeStart + " 00:00:00";
+        }
+        var createTimeEnd = $("#createTimeEnd").val();
+        if(createTimeEnd != "" ) {
+            createTimeEnd = createTimeEnd + " 23:59:59";
+        };
+        var isEnable = $("#isEnable").val();
+        tableObj.setGridParam({
+            postData: {
+                pageNo: 1,
+                pageSize: 10,
+                data: {
+                    msgStatus: 1,//发送状态：0=发送；1=存草稿；2=草稿编辑发送
+                    name: name,
+                    channelType: channetype_id,
+                    createTimeStart: createTimeStart,
+                    createTimeEnd: createTimeEnd,
+                    isEnable: isEnable
+                }
+            },
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function(postData) {
+                return JSON.stringify(postData);
+            }
+        },true).trigger('reloadGrid');
+    }
+    //刷新表格 发送状态：0=发送；1=存草稿；2=草稿编辑发送
+    function reloadJqgrid(){
+        tableObj.setGridParam({
+            postData:{pageNo:1,pageSize:20, data: {
+                    msgStatus: 1}
+            }},true).trigger('reloadGrid');
+    }
+    /* 删除 */
+    function deletePage(id) {
+        parent.layer.confirm("您确定要删除吗？", {
+            title: '温馨提示',
+            shade: [0.4, '#000'],
+            btn: ['确定', '取消'] //按钮
+        }, function(value, index, elem) {
+            ajaxHengyun({
+                type: "GET",
+                url: "${_gate_url}/api/msgs/message/delete",
+                data:{"id":id},
+                success: function(rows) {
+                    if(rows.data) {
+                        parent.layer.msg("删除成功！", {
+                            icon: 6,
+                            time: 1000
+                        });
+                        parent.home.reloadJqgrid();
+                    } else {
+                        parent.layer.msg("删除失败，请稍后重试！", {
+                            time: 1000
+                        });
+                    }
+                }
+            });
+        }, function() {
+            closeLayer();
+        });
+    }
+    //添加页面数据用后台编程获取数据时可删除
+    var newrowid;
+</script>
+</html>
+
+

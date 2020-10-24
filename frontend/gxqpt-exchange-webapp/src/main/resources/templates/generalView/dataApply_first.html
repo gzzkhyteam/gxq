@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>数据申请</span> &gt; <span class="page-title-scend">返回数据字段选择</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+            </div>
+        </div>
+        <div class="view_container view_container_first row">
+            <div class="main_right pull-right">
+                <div id="secondPage" class="secondPage">
+                    <div class="layerDataApply minHeight360 clearfix">
+                        <h3>选择要返回的数据字段
+                            <a href="javascript:void(0);" class="selAll">全选</a>
+                            <a href="javascript:void(0);" class="noselAll">取消全选</a>
+                        </h3>
+                        <ul id="fieldList" class="elementData  clearfix">
+                        </ul>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary" onclick="save()">下一步</button>
+                        <button type="button" class="btn btn-primary" onclick="cancel()">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $(".selAll").click(function(){
+        var elementArray = $(".elementData li");
+        if(elementArray.length>0){
+            elementArray.each(function(index,value){
+                $(value).find("input").prop("checked",true);
+                $(value).find(".selectno").addClass("checked");
+            });
+        }
+    });
+    $(".noselAll").click(function(){
+        var elementArray = $(".elementData li");
+        if(elementArray.length>0){
+            elementArray.each(function(index,value){
+                $(value).find("input").removeAttr("checked");
+                $(value).find(".selectno").removeClass("checked");
+            });
+        }
+    });
+    $("body").on("click",".selectno",function(){
+        if($(this).hasClass("checked")){
+            $(this).removeClass("checked");
+            var ipt = $(this).parent().find("input");
+            $(ipt).removeAttr("checked");
+        }else{
+            $(this).addClass("checked");
+            var ipt = $(this).parent().find("input");
+            $(ipt).prop("checked",true);
+        }
+    });
+    var apiElementList=[];
+    var applyId="${applyId}";
+    var pageType = "${pageType}";
+    var apiId="${dataId}";
+    function getApiElementList() {
+        ajaxHengyun({
+            type: 'POST',
+            async:false,
+            url: '${_gate_url}/api/exchange/dataapi/api/getElementByApiId',
+            data:{apiId: apiId},
+            datatype: "json",
+            success: function (rows) {
+                if (rows.data) {
+                    apiElementList=rows.data;
+                }
+            }
+        });
+    }
+    getZtree();
+    function getZtree(){//获取字段信息
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/element/getList',
+            data:{dirId: "${catalogId}"},
+            datatype: "json",
+            success: function (rows) {
+                if(rows.data){
+                    if(apiId){
+                        getApiElementList();
+                    }
+                    var html="";
+                    for(var i in rows.data){
+                        var checkedType=false;
+                        if(apiElementList){
+                            apiElementList.forEach(function(value,index){
+                                if(value.id==rows.data[i].id){
+                                    checkedType=true;
+                                }
+                            });
+                        }
+                        if(checkedType){
+                            html+='<li class="pull-left clearfix">';
+                            html+='<input type="checkbox" name="unitIdsBox" checked  class="hidden" value="'+rows.data[i].id+'" autocomplete="off"/>';
+                            html+='<span class="selectno checked"></span>';
+                            html+='<label class="pull-left">'+rows.data[i].fieldName+'</label>';
+                            html+='</li>';
+                        }else{
+                            html+='<li class="pull-left clearfix">';
+                            html+='<input type="checkbox" name="unitIdsBox"  class="hidden" value="'+rows.data[i].id+'" autocomplete="off"/>';
+                            html+='<span class="selectno"></span>';
+                            html+='<label class="pull-left">'+rows.data[i].fieldName+'</label>';
+                            html+='</li>';
+                        };
+                    };
+                    $("#fieldList").append(html);
+                    updateIformHeight();
+                }
+            }
+        });
+    };
+    function save(){
+        var fieldIds=[];
+        var inputCheckbox=$("input[name=unitIdsBox]:checked");
+        inputCheckbox.each(function(index,value){
+            fieldIds.push($(value).val());
+        });
+        if(fieldIds.length<1){
+            parent.layer.msg("请选择字段！",{time:1500});
+            return false;
+        }
+        var dto={
+            fieldIds:fieldIds,
+            apiId:apiId
+        }
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/exchange/dataapi/api/saveapielementchosen',
+            data: JSON.stringify(dto),
+            success: function (rows) {
+                if (rows.data) {
+                    if(pageType =='apiApply'){
+                        window.location.href="${_cp}/module/generalSecond?dataId="+apiId+"&catalogId=${catalogId}&applyId="+applyId;
+                    }else {
+                        window.location.href="${_cp}/module/shareMagApplySecond?pageType=${pageType}&dataId="+apiId+"&catalogId=${catalogId}&applyId="+applyId;
+                    }
+                }else{
+                    parent.layer.msg(rows.errmsg,{time:1500});
+                }
+            }
+        });
+    }
+    function cancel() {
+        if(pageType == "api"){
+            window.location.href="${_cp}/module/shareMagApiList";
+        }else {
+            window.location.href="${_cp}/module/shareMagApplyList";
+        }
+    }
+</script>
+</body>
+</html>

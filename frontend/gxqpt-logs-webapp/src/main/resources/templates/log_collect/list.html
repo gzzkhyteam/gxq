@@ -1,0 +1,788 @@
+<!doctype html>
+<html>
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <style type="text/css">
+        #right-box {
+            width: 100%;
+            height: calc(100% - 250px);
+            border: 0;
+        }
+        .cbox {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        日志管理系统 &gt;<span class="page-title-scend">日志采集</span>
+                    </h5>
+                </div>
+                <div class="pull-right"></div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="list-section">
+                <form action="" class="form-inline search-form">
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>上传时间：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input id="createTimeStart" name="createTimeStart" class="Wdate"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'#F{$dp.$D(\'createTimeEnd\')}'})"/>
+                            </div>
+                            <span>~</span>
+                            <div class="form-control-wrap">
+                                <input id="createTimeEnd" name="createTimeEnd" class="Wdate"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'createTimeStart\')}',startDate:'#F{$dp.$D(\'createTimeStart\',{d:+1})}'})"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <div class="form-control-wrap text-right">
+                                <!--未加按钮权限-->
+                                <!--<button type="button" class="btn btn-primary search-button" onclick="search()">
+                                    <span class="glyphicon glyphicon-search"></span> 查询
+                                </button>-->
+
+                                <!--加了按钮权限-->
+                                <script type="text/javascript" id="logs_collect_query">
+                                    resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "logs_collect_query",
+                                        btnHtml :"<button type=\"button\" class=\"btn btn-primary search-button\" onclick=\"search()\">查询</button>",
+                                        htmlInsert: true
+                                    });
+                                 </script>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <div class="form-control-wrap text-right">
+                                <!--未加按钮权限-->
+                                <!--<button type="button" class="btn btn-primary search-button" onclick="reset()">
+                                    <span class="glyphicon glyphicon-refresh"></span> 重置
+                                </button>-->
+
+                                <!--加了按钮权限-->
+                                <script type="text/javascript" id="logs_collect_reset">
+                                    resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "logs_collect_reset",
+                                        btnHtml :"<button type=\"button\" class=\"btn btn-primary search-button\" onclick=\"search()\">重置</button>",
+                                        htmlInsert: true
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:20px;height: 90px;">
+
+                            <div id="system" style="height:30px;font-size: 13px;width: 100%">
+
+                            </div>
+                            <div style="float: left;width: 100%;font-size: 13px;">
+                                <div style="float: left;margin-top: 5px;"> 日志类型：</div>
+                                <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px;"> <input type="checkbox" name="logType" value="APACHE"  style="margin-right:5px;"/>APACHE</div>
+                                <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px;"> <input type="checkbox" name="logType" value="TOMCAT"  style="margin-right:5px;"/>TOMCAT</div>
+                                <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px;"> <input type="checkbox" name="logType" value="APP"  style="margin-right:5px;"/>应用系统</div>
+                                <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px;"> <input type="checkbox" name="logType" value="NGINX"  style="margin-right:5px;"/>NGINX</div>
+                                <div style="float: left;width: 100%">
+                                    <div style="float: left;margin-top: 5px"> 解析状态：</div>
+                                    <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px"> <input type="checkbox" name="parseStatus" value="PARSED"  style="margin-right:5px;"/>已解析</div>
+                                    <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px"> <input type="checkbox" name="parseStatus" value="NOTPARSED"  style="margin-right:5px;"/>未解析</div>
+                                    <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px"> <input type="checkbox" name="parseStatus" value="PARSING"  style="margin-right:5px;"/>解析中</div>
+                                    <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px"> <input type="checkbox" name="parseStatus" value="INVALID"  style="margin-right:5px;"/>已失效</div>
+                                    <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px"> <input type="checkbox" name="parseStatus" value="PARSEDFAILED"  style="margin-right:5px;"/>解析失败</div>
+
+                                </div>
+                            </div>
+
+                    </div>
+                    <div class="" style="float: left;width: 100%;margin-top: 5px">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <table>
+                                <tr>
+                                    <td style="width:90px;">
+                                        <!--未加按钮权限-->
+                                        <!--<button type="button" class="btn btn-primary btnh"   onclick="batchDelete()">批量删除</button>-->
+
+                                        <!--加了按钮权限-->
+                                        <script type="text/javascript" id="logs_collect_deletebatch">
+                                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                resource_code : "logs_collect_deletebatch",
+                                                btnHtml :"<button type=\"button\" class=\"btn btn-primary btnh\" onclick=\"batchDelete()\">批量删除</button>",
+                                                htmlInsert: true
+                                            });
+                                        </script>
+                                    </td>
+                                    <td style="width:90px;">
+                                        <!--未加按钮权限-->
+                                        <!--<button type="button" class="btn btn-primary btnh"   onclick="batchDownloadPage()">批量下载</button>-->
+
+                                        <!--加了按钮权限-->
+                                        <script type="text/javascript" id="logs_collect_downbatch">
+                                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                resource_code : "logs_collect_downbatch",
+                                                btnHtml :"<button type=\"button\" class=\"btn btn-primary btnh\" onclick=\"batchDownloadPage()\">批量下载</button>",
+                                                htmlInsert: true
+                                            });
+                                        </script>
+                                    </td>
+                                    <td style="width:70px;">
+                                        <!--未加按钮权限-->
+                                       <!-- <button class="btn btn-primary btnh" id="treeSearch" type="button" onclick="importFile()">导入</button>-->
+
+                                        <!--加了按钮权限-->
+                                        <script type="text/javascript" id="logs_collect_import">
+                                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                resource_code : "logs_collect_import",
+                                                btnHtml :"<button type=\"button\" class=\"btn btn-primary btnh\" onclick=\"importFile()\">导入</button>",
+                                                htmlInsert: true
+                                            });
+                                        </script>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="right-box" class="list-section" style="float: left;margin-top: 12px">
+                <div class="grid-section">
+                    <table id="list"></table>
+                    <div id="pager"></div>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    var tableObj = null;//jqgrid表对象
+    var fileListArray = [];//文档列表
+    var checkName = [];
+    var arr = new Array();
+    var token = $.cookie("_token");
+    var systemArr = [];
+    var userId = $.cookie('_user_id');
+    //获取应用系统
+    getSystemList();
+
+    function getSystemList() {
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            url: "${_gate_url}/api/developer/application/findList",
+            data:{type:1},
+            success: function (rows) {
+                if (rows.data) {
+                    $('#system').append('<div style="float: left;margin-top: 5px">应用系统：</div>');
+                    var arr = rows.data;
+                    for(var i=0;i<arr.length;i++){
+                        var appId = arr[i].appId;
+                        var name = arr[i].name;
+                        if(i>5&&i%6==0){
+                            $('#system').append('<div class="x" style="float: left;width: 100%"></div>');
+                            $('#system').append('<div style="float: left;width: 65px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>');
+
+                        }
+                        $('#system').append('<div style="float: left;width: 15%;margin-left: 5px;margin-top: 5px"> <input type="checkbox" name="system" value='+appId+'  style="margin-right:5px;"/>'+name+'&nbsp;&nbsp;&nbsp;</div>');
+                    }
+                }
+            }
+        });
+    }
+
+    //获取全部的应用系统（无权限）
+    getSystemListAll();
+
+    function getSystemListAll() {
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            url: "${_gate_url}/api/developer/application/findAllList",
+            success: function (rows) {
+                if (rows.data) {
+                    var arr = rows.data;
+                    for(var i=0;i<arr.length;i++){
+                        var appId = arr[i].appId;
+                        var name = arr[i].name;
+                        var obj = new Object();
+                        obj.name=name;
+                        obj.value=appId;
+                        systemArr.push(obj);
+                    }
+                }
+            }
+        });
+    }
+
+    //获取文档列表
+    getdocumentList();
+
+    function getdocumentList() {
+        var height = $("#right-box").height() - 80;
+        tableObj = $("#list").jqGrid({
+            mtype: 'POST',
+            postData: {"pageNo": 1, "pageSize": 10},
+            url: '${_gate_url}/api/logs/file/pageQueryUpload',
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                return JSON.stringify(postData);
+            },
+            colNames: ['上传时间', '文件名称','文件路径', '文件Id','应用系统', '日志类型', '日志时间区间', '解析状态','日志解析状态', '操作'],
+            colModel: [{
+                name: 'createTime',
+                index: 'createTime',
+                sortable:false
+            }, {
+                name: 'fileName',
+                index: 'fileName',
+                sortable:false
+            },{
+                name: 'documentPath',
+                index: 'documentPath',
+                sortable:false,
+                width: '250'
+            },{
+                name: 'documentId',
+                index: 'documentId',
+                hidden:true
+            },{
+                name: 'appId',
+                index: 'appId',
+                sortable:false,
+                width: '150',
+                formatter: formatterAppId
+            }, {
+                name: 'logType',
+                index: 'logType',
+                sortable:false,
+                width: '150',
+                formatter: formatterLogType
+            }, {
+                name: 'logStartTime',
+                index: 'logStartTime',
+                sortable:false,
+                width: '250',
+                formatter: formatterStartToEnd
+            }, {
+                name: 'isParsed',
+                index: 'isParsed',
+                hidden:true
+            },{
+                name: 'parsedStatus',
+                index: 'parsedStatus',
+                sortable:false
+            }, {
+                name: 'act',
+                index: 'act',
+                title: false,
+                width: '100',
+                align: 'center',
+                sortable:false,
+                formatter: formatterAct
+            }],
+            jsonReader: {
+                root: "data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            pager: '#pager',
+            height: height,
+            multiselect: true,
+            loadComplete: function () {
+                var rowIds = $("#list").jqGrid('getDataIDs');
+                if (fileListArray.length > 0) {
+                    for (var k = 0; k < rowIds.length; k++) {
+                        var curRowData = $("#list").jqGrid('getRowData', rowIds[k]);
+                        var curChk = $("#list tr[id=" + rowIds[k] + "]").find(":checkbox");
+                        $.each(fileListArray, function (i, data) {
+                            if (rowIds[k] == data) {
+                                curChk.attr('checked', 'true');
+                                $("#list").jqGrid('setSelection', data);
+                            }
+                        });
+                    }
+                }
+            },
+            beforeSelectRow: function (rowid, e) {//多选
+                if (e.type == 'click') {
+                    i = $.jgrid.getCellIndex($(e.target).closest('td')[0]),
+                        cm = $("#list").jqGrid('getGridParam', 'colModel');
+                    return (cm[i].name == 'cb'); //当点击的单元格的名字为cb时，才触发选择行事件
+                }
+                return false;
+            },
+            onSelectAll: function (aRowids, status) {
+                
+                if (status) {
+                    for (var i = 0; i < aRowids.length; i++) {
+                        
+                        var curRowData = $("#list").jqGrid('getRowData', aRowids[i]);
+                        fileListArray.push(aRowids[i]);
+                        fileListArray = removeDuplicatedItem(fileListArray);
+                    }
+                } else {
+                    for (var i = 0; i < aRowids.length; i++) {
+                        var ret = jQuery.inArray(aRowids[i], fileListArray);
+                        fileListArray.splice(ret, 1);
+                        checkName.splice(ret, 1);
+                    }
+                    
+                }
+            },
+            onSelectRow: function (id, check) {
+                if (check) {
+                    
+                    var curRowData = $("#list").jqGrid('getRowData', id);
+                    fileListArray.push(id);
+                    fileListArray = removeDuplicatedItem(fileListArray);
+                } else {
+                    
+                    var ret = $.inArray(id, fileListArray);
+                    fileListArray.splice(ret, 1);
+                    checkName.splice(ret, 1);
+                }
+            },
+            onPaging: function (pgButton) {
+                var pageNo = $(".ui-pg-input").val();
+                pageNo = parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total = parseInt(total);
+                if (pgButton == "next") {
+                    if (pageNo >= total) {
+                        return false;
+                    } else {
+                        pageNo += 1;
+                    }
+                } else if (pgButton == "prev") {
+                    if (pageNo > 1) {
+                        pageNo -= 1;
+                    } else {
+                        return false;
+                    }
+                } else if (pgButton == "last") {
+                    pageNo = total;
+                } else if (pgButton == "first") {
+                    pageNo = 1;
+                }
+                var pageSize = $(".ui-pg-selbox").val();
+                if (pageNo != 0) {
+                    $("#list").setGridParam({postData: {pageNo: pageNo, pageSize: pageSize}}).trigger("reloadGrid");
+                    return false;
+                }
+            }
+        });
+    }
+
+    //系统格式化
+    function formatterAppId(cellvalue, options, rawObject) {
+        var appname='';
+        for(var i=0;i<systemArr.length;i++){
+            var name = systemArr[i].name;
+            var value = systemArr[i].value;
+            if(cellvalue==value){
+                appname=name;
+            }
+        }
+        return appname;
+    }
+
+    //日志类型格式化
+    function formatterLogType(cellvalue, options, rawObject){
+        if(cellvalue=="APP"){
+            return "应用系统";
+        }else{
+            return cellvalue;
+        }
+    }
+
+    //是否过期格式化
+    function formatterStartToEnd(cellvalue, options, rawObject) {
+        var time = "";
+        if(rawObject.logStartTime==null||rawObject.logEndTime==null){
+
+        }else{
+            var start = formatterCreateTime(rawObject.logStartTime);
+            var end = formatterCreateTime(rawObject.logEndTime);
+            time = start+"-"+end;
+        }
+        return time;
+    }
+
+    //操作列
+    function formatterAct(cellvalue, options, rawObject) {
+        var returnValue = "";
+        id = rawObject.id;
+        var documentId = rawObject.documentId;
+        var logType = rawObject.logType;
+        var parsedStatus = rawObject.parsedStatus;
+        var documentPath = rawObject.documentPath;
+        var fileName = rawObject.fileName;
+        <!--未做权限控制-->
+        /*returnValue += '<a class="ui-button" href="javascript:" onclick="viewPage(\''+id+ '\',\''+documentId+ '\',\''+logType+ '\',\''+parsedStatus+'\',\''+userId+ '\',\''+token+'\')">';
+        returnValue += '预览</a>';
+        returnValue += '<span class="oper-separator"></span>';
+        returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="deletePage(\''+id+ '\')">';
+        returnValue += '删除</a>';
+        returnValue += '<span class="oper-separator"></span>';
+        returnValue += '<a class="ui-button" href="${_gate_url}/api/file/p/file/down?id='+documentId+'&userId='+userId+'&token='+token+'" >';
+        returnValue += '下载</a>';*/
+
+        <!--做权限控制-->
+        // resource_code : "logs_collect_view", 的值必须和权限体统中的编码一致
+        returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+            resource_code : "logs_collect_view",
+            btnHtml :"<a class=\"ui-button\" href=\"javascript:void(0);\" onclick=\"viewPage('"+id+"','"+documentId+"','"+logType+"','"+parsedStatus+"','"+userId+"','"+token+"')\">预览</a>",
+            htmlInsert: false
+        });
+        returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+            resource_code : "logs_collect_delete",
+            btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button\" href=\"javascript:void(0);\" onclick=\"deletePage('"+id+"')\">删除</a>",
+            htmlInsert: false
+        });
+        returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+            resource_code : "logs_collect_download",
+            btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button\" href=\"${_gate_url}/api/file/p/file/down?id="+documentId+"&userId="+userId+"&token="+token+"\">下载</a>",
+            htmlInsert: false
+        });
+
+
+        return returnValue;
+    }
+
+    //模糊查询
+    function search() {
+        var createTimeStart = $("#createTimeStart").val();
+        if (createTimeStart != "") {
+            createTimeStart = createTimeStart + " 00:00:00";
+        }
+        var createTimeEnd = $("#createTimeEnd").val();
+        if (createTimeEnd != "") {
+            createTimeEnd = createTimeEnd + " 23:59:59";
+        }
+        //应用系统
+        var system="";
+        if($("input:checkbox[name='system']:checked").val()!=undefined){
+            var i=0;
+            $("input:checkbox[name='system']:checked").each(function(){
+                if(i==0){
+                    system= $(this).val();
+                    i++;
+                }else{
+                    system=system+","+$(this).val();
+                }
+            })
+        }
+        //日志类型
+        var logType="";
+        if($("input:checkbox[name='logType']:checked").val()!=undefined){
+            var i=0;
+            $("input:checkbox[name='logType']:checked").each(function(){
+                if(i==0){
+                    logType= $(this).val();
+                   i++;
+                }else{
+                    logType=logType+","+$(this).val();
+                }
+            })
+        }
+
+        //是否解析
+        var isParsed="";
+        if($("input:checkbox[name='parseStatus']:checked").val()!=undefined){
+            var i=0;
+            $("input:checkbox[name='parseStatus']:checked").each(function(){
+                if(i==0){
+                    isParsed= $(this).val();
+                    i++;
+                }else{
+                    isParsed=isParsed+","+$(this).val();
+                }
+            })
+        }
+        tableObj.setGridParam({
+            postData: {
+                pageNo: 1, pageSize: 20,
+                data: {
+                    createTimeStart: createTimeStart,
+                    createTimeEnd: createTimeEnd,
+                    appId:system,
+                    logType:logType,
+                    isParsed:isParsed,
+                    appId:system
+                }
+            }
+        }, true).trigger('reloadGrid');
+    }
+
+    //刷新表格
+    function reloadJqgrid() {
+        var p=$("#list").jqGrid('getGridParam','page');//获取当前页
+        var pageSize = $(".ui-pg-selbox").val();
+        var createTimeStart = $("#createTimeStart").val();
+        if (createTimeStart != "") {
+            createTimeStart = createTimeStart + " 00:00:00";
+        }
+        var createTimeEnd = $("#createTimeEnd").val();
+        if (createTimeEnd != "") {
+            createTimeEnd = createTimeEnd + " 23:59:59";
+        }
+        //应用系统
+        var system="";
+        if($("input:checkbox[name='system']:checked").val()!=undefined){
+            var i=0;
+            $("input:checkbox[name='system']:checked").each(function(){
+                if(i==0){
+                    system= $(this).val();
+                    i++;
+                }else{
+                    system=system+","+$(this).val();
+                }
+            })
+        }
+        //日志类型
+        var logType="";
+        if($("input:checkbox[name='logType']:checked").val()!=undefined){
+            var i=0;
+            $("input:checkbox[name='logType']:checked").each(function(){
+                if(i==0){
+                    logType= $(this).val();
+                    i++;
+                }else{
+                    logType=logType+","+$(this).val();
+                }
+            })
+        }
+
+        //是否解析
+        var isParsed="";
+        if($("input:checkbox[name='parseStatus']:checked").val()!=undefined){
+            var i=0;
+            $("input:checkbox[name='parseStatus']:checked").each(function(){
+                if(i==0){
+                    isParsed= $(this).val();
+                    i++;
+                }else{
+                    isParsed=isParsed+","+$(this).val();
+                }
+            })
+        }
+        $("#list").setGridParam({
+            postData: {pageNo: p,pageSize:pageSize,data: {
+                    createTimeStart: createTimeStart,
+                    createTimeEnd: createTimeEnd,
+                    appId:system,
+                    logType:logType,
+                    isParsed:isParsed,
+                    appId:system
+                }}
+        }, true).trigger('reloadGrid');
+    }
+
+    /* 批量下载文件 */
+    function batchDownloadPage(){
+        var ids = new Array();
+        arr = $("#list").jqGrid('getGridParam','selarrrow');
+        for(var i=0 ; i<arr.length; i++ ){
+            var rowData = $("#list").jqGrid('getRowData',arr[i]);
+            ids.push(rowData.documentId);
+        }
+        if (ids.length == 0) {
+            parent.layer.msg("请选择需要下载的文件！",{icon: 7,time: 2000});
+            return false;
+        } else {
+            var urlDownload = "${_gate_url}/api/file/file/downloadpackage?ids[]=" + ids +'&token='+token;
+            window.open(urlDownload);
+        }
+    }
+
+    /* 删除 */
+    function deletePage(id) {
+        parent.layer.confirm("您确定要删除此条记录吗？", {
+            title: '温馨提示',
+            shade: [0.4, '#000'],
+            btn: ['确定', '取消'] //按钮
+        }, function (value, index, elem) {
+            ajaxHengyun({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: "${_gate_url}/api/logs/file/delete?id=" + id,
+                success: function (rows) {
+                    if (rows.data) {
+                        parent.home.reloadJqgrid();
+                        parent.layer.msg("删除成功！", {icon: 6, time: 2000});
+                    } else {
+                        parent.layer.msg("删除失败，请稍后重试！", {icon: 5,time: 2000});
+                    }
+                }
+            });
+        }, function () {
+            closeLayer();
+        });
+    }
+
+    /* 批量删除 */
+    function batchDelete() {
+        var ids = new Array();
+        ids = $("#list").find(':checkbox:checked').map(function () {
+            return $(this).closest('tr').attr('id')}).get().join();
+        if(ids.length == 0){
+            parent.layer.msg("请选择需要删除的！",{icon: 7,time: 2000});
+            return false;
+        }else{
+            parent.layer.confirm("您确定要批量删除这些记录吗？", {
+                title: '温馨提示',
+                shade: [0.4, '#000'],
+                btn: ['确定', '取消'] //按钮
+            }, function (value, index, elem) {
+                ajaxHengyun({
+                    type: "GET",
+                    async: false,
+                    dataType: 'json',
+                    url: "${_gate_url}/api/logs/file/deleteBatch?ids=" + ids,
+                    success: function (rows) {
+                        if (rows.data) {
+                            parent.home.reloadJqgrid();
+                            parent.layer.msg("批量删除成功！", {icon: 6, time: 2000});
+                        } else {
+                            parent.layer.msg("批量删除失败，请稍后重试！", {icon: 5, time: 2000});
+                        }
+                    }
+                });
+            }, function () {
+                closeLayer();
+            });
+        }
+    }
+
+    //上传时间格式化
+    function formatterCreateTime(cellvalue, options, rawObject) {
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        };
+        if(cellvalue && cellvalue.indexOf("-")>=0){
+            cellvalue=cellvalue.replace(/-/g, "/");
+        }
+        return new Date(cellvalue).Format("yyyy-MM-dd hh:mm:ss");
+    }
+
+    /* 弹出导入页面 */
+    function importFile(){
+        parent.layer.open({
+            id: 'import',
+            type: 2,
+            anim: 6,
+            title: '日志文件导入',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '40%'],
+            content: "${_cp}/logs/collectImport",
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 导入', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("import");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    }
+
+    /* 弹出预览页面 */
+    function viewPage(id,documentId,logType,parsedStatus,userId,token) {
+        var url = "";
+        if(parsedStatus=="已解析"){
+            if(logType=="TOMCAT"){
+                url = "${_cp}/logs/collectTomcatView?id="+id+"&documentId="+documentId+"&userId="+userId+"&token="+token;
+            }else if(logType=="NGINX"){
+                url = "${_cp}/logs/collectNginxView?id="+id+"&documentId="+documentId+"&userId="+userId+"&token="+token;
+            }else if(logType=="APP"){
+                url = "${_cp}/logs/collectAppView?id="+id+"&documentId="+documentId+"&userId="+userId+"&token="+token;
+            }else if(logType=="APACHE"){
+                url = "${_cp}/logs/collectApacheView?id="+id+"&documentId="+documentId+"&userId="+userId+"&token="+token;
+            }else{
+                parent.layer.msg("文件类型不对");
+                return;
+            }
+        }else if(parsedStatus=="未解析"){
+                url = "${_cp}/logs/collectNoparsedView?id="+id+"&documentId="+documentId+"&userId="+userId+"&token="+token;
+        }else if(parsedStatus=="已失效"){
+                url = "${_cp}/logs/collectInvalidView?id="+id+"&documentId="+documentId+"&userId="+userId+"&token="+token;
+        }else if(parsedStatus=="解析失败"){
+                url = "${_cp}/logs/collectFailureView?id="+id+"&documentId="+documentId+"&userId="+userId+"&token="+token;
+                //alert("请联系管理员！");
+              //  return;
+        }else if(parsedStatus=="解析中"){
+            parent.layer.msg("正在解析！", {icon: 6, time: 2000});
+            return;
+        }
+        parent.layer.open({
+            id: 'choose',
+            type: 2,
+            anim: 6,
+            title: '预览',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '60%'],
+            content: url,
+            btn: [],
+            yes: function (index, layero) {
+
+            }
+        });
+    }
+</script>
+</body>
+</html>

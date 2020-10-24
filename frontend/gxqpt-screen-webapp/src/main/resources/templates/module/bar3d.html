@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="${_static}/js/jquery-1.11.1.min.js"></script>
+		<script src="${_static}/js/echarts.min.js"></script>
+		<script src="${_static}/js/echarts-gl.min.js"></script>
+		<style type="text/css">
+			.charts-box {
+				margin: 0 auto;
+				width: 1000px;
+				height: 600px;
+				border: 1px solid #ccc;
+			}
+			.charts{
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="charts-box">
+			<div id="fz" class="charts">
+
+			</div>
+		</div>
+		<script type="text/javascript">
+			var fz = echarts.init(document.getElementById("fz"));
+
+			var hours = [];
+			var days = ['Saturday', 'Friday', 'Thursday',
+				'Wednesday', 'Tuesday', 'Monday', 'Sunday'
+			];
+
+			var data1 = [
+				[2.5, 3.0, 0.5],
+				];
+			var data2 = [
+				[2.5, 3.0, 0.5],
+				];
+			option = {
+				tooltip: {},
+				visualMap: {
+//					max: 20,
+					inRange: {
+						color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+					}
+				},
+				xAxis3D: [{
+					type: 'value',
+					scale:true,
+					interval:1,
+					min:0,
+					max:5
+				}],
+				yAxis3D: [{
+					type: 'value',
+					interval:1,
+					min:0,
+					max:5
+				}],
+				zAxis3D: [{
+					type: 'value',
+					min:0,
+//					interval:1,
+					max:5
+				}],
+				grid3D: {
+					boxWidth: 100,
+					boxHeight: 100,
+					boxDepth: 100,
+					viewControl: {
+						// projection: 'orthographic'
+					},
+					light: {
+						main: {
+							intensity: 1.2,
+							shadow: true
+						},
+						ambient: {
+							intensity: 0.3
+						}
+					}
+				},
+				series: [{
+					type: 'bar3D',
+					data: data1,
+					shading: 'lambert',
+
+					label: {
+						textStyle: {
+							fontSize: 16,
+							borderWidth: 1
+						}
+					},
+
+					emphasis: {
+						label: {
+							textStyle: {
+								fontSize: 20,
+								color: '#900'
+							}
+						},
+						itemStyle: {
+							color: '#900'
+						}
+					}
+				}]
+			}
+			fz.setOption(option);
+		</script>
+	</body>
+
+</html>

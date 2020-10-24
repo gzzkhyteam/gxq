@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+		<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+		<link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+		<link rel="stylesheet" href="${_static}/css/core/module.css">
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="${_static}/js/app.js"></script>
+		<script type="text/javascript" src="${_static}/js/module.js"></script>
+	</head>
+	<body>
+		<div class="workspace-body">
+			<div class="clearfix">
+				<!-- begin 页面内容主体 -->
+				<div class="col-lg-12 col-md-12 clearfix">
+	                <div class="list-section clearfix">
+	                    <form autocomplete="off" action="" class="form-inline search-form clearfix">
+	                        <div class="form-field">
+	                        	<div class="form-group">
+	                        		<label class="control-label">
+	                                	<span class="text-danger"></span>
+	                                    <span>角色ID：</span>
+	                                </label>
+	                            	<div class="form-control-wrap">
+										<input name="" class="form-control" placeholder=""/>
+									</div>
+	                            </div>
+	                    	</div>
+	                        <div class="form-field">
+	                        	<div class="form-group">
+	                        		<label class="control-label">
+	                                	<span class="text-danger"></span>
+	                                    <span>角色名称：</span>
+	                                </label>
+	                            	<div class="form-control-wrap">
+										<input name="" class="form-control" placeholder=""/>
+									</div>
+	                            </div>
+	                    	</div>
+	                        <div class="form-field">
+	                        	<div class="form-group">
+	                                <div class="form-control-wrap text-right">
+	                                	<button type="button" class="btn btn-primary search-button">
+	                                		<span class="glyphicon glyphicon-search"></span> 查询
+	                                    </button>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </form>
+	                </div>
+	                <div class="list-section">
+	                    <div class="list-content">
+	                        <div class="form-inline">
+	                            <fieldset>
+                            		<div class="grid-section">
+	                                    <table id="list">
+	                                    </table>
+	                                    <div id="pager"></div>
+	                                </div>
+	                            </fieldset>
+	                        </div>
+	                    </div>
+	                </div>
+				</div>
+				<!-- end 页面内容主体 -->
+			</div>
+		</div>
+		<script type="text/javascript">
+		    $(function () {
+				$("#list").jqGrid({
+			    	url: '',
+			        colNames: ['角色ID', '角色名称', '角色描述'],
+			        colModel: [{
+			            name: 's1',
+			            index: 's1',
+			            width: '100'
+			        }, {
+			            name: 's2',
+			            index: 's2',
+			            width: '100'
+			        }, {
+			            name: 's3',
+			            index: 's3',
+			        }],
+			        multiselect: true,
+			        pager: '#pager',
+			        height: 'auto',
+			        beforeSelectRow:function(rowid, e){
+						if(e.type == 'click'){
+							i = $.jgrid.getCellIndex($(e.target).closest('td')[0]),
+									cm = jQuery("#partList").jqGrid('getGridParam', 'colModel');
+							return (cm[i].name == 'cb'); //当点击的单元格的名字为cb时，才触发选择行事件
+						}
+						return false;
+					},
+				});
+			    addRow();
+		    });
+		    //添加页面数据用后台编程获取数据时可删除
+		    var newrowid;
+		    function addRow() {
+		        $("#operate").val("");
+		        var selectedId = $("#list").jqGrid("getGridParam", "selrow");
+		        var ids = jQuery("#list").jqGrid('getDataIDs');
+		        //获得当前最大行号（数据编号）
+		        var rowid = Math.max.apply(Math, ids);
+		        //获得新添加行的行号（数据编号）
+		        newrowid = rowid + 1;
+		        var dataRow = {
+		            name: "杨阳",
+		            sex: "女",
+		            age: "31",
+		            type: "行政人员",
+		            code: "拟定公共服务政策和保障标准",
+		            code1: "公共服务部门",
+		            unit: "甲秀楼",
+		            tle: "15987655678",
+		        };
+		        var dataRow1 = {
+		            name: "张伟",
+		            sex: "男",
+		            age: "33",
+		            type: "巡检人员",
+		            code: "执行巡检工作",
+		            code1: "巡检部门",
+		            unit: "甲秀楼",
+		            tle: "18987655678",
+		        };
+		        var dataRow2 = {
+		            name: "王海",
+		            sex: "女",
+		            age: "22",
+		            type: "巡检人员",
+		            code: "执行巡检工作",
+		            code1: "巡检部门",
+		            unit: "甲秀楼",
+		            tle: "17987655678",
+		        };
+		        var dataRow3 = {
+		            name: "王立",
+		            sex: "男",
+		            age: "33",
+		            type: "巡检人员",
+		            code: "执行巡检工作",
+		            code1: "巡检部门",
+		            unit: "甲秀楼",
+		            tle: "13987655678",
+		        };
+		        var dataRow4 = {
+		            name: "李红",
+		            sex: "女",
+		            age: "23",
+		            type: "巡检人员",
+		            code: "执行巡检工作",
+		            code1: "巡检部门",
+		            unit: "甲秀楼",
+		            tle: "13987655678",
+		        };
+		        var dataRow5 = {
+		            name: "张辉",
+		            sex: "男",
+		            age: "58",
+		            type: "巡检人员",
+		            code: "负责文电、会务、应急值班、机要、档案.",
+		            code1: "对外交流部门",
+		            unit: "甲秀楼",
+		            tle: "18987655678",
+		        };
+		        //将新添加的行插入到第一列
+		        $("#list").jqGrid("addRowData", newrowid, dataRow, "first");
+		        $("#list").jqGrid("addRowData", newrowid, dataRow1, "second");
+		        $("#list").jqGrid("addRowData", newrowid, dataRow2, "three");
+		        $("#list").jqGrid("addRowData", newrowid, dataRow3, "four");
+		        $("#list").jqGrid("addRowData", newrowid, dataRow4, "five");
+		        $("#list").jqGrid("addRowData", newrowid, dataRow5, "six");
+		        $("#list").jqGrid("addRowData", newrowid, dataRow5, "seven");
+		    }
+		    
+		</script>
+	</body>
+</html>

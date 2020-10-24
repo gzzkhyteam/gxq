@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>交换共享系统</title>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+    <style>
+        .tab-border-no-layer tbody tr td{
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+<div id="container" class="container">
+	<div class="main clearfix">
+		<div class="row">
+			<div class="current pull-left">
+				<h3 class="page-title">
+					<span>数据集管理</span> &gt; <span id="secondTil">数据集编辑</span> &gt; <span class="page-title-scend">数据集基本信息录入</span>
+				</h3>
+			</div>
+			<div class="back pull-right">
+				<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+			</div>
+		</div>
+		<div class="view_container view_container_first row" ng-app="app" ng-controller="controller">
+			<div class="main_right pull-right">
+				<div id="secondPage" class="secondPage">
+					<div id="unit" class="view_item">
+						<form id="dateSetParam" action="" autocomplete="off">
+							<table class="table default-table tab-border-no-layer">
+								<tbody>
+								<tr>
+									<th width="120"><span class="requiredSpan">*</span>数据集名称：</th>
+									<td>
+										<input type="text" name="setName" id="setName" class="form-control" dataType="*" nullmsg="请填写数据集名称！"/>
+									</td>
+								</tr>
+								<tr>
+									<th>数据集标识：</th>
+									<td>
+										<input type="text" name="setCode" id="setCode" class="form-control"
+											   readonly="readonly"/>
+									</td>
+								</tr>
+								<tr>
+									<th>数据集创建类型：</th>
+									<td>
+										<select id="setDataType" name="setType" class="form-control"
+												onchange="setDataType1()">
+											<option value="1">数据文件</option>
+											<!--<option value="2">结构化文件</option>-->
+											<!--<option value="3">API调用</option>-->
+											<option value="4">数据库读取</option>
+										</select>
+									</td>
+								</tr>
+								<tr class="apiType">
+									<th><span class="requiredSpan">*</span>API地址：</th>
+									<td>
+										<input type="text" name="apiUrl" id="apiUrl" class="form-control" dataType="*" nullmsg="请填写API地址！"/>
+									</td>
+								</tr>
+								<!--<tr class="apiType">
+                                    <th>参数：</th>
+                                    <td>
+                                        <input type="text" name="apiDataType" id="apiDataType" class="form-control"/>
+                                    </td>
+                                </tr>-->
+								<tr class="apiType">
+									<th>API类型：</th>
+									<td>
+										<select id="apiDataType" name="apiDataType" class="form-control">
+											<option value="1">JSON</option>
+											<option value="2">XML</option>
+										</select>
+									</td>
+								</tr>
+								<tr class="dataBaseType">
+									<th><span class="requiredSpan">*</span>数据源名称：</th>
+									<td>
+										<input type="hidden" name="dbId" id="dbId"/>
+										<input type="text" name="dbIdName" id="dbIdName" class="form-control" onclick="dataSourceSet()" dataType="*" nullmsg="请填写数据源名称！"/>
+									</td>
+								</tr>
+								<!--<tr class="comType">
+									<th>采集时间：</th>
+									<td>
+										<input type="text" name="" id="" class="form-control Wdate"/>
+									</td>
+								</tr>-->
+								<tr class="comType">
+									<th>更新方式：</th>
+									<td>
+										<select id="updateType" name="updateType" class="form-control">
+											<option value="1">增量更新</option>
+											<option value="2">全量更新</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th>更新频率：</th>
+									<td>
+										<select id="updateRate" name="updateRate" class="form-control">
+											<option value="1">一次性</option>
+											<option value="2">实时</option>
+											<option value="3">天</option>
+											<option value="4">周</option>
+											<option value="5">月</option>
+											<option value="6">年</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th><span class="requiredSpan">*</span>创建理由：</th>
+									<td>
+										<textarea id="reason" name="reason" rows="5" cols="" class="form-control" dataType="*" nullmsg="请填写创建原因！"></textarea>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+							<div class="text-center">
+								<button type="button" class="btn btn-primary" onclick="openFlow()">查看流程</button>
+								<!--<button type="button" class="btn btn-primary" onclick="dataTypeView()">数据格式</button>-->
+								<button type="button" class="btn btn-primary btn-nextPage">下一步</button>
+								<button type="button" class="btn btn-primary" onclick="loadFirstPage()">取消</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+<script type="text/javascript">
+    //表单验证
+    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: '${_gate_url}/api/exchange/set/createFileDataSetFirst',
+        },"#dateSetParam",{
+            attrName:"name",
+            prefix:"",
+            suffix:"",
+        });
+    })
+
+    function loadFirstPage(){
+        window.location.href='${_cp}/module/dataSetManageList?pageNo=${pageNo}';
+    }
+
+    function openFlow() {//查看流程
+        parent.layer.open({
+            id: 'applyDownload',
+            type: 2,
+            anim: 6,
+            title: '流程查看',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['1080px', '600px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/dataSetFlow",
+            btn: ['关闭'],
+        });
+    }
+    function dataTypeView() {//数据格式查看
+        parent.layer.open({
+            id: 'dataTypeView',
+            type: 2,
+            anim: 6,
+            title: '数据格式查看',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['820px', '460px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/dataTypeView",
+            btn: ['关闭'],
+        });
+    }
+    function dataSourceSet() {//数据源选择
+        parent.layer.open({
+            id: 'dataSourceSet',
+            type: 2,
+            anim: 6,
+            title: '数据源选择',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['90%', '90%'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/dataSetSourceSet?pageNo=1",
+            btn: ['确定','取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("dataSourceSet");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+    function setDataSource(id,name){
+        $("#dbId").val(id);
+        $("#dbIdName").val(name);
+        $("#dbIdName").blur();
+        updateIformHeight();
+    }
+    function setDataType1() {//数据集创建类型选择
+        var type = $("#setDataType").val();
+        if (type) {
+            if (type == "1" || type == "2") {
+                $(".apiType,.dataBaseType,.comType").css("display", "none");
+            } else if (type == "3") {
+                $(".apiType,.comType").css("display", "table-row");
+                $(".dataBaseType").css("display", "none");
+            } else {
+                $(".dataBaseType,.comType").css("display", "table-row");
+                $(".apiType").css("display", "none");
+            }
+        }
+        updateIformHeight();
+    }
+    var editType=0;
+    var secondTil="";
+    if("${id}"){
+        getTableField();
+        editType=2;
+        var secondVal = sessionStorage.getItem("secondTil");
+        if(!secondVal){
+        	secondTil="edit";
+		}else if(secondVal=="create"){
+            secondTil="create";
+            $("#secondTil").text("新增数据集");
+		}
+	}else{
+        getSetCode();
+        editType=1;
+        secondTil="create";
+        $("#secondTil").text("新增数据集");
+	};
+    function getSetCode() {//获取数据集标识
+        ajaxHengyun({
+            type: "GET",
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/exchange/set/dataSetCode',
+            success: function (res) {
+                if (res.data) {
+                    $("#setCode").val(res.data);
+                }
+            }
+        });
+    };
+    var sqlCode="";
+    function getTableField(){//获取详情
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/getBaseInfo",
+            data: {setId:"${id}"},
+            success: function (rows) {
+                if(rows.data){
+                    $("#setName").val(rows.data.setName);
+                    $("#setCode").val(rows.data.setCode);
+                    $("#setDataType").val(rows.data.setType);
+                    $("#apiUrl").val(rows.data.apiUrl);
+                    $("#apiDataType").val(rows.data.apiDataType);
+                    $("#dbId").val(rows.data.dbId);
+                    $("#dbIdName").val(rows.data.dbName);
+                    $("#updateType").val(rows.data.updateType);
+                    $("#updateRate").val(rows.data.updateRate);
+                    $("#reason").val(rows.data.reason);
+                    sqlCode=rows.data.sqlCode;
+                    setDataType1();
+                    $("#setDataType").attr("disabled",true);
+                    $("#dbIdName").attr("disabled",true);
+                }
+            }
+        });
+    };
+
+    /*----------------------angular.js---------------------------------------*/
+    var app = angular.module('app', []);
+
+    app.controller('controller', function ($scope,$http,token) {
+        var urlPrev ='${_gate_url}';
+        $scope.save = function () {
+            nextPage();
+        }
+    }).service('token',function () {
+        this.getToken = function () {
+            return getToken();
+        }
+    });
+    $('.btn-nextPage').valid({
+        form: '#dateSetParam',
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            var appElement = document.querySelector('[ng-controller=controller]');
+            var $scope = angular.element(appElement).scope();
+            $scope.save();
+        }
+    });
+
+
+   /* $('.btn-nextPage').valid({
+        form: '#dateSetParam',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        checkpassed: function () {
+            nextPage();
+        }
+    });*/
+    function nextPage() {//下一步
+        var dataDTO = $("#dateSetParam").serializeJSON();
+        dataDTO.editType = editType;
+        dataDTO.id = "${id}";
+        var type = $("#setDataType").val();
+        dataDTO.setType = type;
+        dataDTO.dbId = $("#dbId").val();
+        var url = '';
+        if (type) {
+            if (type == "1" || type == "2") {
+                url = '${_gate_url}/api/exchange/set/createFileDataSetFirst';
+            } else if (type == "3") {
+                url = '${_gate_url}/api/exchange/set/createApiDataSetFirst';
+            } else {
+                url = '${_gate_url}/api/exchange/set/createDatabaseDataSetFirst';
+            }
+        }
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url: url,
+            data: JSON.stringify(dataDTO),
+            success: function (res) {
+                if (res.data) {
+                    sessionStorage.setItem("secondTil",secondTil);
+                    if (type) {
+                        if (type == "1" || type == "2") {
+                            window.location.href = "${_cp}/module/dataSetEditSecond?id="+res.data.id+"&type="+dataDTO.setType+"&pageNo=${pageNo}";
+                        } else if (type == "3") {
+                            window.location.href = "${_cp}/module/dataSetEditApi?id="+res.data.id+"&pageNo=${pageNo}";
+                        } else {
+                            if(res.data.tableCode){
+                                window.location.href = "${_cp}/module/dataSetEditDb?id="+res.data.id+"&pageNo=${pageNo}";
+                                return;
+							}
+							if(sqlCode && sqlCode!=""){
+                            	window.location.href = "${_cp}/module/dataSetEditDataBaseOne?id="+res.data.id+"&pageNo=${pageNo}";
+							}else{
+								window.location.href = "${_cp}/module/dataSetEditDataBaseTwo?id="+res.data.id+"&pageNo=${pageNo}";
+							}
+                        }
+                    }
+                }else{
+                    parent.layer.msg(res.errmsg+"，请重试！",{time:3000});
+                }
+            }
+        });
+    }
+
+
+</script>
+</body>
+</html>

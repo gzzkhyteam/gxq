@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>数据集管理</span>
+						</h3>
+					</div>
+				</div>
+				<div class="main_container row">
+					<form  id="searchDataForm" action="" class="search-form" autocomplete="off">
+						<ul class="clearfix">
+							<li class="pull-left">
+								<label class="control-label">数据集名称：</label>
+                            	<input name="setName" class="" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<!--  //数据集类型:1,非结构化文件；2，结构化文件；3，API调用；4，数据库读取-->
+								<label class="control-label">数据集创建类型：</label>
+                            	<select name="setType" class="chosen-select">
+                                	<option value="">全部</option>
+									<option value="1">数据文件</option>
+									<!--<option value="2">结构化文件</option>-->
+									<!--<option value="3">API调用</option>-->
+									<option value="4">数据库读取</option>
+                                </select>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">创建人：</label>
+								<input name="createUserName" class="" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<!--状态:-1，暂存 1，审批中；2，驳回；3，已上架；4，已下架-->
+								<label class="control-label">处理状态：</label>
+                            	<select name="status" class="chosen-select">
+                                	<option value="">全部</option>
+							        <option value="-1">暂存</option>
+							        <option value="1">审批中</option>
+							        <option value="2">驳回</option>
+									<option value="3">已上架</option>
+									<option value="4">已下架</option>
+                                </select>
+							</li>
+							<li class="pull-left">
+								<button type="button" class="btn btn-primary search-button" onclick="searchBtn()">
+                            		<span class="glyphicon glyphicon-search"></span> 查询
+                                </button>
+							</li>
+							<li class="pull-right marginAuto">
+								<!-- /*新增按权限*/-->
+								<script type="text/javascript" id="exchange_databse_create">
+                                    resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_databse_create",
+                                        btnHtml :"<button type=\"button\" class=\"btn btn-primary btn-create\" onclick=\"window.location.href='${_cp}/module/dataSetEditFirst?setId=&pageNo=1'\">新增</button>",
+                                        htmlInsert: true
+                                    });
+								</script>
+
+							</li>
+						</ul>
+                    </form>
+					<table id="dataSetList" class="default-table tab-title-top">
+						<thead>
+							<tr>
+                                <th width="60">序号</th>
+								<th>数据集名称 </th>
+								<th>数据集标识</th>
+								<th width="140">数据集创建类型</th>
+								<th width="80">创建人</th>
+								<th width="100" class="text-right">数据量</th>
+								<th width="180">创建时间</th>
+								<th width="100">上传频率</th>
+								<th>关联目录数</th>
+								<th>处理状态</th>
+								<th width="200">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<div class="text-center">
+						<ul class="pagination" id="pagination" ></ul>
+						<p class="pull-right currentPage">共<i id="totalNum" class="colorBlue"></i>条数据，当前第<i id="pageNum" class="colorBlue"></i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+
+            var parm={
+                data:{},
+                pageNo:"${pageNo}",
+                pageSize:10
+            };
+
+            searchBtn();
+            function searchBtn(){//查询
+                var dataDTO =$("#searchDataForm").serializeJSON();
+                parm.pageNo=1;
+                parm.data=dataDTO;
+                getList(parm);
+            }
+            getList(parm);
+            /*获取数据源列表*/
+            function  getList(parm) {
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/set/find ',
+                    data:JSON.stringify(parm),
+                    success:function(rows){
+                        var html=""
+                        if (rows.data){
+                            rows.data.list.forEach(function(value,index){
+                                var value=dealElement(value);
+                                //数据集类型:1,非结构化文件；2，结构化文件；3，API调用；4，数据库读取
+								var dldw="";
+								var setTypeName = "";
+                                if(value.setType ==1 ){
+                                    setTypeName = "数据文件";
+                                    dldw="个";
+								}else if(value.setType ==2){
+                                    setTypeName = "结构化文件";
+                                    dldw="个";
+								}else if(value.setType ==3){
+                                    setTypeName = "API调用";
+                                    dldw="条";
+								}else if(value.setType ==4){
+                                    setTypeName = "数据库读取";
+                                    dldw="条";
+                                }
+                                //更新频率:1,一次性；2，实时；3，天；4，周；5，月；6，年
+                                var updateRateName="";
+                                if(value.updateRate ==1 ){
+                                    updateRateName = "一次性";
+                                }else if(value.updateRate ==2){
+                                    updateRateName = "实时";
+                                }else if(value.updateRate ==3){
+                                    updateRateName = "天";
+                                }else if(value.updateRate ==4) {
+                                    updateRateName = "周";
+                                }else if(value.updateRate ==5) {
+                                    updateRateName = "月";
+                                }else if(value.updateRate ==6) {
+                                    updateRateName = "年";
+                                }
+								//状态:-1，暂存 1，审批中；2，驳回；3，已上架；4，已下架
+                                var statusName="";
+                                if(value.status == -1){
+                                    statusName ="暂存"
+								}else if(value.status ==1 ){
+                                    statusName = "审批中";
+                                }else if(value.status ==2){
+                                    statusName = "驳回";
+                                }else if(value.status ==3){
+                                    statusName = "已上架";
+                                }else if(value.status ==4){
+                                    statusName = "已下架";
+                                }
+								var num = (rows.data.pageNum-1)*10+index+1;
+                                html+='<tr>';
+                                html+='<td>'+num+'</td>';
+                                html+='<td title="'+value.setName+'">'+value.setName+'</td>';
+                                html+='<td title="'+value.setCode+'">'+value.setCode+'</td>';
+                                html+='<td>'+setTypeName+'</td>';
+                                html+='<td>'+value.createUserName+'</td>';
+                                if(value.dataCount){
+                                    html+='<td class="text-right">'+value.dataCount +dldw+'</td>';
+								}else{
+                                    html+='<td></td>';
+								}
+                                html+='<td>'+fmtDateTime(value.createTime) +'</td>';
+                                html+='<td>'+updateRateName+'</td>';
+                                html+='<td>'+value.relatedDicCunt+'</td>';
+                                html+='<td>'+statusName+'</td>';
+                                html+='<td>';
+                               // html+='<a href="${_cp}/module/dataSetViewFirst?setId='+value.id+'&pageNo='+parm.pageNo+'">详情</a>';
+                                html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                    resource_code : "exchange_database_detail",
+                                    btnHtml :'<a  href="${_cp}/module/dataSetViewFirst?setId='+value.id+'&pageNo='+parm.pageNo+'">详情</a>',
+                                    htmlInsert: false
+                                });
+                                if(value.status && value.status!=1 ) {
+                                    //html += '<a href="${_cp}/module/dataSetEditFirst?setId=' + value.id + '&pageNo=' + parm.pageNo + '">编辑</a>';
+                                    html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_database_edit",
+                                        btnHtml :'<a  href="${_cp}/module/dataSetEditFirst?setId='+value.id+'&pageNo='+parm.pageNo+'">编辑</a>',
+                                        htmlInsert: false
+                                    });
+                                    if(value.canDelete==1){
+                                    	//html += '<a href="javascript:void(0);" onclick="remove(' + value.id + ')">删除</a>';
+                                        html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "exchange_database_delete",
+                                            btnHtml :'<a  href="javascript:void(0);" onclick="remove(\''+ value.id+'\')">删除</a>',
+                                            htmlInsert: false
+                                        });
+									}
+                                }
+                                if(value.status && value.status==3 && value.setType == 4){
+                                    html += '<a href="${_cp}/module/dataSetDataValid?id='+value.id+'&pageNo='+parm.pageNo+'">数据校验</a>';
+								};
+                                html+='</td>';
+                                html+='</tr>';
+                            });
+                            if(rows.data.list.length==0){
+                                html+="<tr><td class='text-center' colspan='11'>暂无数据</td></tr>"
+                                $(".pagination,.currentPage").css("display","none");
+                            } else {
+                                $(".pagination,.currentPage").css("display","block");
+                            }
+                            $("#dataSetList tbody").html(html);
+                            $('#totalPages').text(rows.data.pages);
+                            $('#totalNum').text(rows.data.total);
+                            jqPaginator(rows.data);
+                            updateIformHeight();
+                        }else{
+                            $(".pagination,.currentPage").css("display","none");
+                            parent.layer.msg(res.errmsg+"，请重试！",{time:3000});
+						}
+                    }
+                });
+            }
+
+            function remove(id){//删除
+                parent.layer.confirm("您确定要删除该条信息吗？",{
+                    title:'温馨提示',
+                    shade: [0.4,'#000'],
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    ajaxHengyun({
+                        type:"POST",
+                        dataType: 'json',
+                        url:  '${_gate_url}/api/exchange/set/deleteDataSet',
+                        data:{setId:id},
+                        success:function(rows){
+                            if (rows.data){
+                                parent.layer.msg("删除成功！",{time:1000});
+                                getList(parm);
+                            }else{
+                                parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                            }
+                        }
+                    });
+                });
+            }
+		</script>
+	</body>
+</html>

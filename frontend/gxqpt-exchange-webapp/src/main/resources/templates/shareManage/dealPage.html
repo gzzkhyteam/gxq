@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body class="bgNone">
+		<div class="workspace-body">
+			<div id="console-container" class="clearfix">
+				<div class="col-sm-12">
+					<div class="general_list_main clearfix">
+						<div class="main_bottom col-lg-12 col-sm-12">
+							<div class="view_item">
+								<table class="table default-table tab-border-no-layer">
+									<tbody>
+										<tr>
+											<th width="80">异常情况：</th>
+											<td>
+												<input type="text" name="failLog" id="failLog" value="" class="form-control" autocomplete="off" readonly/>
+											</td>
+										</tr>
+										<tr>
+											<th>异常时间：</th>
+											<td>
+												<input type="text" name="visitTime" id="visitTime" value="" class="form-control" autocomplete="off" readonly/>
+											</td>
+										</tr>
+										<tr>
+											<th>异常来源：</th>
+											<td>
+												<input type="text" name="failType" id="failType" class="form-control" value="" autocomplete="off" readonly/>
+											</td>
+										</tr>
+										<tr>
+											<th>处理方式：</th>
+											<td>
+												<textarea id="hdleContent" name="hdleContent" rows="5" cols="" class="form-control"></textarea>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<script type="text/javascript">
+
+            var id = "${id}";
+            getInfo(id);
+
+            function getInfo(id) {//获取详情
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    url: '${_gate_url}/api/exchange/dataapi/api/getexcinfo',
+                    data: {id: id},
+                    success: function (rows) {
+                        if (rows.data) {
+                            $("#failLog").val(rows.data.failLog);
+                            $("#visitTime").val(rows.data.visitTime);
+                            var failType = rows.data.failType;
+                            if (failType == 1) {
+                                failType = "系统错误";
+                            } else if (failType == 2) {
+                                failType = "访问参数错误";
+                            }else {
+                                failType = "";
+                            }
+                            $("#failType").val(failType);
+                        };
+                    }
+                });
+            };
+
+
+            /*提交方法*/
+            function save(num){
+                var dto={};
+                dto.id=id;
+                dto.hdleContent=$("#hdleContent").val();
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/dataapi/api/saveexchdle',
+                    data:JSON.stringify(dto),
+                    success:function(rows){
+                        if (rows.data){
+                            parent.layer.msg("处理成功！",{time:1000});
+                            parent.layer.close(num);
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    }
+                });
+            }
+		</script>
+	</body>
+</html>

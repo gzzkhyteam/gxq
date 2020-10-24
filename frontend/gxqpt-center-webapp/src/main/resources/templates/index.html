@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.css"/>
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/bootstrap/3.3.6/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <!--ft-carousel--轮播图插件-->
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ft-carousel/ft-carousel.css"/>
+    <script src="${_static}/js/lib/ft-carousel/ft-carousel.min.js" type="text/javascript" charset="utf-8"></script>
+    <!--ft-carousel--轮播图插件-->
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        header {
+            height: 80px;
+            background: #0A4F82;
+        }
+
+        header img {
+            margin-top: 14px;
+            margin-left: 14%;
+        }
+
+        .user-auth {
+            font-size: 18px;
+            margin-top: 28px;
+            margin-right: 14%;
+            color: #010c1f;
+        }
+
+        .user-auth a {
+            color: #fff;
+        }
+
+        .block {
+            padding: 0 14%;
+        }
+
+        .bg-block1 {
+            position: relative;
+            padding: 0;
+            height: 300px;
+        }
+
+        .bg-block1 .content {
+            position: absolute;
+            top: 0;
+            left: 25%;
+            width: 50%;
+            height: 100%;
+        }
+
+        .count-data {
+            margin-top: 30px;
+            color: #fff;
+        }
+
+        .count-data .num {
+            color: #f00;
+        }
+
+        .search-box {
+            position: relative;
+            margin-top: 5px;
+            height: 40px;
+            background: #fff;
+            border-radius: 4px;
+        }
+
+        .search-box .search-icon {
+            margin: -5px 5px 0;
+        }
+
+        .search-box .search-input {
+            margin-top: 0;
+            width: calc(100% - 118px);
+            height: 40px;
+            outline: none;
+            border: 0;
+            font-size: 16px;
+        }
+
+        .search-box .search-input::-webkit-input-placeholder {
+            color: #B2A79B;
+        }
+
+        .search-box .clear-btn {
+            color: #ccc;
+            font-size: 16px;
+        }
+
+        .search-box .clear-btn:hover {
+            cursor: pointer;
+            color: #cc2525;
+        }
+
+        .search-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 40px;
+            width: 60px;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+            background: #2D323C;
+            color: #fff;
+            border: 0;
+            line-height: 3.0;
+        }
+
+        .search-btn:hover {
+            color: #fff;
+        }
+
+        .search-result-list {
+            position: absolute;
+            margin-top: 3px;
+            width: 100%;
+            background: #EEEEEE;
+            display: none;
+            box-shadow: 0px 0px 5px #333;
+            z-index: 99;
+        }
+
+        .data-list .text-title {
+            width: 78px;
+            padding: 15px 8px;
+            text-align: right;
+            color: #e65412;
+            font-weight: bold;
+        }
+
+        .data-list .list-contain {
+            width: calc(100% - 78px);
+            padding: 8px;
+        }
+
+        .list-contain span {
+            float: left;
+            background: #fff;
+            padding: 3px;
+            border-radius: 4px;
+            margin: 3px;
+            display: block;
+            cursor: pointer;
+        }
+
+        .list-contain span:hover,
+        .list-contain span.selected {
+            background: #03A9F4;
+            color: #fff;
+        }
+
+        .bulge {
+            position: absolute;
+            bottom: 0;
+            left: calc(50% - 200px);
+            background: url("${_static}/images/out_home/icon_gz_02_1.png") 20px 12px no-repeat / 85px 17px, url(${_static}/images/out_home/icon_gz_02_2.png) 294px 10px no-repeat / 85px 17px, url(${_static}/images/out_home/icon_gz_02_0.png) 0 0 no-repeat / 100% 100%;
+            width: 400px;
+            height: 40px;
+        }
+
+        .text-chanese {
+            margin-top: 8px;
+            margin-left: 110px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .text-english {
+            margin-top: 8px;
+            font-size: 1.1em;
+            /*font-weight: bold;*/
+            color: #c3c3c3;
+        }
+
+        .oblique-line {
+            border-right: 1px solid #c3c3c3;
+            height: 26px;
+            transform: rotate(30deg);
+            margin: 6px 10px;
+        }
+
+        /*轮播插件样式*/
+
+        .carousel-item {
+            width: 100%;
+        }
+
+        .ft-carousel .carousel-indicators span {
+            width: 12px;
+            height: 8px;
+            border-radius: 0;
+        }
+
+        .ft-carousel .carousel-indicators {
+            left: 50%;
+        }
+
+        /*轮播插件样式*/
+
+        .bg-block2 {
+            background: #fff;
+        }
+
+        .app-list {
+            margin-top: 25px;
+            width: 70%;
+        }
+
+        .app-item {
+            float: left;
+            margin: 1%;
+            width: 30%;
+            height: 240px;
+            border: 1px solid #ccc;
+            transition: background .3s;
+        }
+
+        .app-item:hover {
+            cursor: pointer;
+            background: #5EB5FE;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .app-item:hover .text-describe {
+            color: #fff;
+        }
+
+        .app-item img {
+            width: 70px;
+            margin: 12px auto 0;
+            display: block;
+        }
+
+        .app-item .text-title {
+            margin-top: 8px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .app-item .text-describe {
+            width: 85%;
+            margin: 0 auto;
+            color: #777;
+            line-height: 1.7;
+            margin-top: 5px;
+            height: calc(100% - 120px);
+            overflow: hidden;
+        }
+
+        .more-app-list {
+            width: 30%;
+        }
+
+        .more-app-list .top-bar {
+            margin-top: 35px;
+            height: 40px;
+            background: url(${_static}/images/out_home/icon_gz_04_1.png) 0 0 no-repeat, #F6F6F6;
+            margin-bottom: 24px;
+        }
+
+        .top-bar .text-more {
+            color: #fff;
+            font-size: 1.1em;
+            line-height: 2.8;
+            padding-left: 7px;
+        }
+
+        .swich-icon-list {
+            float: right;
+            margin-right: 8px;
+        }
+
+        .swich-icon-item {
+            float: left;
+            width: 15px;
+            height: 15px;
+            line-height: 16px;
+            margin: 3px;
+            margin-top: 13px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .swich-icon-item:hover,
+        .swich-icon-item.active {
+            background: red;
+            color: #fff;
+        }
+
+        .more-app-item {
+            margin: 8px 0;
+            height: 80px;
+            background: #eee;
+            padding: 14px;
+            display: block;
+        }
+
+        .more-app-item:hover {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .more-app-item img {
+            width: 50px;
+            display: block;
+            float: left;
+            margin-right: 8px;
+        }
+
+        .more-app-item .text-title {
+            margin-top: 5px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .more-app-item .text-describe {
+            margin-top: 5px;
+            color: #555;
+        }
+
+        .block-title-bar {
+            margin: 30px 0;
+            height: 45px;
+            background: #eee;
+        }
+
+        .block-title-bar .text-chanese {
+            margin-left: 15%;
+            font-size: 1.3em;
+            line-height: 1.8;
+            float: left;
+        }
+
+        .block-title-bar .oblique-line {
+            width: 1px;
+            float: left;
+            border-right: 2px solid red;
+            margin-top: 12px;
+            height: 28px;
+        }
+
+        .block-title-bar .text-english {
+            line-height: 2.2;
+            float: left;
+            color: #aaa;
+        }
+
+        .coverage-area-list {
+            margin-top: 30px;
+        }
+
+        .coverage-area-item {
+            margin: 0.5%;
+            width: 24%;
+            height: 400px;
+            text-decoration: none;
+            transition: box-shadow .3s;
+        }
+
+        .coverage-area-item:hover {
+            box-shadow: 0 0 8px 5px #eee;
+            text-decoration: none;
+        }
+
+        .coverage-area-item .text-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 45px;
+            color: #fff;
+        }
+
+        .coverage-area-item .text-content {
+            margin-top: 35px;
+            padding: 8px 13% 0;
+            color: #777;
+        }
+
+        .coverage-area-item .text-content .text-title {
+            color: #333;
+            margin-top: 0;
+            text-align: left;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .coverage-area-item .text-content .text-describe {
+            overflow: hidden;
+            height: 157px;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        .progress-list {
+            padding: 0 20px;
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+        .progress-list .auto-width{
+            position: absolute;
+            left: 0;
+            height: 100%;
+            background: url(${_static}/images/out_home/kd.png) 0 100px no-repeat / calc(100% - 32px) 18px;
+        }
+
+        .progress-prev {
+            left: 0px;
+            position: absolute;
+            top: 92px;
+            width: 20px;
+            height: 20px;
+            background: url(${_static}/images/out_home/icon_gz_13_1.png) 0 58% no-repeat / 18px;
+            cursor: pointer;
+            z-index: 999;
+        }
+
+        .progress-next {
+            position: absolute;
+            top: 92px;
+            width: 20px;
+            height: 20px;
+            right: 0;
+            background: url(${_static}/images/out_home/icon_gz_13_2.png) right 0 top 58% no-repeat / 18px;
+            cursor: pointer;
+            z-index: 999;
+        }
+
+        .progress-prev:hover,
+        .progress-next:hover {
+            background-size: 20px;
+        }
+
+        .progress-item {
+            width: 280px;
+            background: url(${_static}/images/out_home/icon_gz_13_3.png) 50% 61% no-repeat;
+            height: 170px;
+            text-align: center;
+        }
+
+        .progress-item.active {
+            background: url(${_static}/images/out_home/icon_gz_13_4.png) 50% 61% no-repeat;
+        }
+
+        .progress-item .text-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: 18px;
+        }
+
+        .progress-item .text-describe {
+            text-align: center;
+            color: #555;
+            padding: 10px 30px 5px;
+            overflow: hidden;
+            height: 60px;
+            font-size: 0.8em;
+        }
+
+        .progress-item .text-time {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 1.3em;
+            color: #777;
+        }
+
+        /*---------------底部footer begin-------------*/
+
+        footer {
+            width: 100%;
+            height: 115px;
+            background: #2989b7 url(${_static}/images/out_home/icon_gz_04.png) no-repeat center;
+            text-align: center;
+            color: #FFFFFF;
+        }
+
+        footer ul {
+            display: inline-block;
+            margin: 36px 0 0;
+        }
+
+        footer ul li {
+            float: left;
+            margin-right: 10px;
+            text-align: left;
+        }
+
+        footer ul li p:first-child {
+            margin-top: 4px;
+            margin-right: 20px;
+        }
+
+        /*---------------底部footer end---------------*/
+    </style>
+</head>
+
+<body>
+<header>
+    <img src="${_static}/images/out_home/icon_gz_logo.png"/>
+    <div class="pull-right user-auth">
+        <a href="javascript:">登录</a>
+        <!--<span>|</span>-->
+        <!--<a href="javascript:">注册</a>-->
+    </div>
+</header>
+<div class="block bg-block1">
+    <div class="ft-carousel" id="carousel">
+        <ul class="carousel-inner">
+            <li class="carousel-item"
+                style="background: url(${_static}/images/out_home/icon_gz_00_1.png) 50% 50px no-repeat / 600px 300px,url(${_static}/images/out_home/icon_gz_00.jpg) 0 0 no-repeat /100%;"></li>
+            <li class="carousel-item"
+                style="background: url(${_static}/images/out_home/icon_gz_00_1.png) 50% 50px no-repeat / 600px 300px,url(${_static}/images/out_home/icon_gz_00.jpg) 0 0 no-repeat / 100%;"></li>
+            <li class="carousel-item"
+                style="background: url(${_static}/images/out_home/icon_gz_00_1.png) 50% 50px no-repeat / 600px 300px,url(${_static}/images/out_home/icon_gz_00.jpg) 0 0 no-repeat / 100%;"></li>
+        </ul>
+    </div>
+    <div class="content">
+        <div class="count-data">
+            现已开发<span class="num">8565</span>个政府数据集，<span class="num">36</span>个数据应用，超过<span class="num">54856</span>条政府数据
+        </div>
+        <div class="search-box">
+            <img class="search-icon" src="${_static}/images/out_home/icon_gz_01.png"/>
+            <input type="text" class="search-input" placeholder="请输入数据/模块/服务/应用名称关键字"/>
+            <i class="clear-btn fa fa-close hidden"></i>
+            <button class="search-btn" onclick="search()">搜索</button>
+            <div class="search-result-list clearfix">
+                <div class="data-list clearfix">
+                    <div class="text-title pull-left">数据</div>
+                    <div class="list-contain pull-left">
+                        <span>经济建设（380）</span>
+                        <span>资源环境（124）</span>
+                        <span>教育科技（85）</span>
+                        <span>道路交通（185）</span>
+                    </div>
+                </div>
+                <div class="data-list clearfix">
+                    <div class="text-title pull-left">模块</div>
+                    <div class="list-contain pull-left">
+                        <span>市发改委（324）</span>
+                        <span>市经信委（856）</span>
+                        <span>市商务委（654）</span>
+                        <span>市教委（245）</span>
+                    </div>
+                </div>
+                <div class="data-list clearfix">
+                    <div class="text-title pull-left">服务</div>
+                    <div class="list-contain pull-left">
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                    </div>
+                </div>
+                <div class="data-list clearfix">
+                    <div class="text-title pull-left">应用</div>
+                    <div class="list-contain pull-left">
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                    </div>
+                </div>
+                <div class="data-list clearfix">
+                    <div class="text-title pull-left">提供部门</div>
+                    <div class="list-contain pull-left">
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                        <span>经济建设（380）</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bulge">
+            <div class="text-chanese pull-left">
+                开发能力
+            </div>
+            <div class="oblique-line pull-left">
+
+            </div>
+            <div class="text-english pull-left">
+                Open capacity
+            </div>
+        </div>
+    </div>
+</div>
+<div class="block bg-block2 clearfix">
+    <div class="app-list clearfix pull-left">
+        <a class="app-item">
+            <img src="${_static}/images/out_home/icon_gz_app_1.png"/>
+            <div class="text-title">
+                单点登录
+            </div>
+            <div class="text-describe">
+                支持用户只需要登录一次就可以访问所有相互信任的应用系统。
+            </div>
+        </a>
+
+        <a class="app-item">
+            <img src="${_static}/images/out_home/icon_gz_app_2.png"/>
+            <div class="text-title">
+                开放模块
+            </div>
+            <div class="text-describe">
+                通过开放模块的组装适配可快速搭建好各应用的基础共性内容的建设，提高效率，降低成本
+            </div>
+        </a>
+
+        <a class="app-item">
+            <img src="${_static}/images/out_home/icon_gz_app_3.png"/>
+            <div class="text-title">
+                开放服务
+            </div>
+            <div class="text-describe">
+                提供各类与业务相关的共性服务，可以是一体化平台对基础模块功能的服务，也可以是新建的各类业务系统相关业务功能的服务。
+            </div>
+        </a>
+
+        <a class="app-item">
+            <img src="${_static}/images/out_home/icon_gz_app_4.png"/>
+            <div class="text-title">
+                开放数据
+            </div>
+            <div class="text-describe">
+                通过交换共享功能，对内完成所有业务部门的共享开放需求，对外实现与上级部门或其它单位的共享开放平台对接。
+            </div>
+        </a>
+
+        <a class="app-item">
+            <img src="${_static}/images/out_home/icon_gz_app_5.png"/>
+            <div class="text-title">
+                开放应用
+            </div>
+            <div class="text-describe">
+                将十二大应用示范工程及其它信息化系统中公共的应用部分提炼出来，形成成熟可用的应用。
+            </div>
+        </a>
+
+        <a class="app-item">
+            <img src="${_static}/images/out_home/icon_gz_app_6.png"/>
+            <div class="text-title">
+                开放平台
+            </div>
+            <div class="text-describe">
+                开放平台由一体化提供框架性功能，通过一定的扩展机制为外部应用提供接口，当外部应用较为简单时，可以直接通过统一平台应用进行定制即可完成扩展。
+            </div>
+        </a>
+    </div>
+    <div class="more-app-list pull-left">
+        <div class="top-bar">
+            <span class="text-more">更多</span>
+            <div class="swich-icon-list">
+                <div class="swich-icon-item active" id="swich-icon-1">
+                    1
+                </div>
+                <div class="swich-icon-item" id="swich-icon-2">
+                    2
+                </div>
+            </div>
+        </div>
+        <div class="more-app-list-contain">
+            <a class="more-app-item">
+                <img src="${_static}/images/out_home/icon_gz_11.png"/>
+                <div class="text-title">
+                    模块名称
+                </div>
+                <div class="text-describe">
+                    模块描述
+                </div>
+            </a>
+            <a class="more-app-item">
+                <img src="${_static}/images/out_home/icon_gz_11.png"/>
+                <div class="text-title">
+                    模块名称
+                </div>
+                <div class="text-describe">
+                    模块描述
+                </div>
+            </a>
+            <a class="more-app-item">
+                <img src="${_static}/images/out_home/icon_gz_11.png"/>
+                <div class="text-title">
+                    模块名称
+                </div>
+                <div class="text-describe">
+                    模块描述
+                </div>
+            </a>
+            <a class="more-app-item">
+                <img src="${_static}/images/out_home/icon_gz_11.png"/>
+                <div class="text-title">
+                    模块名称
+                </div>
+                <div class="text-describe">
+                    模块描述
+                </div>
+            </a>
+            <a class="more-app-item">
+                <img src="${_static}/images/out_home/icon_gz_11.png"/>
+                <div class="text-title">
+                    模块名称
+                </div>
+                <div class="text-describe">
+                    模块描述
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="block-title-bar">
+    <div class="text-chanese">
+        覆盖领域
+    </div>
+    <div class="oblique-line">
+
+    </div>
+    <div class="text-english">
+        Area of coverage
+    </div>
+</div>
+<div class="block bg-block3">
+    <div class="coverage-area-list clearfix">
+        <a href="javascript:" class="coverage-area-item pull-left"
+           style="background: url(${_static}/images/out_home/icon_gz_12_1.png) 0 0 no-repeat / 100% 100%;">
+            <div class="text-content">
+                <div class="text-title">
+                    领域数据
+                </div>
+                <div class="text-describe">
+                    聚合政务、人力、科技、产业、国土资源、税务等多个领域的数据，对高新区分散异构的数据资源进行整合，提高了政府和企业的信息化水平。
+                </div>
+            </div>
+            <div class="text-title">
+                领域数据
+            </div>
+        </a>
+        <a href="javascript:" class="coverage-area-item pull-left"
+           style="background: url(${_static}/images/out_home/icon_gz_12_2.png) 0 0 no-repeat / 100% 100%;">
+            <div class="text-content">
+                <div class="text-title">
+                    主题数据
+                </div>
+                <div class="text-describe">
+                    基于基础数据，将信息经过过滤识别出来，再从全局出发，根据需求将数据分为不同的主题，实现数据的面向业务主题进行存储。
+                </div>
+            </div>
+            <div class="text-title">
+                主题数据
+            </div>
+        </a>
+        <a href="javascript:" class="coverage-area-item pull-left"
+           style="background: url(${_static}/images/out_home/icon_gz_12_3.png) 0 0 no-repeat / 100% 100%;">
+            <div class="text-content">
+                <div class="text-title">
+                    行业数据
+                </div>
+                <div class="text-describe">
+                    汇集各行业最新的市场变化数据，实现对行业经济的运行状况、产品生产、销售、消费、技术、行业竞争力、市场竞争格局、行业政策等行业要素进行深入的分析，从而发现行业运行的内在经济规律，进而进一步预测未来行业发展的趋势
+                </div>
+            </div>
+            <div class="text-title">
+                行业数据
+            </div>
+        </a>
+        <a href="javascript:" class="coverage-area-item pull-left"
+           style="background: url(${_static}/images/out_home/icon_gz_12_4.png) 0 0 no-repeat / 100% 100%;">
+            <div class="text-content">
+                <div class="text-title">
+                    服务数据
+                </div>
+                <div class="text-describe">
+                    充分整合了一体化平台产生的各类数据，为上层应用的数据应用及运维等服务提供充分的数据支撑。
+                </div>
+            </div>
+            <div class="text-title">
+                服务数据
+            </div>
+        </a>
+    </div>
+</div>
+<div class="block-title-bar">
+    <div class="text-chanese">
+        平台发展历程
+    </div>
+    <div class="oblique-line">
+
+    </div>
+    <div class="text-english">
+        Development process platform
+    </div>
+</div>
+<div class="block bg-block4">
+    <div class="progress-list clearfix">
+        <div class="progress-prev hidden">
+
+        </div>
+        <div class="progress-next">
+
+        </div>
+        <div class="auto-width">
+            <div class="progress-item pull-left">
+                <div class="text-title">
+                    项目招标大会
+                </div>
+                <div class="text-describe">
+                    在阳光产权交易中心举行招标
+                </div>
+                <div class="text-time">
+                    2018年01月10日
+                </div>
+            </div>
+            <div class="progress-item pull-left">
+                <div class="text-title">
+                    项目正式启动
+                </div>
+                <div class="text-describe">
+                    与甲方召开启动会议，项目正式启动
+                </div>
+                <div class="text-time">
+                    2018年01月29日
+                </div>
+            </div>
+            <div class="progress-item pull-left active">
+                <div class="text-title">
+                    框架搭建完成
+                </div>
+                <div class="text-describe">
+                    服务中心、统一认证、权限管理完成完成
+
+                </div>
+                <div class="text-time">
+                    2018年03月01日
+                </div>
+            </div>
+            <div class="progress-item pull-left">
+                <div class="text-title">
+                    部分功能完成
+                </div>
+                <div class="text-describe">
+                    文件管理、云盘管理、标准管理系统完成
+
+                </div>
+                <div class="text-time">
+                    2018年04月01日
+                </div>
+            </div>
+            <div class="progress-item pull-left">
+                <div class="text-title">
+                    0.1 版本发布
+                </div>
+                <div class="text-describe">
+                    完成模块层、服务层开发
+
+                </div>
+                <div class="text-time">
+                    2018年05月01日
+                </div>
+            </div>
+            <div class="progress-item pull-left">
+                <div class="text-title">
+                    参与数博会展示
+                </div>
+                <div class="text-describe">
+                    对平台的快速开发能力、分析能力、一体化能力进行展示
+                </div>
+                <div class="text-time">
+                    2018年05月26日
+                </div>
+            </div>
+            <div class="progress-item pull-left">
+                <div class="text-title">
+                    0.2 版本发布
+                </div>
+                <div class="text-describe">
+                    完成模块层、服务层、应用层开发
+                </div>
+                <div class="text-time">
+                    2018年08月01日
+                </div>
+            </div>
+            <div class="progress-item pull-left">
+                <div class="text-title">
+                    0.3 版本发布
+                </div>
+                <div class="text-describe">
+                    全部功能完成，进行内部上线试运行
+                </div>
+                <div class="text-time">
+                    2018年10月01日
+                </div>
+            </div>
+            <div class="progress-item pull-left">
+                <div class="text-title">
+                    1.0 版本发布
+                </div>
+                <div class="text-describe">
+                    内部试运行结束，完成项目初步验收，正式上线试运行
+                </div>
+                <div class="text-time">
+                    2018年11月01日
+                </div>
+            </div>
+            <div class="progress-item pull-left">
+                <div class="text-title">
+                    1.1 版本发布
+                </div>
+                <div class="text-describe">
+                    完成技术验收，项目正式上线运行
+                </div>
+                <div class="text-time">
+                    2019年02月01日
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <ul class="clearfix">
+        <li><img src="${_static}/images/out_home/icon_gz_001.png"/></li>
+        <li><img src="${_static}/images/out_home/icon_gz_02.png"/></li>
+        <li>
+            <p>主办：贵阳国家高新技术产业开发区管委会</p>
+            <p>备案序号：黔ICP备54815478号</p>
+        </li>
+        <li>
+            <p>技术支持单位：中科恒运股份有限公司</p>
+            <p>黔公网安备：12135401101120</p>
+        </li>
+    </ul>
+</footer>
+
+<script type="text/javascript">
+    /*初始化轮播插件*/
+    $("#carousel").FtCarousel({
+        time: 5000
+    });
+    /*搜索框聚集展现下拉搜索列表*/
+    $('.search-input').focus(function () {
+        // $('.search-result-list').slideDown();
+    })
+    /*取消部门元素点击关闭下拉搜索列表*/
+    $(document).click(function (e) {
+        if (!$(e.target).hasClass('search-box') && !$(e.target).parents('.search-box').length && !$(e.target).hasClass('carousel-btn')) {
+            $('.search-result-list').slideUp();
+        }
+    })
+    /*应用入口增加悬浮样式*/
+    $('.app-item').mouseenter(function () {
+        var oldSrc = $(this).find('img').attr('src');
+        var newSrc = oldSrc.split('.')[0] + '0.' + oldSrc.split('.')[1];
+        $(this).find('img').attr('src', newSrc)
+    })
+    /*应用入口取消悬浮样式*/
+    $('.app-item').mouseleave(function () {
+        var oldSrc = $(this).find('img').attr('src');
+        var newSrc = oldSrc.split('.')[0].slice(0, -1) + '.' + oldSrc.split('.')[1];
+        $(this).find('img').attr('src', newSrc)
+    })
+    /*把下拉搜索列表的选项增加到搜索框*/
+    $('.search-result-list').on('click', '.list-contain span', function () {
+        var _this = $(this);
+        var oldText = _this.text();
+        var newText = oldText.split('（')[0];
+        var inputText = $('.search-input').val();
+        if (_this.hasClass('selected')) {
+            if (inputText.indexOf(newText + '+') >= 0) {
+                $('.search-input').val(inputText.replace(newText + '+', '')).change();
+            } else if (inputText.indexOf('+' + newText) >= 0) {
+                $('.search-input').val(inputText.replace('+' + newText, '')).change();
+            } else {
+                $('.search-input').val(inputText.replace(newText, '')).change();
+            }
+        } else {
+            if (inputText && inputText.trim()) {
+                $('.search-input').val(inputText + '+' + newText).change();
+            } else {
+                $('.search-input').val(newText).change();
+            }
+        }
+        _this.toggleClass('selected');
+    })
+    /*判断搜索框是否为空并显示或隐藏清空按钮*/
+    $('.search-input').keyup(function () {
+        var _this = $(this);
+        if (_this.val && _this.val().trim()) {
+            $('.search-box .clear-btn').removeClass('hidden');
+        } else {
+            $('.search-box .clear-btn').addClass('hidden');
+        }
+    })
+    $('.search-input').change(function () {
+        var _this = $(this);
+        if (_this.val && _this.val().trim()) {
+            $('.search-box .clear-btn').removeClass('hidden');
+        } else {
+            $('.search-box .clear-btn').addClass('hidden');
+        }
+        $('.search-box .search-input').focus();
+    })
+    /*清空搜索框*/
+    $('.search-box .clear-btn').click(function () {
+        $('.search-box .search-input').val('').change();
+        $('.search-result-list span').removeClass('selected');
+    })
+
+    /*开始搜索*/
+    function search() {
+        location.href = '${_cp}/searchResultList';
+    }
+
+    /*初始化平台发展历程的宽度*/
+    initProcessWidth();
+    var autoWidth;
+    function initProcessWidth() {
+        var num = $('.auto-width').find('.progress-item').length;
+        autoWidth = num * 280;
+        $('.auto-width').css('width', autoWidth + 130);
+    }
+
+    /*平台发展历程查看*/
+    $('.auto-width').css('left');
+    $('.progress-list .progress-next').click(function () {
+        $('.progress-prev').removeClass('hidden');
+        var oldLeft = $('.auto-width').css('left').slice(0,-2);
+        if(Math.abs(Number(oldLeft)) >= autoWidth-$('.progress-list').width()-250){
+            $('.progress-next').addClass('hidden');
+        }
+        $('.auto-width').animate({
+            left:(Number(oldLeft)-280)
+        },100);
+    })
+    $('.progress-list .progress-prev').click(function () {
+        $('.progress-next').removeClass('hidden');
+        var oldLeft = $('.auto-width').css('left').slice(0,-2);
+        if(Math.abs(Number(oldLeft)) <= 300){
+            $('.progress-prev').addClass('hidden');
+        }
+        $('.auto-width').animate({
+            left:(Number(oldLeft)+280)
+        },100);
+    })
+</script>
+</body>
+
+</html>

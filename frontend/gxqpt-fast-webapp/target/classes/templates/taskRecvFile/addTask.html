@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- begin 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css" href="${_css}/reset.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/layer/skin/layer.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_css}/app.css">
+
+    <link type="text/css" rel="stylesheet" href="${_lib}/ValidateForm/Validform.css"/>
+    <link href="${_lib}/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${_lib}/webuploader/upload.css" rel="stylesheet" type="text/css" />
+    <!-- end 外部CSS引入 -->
+
+    <!-- begin 自定义样式 -->
+    <link href="${_css}/taskRecvFile/addTask.css" rel="stylesheet" type="text/css" />
+    <!-- end 自定义样式 -->
+
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="addOrUpdateTaskForm">
+                    <input type="hidden" name="taskId" value="${taskId}"/>
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>新增拟办意见</h5>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary btn-submits" type="submit" id="btnAddWillDoTask">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            提交
+                        </button>
+                        <button class="btn btn-default go-back"  id="btnGoBack">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            取消
+                        </button>
+                    </div>
+                </div>
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline">
+                            <fieldset>
+                                <form onsubmit="return false;" id="addWillDoTask">
+                                <div class="col-sm-12">
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"> <span
+                                                    class="text-danger">*</span> <span>任务类型</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <select class="form-control w153" name="taskType">
+                                                    <option value="综合保障类">综合保障类</option>
+                                                    <option value="征求意见类">征求意见类</option>
+                                                    <option value="筑党办发">筑党办发</option>
+                                                    <option value="黔府发">黔府发</option>
+                                                    <option value="筑府发">筑府发</option>
+                                                    <option value="筑委专议">筑委专议</option>
+                                                    <option value="筑党专议">筑党专议</option>
+                                                    <option value="筑府办函">筑府办函</option>
+                                                    <option value="黔府函">黔府函</option>
+                                                    <option value="黔党函">黔党函</option>
+                                                    <option value="黔府办函">黔府办函</option>
+                                                    <option value="黔党办函7">黔党办函</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"> <span
+                                                    class="text-danger">*</span> <span>任务名称</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <div class="form-control-wrap">
+                                                    <input class="form-control" name="taskName"  datatype="*" nullmsg="任务名称不允许为空" value="">
+                                                    <input type="hidden" name="fileId"  value="">
+                                                    <input type="hidden" name="fileNo" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"> <span
+                                                    class="text-danger"></span> <span>牵头领导</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <select class="form-control w153" name="leadName"
+                                                        data-placeholder="请选择" id="managerId" >
+                                                    <option value="3">郭嘉龙</option>
+                                                    <option value="4">岳金成</option>
+                                                    <option value="5">隋智超</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"> <span
+                                                    class="text-danger"></span> <span>配合领导</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <select name="coordinationId" id="coordinationId" class="form-control chosen-select w153"
+                                                        data-placeholder="请选择">
+                                                    <option value="3">郭嘉龙</option>
+                                                    <option value="4">岳金成</option>
+                                                    <option value="5">隋智超</option>
+                                                    <!--<option value="4">裴斌</option>
+                                                    <option value="5">陈昌隆</option>
+                                                    <option value="6">李颖</option>
+                                                    <option value="7">方军祥</option>
+                                                    <option value="8"></option>
+                                                    <option value="9">赵旭</option>
+                                                    <option value="10">周世军</option>-->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"> <span
+                                                    class="text-danger"></span> <span>承办处室</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                    <select name="undertakeRoom" id="deptIds" class="form-control chosen-select w153"
+                                                            data-placeholder="请选择" >
+                                                        <option value="市政府办公厅">市政府办公厅</option>
+                                                        <option value="市发改委">市发改委</option>
+                                                        <option value="市财政局">市财政局</option>
+                                                        <option value="市审计局">市审计局</option>
+                                                        <option value="市综合执法局">市综合执法局</option>
+                                                        <option value="市建委">市建委</option>
+                                                        <option value="市农委">市农委</option>
+                                                        <option value="市民政局">市民政局</option>
+                                                    </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"> <span
+                                                    class="text-danger"></span> <span>配合处室</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                    <select name="coordinationRoom" id="cooperateDeptIds" class="form-control chosen-select w153"
+                                                            data-placeholder="请选择" >
+                                                        <option value="市政府办公厅">市政府办公厅</option>
+                                                        <option value="市发改委">市发改委</option>
+                                                        <option value="市财政局">市财政局</option>
+                                                        <option value="市审计局">市审计局</option>
+                                                        <option value="市综合执法局">市综合执法局</option>
+                                                        <option value="市建委">市建委</option>
+                                                        <option value="市农委">市农委</option>
+                                                        <option value="市民政局">市民政局</option>
+                                                    </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-field">
+                                         <div class="form-group">
+                                             <label class="control-label w153">
+                                                 <span class="text-danger"></span>
+                                                 <span>经办人</span>
+                                                 <span>：</span>
+                                             </label>
+                                             <div class="form-control-wrap">
+                                                 <select name="agent" id="handlerIds" class="form-control chosen-select w153"
+                                                          data-placeholder="请选择" >
+                                                     <option value="3">郭嘉龙</option>
+                                                     <option value="4">岳金成</option>
+                                                     <option value="5">隋智超</option>
+                                                 </select>
+                                             </div>
+                                         </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"> <span
+                                                    class="text-danger">*</span> <span>紧急程度</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <select
+                                                        class="form-control w153" name="urgencyDegree"
+                                                         data-placeholder="请选择" datatype="*" nullmsg="请选择紧急程度！">
+                                                    <option value="平急">平急</option>
+                                                    <option value="急件">急件</option>
+                                                    <option value="加急">加急</option>
+                                                    <option value="特急">特急</option>
+                                                    <option value="特提">特提</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                               <div class="col-sm-12">
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"><span>完成时限</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <input class="form-control Wdate" value=""  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="finishTimeLimit" name="finishTimeLimit" >
+                                            </div>
+                                        </div>
+                                    </div>
+                               </div>
+                               <div class="col-sm-12">
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"> <span
+                                                    class="text-danger">*</span> <span>任务内容</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <textarea class="form-control" name="content" rows="5" style="width: 483px;" datatype="*1-400" nullmsg="内容概要不允许为空" errormsg="请输入不超过400个字符"
+                                                          placeholder="请输入内容，400字以内"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                               </div>
+                               <div class="col-sm-12">
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w153"> <span
+													class="text-danger"></span> <span>附件上传</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<div id="wrapper" class="pull-left" style="margin:0;width:483px;">
+														<div id="container" style="margin: 0;padding: 0;">
+                                                            <div id="uploader1" class="uploader uploader1-active">
+                                                                <div id="dndArea1" class="placeholder dndArea dndArea1-active"></div>
+                                                                <div id="filePicker1" class="filePicker"></div>
+                                                                <input type="text" value="" name="attachmentName" id="attachmentName" style="display: none;">
+                                                                <input type="text" value="" name="attachmentUrl" id="attachmentUrl" style="display: none;">
+                                                            </div>
+                                                        </div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+                                <div class="col-sm-12">
+                                   <div class="form-field">
+                                       <div class="form-group">
+                                           <label class="control-label w153"> <span
+                                                   class="text-danger">*</span> <span>备注</span> <span>：</span>
+                                           </label>
+                                           <div class="form-control-wrap">
+                                               <textarea class="form-control" name="desc" rows="5" style="width: 483px;" datatype="*1-200" nullmsg="内容概要不允许为空" errormsg="请输入不超过200个字符"
+                                                         placeholder="请输入内容，200字以内"></textarea>
+                                           </div>
+                                       </div>
+                                   </div>
+                                </div>
+                                </form>
+                            </fieldset>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <!-- end 页面内容主体 -->
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib}/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_lib}/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib}/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib}/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_lib}/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib}/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_js}/app.js"></script>
+<!--end 外部JS引入 -->
+<script type="text/javascript" src="${_js}/uploadfile.js"></script>
+<script type="text/javascript" src="${_js}/lj.js"></script>
+<script type="text/javascript" src="${_js}/hengyun/hengyun_ajax.js"></script>
+
+<script type="text/javascript" src="${_lib}/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_lib}/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_lib}/jqueryform/jquery.form.js"></script>
+
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<!-- 附件上传插件 -->
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYUploadFile.js"></script>
+<!--begin 自定义JS -->
+<script type="text/javascript" src="${_static}/js/taskRecvFile/addTask.js"></script>
+<!--end 自定义JS -->
+</body>
+</html>

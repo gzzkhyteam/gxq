@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- begin 外部CSS引入 -->
+    <link href="${_js}/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="${_js}/lib/webuploader/upload.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="${_cp}/static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/font-awesome/css/font-awesome.min.css">
+    <!--
+    <link rel="stylesheet" type="text/css"
+        href="/gydbdc-oa-webapp/statics/js/lib/chosen/chosen.min.css">
+    -->
+    <link rel="stylesheet" type="text/css" href="${_lib }/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jquery-step/jquery.step.css">
+
+    <link rel="stylesheet" href="${_cp}/static/themes/blue/css/ui.css">
+
+    <link rel="stylesheet" href="${_cp}/static/css/app.css">
+
+    <link type="text/css" rel="stylesheet"
+          href="${_lib}/ValidateForm/Validform.css"/>
+    <link href="${_js}/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="${_js}/lib/webuploader/upload.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_js}/hengyun/hengyun_ajax.js"></script>
+    <!-- end 外部CSS引入 -->
+    <!-- begin 自定义样式 -->
+    <link rel="stylesheet" href="${_cp}/static/css/taskSendFile/add.css">
+    <!-- end 自定义样式 -->
+
+</head>
+
+<body>
+<form id="dataSubmitTrue" action="" method="post">
+    <input type="hidden" value='' name="id" id="id">
+    <div class="workspace-body">
+        <div class="console-container">
+            <div class="row">
+                <div id="modalDialog" class="col-sm-12">
+                    <!-- 模态框（Modal） -->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" style="width:92%">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        &times;
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">
+                                        添加发送单位
+                                    </h4>
+                                </div>
+                                <div id="modalBody" class="modal-body">
+                                    <div class="form-inline view-info">
+                                        <fieldset>
+                                            <!-- begin 表格 -->
+                                            <div class="grid-section">
+                                                <table id="list">
+                                                </table>
+                                                <div id="pager"></div>
+                                            </div>
+                                            <!-- end 表格  -->
+                                        </fieldset>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" id="btnCloseSend">关闭
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="btnSaveSend">
+                                        确定
+                                    </button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div>
+                    </div>
+                    <!-- begin 标题 -->
+                    <div class="console-title console-title-border clearfix">
+                        <div class="pull-left">
+                            <h5>
+                                收发文管理 &gt; <font color="#0099cc">编辑登记</font>
+                            </h5>
+                        </div>
+                    </div>
+                    <!-- begin 页面内容主体 -->
+
+                    <div class="list-section">
+                        <div class="list-content">
+                            <div class="form-inline view-info">
+                                <fieldset>
+                                    <div class="col-sm-12">
+                                        <div class="col-md-12">
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w120"> <span>发文号</span> <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input class="form-control" id ="docNum" name="docNum"  />
+                                                    </div>
+                                                    <div class="form-control-wrap">
+                                                        <label class="control-label w120">
+                                                            <span>发文时间:</span>
+                                                        </label>
+                                                        <input class="form-control"  value='' name="createTime"
+                                                               value="" onclick="WdatePicker({isShowWeek:true,dateFmt:'yyyy-MM-dd'})"   datatype="*" errormsg="请输入年" nullmsg="请输入年" id="createTime" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w120"> <span
+                                                            class="text-danger">*</span> <span>密级</span> <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <select
+                                                                class="form-control w153" name="rank"
+                                                                onchange="selectCountry(this);" data-placeholder="请选择"
+                                                                datatype="*" nullmsg="请选择保密级别!" id="rank">
+                                                            <option value="平急">平急</option>
+                                                            <option value="急件">急件</option>
+                                                            <option value="加急">加急</option>
+                                                            <option value="特急">特急</option>
+                                                            <option value="特提">特提</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="col-md-12">
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w120"> <span
+                                                            class="text-danger">*</span> <span>发送单位</span> <span>：</span>
+                                                    </label>
+
+                                                    <div class="form-control-wrap">
+                                                        <select name="docUnit" id="" class="form-control chosen-select w153"
+                                                                data-placeholder="请选择" >
+                                                            <option value="市政府办公厅">市政府办公厅</option>
+                                                            <option value="市发改委">市发改委</option>
+                                                            <option value="市财政局">市财政局</option>
+                                                            <option value="市审计局">市审计局</option>
+                                                            <option value="市综合执法局">市综合执法局</option>
+                                                            <option value="市建委">市建委</option>
+                                                            <option value="市农委">市农委</option>
+                                                            <option value="市民政局">市民政局</option>
+                                                        </select>
+                                                    </div>
+                                                    <!--<button class="form-control btn btn-primary" type="button" id="openUnit">打开单位表</button>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="col-md-12">
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w120"> <span>创建时间</span> <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input class="form-control" name="docTime" id="docTime"
+                                                               value=""
+                                                               readonly="readonly">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="col-md-12">
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w120"> <span
+                                                            class="text-danger">*</span> <span>事由</span> <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <textarea class="form-control" name="desc" rows="5" id="desc"
+                                                                  style="width: 645px;" datatype="*" errormsg="请输入事由"
+                                                                  nullmsg="请输入事由"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <div class="col-md-12">
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w120"> <span
+                                                            class="text-danger">*</span> <span>正文</span> <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <textarea class="form-control" datatype="*" nullmsg="请输入正文" id="content"
+                                                                  name="content" rows="5"
+                                                                  style="width: 645px;"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="col-md-12">
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w120"> <span>上传附件</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <div id="wrapper" class="pull-left"
+                                                             style="margin:0;width:calc(645px);">
+                                                            <div id="container" style="margin: 0;padding: 0;">
+                                                                <div id="uploader1" class="uploader uploader1-active">
+                                                                    <div id="dndArea1" class="placeholder dndArea dndArea1-active"></div>
+                                                                    <div id="filePicker1" class="filePicker"></div>
+                                                                    <input type="text" value="" name="attachmentName" id="attachmentName" style="display: none;">
+                                                                    <input type="text" value="" name="attachmentUrl" id="attachmentUrl" style="display: none;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="clear"></div>
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"> <span><!--  上传附件--></span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <div id="uploader" class="uploader wu-example">
+                                                    <div class="btns">
+                                                        <div id="picker17" class="selFlie"><!--  添加附件--></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <div class="text-center">
+                                        <button class="btn btn-primary" type="button" id="reset">返回</button>
+                                        <button class="btn btn-primary" id="btnSubmit" type="submit">保存</button>
+                                    </div>
+                                </fieldset>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- end 页面内容主体 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib}/bootstrap/3.3.6/bootstrap.min.js"></script>
+<script type="text/javascript" src="${_lib}/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib}/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript"
+        src="${_lib }/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript"
+        src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript"
+        src="${_lib }/jquery-step/jquery.step.js"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+
+<script type="text/javascript" src="${_js }/app.js"></script>
+<!--end 外部JS引入 -->
+
+<script type="text/javascript" src="${_lib }/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_lib }/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_lib }/jqueryform/jquery.form.js"></script>
+<!-- 附件上传插件 -->
+<script type="text/javascript" src="${_js}/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_js}/lib/webuploader/HYCore.js"></script>
+<!--begin 自定义JS -->
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script type="text/javascript">
+
+    Date.prototype.format = function(fmt) { 
+        var o = { 
+            "M+" : this.getMonth()+1,                 //月份 
+            "d+" : this.getDate(),                    //日 
+            "h+" : this.getHours(),                   //小时 
+            "m+" : this.getMinutes(),                 //分 
+            "s+" : this.getSeconds(),                 //秒 
+            "q+" : Math.floor((this.getMonth()+3)/3), //季度 
+            "S"  : this.getMilliseconds()             //毫秒 
+        }; 
+        if(/(y+)/.test(fmt)) {
+            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+        }
+        for(var k in o) {
+            if(new RegExp("("+ k +")").test(fmt)){
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+            }
+        }
+        return fmt;
+    }
+
+    $(function() {
+
+        var taskSendFileId = '${id}';
+
+        getDetailById(taskSendFileId);
+        function getDetailById (id) {
+            ajaxHengyun({
+                type: 'GET',
+                url:'${_gate_url}/api/developer/fastapplicationdoc/taskDetail?id='+id,
+                success: function (res) {
+                    var data = res.data;
+                    $('#id').val(data.id);
+                    $('#docUnit').val(data.docUnit);
+                    $('#docNum').val(data.docNum);
+                    $('#rank').val(data.rank);
+                    $('#createUserName').val(data.createUserName);
+                    $('#docTime').val(new Date(data.docTime).format('yyyy-MM-dd'));
+                    $('#title').val(data.title);
+                    $('#desc').text(data.desc);
+                    $('#content').text(data.content);
+                    $('#createTime').val(new Date(data.createTime).format('yyyy-MM-dd'));
+                    $('#docUnit').val(data.docUnit);
+
+                    if (data.attachmentName) {
+                        $('#attachmentName').val(data.attachmentName);
+                        $('#attachmentUrl').val(data.attachmentUrl);
+                        $('#dndArea1').text(data.attachmentName).css('background-image', 'url(' + data.attachmentUrl + ')');
+                    }
+                }
+            });
+        }
+    });
+
+    function onFocusSendUnit(){
+        var docUnit = $('#docUnit').val();
+        checkedNames = docUnit.split(',');
+        checkName = checkedNames.slice();
+        jQuery("#list").jqGrid('setGridParam', {
+            page : 1
+        }).trigger('reloadGrid');
+
+        $('#myModal').modal('show');
+        var width=$('#modalDialog').width()-70;
+        $(".ui-jqgrid table").setGridWidth(width);
+
+    }
+
+    $('#openUnit').click(function () {
+        checkedNames.splice(0, checkedNames.length);
+        var docUnit = $('#docUnit').val();
+        if (docUnit.indexOf(',') >= 0) {
+            checkedNames = docUnit.split(',');
+        }
+        else if (docUnit != "") {
+            checkedNames.push(docUnit);
+        }
+        else {
+            //asdasd
+        }
+
+        checkName = checkedNames.slice();
+        jQuery("#list").jqGrid('setGridParam', {
+            page: 1
+        }).trigger('reloadGrid');
+
+        $('#myModal').modal('show');
+        var width = $('#modalDialog').width() - 70;
+        $(".ui-jqgrid table").setGridWidth(width);
+    });
+
+    $('#btnCloseSend').click(function () {
+        parent.layer.alert("关闭前请保存数据，确定关闭吗？", function (index) {
+            $('#myModal').modal('hide');
+            parent.layer.close(index);
+        });
+    });
+
+    $('#btnSaveSend').click(function () {
+        checkedNames = checkName.slice();
+        checkName.splice(0, checkName.length);
+
+        $('#docUnit').val("");
+        if (checkedNames.length < 1) {
+            $('#myModal').modal('hide');
+            ;
+        }
+
+        if (checkedNames.length > 1) {
+            $('#docUnit').val(checkedNames.join(','));
+        }
+        else {
+            $('#docUnit').val(checkedNames[0]);
+        }
+
+        $('#myModal').modal('hide');
+
+    });
+
+    var checkedNames = new Array();
+    var checkName = new Array();
+    $(function () {
+        $(".filelist li").each(function () {
+            $(this).hover(function () {
+                $(this).find(".file-panel").slideDown();
+            }, function () {
+                $(this).find(".file-panel").slideUp();
+            });
+
+        });
+        loadFile();
+
+        var SelectRowIndx;
+        // $("#list").jqGrid({
+        //     datatype: "json",
+        //     url: 'getDutyInfoListPage.do',
+        //     colNames: ['单位名称', '单位性质'],
+        //     colModel: [{name: 'name', index: 'name', width: '90'},
+        //         {name: 'typeCodeName', index: 'typeCodeName', width: '60'}],
+        //     rowNum: 10,
+        //     multiselect: true,
+        //     loadComplete: function () {
+        //         var rowIds = jQuery("#list").jqGrid('getDataIDs');
+        //         if (checkedNames.length > 0) {
+        //             for (var k = 0; k < rowIds.length; k++) {
+
+        //                 var curChk = $("#list tr[id=" + rowIds[k] + "]").find(":checkbox");
+        //                 var curRowData = jQuery("#list").jqGrid('getRowData', rowIds[k]);
+        //                 $.each(checkedNames, function (i, data) {
+        //                     if (data.indexOf(curRowData.name) >= 0) {
+        //                         curChk.attr('checked', 'true');
+        //                         $("#list").jqGrid('setSelection', data);
+        //                     }
+        //                 });
+        //             }
+        //         }
+        //     },
+        //     onSelectRow: function (id, check) {
+        //         //console.log(check);
+        //         var curRowData = jQuery("#list").jqGrid('getRowData', id);
+        //         if (check) {
+
+        //             var ret = jQuery.inArray(curRowData.name, checkName);
+        //             if (ret == -1) {
+        //                 //checkId.push(id);
+        //                 checkName.push(curRowData.name);
+        //             }
+
+
+        //         } else {
+        //             var ret = jQuery.inArray(curRowData.name, checkName);
+        //             checkName.splice(ret, 1);
+        //         }
+        //         //SelectRowIndx = GetJqGridRowIndx("#" + this.id);
+        //     },
+        //     gridComplete: function () {
+        //         $("#" + this.id).jqGrid('setSelection', SelectRowIndx);
+        //     },
+        //     beforeSelectRow: function (rowid, e) {
+        //     },
+        //     onSelectAll: function (rowids, status) {
+        //         if (status) {
+        //             for (var i = 0; i < rowids.length; ++i) {
+        //                 var id = rowids[i];
+        //                 var curRowData = jQuery("#list").jqGrid('getRowData', id);
+        //                 var ret = jQuery.inArray(curRowData.name, checkName);
+        //                 if (ret == -1) {
+
+        //                     //checkId.push(id);
+        //                     checkName.push(curRowData.name);
+        //                 }
+        //             }
+
+        //             //console.log(JSON.stringify(checkName));
+        //         }
+        //         else {
+        //             for (var i = 0; i < rowids.length; ++i) {
+        //                 var id = rowids[i];
+        //                 var curRowData = jQuery("#list").jqGrid('getRowData', id);
+        //                 var ret = jQuery.inArray(curRowData.name, checkName);
+        //                 //checkId.splice(ret,1);
+        //                 checkName.splice(ret, 1);
+        //             }
+        //         }
+        //     },
+        //     jsonReader: {
+        //         root: 'rows',
+        //         page: 'page',
+        //         total: 'total',
+        //         records: 'records'
+        //     },
+        //     prmNames: {
+        //         page: "page", // 表示请求页码的参数名称
+        //         rows: "rows" // 表示请求行数的参数名称
+        //     },
+        //     pager: '#pager',
+        //     height: 'auto',
+
+        // });
+    });
+    loadFile();
+    function loadFile() {
+        fileUpload2 = new FileUpload({
+            "filePicker": "filePicker1",
+            "dndArea": "dndArea1",
+            "uploader": "uploader1",
+            "jxButton": "jxButton1",
+            "busType": "emgnc",
+            "token": $.cookie("_token")
+        });
+    }
+    var FileList = new Array();
+    function successUpload(json) {
+        if (json.data && json.data.list) {
+            var file = json.data.list[0];
+            $('#attachmentName').val(file.submittedFileName);
+            $('#attachmentUrl').val(file.url);
+            $('#dndArea1').css('background-image', 'url(' + file.url + ')').text(file.submittedFileName);
+        }
+    }
+    //返回
+    $("#reset").click(function () {
+        window.location.href = "${_cp}/fast/${appId}/document/taskSendFile";
+    });
+    //发文编号唯一性校验
+    // $("#docNum").change(function () {
+    //     var docNum = $("#docNum").val();
+    //     $.ajax({
+    //         url: "checkNum.do",
+    //         type: "post",
+    //         data: {"docNum": docNum},
+    //         success: function (msg) {
+    //             if ("可以使用" != msg) {
+    //                 alert(msg);
+    //                 $("#docNum").val("");
+    //                 $("#docNum").focus();
+    //             }
+    //         }
+    //     });
+    // });
+
+    $('#btnSubmit').valid({
+        form: '#dataSubmitTrue',
+        showAllError: true,
+        checkpassed: function () {
+            parent.layer.confirm("您确定提交吗？", {
+                icon: 3,
+                title: '确认'
+            }, function () {
+                submitFrom();
+            }, function () {
+                parent.layer.closeAll();
+            });
+
+        }
+    });
+
+    function submitFrom() {
+        var postData = GetWebControls("#dataSubmitTrue");
+        postData["attachments"] = fileList;
+        postData["docType"] = "send";
+        ajaxHengyun({
+            url: "${_gate_url}/api/admin/fastapplicationdoc/update",
+            type: "post",
+            dataType: 'json',
+            data: JSON.stringify(postData),
+            contentType: "application/json",
+            success: function(data){
+                if(data){
+                    parent.layer.msg("更新成功");
+                    window.location.href = "${_cp}/fast/45kj6313/document/taskSendFile";
+                }else{
+                    parent.layer.alert("更新失败", {icon: 3, title:'提示'}, function(index){
+                        parent.layer.closeAll();
+                    })
+
+                }
+            }
+        });
+
+    }
+
+    /*
+     自动获取页面控件值
+     */
+    function GetWebControls(element) {
+        var reVal = "";
+        $(element).find('input,select,textarea').each(
+            function (r) {
+                var id = $(this).prop('name');
+                var value = $(this).val();
+                var type = $(this).prop('type');
+                if (id) {
+                    switch (type) {
+                        case "checkbox":
+                            if ($(this).prop("checked")) {
+                                reVal += '"' + id + '"' + ':' + '"1",';
+                            } else {
+                                reVal += '"' + id + '"' + ':' + '"0",';
+                            }
+                            break;
+                        case "radio":
+                            if ($(this).prop("checked")) {
+                                reVal += '"' + id + '":' + '"' + $.trim(value)
+                                    + '",';
+                            }
+                            break;
+                        default:
+                            if (value != "") { //如果值为空就传空，不需要传空格 -wgj
+                                reVal += '"' + id + '"' + ':' + '"'
+                                    + $.trim(value) + '",';
+                            } else {
+                                reVal += '"' + id + '"' + ':' + '"",';
+                            }
+                            break;
+                    }
+                }
+            });
+        reVal = reVal.substr(0, reVal.length - 1);
+        reVal = reVal.replace(/\\/g, '\\\\');
+        reVal = reVal.replace(/\n/g, '\\n');
+        return jQuery.parseJSON('{' + reVal + '}');
+    }
+</script>
+</body>
+</html>

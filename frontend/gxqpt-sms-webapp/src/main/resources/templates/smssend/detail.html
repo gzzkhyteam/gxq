@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>详情</title>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/sms/common.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/sms/zstyle.css"/>
+    <style>
+        .spancurrent1{
+            display: inline-block;
+            text-align: center;
+        }
+        .rlease-left{
+            width: 100%;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<div class="zworkspace-body">
+    <div class="clear rleasebox">
+        <div class="rlease-left fl">
+            <!---右左btnbox-->
+            <div class="btnbox" >
+                <a class="spancurrent1"  id="sendbtn" href="${_cp}/sms/smsEditAgain?home=0&id=${msgId}">再次编辑</a>
+
+                <a class="spancurrent1"  id="backbtn" href="${_cp}/sms/publishShortSucess">返回</a>
+            </div>
+            <div class="edita_content">
+            <ul>
+                <li>
+                    <span>短信主题：</span>
+                    <span class="qudao">
+                            <input class="qudaoinput" type="text" id="topic" readonly="readonly">
+                    </span>
+                </li>
+                <li>
+                <span>发送账号：</span>
+                <span class="qudao">
+                            <input class="qudaoinput" type="text" id="account" readonly="readonly">
+                    </span>
+                </li>
+                <li>
+                    <span>发送人：</span>
+                    <span class="qudao">
+                            <input class="qudaoinput" type="text" id="sender" readonly="readonly">
+                    </span>
+                </li>
+                </li>
+                <li style="margin-bottom: 5px">
+                    <span>接收人：</span>
+                    <span class="qudao">
+                            <input class="qudaoinput" type="text" id="receiver" readonly="readonly">
+
+                    </span>
+                </li>
+                <li style="margin-bottom: 5px;text-align: right;padding-right: 3%">
+                    成功 <span id="success" style="width: 20px"></span> 未成功 <span id="fail" style="width: 20px"></span>
+                </li>
+                <li>
+                    <span>发送时间：</span>
+                    <span class="qudao">
+                            <input class="qudaoinput" type="text" id="send" readonly="readonly">
+                    </span>
+                </li>
+                <li>
+                    <span>短信正文：</span>
+                    <span class="zhengwen" style="width:100%;height:auto">
+                        <textarea class="smsinput" type="text" id="text" style="width: 100%;height:250px;margin-top: 10px" readonly="readonly"></textarea>
+                    </span>
+                </li>
+
+            </ul>
+            </div>
+        </div>
+
+
+
+    </div>
+
+</div>
+
+<!-- 定时发送 -->
+
+<div class="datapicker" style="display:block;width:260px; margin:20px auto;">
+    <input id="sendJobTime" class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"  />
+    <p style="line-height:30px;">请确认您想要发送的时间！</p>
+</div>
+
+<script>
+    var urlPost ="${_gate_url}";//跳转后台
+    var _cp = "${_cp}";//跳转前台
+    var sta = 0;//0发布1修改
+    var id = null;//新增id空，由于js与修改公用，要进行区分
+</script>
+<script type="text/javascript" src="${_static}/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="${_static}/js/jquery.combobox.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<!--<script src="${_static}/js/ueditor/ueditor.config.js" type="text/javascript"></script>
+<script src="${_static}/js/ueditor/ueditor.all.js" type="text/javascript"></script>-->
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.min.js"></script>
+
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.min.js"></script>
+<!--<script type="text/javascript" src="${_static}/js/create.js"></script>-->
+<script>
+    $(function(){
+        ajaxHengyun({
+            type: "get",
+            url: "${_gate_url}/api/sms/api/smsrecord/detail",
+            data:{msgId:"${msgId}"},
+            success: function(rows) {
+                console.log(rows.data);
+                $("#topic").val(rows.data.topic)
+                $("#account").val(rows.data.channelName)
+                //$("#sender").val(rows.data.sender)
+				$("#sender").val(rows.data.senderName)
+                $("#receiver").val(rows.data.receiver)
+                $("#send").val(rows.data.sendTime)//内容
+                $("#text").val(rows.data.context)
+                $("#success").html(rows.data.success)
+                $("#fail").html(rows.data.fail)
+                console.log(rows.data.success,rows.data.fail)
+
+            }
+        });
+
+    })
+
+
+</script>
+
+<input type="hidden" id="attachmentId"/>
+<input type="hidden" id="attachmentUrl"/>
+</body>
+</html>

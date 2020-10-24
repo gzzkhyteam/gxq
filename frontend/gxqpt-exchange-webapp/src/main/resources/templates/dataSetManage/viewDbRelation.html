@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>数据集管理</span> &gt; <span>数据集编辑</span> &gt; <span class="page-title-scend">关联目录</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+            </div>
+        </div>
+        <div class="view_container view_container_first row">
+            <div class="main_right pull-right">
+                <div id="secondPage" class="secondPage">
+                    <div class="layerDataApply minHeight360 clearfix">
+                        <h3>关联目录</h3>
+                        <table class="table default-table tab-border-no-layer">
+                            <tbody>
+                            <tr>
+                                <td id="selCatalog" class="viewTd">&nbsp;
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="catalogFieldContainer"></div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary" onclick="history.back()">上一步</button>
+                        <button type="button" class="btn btn-primary" onclick="loadFirstPage()">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    function loadFirstPage(){
+        window.location.href='${_cp}/module/dataSetManageList?pageNo=${pageNo}';
+    };
+    var catalogIds=[];
+    var fieldInfoOpt=[];
+    getFieldInfo();
+    function getFieldInfo(){//获取数据集字段名称
+        ajaxHengyun({
+            async: false,
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/getTableInfo",
+            data: {tableCode:"${tableCode}",dataSourcId:"${dataSourcId}"},
+            success: function (rows) {
+                if (rows.data) {
+                    fieldInfoOpt=rows.data.fieldList;
+                }
+            }
+        });
+    };
+    getDataSetView();
+    function getDataSetView(){//获取详情
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/getBaseInfo",
+            data: {setId:"${id}"},
+            success: function (rows) {
+                if (rows.data) {
+                    var fields=rows.data.fieldList;
+                    var relatedDirectory=rows.data.relatedDirectory;
+                    var catalogName=[];
+                    var html="";
+                    relatedDirectory.forEach(function(value,index){
+                        catalogIds.push(value.directoryId);
+                        catalogName.push(value.name);
+                        html+='<h3>'+value.name+'</h3>';
+                        html+='<table class="default-table tab-title-top catalogFieldTable" data-id="'+value.directoryId+'" data-name="'+value.name+'">';
+                        html+='<thead>';
+                        html+='<tr>';
+                        html+='<th>目录字段名称</th>';
+                        html+='<th>目录字段标识</th>';
+                        html+='<th>数据集字段名称</th>';
+                        html+='</tr>';
+                        html+='</thead>';
+                        html+='<tbody>';
+                        value.list.forEach(function(row,num){
+                            html+='<tr>';
+                            html+='<td class="fieldName">'+row.fieldName+'</td>';
+                            html+='<td class="fieldCode" data-id="'+row.id+'" data-type="'+row.fieldType+'">'+row.fieldCode+'</td>';
+                            html+='<td>';
+                            for(var i in fieldInfoOpt){
+                                if(fieldInfoOpt[i].fieldCode==row.setField){
+                                    html+=fieldInfoOpt[i].fieldCode;
+                                }
+                            }
+                            html+='</td>';
+                            html+='</tr>';
+                        });
+                        html+='</tbody>';
+                        html+='</table>';
+                    });
+                    $(".catalogFieldContainer").html(html);
+                    updateIformHeight();
+                    if(catalogName.join(",")!=""){
+                        $("#selCatalog").text(catalogName.join(","));
+                    }
+                }
+            }
+        });
+    };
+</script>
+</body>
+</html>

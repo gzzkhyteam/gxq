@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+</head>
+<body class="bgNone">
+<div class="workspace-body">
+    <div id="console-container" class="clearfix">
+        <div class="col-sm-12">
+            <div class="general_list_main clearfix">
+                <div class="main_bottom col-lg-12 col-sm-12">
+                    <div class="view_item">
+                        <form id="dataForm" action="" autocomplete="off">
+                            <table class="table default-table tab-border-no-layer">
+                                <tbody>
+                                <tr>
+                                    <td style="text-align: left"><span class="requiredSpan">*</span>目录名称</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" name="dirName" id="dirName" class="form-control" value="${catalogPname}" readonly/>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <h3>字段选择
+                                <button type="button" class="btn btn-primary pull-right" onclick="getAll()">全选</button>
+                            </h3>
+                            <table id="fieldInfo" class="table default-table tab-title-top">
+                                <thead>
+                                <tr>
+                                    <th width="60">选择</th>
+                                    <th width="60">序号</th>
+                                    <th width="200">字段名称</th>
+                                    <th width="160">字段类型</th>
+                                    <th>字段描述</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript">
+    getFieldInfo();
+    function getFieldInfo(){//获取字段信息
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/queryDataSetField",
+            data: {setId:"${setId}",page:1},
+            success: function (rows) {
+                if (rows.data) {
+                    var html="";
+                    var fields=rows.data;
+                    for(var i in fields){
+                        html+='<tr>';
+                        html+='<td>';
+                        html+='<input type="checkbox" class="checkbox"/>';
+                        html+='</td>';
+                        html+='<td class="fieldId" data-Id="'+fields[i].id+'">'+(parseInt(i)+1)+'</td>';
+                        html+='<td class="fieldCode">'+fields[i].fieldCode+'</td>';
+                        html+='<td class="fieldType">'+fields[i].fieldType+'</td>';
+                        html+='<td class="fieldName">'+fields[i].fieldName+'</td>';
+                        html+='</tr>';
+                    }
+                    $("#fieldInfo tbody").append(html);
+                }
+            }
+        });
+    };
+    function save(index){
+        var dataDTO={};
+        dataDTO.unitId="${autoCatalogUnitId}";
+        dataDTO.id="${catalogPid}";
+        dataDTO.dirName=$("#dirName").val();
+        dataDTO.isBottom=2;
+        dataDTO.dataType="${dataType}";
+        dataDTO.automaticSaveDTO=[];
+        var trEle = $("#fieldInfo tbody tr");
+        var num=0;
+        if(trEle){
+            trEle.each(function(no,ele){
+                var checkedVal = $(ele).find(".checkbox").prop("checked");
+                var fieldObj={};
+                if(checkedVal){
+                    fieldObj.fieldCode=$(ele).find(".fieldCode").text();
+                    fieldObj.fieldType=$(ele).find(".fieldType").text();
+                    fieldObj.fieldName=$(ele).find(".fieldName").text();
+                    dataDTO.automaticSaveDTO.push(fieldObj);
+                }
+            });
+        };
+        if(!dataDTO.dirName){
+            parent.layer.msg("请填写目录名称！",{time:1000});
+            return false;
+        }
+        if(dataDTO.automaticSaveDTO.length<1){
+            parent.layer.msg("请选择字段！",{time:1000});
+            return false;
+        }
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url:  '${_gate_url}/api/exchange/directory/saveAutomatic',
+            data:JSON.stringify(dataDTO),
+            success:function(rows){
+                if (rows.data){
+                    parent.home.getZtree();
+                    parent.layer.msg("自动创建字段成功！",{time:1000});
+                    parent.layer.close(index);
+                }else{
+                    parent.layer.msg(rows.errmsg+"，请重试！",{time:1000});
+                }
+            }
+        });
+    };
+    var setStatic = false;
+    function getAll(){
+        var trEle = $("#fieldInfo tbody tr");
+        if(trEle.length>0){
+            if(!setStatic){
+                trEle.each(function(index,value){
+                    $(value).find(".checkbox").prop("checked",true);
+                });
+                setStatic = true;
+            }else{
+                trEle.each(function(index,value){
+                    $(value).find(".checkbox").prop("checked",false);
+                });
+                setStatic = false;
+            }
+        }
+    };
+</script>
+</body>
+</html>

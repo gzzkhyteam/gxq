@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                主机管理 > <span class="active">详情</span>
+            </div>
+            <a href="javascript:" class="button-icon pull-right" onclick="history.back()">
+                返回
+            </a>
+        </div>
+        <div class="main">
+            <div class="block" ng-app="app" ng-controller="controller" ng-cloak>
+                <div class="text-title">查看主机信息</div>
+                <div class="content">
+                    <table class="tab">
+                        <tbody>
+                        <tr>
+                            <th>主机名称：</th>
+                            <td>{{host.hostName}}</td>
+                        </tr>
+                        <tr>
+                            <th>内存(G)：</th>
+                            <td>{{host.mem}}</td>
+                        </tr>
+                        <tr>
+                            <th>硬盘(G)：</th>
+                            <td>{{host.harddisk}}</td>
+                        </tr>
+                        <tr>
+                            <th>CPU数量：</th>
+                            <td>{{host.cpuCount}}</td>
+                        </tr>
+                        <tr>
+                            <th>操作系统类型：</th>
+                            <td>{{host.osType}}</td>
+                        </tr>
+                        <tr>
+                            <th>操作系统版本：</th>
+                            <td>{{host.osVersion}}</td>
+                        </tr>
+                        <tr>
+                            <th>服务商：</th>
+                            <td>{{host.serverProvider}}</td>
+                        </tr>
+                        <tr>
+                            <th>是否虚拟主机：</th>
+                            <td>{{host.virtualHost | formatVirtualHost}}</td>
+                        </tr>
+                        <tr>
+                            <th>物理主机：</th>
+                            <td>{{host.physicalHostName}}</td>
+                        </tr>
+                        <tr>
+                            <th>内网IP：</th>
+                            <td>{{host.ipAddr}}</td>
+                        </tr>
+                        <tr>
+                            <th>外网IP：</th>
+                            <td>{{host.ipAddrPublic}}</td>
+                        </tr>
+                        <tr>
+                            <th>备注：</th>
+                            <td>{{host.remark}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+</body>
+<script type="text/javascript">
+	var pageType = "appProviderList";
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        //获取主机列表
+        $scope.getHostList = function (hostId) {
+            $http.get(urlPrev + 'host/getHostNameList',{
+                headers: getHeaders(),
+            }).success(function (res) {
+                if(res.errcode == 0){
+                    if(res.data && res.data.length){
+                        $.each(res.data,function (index,value) {
+                            if(value.id == hostId){
+                                $scope.host.physicalHostName = value.hostName;
+                            }
+                        })
+                    }
+                }
+            })
+        }
+        //获取主机详情
+        $scope.getHost = function () {
+            $http.post(urlPrev + 'host/getDetailHost', null, {
+                params: {id: '${id}'},
+                headers: getHeaders(),
+            }).success(function (res) {
+                if (res.errcode == 0) {
+                    $scope.host = res.data;
+                    $scope.getHostList(res.data.physicalHostId);
+                }
+            })
+        }
+        $scope.getHost();
+    }).filter('formatVirtualHost', function () {
+        return function (text) {
+            if (text == 1) {
+                return '否';
+            } else if (text == 2) {
+                return '是';
+            }
+        }
+    })
+    /*angularJS*/
+</script>
+</html>

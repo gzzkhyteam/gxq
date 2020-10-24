@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+				<div class="current pull-left">
+					<ul class="navsecond clearfix">
+						<li class="pull-left"><a href="${_cp}/module/dataSetCreateDataBaseTwo?id=${id}">字段选择</a></li>
+						<li class="pull-left"><a class="active" href="${_cp}/module/dataSetCreateDataBaseOne?id=${id}">SQL查询</a></li>
+					</ul>
+				</div>
+			</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div class="row">
+								<div class="current pull-left">
+									<h3 class="page-title">
+										<span>数据集管理</span> &gt; <span>新建数据集</span> &gt; <span class="page-title-scend">选择数据集字段</span>
+									</h3>
+								</div>
+								<div class="back pull-right">
+									<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+								</div>
+							</div>
+							<div id="sqlQuery" class="row marginTop minHeight360">
+								<h3>SQL输入</h3>
+								<table class="table default-table tab-border-no-layer">
+									<tbody>
+										<tr>
+											<td>
+												<textarea id="sqlCode" rows="5" cols="" class="form-control"></textarea>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<!--<h3 class="marginTop">数据预览</h3>
+								<table class="default-table tab-title-top">
+									<thead>
+										<tr>
+											<th>字段1</th>
+											<th>字段2</th>
+											<th>字段3</th>
+											<th>字段4</th>
+											<th>字段5</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>1</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td>2</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td>3</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+										</tr>
+									</tbody>
+								</table>-->
+							</div>
+							<div class="text-center">
+								<button type="button" class="btn btn-primary" onclick="history.back()">上一步</button>
+								<button type="button" class="btn btn-primary" onclick="save()">下一步</button>
+								<!--<a href="${_cp}/module/dataSetCreateRelation" class="btn btn-primary" >下一步</a>-->
+								<button type="button" class="btn btn-primary" onclick="history.go(-2)">取消</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript">
+            /*提交*/
+            function save(){
+                var sqlCode = $("#sqlCode").val();
+                if(!sqlCode){
+                    parent.layer.msg("请填写SQL语句！",{time:1000});
+                    return false;
+                }
+                var dataDTO={
+                    id:"${id}",
+                    editType:1,
+                    resultFileName:[],
+                    setMode:2,
+                    tableCode:"",
+                    sqlCode:sqlCode
+                }
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/set/createDatabaseDataSetSecond',
+                    data:JSON.stringify(dataDTO),
+                    success:function(rows){
+                        if (rows.data){
+                            window.location.href="${_cp}/module/dataSetCreateDbRelation?id="+rows.data.id+"&tableCode="+rows.data.tableCode+"&dataSourcId="+rows.data.dbId;
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    },
+                });
+            };
+		</script>
+	</body>
+</html>

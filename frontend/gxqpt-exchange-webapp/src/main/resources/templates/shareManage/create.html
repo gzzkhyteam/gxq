@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/webuploader.css"/>
+    	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/upload.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+		<style>
+			.fileSpanCss{
+				display: inline-block;
+				margin-right: 10px;
+				cursor: default;
+			}
+			.fileSpanCss i{
+				margin-left: 10px;
+				color: #fcb182;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+                <div class="row">
+                    <div class="current pull-left">
+                        <h3 class="page-title">
+                            <span>共享管理</span> &gt; <span>需求申请</span> &gt; <span class="page-title-scend">新增</span>
+                        </h3>
+                    </div>
+                    <div class="back pull-right">
+                        <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+                    </div>
+                </div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div id="unit" class="view_item">
+								<form id="dataForm" style="margin-bottom: 150px;" autocomplete="off">
+									<table class="table default-table tab-border-no-layer">
+										<tbody>
+											<tr>
+												<th width="120">单位名称：</th>
+												<td>
+													<input type="text" name="unitName" id="unitName" class="form-control" readonly/>
+												</td>
+												<th width="150">单位类型：</th>
+												<td>
+													<input name="unitType" id="unitType" class="form-control" readonly>
+
+													</input>
+												</td>
+											</tr>
+											<tr>
+												<th>联系人姓名：</th>
+												<td>
+													<input type="text" name="contName" id="contName" class="form-control" readonly />
+												</td>
+												<th>联系人电话：</th>
+												<td>
+													<input type="text" name="contTel" id="contTel" class="form-control"  readonly />
+												</td>
+											</tr>
+											<tr>
+												<th><span class="requiredSpan">*</span>联系人邮箱：</th>
+												<td>
+													<input type="text" name="contEmail" id="contEmail" class="form-control" dataType="e" errormsg="请填写邮箱！" ignore="ignore"/>
+												</td>
+												<th>统一社会信用代码：</th>
+												<td>
+													<input type="text" name="creditCode" id="creditCode" class="form-control"/>
+												</td>
+											</tr>
+											<tr>
+												<th><span class="requiredSpan">*</span>需求内容：</th>
+												<td colspan="3">
+													<textarea id="content" name="content" rows="5" cols="" class="form-control" dataType="*" nullmsg="请填写需求内容！"></textarea>
+												</td>
+											</tr>
+											<tr>
+												<th><span class="requiredSpan">*</span>用途：</th>
+												<td colspan="3">
+													<textarea id="purpose" name="purpose" rows="5" cols="" class="form-control" dataType="*" nullmsg="请填写用途！"></textarea>
+												</td>
+											</tr>
+											<tr>
+												<th><span class="requiredSpan">*</span>申请原因：</th>
+												<td colspan="3">
+													<textarea id="applyReason" name="applyReason" rows="5" cols="" class="form-control" dataType="*" nullmsg="请填写申请原因！"></textarea>
+												</td>
+											</tr>
+											<tr>
+												<th>处理部门：</th>
+												<td colspan="3" style="text-align: left;">
+													<select id="orgId" name="orgId" class="form-control chosen-select">
+
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>文件上传：</th>
+												<td colspan="3">
+													<div class="pull-left downFileText">
+														<div id="uploadFileName" class="form-control text-left" style="line-height: 30px;"></div>
+														<!--<input type="text" id="uploadFileName" class="form-control" disabled dataType="*" nullmsg="请上传文件！"/>-->
+													</div>
+													<div class="pull-right downFileBtn">
+														<div id="filePicker" class="filePicker photoFilePicker"></div>
+														<div id="uploader" class="uploader photoUploader hidden">
+															<div class="queueList">
+																<ul id="file_html" class="filelist">
+																</ul>
+																<div id="dndArea" class="placeholder dndArea" style="padding-top: 85px;">
+
+																	<p> </p>
+																</div>
+															</div>
+															<div class="statusBar" style="display:none;">
+																<div class="progress">
+																	<span class="text">0%</span> <span class="percentage"></span>
+																</div>
+																<div class="info"></div>
+																<div class="btns">
+																	<div id="jxButton" class="jxButton"></div>
+																	<div class="uploadBtn">开始上传</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="text-center">
+										<button type="button" class="btn btn-primary btn-save">提交</button>
+										<button type="button" class="btn btn-primary" onclick="history.back()">取消</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+		<script>
+            var _GATE_URL = "${_gate_url}";
+		</script>
+		<script src="${_static}/js/lib/webuploader/webuploader.js" type="text/javascript" ></script>
+		<script src="${_static}/js/lib/webuploader/HYCore.js" type="text/javascript" ></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript">
+			getUnitList();
+            getBaseInfo();
+			$('#orgId').chosen({
+				disable_search:false,
+                search_contains: true,
+				no_results_text:'没有查询到符合条件的记录',
+				allow_single_deselect:true
+			});
+            function getUnitList(){//获取单位列表
+                ajaxHengyun({
+                    type: 'GET',
+                    url: '${_gate_url}/api/exchange/directory/getOrgList ',
+                    datatype: "json",
+                    success: function (rows) {
+                        if(rows.data){
+                            var html="";
+                            for(var i in rows.data){
+                                html+='<option value="'+rows.data[i].id+'">'+rows.data[i].name_+'</option>';
+                            }
+                            $("#orgId").append(html);
+                            $('#orgId').trigger("chosen:updated");
+                        }
+                    }
+                });
+            }
+            function getBaseInfo(){//获取名称及单位类型
+                ajaxHengyun({
+                    type: 'GET',
+                    url: '${_gate_url}/api/exchange/dataapi/demand/getaddinfo ',
+                    datatype: "json",
+                    success: function (rows) {
+                        if(rows.data){
+                            $("#unitName").val(rows.data.orgName);
+                            $("#unitType").val(rows.data.unitType);
+                            $("#contName").val(rows.data.linkName);
+                            $("#contTel").val(rows.data.linkPhone);
+                        }
+                    }
+                });
+            }
+
+            /*提交*/
+            $('.btn-save').valid({
+                form: '#dataForm',
+                //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+                //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+                showAllError: true,
+                ignoreHidden: true,
+                checkpassed: function () {
+                    save();
+                }
+            });
+            function save(){
+                var dto ={};
+                dto.unitName=$("#unitName").val();
+                dto.unitType=$("#unitType").val();
+                dto.contName=$("#contName").val();
+                dto.contTel=$("#contTel").val();
+                dto.contEmail=$("#contEmail").val();
+                dto.creditCode=$("#creditCode").val();
+                dto.content=$("#content").val();
+                dto.purpose=$("#purpose").val();
+                dto.applyReason=$("#applyReason").val();
+                dto.orgId=$("#orgId").val();
+                dto.fileList = files;
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: "${_gate_url}/api/exchange/dataapi/demand/save",
+                    data:JSON.stringify(dto),
+                    success:function(rows){
+                        if (rows.data){
+                            parent.layer.msg("操作成功！",{time:1000});
+                            window.location.href="${_cp}/module/shareMagDemandList";
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    }
+                });
+            };
+
+
+
+            /* 附件上传 begin */
+            var token = $.cookie("_token");
+            var folderId="-1";
+            var dataType="";
+            loadFile();
+            function loadFile() {
+                fileUpload = new FileUpload({
+                    "filePicker" : "filePicker",
+                    "dndArea" : "dndArea",
+                    "uploader" : "uploader",
+                    "jxButton" : "jxButton",
+                    "folderId":folderId,
+                    "dataType":dataType,
+                    "token":token,
+                    "_isAdmin":true
+                });
+            }
+            var files=[];
+            function successUploadFile(rows) {
+                if(rows.data.list.length>0){
+                    var html="";
+                    var file={};
+                    for(var i in rows.data.list){
+                        file.filePath=rows.data.list[i].url;
+                        file.oldName=rows.data.list[i].submittedFileName;
+                        file.busId=rows.data.list[i].id;
+                        files.push(file);
+                        var uploadFileNameText=$("#uploadFileName").html();
+						var filesHtml = "<span class='fileSpanCss'>"+rows.data.list[i].submittedFileName+"<i class='fa fa-remove' onclick='removeFile(this,\""+rows.data.list[i].id+"\")'></i></span>";
+                        if(!uploadFileNameText){
+                            $("#uploadFileName").html(filesHtml);
+                        }else{
+                            $("#uploadFileName").html(uploadFileNameText+filesHtml);
+                        }
+                    };
+                }
+            };
+            function removeFile(ele,id){//文件删除
+                files.forEach(function(value,index){
+                    if(value.busId==id){
+                        $(ele).parent().remove();
+                        files.splice(index,1);
+                    }
+                })
+            };
+
+
+		</script>
+	</body>
+</html>

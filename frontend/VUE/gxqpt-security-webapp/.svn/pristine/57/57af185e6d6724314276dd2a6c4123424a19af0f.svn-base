@@ -1,0 +1,251 @@
+<template>
+	<Layout>
+		<Content>
+			<Breadcrumb>
+				<BreadcrumbItem>故障管理</BreadcrumbItem>
+				<BreadcrumbItem>故障监控</BreadcrumbItem>
+			</Breadcrumb>
+			<Card>
+				<Row>
+					<Col span="6">
+					<Gauge id="operationRate" :gaugeOption="gaugeOption" title="无故障持续时间">
+						<div id="operationRate"></div>
+					</Gauge>
+					</Col>
+					<Col span="6">
+					<Gauge id="appRate" :gaugeOption="gaugeOption" title="未处理故障数">
+						<div id="appRate"></div>
+					</Gauge>
+					</Col>
+					<Col span="6">
+					<Gauge id="serviceRate" :gaugeOption="gaugeOption" title="故障处理平均时长">
+						<div id="serviceRate"></div>
+					</Gauge>
+					</Col>
+					<Col span="6">
+					<Gauge id="trainingRate" :gaugeOption="gaugeOption" title="平均每日故障数">
+						<div id="trainingRate"></div>
+					</Gauge>
+					</Col>
+				</Row>
+				<Row>
+					<Col span="10" :offset="1">
+						<bar id="stoppageNum" :barOption="barOption" title="故障数量分析" :legendDataBar="legendDataBar">
+							<div id="stoppageNum"></div>
+						</bar>
+					</Col>
+					<Col span="10" :offset="1">
+						<bar id="sysStoppageNum" :barOption="sysbarOption" title="系統故障數量TOP5" >
+							<div id="sysStoppageNum"></div>
+						</bar>
+					</Col>
+				</Row>
+			</Card>
+		</Content>
+	</Layout>
+</template>
+
+<script>
+	// 仪表盘
+	import Gauge from './../echarts/Gauge.vue'
+	// 柱状图
+	import bar from './../echarts/bar.vue'
+
+	const gaugeOption = {
+		tooltip: {
+			formatter: 9999
+		},
+		series: [{
+			name: '业务指标',
+			type: 'gauge',
+			detail: {
+				formatter: '{value}%'
+			},
+			data: [{
+				value: 50,
+				name: '完成率'
+			}]
+		}]
+	}
+	const legendDataBar = ['已解決故障數量', '未解決故障數量'];
+	const barOption = {
+		xAxis: [{
+			type: 'category',
+			data: [
+				'2017/10',
+				'2017/11',
+				'2017/12',
+				'2018/01',
+				'2018/02',
+				'2018/03',
+				'2018/04',
+				'2018/05',
+				'2018/06',
+				'2018/07',
+			],
+			axisLine: {
+				show: true,
+				lineStyle: {
+					color: "#063374",
+					width: 1,
+					type: "solid"
+				}
+			},
+			axisTick: {
+				show: false,
+			},
+			axisLabel: {
+				interval:0,
+				show: true,
+				textStyle: {
+					color: "#000",
+				}
+			},
+		}],
+		yAxis: [{
+			type: 'value',
+			axisLabel: {
+				formatter: '{value}'
+			},
+			axisTick: {
+				show: false,
+			},
+			axisLine: {
+				show: false,
+				lineStyle: {
+					color: "#000",
+					width: 2,
+					type: "solid"
+				},
+			},
+			splitLine: {
+				lineStyle: {
+					color: "#ddd",
+				}
+			}
+		}],
+		series: [{
+			name: '已解決故障數量',
+			type: 'bar',
+			data: [20, 50, 80, 58, 83, 68, 57, 80, 42, 66],
+			barWidth: 10, //柱子宽度
+			barGap: 1, //柱子之间间距
+			itemStyle: {
+				color: '#5b9bd5',
+			}
+		}, {
+			name: '未解決故障數量',
+			type: 'bar',
+			data: [50, 70, 60, 61, 75, 87, 60, 62, 86, 46],
+			barWidth: 10,
+			barGap: 1,
+			itemStyle: {
+				color: '#ed7d31',
+			}
+		}],
+	}
+	const sysbarOption = {
+		yAxis: [{
+			type: 'category',
+			data: [
+				'2017/10',
+				'2017/11',
+				'2017/12',
+				'2018/01',
+				'2018/02',
+				'2018/03',
+				'2018/04',
+				'2018/05',
+				'2018/06',
+				'2018/07',
+			],
+			axisLine: {
+				show: true,
+				lineStyle: {
+					color: "#063374",
+					width: 1,
+					type: "solid"
+				}
+			},
+			axisTick: {
+				show: false,
+			},
+			axisLabel: {
+				interval:0,
+				show: true,
+				textStyle: {
+					color: "#000",
+				}
+			},
+		}],
+		xAxis: [{
+			type: 'value',
+			axisLabel: {
+				formatter: '{value}'
+			},
+			axisTick: {
+				show: false,
+			},
+			axisLine: {
+				show: true,
+				lineStyle: {
+					color: "#333",
+					width: 1,
+					type: "solid"
+				},
+			},
+			splitLine: {
+				lineStyle: {
+					color: "#ddd",
+				}
+			}
+		}],
+		series: [{
+			name: '',
+			type: 'bar',
+			data: [20, 50, 80, 58, 83, 68, 57, 80, 42, 66],
+			barWidth: 10, //柱子宽度
+			barGap: 1, //柱子之间间距
+			itemStyle: {
+				color: '#5b9bd5',
+			}
+		}],
+	}
+
+	export default {
+		components: {
+			Gauge,
+			bar,
+		},
+		data() {
+			return {
+				gaugeOption,
+				barOption,
+				sysbarOption,
+				legendDataBar,
+				searchCondition: {
+					// 部署内容
+					time: '',
+					// 人员名称
+					person: ''
+				}
+			}
+		},
+		methods: {
+			search() {
+				alert()
+			}
+		}
+	}
+</script>
+
+<style lang='less' scoped>
+	#operationRate,
+	#appRate,
+	#serviceRate,
+	#trainingRate,
+	#stoppageNum,
+	#sysStoppageNum {
+		height: 320px;
+	}
+</style>

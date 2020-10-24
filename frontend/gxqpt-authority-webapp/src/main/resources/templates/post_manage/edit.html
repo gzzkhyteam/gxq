@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Expires" content="0"/>
+	<meta name="renderer" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/core/module.css">
+</head>
+<body>
+<div class="workspace-body">
+	<div class="col-md-12 col-lg-12">
+		<div class="row">
+			<!--内容-->
+			<div class="list-section">
+				<div class="list-content">
+					<div class="form-inline marginTop" ng-app="app" ng-controller="controller">
+						<form autocomplete="off" id="dataForm" action="" method="post">
+							<input type="hidden" name="id" value="${id}"/>
+							<input type="hidden" name="orgid" value="${orgid}"/>
+							<table class="table default-table table-title-left">
+								<tbody>
+								<tr>
+									<th width="130"><sub class="required">*</sub>岗位名称</th>
+									<td><input id="name" readonly="readonly" class="form-control inp-form" name="name" dataType="*" nullmsg="岗位名称不能为空！"/></td>
+									<th width="130">岗位级别</th>
+									<td>
+										<select id="level" name="level" class="form-control chosen-select set-form">
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th>所属单位</th>
+									<td colspan="3">
+										<input id="orgname" class="form-control inp-form" name="orgname" value="${orgname}" readonly/>
+									</td>
+								</tr>
+								<tr>
+									<th>排序权重</th>
+									<td><input id="sortvalue" class="form-control" name="sortvalue" ignore="ignore" dataType="integeP" errormsg="请输入整数！"/> （值最小排前）</td>
+									<th>启用标记</th>
+									<td>
+										<select id="isenable" name="isenable" class="form-control chosen-select set-form">
+											<option value="1">是</option>
+											<option value="0">否</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th>说明</th>
+									<td colspan="3"><textarea rows="3" id="description" class="form-control textarea-form" name="description"></textarea></td>
+								</tr>
+								</tbody>
+							</table>
+							<button type="button" class="btn-submit hidden"></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+<script type="text/javascript">
+
+    //表单验证开始
+    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/admin/post/updateById",
+        },"#dataForm",{
+            attrName:"name",
+            prefix:"",
+            suffix:"",
+        });
+    })
+
+    var id="${id}";
+    var systemCode="${systemCode}";
+
+    /*获取岗位级别*/
+    getPostLeve();
+    function getPostLeve() {
+        ajaxHengyun({
+            type: 'GET',
+            async:false,
+            url: '${_gate_url}/api/admin/dictionary/getCodeList?code=POST_LEVE',
+            success: function (rows) {
+                if (rows.data) {
+                    var items = rows.data;
+                    var html = "";
+                    items.forEach(function (val, index) {
+                        html += '<option value="' + val.name + '">' + val.name + '</option>';
+                    })
+                    $("#level").html(html);
+                }
+                ;
+            }
+        })
+    }
+
+    ajaxHengyun({
+        type:"GET",
+        async:false,
+        url: "${_gate_url}/api/admin/post/getPostById",
+        data:{id:id,systemCode:systemCode},
+        datatype:'json',
+        success:function(rows){
+            if (rows.data){
+                $("#name").val(rows.data.name);
+                $("#orgname").val(rows.data.orgname);
+                $("#isleader").val(rows.data.isleader);
+                $("#level").val(rows.data.level);
+                $("#sortvalue").val(rows.data.sortvalue);
+                $("#isenable").val(rows.data.isenable);
+                $("#description").val(rows.data.description);
+            }
+        }
+    });
+
+    var index;
+    function save(num){
+        index=num;
+        $('.btn-submit').click();
+    }
+   /* $('.btn-submit').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        checkpassed: function () {
+            saveObj();
+        }
+    });*/
+
+
+    /*----------------------angular.js---------------------------------------*/
+    var app = angular.module('app', []);
+
+    app.controller('controller', function ($scope,$http,token) {
+        var urlPrev ='${_gate_url}';
+        $scope.submit = function () {
+            $('.btn-submit').click();
+        };
+        $scope.save = function () {
+            saveObj();
+        }
+    }).service('token',function () {
+        this.getToken = function () {
+            return getToken();
+        }
+    });
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            var appElement = document.querySelector('[ng-controller=controller]');
+            var $scope = angular.element(appElement).scope();
+            $scope.save();
+        }
+    });
+    /*提交*/
+    function saveObj(){
+        var orgid="${orgid}";
+        var orgname="${orgname}";
+        var gxqptDutiesDTO =$("#dataForm").serializeJSON();
+        console.log(gxqptDutiesDTO);
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url: "${_gate_url}/api/admin/post/updateById",
+            data:JSON.stringify(gxqptDutiesDTO),
+            success:function(rows){debugger;
+                if (rows.data){
+                    parent.home.reloadJqgrid(orgid,orgname);
+                    parent.layer.msg("岗位编辑成功！",{icon:6,time:1000});
+                    parent.layer.close(index);
+                }else{
+                    parent.layer.msg("岗位编辑出错，请重试！",{time:1000});
+                }
+            }
+        });
+    };
+</script>
+</body>
+</html>

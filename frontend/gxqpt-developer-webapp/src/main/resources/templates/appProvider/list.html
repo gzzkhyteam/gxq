@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>应用服务管理 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/jqueryPagination/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                服务提供商管理 > <span class="active">列表</span>
+            </div>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="table-box">
+                <div class="top-bar">
+                    <div class="form-inline pull-left">
+                        <div class="form-group">
+                            <label class="sr-only"></label>
+                            <input type="text" class="form-control" placeholder="公司名称" ng-model="data.name">
+                        </div>
+
+                        <button class="btn btn-primary btn-search" ng-click="reloadHost()">查询</button>
+                    </div>
+                    <div class="button-group pull-right">
+                        <a class="btn btn-primary" href="${_cp}/module/appProviderCreate">新增</a>
+                    </div>
+                </div>
+                <table class="table table-darck table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th width="50" align="center"></th>
+                        <th>公司名称</th>
+                        <th>所在地址</th>
+                        <th>公司规模</th>
+                        <th>法人</th>
+                        <th>联系邮箱</th>
+                        <th>联系电话</th>
+                        <th width="120">是否启用</th>
+                        <th width="120" class="text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="host in hostList">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td>{{host.name}}</td>
+                        <td>{{host.address}}</td>
+                        <td>{{host.empNum}}</td>
+                        <td>{{host.leader}}</td>
+                        <td>{{host.email}}</td>
+                        <td>{{host.phone}}</td>
+                        <td>{{host.enableIs | formatStatus}}</td>
+                        <td class="act">
+                            <a href="${_cp}/module/appProviderEdit?id={{host.id}}">修改</a>
+                            <a href="javascript:" ng-show="host.enableIs == 1" ng-click="updataStatus(0,host.id)">停用</a>
+                            <a href="javascript:" ng-show="host.enableIs == 0" ng-click="updataStatus(1,host.id)">启用</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="bottom-bar alignCenter">
+                    <div id="pagination_9"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqueryPagination/js/pagination.min.js"></script>
+</body>
+<script type="text/javascript">
+	var pageType = "appProviderList";
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http, token) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        var pagination = null;
+        // var urlPrev = getUrlPrev('${_gate_url}');
+        //获取创建人
+        $scope.getPerson = function () {
+            $http.get(urlPrev + '/host/findHostCreateUser', {
+                headers: getHeaders(),
+            }).success(function (res) {
+                $scope.personList = res.data;
+            })
+        }
+        $scope.getPerson();
+        //获取主机列表
+        $scope.getHost = function (currPage, pageSize,load) {
+            $http.post(urlPrev + 'applicationProvider/page', {
+                data: $scope.data,
+                pageNo: currPage || 1,
+                pageSize: pageSize || 10
+            }, {
+                headers: getHeaders(),
+            }).success(function (res) {
+                $scope.hostList = res.data.list;
+                /*处理分页*/
+                if(load) {
+                    $("#pagination_9").pagination('setPage', 1, res.data.pages, res.data.total);
+                }else{
+                    pagination = $("#pagination_9").pagination({
+                        totalPage: res.data.pages,
+                        totalSize: res.data.total,
+                        pageSizeOpt: [
+                            {'value': 5, 'text': '5条/页'},
+                            {'value': 10, 'text': '10条/页', 'selected': true},
+                            {'value': 15, 'text': '15条/页'},
+                            {'value': 20, 'text': '20条/页'}
+                        ],
+                        callBack: function (currPage, pageSize) {
+                            $scope.getHost(currPage, pageSize);
+                        }
+                    });
+                }
+            })
+        }
+        $scope.getHost();
+        $scope.reloadHost = function () {
+            $scope.getHost(1,pagination.get(0).pageText.pageSize,true);
+        }
+        $scope.updataStatus = function (code, id) {
+            $http.post(urlPrev + 'applicationProvider/updateData', {id: id, enableIs: code}, {
+                headers: getHeaders(),
+            }).success(function (res) {
+                // if(res.data){
+                //     $scope.getHost();
+                //     layer.`msg('操作成功',{icon:6});
+                // }
+                if (res.errcode == 0) {
+                    $scope.getHost();
+                    layer.msg('操作成功', {icon: 6});
+                }
+            })
+        }
+    }).service('token', function () {
+        this.getToken = function () {
+            // return $.cookie('token');
+            return getToken();
+        }
+    }).filter('formatStatus', function () {
+        return function (text) {
+            if (text == 0) {
+                return '停用';
+            } else if (text == 1) {
+                return '启用';
+            }
+        }
+    })
+    /*angularJS*/
+</script>
+</html>

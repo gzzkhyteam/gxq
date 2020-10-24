@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Expires" content="0"/>
+	<meta name="renderer" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/module.css">
+	<link rel="stylesheet" href="${_static}/css/personInfo.css">
+    <style type="text/css">
+        .list-section .selWid-form-search{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12 marginTop">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                    	<form id="dataForm" action="" method="post">
+                            <table class="table default-table table-title-left">
+                            	<tbody>
+                            		<tr>
+                            			<th width="110">姓名：</th>
+                            			<td><input id="name" class="form-control inp-form" name="name" disabled/></td>
+                                        <th width="130" rowspan="3">头像：</th>
+                                        <td rowspan="3">
+                                            <input id="photo" type="hidden" class="form-control inp-form" name="photo"/>
+                                            <img src="${_static}/images/nopic.jpg" id="nopic" class="nopic"/>
+                                                <div id="filePicker" class="filePicker photoFilePicker"></div>
+                                            <div id="uploader" class="uploader photoUploader">
+                                                <div class="queueList">
+                                                    <ul id="file_html" class="filelist">
+                                                    </ul>
+                                                    <div id="dndArea" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                                        <p> </p>
+                                                    </div>
+                                                </div>
+                                                <div class="statusBar" style="display:none;">
+                                                    <div class="progress">
+                                                        <span class="text">0%</span> <span class="percentage"></span>
+                                                    </div>
+                                                    <div class="info"></div>
+                                                    <div class="btns">
+                                                        <div id="jxButton" class="jxButton"></div>
+                                                        <div class="uploadBtn">开始上传</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>统一人员编号：</th>
+                                        <td>
+                                            <input id="empNo" class="form-control inp-form" name="empNo" disabled/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>登录账号：</th>
+                                        <td>
+                                            <input id="nickname" class="form-control inp-form" name="nickname" disabled/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>性别：</th>
+                                        <td>
+                                            <input id="sex" class="form-control inp-form" name="sex" disabled/>
+                                        </td>
+                                        <th>出生日期：</th>
+                                        <td><input id="birthday" class="form-control inp-form" name="birthday" disabled/></td>
+                                    </tr>
+                                    <tr>
+                                        <th>民族：</th>
+                                        <td><input id="nation" class="form-control inp-form" name="nation" disabled/></td>
+                                        <th>最高学历：</th>
+                                        <td>
+                                            <select id="education" name="education" class="form-control selWid-form-search">
+                                                <option value="-1">请选择</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>办公电话：</th>
+                                        <td><input id="officetel" class="form-control inp-form" name="officetel"/></td>
+                                        <th>主要手机号：</th>
+                                        <td><input id="mainmobile" class="form-control inp-form" name="mainmobile" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>备用手机号：</th>
+                                        <td><input id="submobile" class="form-control inp-form" name="submobile" /></td>
+                                    </tr>
+                            		<tr>
+                            			<th>人员简介：</th>
+                            			<td colspan="3"><textarea rows="6" id="descrption" dataType="*0-300" class="form-control textarea-form" name="descrption" ></textarea></td>
+                            		</tr>
+                                    <tr>
+                                        <th>人员职责：</th>
+                                        <td colspan="3"><textarea id="userduty" rows="6" dataType="*0-300" class="form-control textarea-form" name="userduty" ></textarea></td>
+                                    </tr>
+                            	</tbody>
+							</table>
+                            <input type="hidden" id="id" class="form-control inp-form" name="id" />
+							<button type="button" class="btn-submit hidden"></button>
+                    	</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreFile.js"></script>
+<script src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+
+    /* 附件上传 begin */
+    var token = $.cookie("_token");
+    var folderId="-1";
+    var dataType="IMAGE";
+    loadFile();
+    function loadFile() {
+        fileUpload = new FileUpload({
+            "filePicker" : "filePicker",
+            "dndArea" : "dndArea",
+            "uploader" : "uploader",
+            "jxButton" : "jxButton",
+            "folderId":folderId,
+            "dataType":dataType,
+            "token":token,
+            "_isAdmin":true
+        });
+    }
+    function successUpload(json) {
+        var url = json.data.list[0].url;
+        $("#photo").val(url);
+        $("#nopic").attr("src",url);
+    };
+    getEducationInfo();//获取学历信息
+    function getEducationInfo() {
+        ajaxHengyun({
+            type: 'get',
+            url: '${_gate_url}/api/admin/dictionary/getCodeListNoAppId',
+            data: {code:"EDUCATION"},
+            async: false,
+            success: function (res) {
+                if(res.data){
+                    var html ="";
+                    res.data.forEach(function(value,index){
+                        html+='<option value="'+value.code+'">'+value.name+'</option>'
+                    });
+                    $("#education").append(html);
+                }
+            }
+        })
+    };
+    getPersonInfo();//获取个人信息
+    function getPersonInfo() {
+        ajaxHengyun({
+            type: 'post',
+            url: '${_gate_url}/api/admin/emp/getByUserId',
+            data: {id: "${id}",systemCode:"${systemCode}"},
+            success: function (res) {
+                if(!res.data){
+                    return false;
+                }
+                $("#id").val(res.data.id);
+                $("#name").val(res.data.name);
+                $("#photo").val(res.data.photo);
+                if(res.data.photo){
+                    $("#nopic").attr("src", res.data.photo);
+                };
+                $("#nickname").val(res.data.nickname);
+                $("#workDesc").val(res.data.workDesc);
+                if(res.data.sex=="1"){
+                    $("#sex").val("男");
+                }else if(res.data.sex=="0"){
+                    $("#sex").val("女");
+                }else{
+                    $("#sex").val(res.data.sex);
+                }
+                var d = new Date(res.data.birthday);
+                var month =d.getMonth()+1;
+                if(d.getMonth()+1<10){
+                    month = '0' + (d.getMonth()+1);
+                }
+                var date = d.getDate();
+                if(d.getDate()<10){
+                    date = '0' + (d.getDate());
+                }
+                if(res.data.birthday){
+                    $("#birthday").val(d.getFullYear() + '-' + month + '-' + date);
+                };
+                $("#officetel").val(res.data.officetel);
+                $("#mainmobile").val(res.data.mainmobile);
+                $("#submobile").val(res.data.submobile);
+                if(res.data.workStatus == '1')$("#workStatus").val("在职");
+                if(res.data.workStatus == '2')$("#workStatus").val("离职");
+                if(res.data.loginable == 'true')$("#loginable").val("是");
+                if(res.data.loginable == 'false')$("#loginable").val("否");
+                $("#descrption").val(res.data.descrption);
+                $("#userduty").val(res.data.userduty);
+                $("#nation").val(res.data.nation);
+                $("#empNo").val(res.data.empNo);
+                $("#education").val(res.data.education);
+            }
+        })
+    };
+    var index;
+    function save(num){
+        index=num;
+        $('.btn-submit').click();
+    }
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        ignoreHidden: true,
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        checkpassed: function () {
+            saveObj();
+        }
+    });
+    /*提交*/
+    function saveObj(){
+        var gxqptDutiesDTO =$("#dataForm").serializeJSON();
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url: "${_gate_url}/api/admin/emp/updateById",
+            data:JSON.stringify(gxqptDutiesDTO),
+            success:function(rows){
+                if (rows.data){
+                    parent.layer.msg("修改成功！",{icon:6,time:1000});
+                    parent.layer.close(index);
+                }else{
+                    parent.layer.msg("修改出错，请重试！",{time:1000});
+                }
+            }
+        });
+    };
+</script>
+</body>
+</html>

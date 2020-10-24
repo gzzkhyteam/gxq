@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/webuploader.css">
+    <style>
+        .file {
+            filter: alpha(opacity:0);
+            opacity: 0;
+            width: 0px;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12" style="margin-top:30px;">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <form id="dataForm" action="" method="post"><!--enctype="multipart/form-data"-->
+                            <table class="table default-table table-title-left">
+                                <input type="hidden" id="id" name="id" value="${id}">
+                                <tbody>
+                                <tr>
+                                    <th>确认信息</th>
+                                    <td colspan="3">
+                                        <textarea rows="6" class="form-control textarea-form" id="remarks"
+                                                  name="remarks"></textarea>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tr>
+                                    <th>预警级别</th>
+                                    <td>
+                                        <select name="level" id="level" class="form-control" style="width: 100%">
+                                            <option value="1">一般</option>
+                                            <option value="2">较重</option>
+                                            <option value="3">严重</option>
+                                            <option value="4">特别严重</option>
+                                        </select>
+                                    </td>
+                                    <th>确认结果</th>
+                                    <td>
+                                        <input type="radio" name="result" value="true" checked>属实
+                                        <input type="radio" name="result" value="false">不属实
+                                    </td>
+                                </tr>
+                                <tbody>
+                                <tr id="dutyname">
+                                    <th>指定责任人</th>
+                                    <td colspan="3">
+                                        <select name="dName" id="dName" class="form-control" style="width: 100%">
+                                            <option value=""></option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn-submit hidden"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript">
+    $(function(){
+        openValidator({
+            type:"post",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/warn/warn/updateModeById",
+        },"#dataForm",{
+            attrName:"id",
+            prefix:"",
+            suffix:"",
+        });
+    })
+    //获取预警详情信息
+    var id = "${id}";
+    ajaxHengyun({
+        type: 'GET',
+        async: false,
+        url: "${_gate_url}/api/warn/warn/getById",
+        data: {id: id},
+        success: function (rows) {
+            var warnObj = rows.data.warn;
+            if (warnObj){
+                // $("#level").val(warnObj.level);
+                // $("#level").html('<option value="">'+warnObj.level+'</option>');
+                var val = warnObj.level;
+                $("#level option[value='"+val+"']").attr("selected","selected");
+
+            }
+        }
+    });
+
+    // //获取预警级别
+    // function level() {
+    //     ajaxHengyun({
+    //         type: 'GET',
+    //         async: false,
+    //         url: '${_gate_url}/api/warn/warn/getLevel',
+    //         success: function (res) {
+    //             if (res || res.data) {
+    //                 $.each(res.data, function (index, item) {
+    //                     var name="";
+    //                     switch (item){
+    //                         case 1:
+    //                             name="一般";
+    //                             break;
+    //                         case 2:
+    //                             name="较重";
+    //                             break;
+    //                         case 3:
+    //                             name="严重";
+    //                             break;
+    //                         case 4:
+    //                             name="非常严重";
+    //                             break;
+    //                         default:
+    //                             name="";
+    //                             break;
+    //                     }
+    //                     var option = '<option value = ' + item + '>' + name + '</option>';
+    //                     $('#level').append(option);
+    //                 })
+    //             }
+    //         }
+    //     })
+    // }
+
+    // var warnId = "${warnId}";
+    // ajaxHengyun({
+    //     type: 'GET',
+    //     async: false,
+    //     url: "${_gate_url}/api/warn/warn/getDutyer",
+    //     data: {warnId: warnId},
+    //     success: function (rows) {
+    //         var warnObj = rows.data;
+    //         if (warnObj){
+    //             $("#dName").val(warnObj.recName);
+    //         }else {
+    //             $("#dName").val("");
+    //         }
+    //         dName();
+    //     }
+    // });
+
+    //获取已有预警责任人姓名
+    var warnId = "${warnId}";
+    ajaxHengyun({
+        type: 'GET',
+        async: false,
+        url: "${_gate_url}/api/warn/warn/getDutyer",
+        data: {warnId: warnId},
+        success: function (rows) {
+            var warnObj = rows.data;
+            if (warnObj){
+                $("#dName").html('<option value='+warnObj.userId+'>'+warnObj.recName+'</option>');
+            }else {
+                $("#dName").html('<option value=""></option>');
+            }
+            dName();
+        }
+    });
+
+
+    /* 获取预警责任人 */
+    function dName(){
+        ajaxHengyun({
+            type: 'GET',
+            async:false,
+            url: '${_gate_url}/api/admin/p/emp/getTreeEmpPhoneByUserId',
+            data: {userId: "${userId}"},
+            success: function (rows) {
+                if (rows.data) {
+                    var items = rows.data;
+                    var html="";
+                    jQuery.each(items, function(key, val) {
+                        var list1 = val.deptList;
+                        jQuery.each(list1, function(key, val){
+                            var list2 = val.empList;
+                            jQuery.each(list2, function(key, val){
+                                html+='<option value="'+val.gxqptEmpId+'">'+val.name+'</option>';
+                            });
+                        });
+
+                    });
+                    $("#dName").append(html);
+                };
+            }
+        })
+    }
+
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+
+    var index;
+    function save(num) {
+        index = num;
+        $('.btn-submit').click();
+    }
+
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            saveObj();
+        }
+    });
+
+    function getUrlParms(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)
+            return r[2];
+        return null;
+    }
+
+    function saveObj() {
+       // var data = $('#dataForm').serializeJSON();
+        var id = getUrlParms("id");
+        var title = decodeURIComponent(getUrlParms("title"));
+        var content = decodeURIComponent(getUrlParms("content"));
+        var warnId = getUrlParms("warnId");
+        var handlerLeve = getUrlParms("level");
+        var remarks = $("#remarks").val();
+        var level = $("#level").val();
+        var radio = $("input:radio:checked").val();
+        var userId = $("#dName option:selected").val();
+        var userName = $("#dName option:selected").text();
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/warn/warn/updateModeById',
+            data: JSON.stringify({id:id,warnId:warnId,remarks:remarks,title:title,content:content,level:level,result:radio,handlerLeve:handlerLeve,userId:userId,recName:userName}),//JSON.stringify(data),
+            success: function (rows) {
+                if(rows.errcode == 0){
+                    if (rows.data) {
+                        parent.home.reloadJqgrid();
+                        parent.layer.msg("确认成功！", {icon: 6, time: 1000});
+                        parent.layer.close(index);
+                    } else {
+                        parent.layer.msg("确认失败，请重试！", {time: 1000});
+                    }
+                }else{
+                    parent.layer.msg(rows.errmsg, {time: 1000});
+                }
+
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

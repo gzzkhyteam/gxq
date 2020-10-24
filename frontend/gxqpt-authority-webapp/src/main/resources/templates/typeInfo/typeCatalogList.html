@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/sys_com/com.css"/>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <div class="console-title console-title-border clearfix">
+                            <div class="pull-left">
+                                <h3 class="page-title">
+                                    <span class="page-title-scend">所属类型</span>
+                                </h3>
+                            </div>
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-primary btn-create" onclick="openAddPage ()">
+                                    新增
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid-section">
+                            <table id="list">
+                            </table>
+                            <div id="pager"></div>
+                        </div>
+                        <!--<table class="table default-table table-title-top">-->
+                        <!--<thead>-->
+                        <!--<tr>-->
+                        <!--<th width="50">序号</th>-->
+                        <!--<th>目录名称</th>-->
+                        <!--<th>目录编码</th>-->
+                        <!--<th>条目名称</th>-->
+                        <!--<th>条目编码</th>-->
+                        <!--<th width="120">操作</th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                        <!--<tbody>-->
+                        <!--<tr>-->
+                        <!--<td>1</td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td>-->
+                        <!--<a href="avascript:void(0);" onclick="openEditPage ('')">修改</a>-->
+                        <!--<a href="avascript:void(0);">删除</a>-->
+                        <!--</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                        <!--<td>2</td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td>-->
+                        <!--<a href="avascript:void(0);" onclick="openEditPage ('')">修改</a>-->
+                        <!--<a href="avascript:void(0);">删除</a>-->
+                        <!--</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                        <!--<td>3</td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td>-->
+                        <!--<a href="avascript:void(0);" onclick="openEditPage ('')">修改</a>-->
+                        <!--<a href="avascript:void(0);">删除</a>-->
+                        <!--</td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
+                        <!--</table>-->
+                        <!--<div class="text-center">-->
+                            <!--<ul class="pagination pagination-sm">-->
+                                <!--<li><a href="javascript:void(0);">首页</a></li>-->
+                                <!--<li><a href="javascript:void(0);">上一页</a></li>-->
+                                <!--<li><a href="javascript:void(0);">1</a></li>-->
+                                <!--<li><a href="javascript:void(0);">2</a></li>-->
+                                <!--<li><a href="javascript:void(0);">3</a></li>-->
+                                <!--<li><a href="javascript:void(0);">4</a></li>-->
+                                <!--<li><a href="javascript:void(0);">5</a></li>-->
+                                <!--<li><a href="javascript:void(0);">下一页</a></li>-->
+                                <!--<li><a href="javascript:void(0);">尾页</a></li>-->
+                            <!--</ul>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/app.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    var urlPrev = '${_gate_url}/api/admin/';
+    var jqObj = null;//jqGrid实例对象
+    //获取类型条目列表
+    (function getList() {
+        jqObj = $("#list").jqGrid({
+            mtype: 'post',
+            postData: {
+                pageNo: 1, pageSize: 10, data: {dictionaryTypeId: '${id}'},
+            },
+            url: urlPrev+'dictionary/page',
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                return JSON.stringify(postData);
+            },
+            colNames: ['字典条目名称', '字典编码', '启用状态','描述','操作'],
+            colModel: [{
+                name: 'name',
+                index: 'name'
+            }, {
+                name: 'code',
+                index: 'code',
+            }, {
+                name: 'isEnable',
+                index: 'isEnable',
+                formatter:formatterIsEnable
+            }, {
+                name: 'description',
+                index: 'description',
+            },{
+                name: 'act',
+                index: 'act',
+                title: false,
+                width: '350',
+                align: 'center',
+                formatter: formatterAct
+            }],
+            jsonReader: {
+                root: "data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            onPaging:function(pgButton){
+                var pageNo=$(".ui-pg-input").val();
+                pageNo=parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total=parseInt(total);
+                if(pgButton=="next"){
+                    if(pageNo>=total){
+                        return false;
+                    }else{
+                        pageNo+=1;
+                    }
+                }else if(pgButton=="prev"){
+                    if(pageNo>1){
+                        pageNo-=1;
+                    }else{
+                        return false;
+                    }
+                }else if(pgButton=="last"){
+                    pageNo=total;
+                }else if(pgButton=="first"){
+                    pageNo=1;
+                }
+                var pageSize=$(".ui-pg-selbox").val();
+                if(pageNo!=0){
+                    $("#list").setGridParam({postData:{pageNo:pageNo,pageSize:pageSize}}).trigger("reloadGrid");
+                    return false;
+                }
+            },
+            rowNum:10,
+            pager: '#pager',
+            height: 'auto'
+        });
+    })();
+    function formatterAct(cellvalue, options, rawObject) {
+        var returnValue = "";
+            returnValue += '<a class="ui-button" href="javascript:;" onclick="openViewPage(\''+rawObject.id+'\')">';
+            returnValue += '详情</a>';
+            returnValue += '<span class="oper-separator"></span>';
+            returnValue += '<a class="ui-button" href="javascript:;" onclick="openEditPage(\''+rawObject.id+'\')">';
+            returnValue += '修改</a>';
+            returnValue += '<span class="oper-separator"></span>';
+            returnValue += '<a class="marginLeft" href="javascript:;" onclick="del(\''+rawObject.id+'\')">';
+            returnValue += '删除</a>'
+        return returnValue;
+    }
+    function formatterIsEnable(cellvalue, options, rawObject) {
+        return cellvalue?'是':'否';
+    }
+    //重新加载表数据
+    function reloadList() {
+        jqObj.setGridParam({
+            postData: {pageNo:1,pageSize:Number($('.ui-pg-selbox').val()),data: {dictionaryTypeId: '${id}'}}
+        },true).trigger("reloadGrid");
+    }
+    /*条目新增*/
+    function openAddPage() {
+        if(parent.currNode.id == '-1'){
+            top.layer.msg('请选择数据字典类型');
+            return false;
+        }
+        top.layer.open({
+            id: 'add',
+            type: 2,
+            anim: 6,
+            title: '条目新增',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['560px', '390px'],
+            content: "${_cp}/power/typeCatalogAdd",
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 新增', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("add");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = top[iframe].save(index);
+            }
+        });
+    }
+    /*条目编辑*/
+    function openEditPage(id) {
+        top.layer.open({
+            id: 'edit',
+            type: 2,
+            anim: 6,
+            title: '条目编辑',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['560px', '390px'],
+            content: "${_cp}/power/typeCatalogEdit?id="+id,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确定', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("edit");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = top[iframe].save(index);
+            }
+        });
+    }
+    /*条目详情*/
+    function openViewPage(id) {
+        top.layer.open({
+            id: 'view',
+            type: 2,
+            anim: 6,
+            title: '条目详情',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['560px', '300px'],
+            content: "${_cp}/power/typeCatalogView?id="+id,
+            btn: ['<span class="glyphicon glyphicon-remove"></span> 关闭'],
+        });
+    }
+    function del(id){
+       ajaxHengyun({
+           type:'post',
+           url:urlPrev+'dictionary/delete',
+           data:{id:id},
+           success:function (res) {
+               if(res){
+                   top.layer.msg('删除成功',{icon:6});
+                   reloadList();
+               }
+           }
+       })
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+gxqpt:
+  cas-server:
+    ip: 127.0.0.1    # SSO CAS 服务的ip
+    port: 10086           # SSO CAS 服务的端口
+  variable:
+    gate-url: http:// 127.0.0.1:10086
+  port:
+    nginx: 10086
+    eureka: 10086
+  hostname:
+    redis:  127.0.0.1
+    rabbitmq:  127.0.0.1
+    nginx: ${gxqpt.hostname.center}   # 本地环境 不使用nginx ，就跟自身端口ip一样即可
+    eureka:  127.0.0.1
+    center:  127.0.0.1         # center 项目的ip [前端需要改这里]
+
+spring:
+  profiles:
+    active: dev
+  rabbitmq:
+    port: 5672
+    password: gxqpt
+    username: gxqpt
+  redis:
+    port: 16379
+    key-prefix: test
+    password: SbtyMveYNfLzTks7H0apCmyStPzWJqjy
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/

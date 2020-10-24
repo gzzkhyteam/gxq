@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>交换共享系统</title>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+	<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+	<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+	<div class="main clearfix">
+		<div class="row">
+			<div class="current pull-left">
+				<h3 class="page-title">
+					<span>数据源管理</span>
+				</h3>
+			</div>
+		</div>
+		<div class="main_container row">
+			<form id="searchDataForm" action="" class="search-form" autocomplete="off">
+				<ul class="clearfix">
+					<li class="pull-left">
+						<label class="control-label">数据源名称：</label>
+						<input name="sourceName" class="" placeholder=""/>
+					</li>
+					<li class="pull-left">
+						<label class="control-label">数据库类型：</label>
+						<select name="dbType" class="chosen-select">
+							<option value="0">所有</option>
+							<option value="2">Mysql</option>
+							<option value="3">SqlServer</option>
+							<option value="1">oracle</option>
+						</select>
+					</li>
+					<li class="pull-left">
+						<label class="control-label">数据库名称：</label>
+						<input name="dbName" class="" placeholder=""/>
+					</li>
+					<li class="pull-left">
+						<label class="control-label">关联系统：</label>
+						<input name="sysName" class="" placeholder=""/>
+					</li>
+					<li class="pull-left">
+						<button type="button" class="btn btn-primary search-button" onclick="searchBtn()">
+							<span class="glyphicon glyphicon-search"></span> 查询
+						</button>
+					</li>
+					<li class="pull-right marginAuto">
+						<!--<button type="button" class="btn btn-primary btn-create" onclick="window.location.href='${_cp}/module/dataSourceCreate'">-->
+						<!--新增-->
+						<!--</button>-->
+						<!-- /*按钮权限开始*/-->
+						<script type="text/javascript" id="exchange_datasource_create">
+                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "exchange_datasource_create",
+                                btnHtml :"<button type=\"button\" class=\"btn btn-primary btn-create\" onclick=\"window.location.href='${_cp}/module/dataSourceCreate'\">新增</button>",
+                                htmlInsert: true
+                            });
+						</script>
+						<!-- /*按钮权限end*/-->
+					</li>
+				</ul>
+			</form>
+			<table id="dataSourceList" class="default-table tab-title-top">
+				<thead>
+				<tr>
+					<th width="60">序号</th>
+					<th>数据源名称</th>
+					<th>数据库类型</th>
+					<th>数据库名称</th>
+					<th>用户名</th>
+					<!--<th>密码</th>-->
+					<th>关联系统</th>
+					<th width="140">操作</th>
+				</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<div class="text-center">
+				<ul class="pagination" id="pagination" ></ul>
+				<p class="pull-right currentPage">共<span class="total">0</span>条数据，当前第<i id="pageNum" class="colorBlue">1</i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var parm={
+        data:{},
+        pageNo:"${pageNo}",
+        pageSize:10
+    };
+    searchBtn();
+    function searchBtn(){//查询
+        var dataDTO =$("#searchDataForm").serializeJSON();
+        if(dataDTO){
+            dataDTO.dbType=parseInt(dataDTO.dbType);
+        }
+        parm.data=dataDTO;
+        parm.pageNo = 1;
+        getList(parm);
+    }
+    getList(parm);
+    /*获取数据源列表*/
+    function  getList(parm) {
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url:  '${_gate_url}/api/exchange/dataapi/dbSource/find ',
+            data:JSON.stringify(parm),
+            success:function(rows){
+                var html=""
+                if (rows.data){
+                    rows.data.list.forEach(function(value,index){
+                        var value=dealElement(value);
+                        var dbName="",unitName="";
+                        if(value.dbType==2){
+                            dbName="Mysql";
+                        };
+                        if(value.dbType==1){
+                            dbName="Oracle";
+                        };
+                        if(value.dbType==3){
+                            dbName="SQL Server";
+                        };
+                        var num = (rows.data.pageNum-1)*10+index+1;
+                        html+='<tr>';
+                        html+='<td>'+num+'</td>';
+                        html+='<td>'+value.sourceName+'</td>';
+                        html+='<td>'+dbName+'</td>';
+                        html+='<td>'+value.dbName+'</td>';
+                        html+='<td>'+value.dbAccount+'</td>';
+                        // html+='<td>'+value.dbPassword +'</td>';
+                        html+='<td>'+value.systemName+'</td>';
+                        html+='<td>';
+                        // html+='<a href="${_cp}/module/dataSourceView?id='+value.id+'&pageNo='+parm.pageNo+'">详情</a>';
+                        html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                            resource_code : "exchange_datasource_detail",
+                            btnHtml :'<a href="${_cp}/module/dataSourceView?id='+value.id+'&pageNo='+parm.pageNo+'">详情</a>',
+                            htmlInsert: false
+                        });
+                        // html+='<a href="${_cp}/module/dataSourceEdit?id='+value.id+'&pageNo='+parm.pageNo+'">修改</a>';
+                        html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                            resource_code : "exchange_datasource_edit",
+                            btnHtml :'<a href="${_cp}/module/dataSourceEdit?id='+value.id+'&pageNo='+parm.pageNo+'">修改</a>',
+                            htmlInsert: false
+                        });
+                        // html+='<a href="avascript:void(0);" onclick="remove('+value.id+')">删除</a>';
+                        html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                            resource_code : "exchange_datasource_delete",
+                            btnHtml :'<a href="avascript:void(0);" onclick="remove(\''+value.id+'\')">删除</a>',
+                            htmlInsert: false
+                        });
+                        html+='</td>';
+                        html+='</tr>';
+                    });
+                    if(rows.data.list.length==0){
+                        html+="<tr><td class='text-center' colspan='7'>暂无数据</td></tr>"
+                        $(".pagination,.currentPage").css("display","none");
+                    } else {
+                        $(".pagination,.currentPage").css("display","block");
+                    };
+                    $("#dataSourceList tbody").html(html);
+                    $('#totalPages').text(rows.data.pages);
+                    $('.total').text(rows.data.total);
+                    jqPaginator(rows.data);
+                    var height=document.getElementById("container").scrollHeight;
+                    $("#home", window.parent.document).height(height);
+                }else{
+                    html+="<tr><td class='text-center' colspan='7'>暂无数据</td></tr>";
+                    $("#dataSourceList tbody").html(html);
+                    $(".pagination,.currentPage").css("display","none");
+                    var height=document.getElementById("container").scrollHeight;
+                    $("#home", window.parent.document).height(height);
+				}
+            }
+        });
+    }
+
+    function remove(id){//删除
+        parent.layer.confirm("您确定要删除该条信息吗？",{
+            title:'温馨提示',
+            shade: [0.4,'#000'],
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            ajaxHengyun({
+                type:"POST",
+                dataType: 'json',
+                url:  '${_gate_url}/api/exchange/dataapi/dbSource/delete',
+                data:{id:id},
+                success:function(rows){
+                    if (rows.data){
+                        parent.layer.msg("删除成功！",{time:1000});
+                        getList(parm);
+                    }else{
+                        parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                    }
+                }
+            });
+        });
+    }
+</script>
+</body>
+</html>

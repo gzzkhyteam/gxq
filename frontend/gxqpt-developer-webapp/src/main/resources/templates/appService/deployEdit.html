@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                应用管理 > 部署管理 > <span class="active">修改</span>
+            </div>
+            <a href="javascript:" class="button-icon pull-right" onclick="history.back()">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="block">
+                <div class="text-title">部署信息</div>
+                <div class="content">
+                    <form class="form-horizontal" id="dataForm">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>使用主机</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" ng-model="deploy.hostId" ng-options="host.hostId as host.hostName for host in hostList" datatype="*" nullmsg="使用主机不能为空"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>部署目录</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" ng-model="deploy.installPath" datatype="*" nullmsg="部署目录不能为空">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>分配内存(MB)</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" ng-model="deploy.mem" datatype="*" nullmsg="分配内存不能为空">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>分配硬盘(MB)</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" ng-model="deploy.harddisk" datatype="*" nullmsg="分配硬盘不能为空">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>访问地址</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" ng-model="deploy.indexUrl" placeholder="地址请以http://或https://开头"
+                                       datatype="*,url" nullmsg="访问地址不能为空" errormsg="请填写正确的网址">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">版本</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" ng-model="deploy.version">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">状态</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" ng-model="deploy.status" ng-init="deploy.status=3" ng-options="status.code as status.text for status in statusList"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" ng-model="deploy.remark"></textarea>
+                            </div>
+                        </div>
+                        <div class="button-bar button-bar-center">
+                            <button class="btn btn-primary  btn-submit">提交</button>
+                            <button class="btn btn-default " onclick="history.back();return false;">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>s
+<script>
+    var pageType="appList";
+</script>
+</body>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http, token) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.statusList = [{
+            code:1,text:'故障中'
+        },{
+            code:2,text:'升级中'
+        },{
+            code:3,text:'运行中'
+        }];
+        //初始化表单验证
+        $('.btn-submit').valid({
+            form: '#dataForm',
+            showAllError: true,
+            ignoreHidden: true,
+            checkpassed: function () {
+                $scope.save();
+            }
+        });
+        //获取部署主机列表
+        $scope.getHost = function(currPage,pageSize) {
+            $http.post(urlPrev + 'hostInstall/getHostName',null,{
+                headers: getHeaders(),
+            }).success(function (res) {
+                $scope.hostList = res.data;
+                $scope.deploy.hostId = res.data[0].hostId;
+            })
+        }
+        $scope.getHost();
+        /*获取部署详情*/
+        $scope.getDeploy = function () {
+            $http.get(urlPrev + '/hostInstall/get',{
+                params:{id:'${id}'},
+                headers: getHeaders(),
+            }).success(function (res) {
+                $scope.deploy= res.data;
+            })
+        }
+        $scope.getDeploy();
+        $scope.save = function () {
+            $http.put(urlPrev + '/hostInstall/update',$scope.deploy,{
+                headers: getHeaders(),
+            }).success(function (res) {
+                if(res.data){
+                    history.back();
+                }
+            })
+        }
+    }).service('token', function () {
+        this.getToken = function () {
+            return getToken();
+        }
+    })
+    /*angularJS*/
+</script>
+</html>

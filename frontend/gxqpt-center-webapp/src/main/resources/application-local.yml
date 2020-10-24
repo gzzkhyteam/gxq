@@ -1,0 +1,30 @@
+gxqpt:
+  cas-server:
+    ip: 192.168.1.204
+    port: 10000
+  variable:
+    gate-url: http://127.0.0.1:10003
+  port:
+    nginx: ${server.port}
+  hostname:
+    redis: 127.0.0.1
+    rabbitmq: 127.0.0.1
+    nginx: ${gxqpt.hostname.center}
+    eureka: 127.0.0.1
+    center: 127.0.0.1
+
+spring:
+  profiles:
+    active: local
+  rabbitmq:
+    port: 5672
+    password: guest
+    username: guest
+  redis:
+    port: 6379
+    key-prefix: dev
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/

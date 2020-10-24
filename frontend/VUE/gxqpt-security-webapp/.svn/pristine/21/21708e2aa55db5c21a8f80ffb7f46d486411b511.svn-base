@@ -1,0 +1,160 @@
+<!-- 新增详情等的弹窗 -->
+<template>
+  <Modal
+    v-model="showModal"
+    title="新增"
+    width="600px">
+    <Form ref="dealForm" :model="dealForm" :rules="validate" :label-width="96">
+      <FormItem label="日志类别：" prop="logType" required>
+        <Select v-model="dealForm.logType">
+          <Option :value="item.code" v-for="item in logCode" :key="item.id">{{item.name}}</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="日志记录：" prop="logRecord" required>
+        <Input
+          type="textarea"
+          v-model="dealForm.logRecord"
+          disabled>
+        </Input>
+      </FormItem>
+      <FormItem label="故障分类：" prop="faultClassification" required>
+        <Select v-model="dealForm.faultClassification">
+          <Option :value="item.code" v-for="item in faultClass" :key="item.id">{{item.name}}</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="故障级别：" prop="faultLevel" required>
+        <Select v-model="dealForm.faultLevel">
+          <Option :value="item.code" v-for="item in faultLevel" :key="item.id">{{item.name}}</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="附件：" prop="item5" required>
+        <hyUpload
+          ref="fileUpload"
+          action="/api/file/p/file/simple"
+          :onSuccess="fileUploadSuccess"
+          :default-file-list="defaultFiles" />
+      </FormItem>
+    </Form>
+    <div slot="footer">
+      <Button class="modalBtn" type="default" @click="showModal = false" size="large">取消</Button>
+      <Button class="modalBtn" type="primary" @click="submit" size="large">确定</Button>
+    </div>
+  </Modal>
+</template>
+
+<script>
+import api from '@/api/axiosApi'
+import operationApiList from '@/api/operationApiList'
+// 文件上传
+import hyUpload from '@/components/hengyun/hyUpload'
+import { HANDLE_TYPES } from './../constant'
+
+function getDealForm () {
+  return {
+    logType: '',
+    logRecord: '',
+    faultClassification: '',
+    faultLevel: '',
+    item5: ''
+  }
+}
+
+export default {
+  // 分别为 日志类别，故障分类，故障级别
+  props: ['logCode', 'faultClass', 'faultLevel'],
+  components: {
+    hyUpload
+  },
+  data () {
+    const vm = this
+    return {
+      showModal: false,
+      HANDLE_TYPES,
+      handleType: '',
+      dealForm: getDealForm(),
+      defaultFiles: [],
+      validate: {
+        logType: [{validator: (rule, value, cb) => {
+          if (!vm.dealForm.logType) {
+            cb(new Error('不能为空'))
+            return
+          }
+          cb()
+        }}],
+        files: [{validator: (rule, value, cb) => {
+          if (vm.dealForm.item5.length === 0) {
+            cb(new Error('文件不可为空'))
+          } else {
+            cb()
+          }
+        }}]
+      }
+    }
+  },
+  methods: {
+    open (type, id) {
+      const vm = this
+      vm.dealForm = getDealForm()
+      vm.handleType = type
+      vm.$refs.dealForm.resetFields()
+      // 非新增
+      if (type !== HANDLE_TYPES.CREATE) {
+        vm.dealForm.id = id
+        vm.getDetail()
+      }
+      vm.showModal = true
+    },
+    async getDetail () {
+      const vm = this
+      vm.showModal = true
+      const res = await api(operationApiList.logGet, vm.dealForm)
+      if (res.data.errcode === 0) {
+        const data = res.data.data
+        vm.dealForm = data
+      } else {
+        vm.$Message.info(res.data.errmsg)
+      }
+    },
+    submit () {
+      const vm = this
+      if (vm.handleType === HANDLE_TYPES.DETAIL) {
+        vm.showModal = false
+        return
+      }
+      vm.$refs.dealForm.validate(valid => {
+        if (valid) {
+          vm.doSave(vm.dealForm)
+        } else {
+          vm.$Message.info('表单验证失败')
+        }
+      })
+    },
+    async doSave (data) {
+      const vm = this
+      if (vm.handleType === HANDLE_TYPES.CREATE) {
+        const res = await api(operationApiList.logSave, data)
+        if (res.data) {
+          vm.$Message.success('保存成功！！！')
+          vm.$emit('on-ok')
+          vm.showModal = false
+        }
+      } else {
+        const res = await api(operationApiList.logUpdate, data)
+        if (res.data) {
+          vm.$Message.success('更新成功！！！')
+          vm.$emit('on-ok')
+          vm.showModal = false
+        }
+      }
+    },
+    fileUploadSuccess(resp, file, fileList) {
+      if (resp.errcode == 0) {
+        this.dealForm.files = fileList
+        this.$refs.dealForm.validateField('item5', res => {})
+      } else {
+        this.$Message.info(resp.errmsg)
+      }
+    }
+  }
+}
+</script>

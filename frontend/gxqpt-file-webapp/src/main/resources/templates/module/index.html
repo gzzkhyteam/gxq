@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="Expires" content="0"/>
+	<meta name="renderer" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	<!-- 外部CSS引入 -->
+	<link type="text/css" rel="stylesheet"
+		  href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css"
+		  href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+
+	<!--<link rel="stylesheet" type="text/css" href="${_static}/js/lib/metisMenu/metisMenu.min.css">-->
+	<link rel="stylesheet" type="text/css" href="${_static}/css/sidenav.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/libAnimation.css">
+
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/tipsy/tipsy.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/viewer/viewer.css">
+	<link rel="stylesheet" type="text/css"
+		  href="${_static}/js/lib/layer/skin/layer.css">
+	<link rel="stylesheet" type="text/css"
+		  href="${_static}/js/lib/chosen/chosen.min.css">
+
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=1.0.0">
+	<!--<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">-->
+	<link rel="stylesheet" href="${_static}/css/app.css?v=1.0.0">
+	<!--<link rel="icon" href="" type="image/x-icon"/>-->
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+	<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+	<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+	<script>
+        var userId = "${l_u_i_s.id}";
+        var id = userId;
+        var gateUrl="${_gate_url}";
+	</script>
+	<script type="text/javascript" src="${_static}/js/com_msg.js"></script>
+	<title>云盘管理系统</title>
+	<style type="text/css">
+		.index-top {
+			position: static;
+		}
+
+		.layui-layer-iframe .layui-layer-btn, .layui-layer-page .layui-layer-btn {
+			background-color: #0088b6;
+			padding-top: 0;
+			padding: 6px 0;
+		}
+		.layui-layer .layui-layer-title{
+			background-color: #0088b6;
+			color: #fff;
+		}
+		.layui-layer .layui-layer-content{
+			padding: 6px 16px;
+			text-align: left;
+			font-size: 14px;
+			line-height: 36px;
+		}
+		.navbar-ctrl {
+			margin-left: -35px;
+			margin-top: 10px;
+		}
+
+		.navbar-ctrl div {
+			width: 120px;
+			height: 30px;
+			line-height: 30px;
+			background: #09c;
+			text-align: center;
+		}
+
+		.navbar-ctrl div:hover {
+			background: #067DA5;
+		}
+
+		.navbar-ctrl a {
+			color: #fff;
+			text-decoration: none;
+		}
+
+		.img_text {
+			display: inline-block;
+			width: 23px;
+			height: 23px;
+			border-radius: 100%;
+			background: #ff3333;
+			text-align: center;
+			line-height: 23px;
+			position: absolute;
+			left: 32px;
+			top: -3px;
+			font-size: 10px;
+		}
+		.index-top-shortcut ul {
+			position: relative;
+		}
+
+		.index-top-shortcut ul li {
+			width: 6em;
+			font-size: 14px;
+		}
+		#user_photo{
+			border-radius: 50%;
+		}
+		.index-logo .text-title {
+			font-size: 20px;
+			color: #fff;
+			line-height: 1;
+		}
+
+		.index-logo .text-title p {
+			margin-bottom: 0;
+		}
+		.index-logo{
+			width: 36%;
+			top: 20px;
+		}
+		.index-logo img{
+			width: 40px;
+			margin-top: -8px;
+			margin-right: 5px;
+		}
+	</style>
+</head>
+
+<body>
+<div class="view-framework">
+	<!-- begin 顶部 -->
+	<div class="index-top">
+		<!-- begin logo -->
+		<div class="index-logo">
+			<!--<img alt="" src="${_static}/images/pageLogo.png" style="margin-top: 8px;">-->
+			<div class="text-title" style="line-height: 1;">
+				<!--<img class="pull-left" src="${_static}/images/logoImg.png" alt=""/>-->
+				<p style="margin: 0;">"一体化基础系统共享平台"- 云盘管理系统</p>
+				<span style="font-size: 14px; display: inline-block; margin-top: 8px;">The cloud disk management System</span>
+			</div>
+		</div>
+		<!-- end logo -->
+		<!-- begin 顶部快捷菜单 -->
+		<div class="index-top-shortcut">
+			<div id="tm"></div>
+			<ul id="navList" class="navList">
+				<li id="index-top-quit">
+					<a href="${_logout_url}"> <img alt="" src="${_static}/images/core/index/quit.png"> <span>首页</span>
+					</a>
+				</li>
+				<li id="index-top-msg">
+					<a id="conclusionShow" href="javascript:void(0);" data-title="消息列表" data-container="body" data-toggle="popover"  data-placement="bottom" data-trigger="click" data-html=true data-content="">
+						<img alt="" src="${_static}/images/core/index/msg.png">
+						<span>消息</span>
+						<span id="msgElement"></span>
+					</a>
+				</li>
+				<li id="index-top-userinfo">
+					<a href="javascript:void(0);"  style="cursor:default">
+						<img alt="" src="${l_u_i_s.photo!''}"
+							 onerror="this.onerror='';src='${_static}/images/core/index/user.png'" , id="user_photo">
+						<span id="user_name">${l_u_i_s.name!''}</span>
+					</a>
+					<!-- <div class="navbar-ctrl" style="display:none;">
+                        <div>
+                            <a href="javascript:void(0);" onclick="deptOrUserInfo('');">个人信息</a>
+                        </div>
+                        <div>
+                            <a href="javascript:void(0);" onclick="updatePassWord();">密码修改</a>
+                        </div>
+                    </div> -->
+				</li>
+			</ul>
+		</div>
+		<!-- end 顶部快捷菜单 -->
+	</div>
+	<!-- end 顶部 -->
+	<!-- begin 首页主体 -->
+	<div class="view-framework-body view-framework-sidebar-full">
+		<!-- begin 左边导航 -->
+		<div class="view-framework-sidebar">
+			<div class="sidebar-content">
+				<div class="sidebar-inner">
+					<div class="sidebar-fold">
+						<!--<i class="fa fa-navicon fa-lg"></i>-->
+						<img width="22" height="22" style="margin-top: 9px;"
+							 src="${_static}/images/core/index/sidebar_close.png"/>
+					</div>
+					<div class="sidebar-mask"></div>
+					<div class="sidebar-collapse">
+						<ul class="nav" id="side-menu">
+							<!--菜单获取开始-->
+							<script type="text/javascript">
+                                var flag = true;
+                                $(function () {
+                                    //菜单栏内容
+                                    //查询菜单
+                                    var menuList = resourceJs.init("${_gate_url!''}", "${_app_id!''}", "${l_u_i_s.id!''}").findMenu({cache: true});
+                                    var menuHtml = "";
+                                    if (!menuList) {
+                                        menuList = [];
+                                    };
+                                    var params = window.location.search;
+                                    var paramsUrl = "";
+                                    if(params) {
+                                        var paramsUrl = params.split("=");
+                                    };
+                                    var hasChildrenSet = false;
+                                    if (menuList.length > 0) {
+                                        var htm = '';
+                                        for (var i = 0; i < menuList.length; i++) {
+                                            var isChildren = false;
+                                            var obj = menuList[i];
+                                            var menuUrlName = obj.url.split("?")[0];
+                                            if (menuUrlName == paramsUrl[1]) {
+                                                htm += '<li class="active">';
+                                                htm += '<a href="' + obj.url + '" aria-expanded="true" target="home">';
+                                            } else {
+                                                if (menuList[i].children) {
+                                                    for (var m = 0; m < menuList[i].children.length; m++) {
+                                                        var childrenUrl = menuList[i].children[m].url.split("?")[0];
+                                                        if (paramsUrl[1] == childrenUrl) {
+                                                            isChildren = true;
+                                                            hasChildrenSet = true;
+                                                        }
+                                                    }
+                                                }
+                                                if (isChildren) {
+                                                    htm += '<li class="active">';
+                                                    htm += '<a href="' + obj.url + '" aria-expanded="true" target="home">';
+                                                } else {
+                                                    if (i == 0) {
+                                                        htm += '<li class="active">';
+                                                        htm += '<a href="' + obj.url + '" aria-expanded="true" target="home">';
+                                                    } else {
+                                                        htm += '<li>';
+                                                        htm += '<a href="' + obj.url + '" aria-expanded="false" target="home">';
+                                                    }
+                                                }
+                                            }
+                                            //htm += 'target="home">';
+                                            if(!obj.icon){
+                                                obj.icon = "navicon_default";
+                                            };
+                                            var reg=new RegExp("^http");
+                                            if(obj.icon && reg.test(obj.icon)){
+                                                htm += '<span class="navicon "><img src="' + obj.icon + '" style="width: 22px; height: 22px;"></span>';
+                                            } else {
+                                                htm += '<span class="navicon ' + obj.icon + '"></span>';
+                                            }
+                                            htm += '<span class="sidebar-nav-item">' + obj.name + '</span>';
+                                            if (menuList[i].children && menuList[i].children.length > 0) {
+                                                htm += '<span class="fa arrow"></span>';
+                                            }
+                                            htm += '</a>';
+                                            if (menuList[i].children) {
+                                                if (isChildren) {
+                                                    htm += '<ul aria-expanded="true">';
+                                                } else {
+                                                    if (i == 0) {
+                                                        htm += '<ul aria-expanded="true">';
+                                                    } else {
+                                                        htm += '<ul>';
+                                                    }
+                                                }
+
+                                                for (var j = 0; j < menuList[i].children.length; j++) {
+                                                    var childUrl = menuList[i].children[j].url.split("?")[0];
+                                                    if (paramsUrl[1] == childUrl) {
+                                                        htm += ' <li class="active" style="padding-left: 20%;">';
+                                                        htm += '<a href="' + menuList[i].children[j].url + '" class="tab_nei" target="home" style="color: rgb(99, 181, 219);">';
+                                                    } else {
+                                                        htm += ' <li style="padding-left: 20%;">';
+                                                        htm += '<a href="' + menuList[i].children[j].url + '" class="tab_nei" target="home">';
+                                                    }
+                                                    htm += menuList[i].children[j].name + '</a>';
+                                                    if (i == 0 && j == 0) {
+                                                        $("#home").attr("src", menuList[i].children[j].url);
+                                                    }
+                                                }
+                                                htm += '</ul>';
+                                            } else {
+                                                if (i == 0) {
+                                                    $("#home").attr("src", obj.url);
+                                                }
+                                            }
+                                            htm += '</li>';
+
+                                        }
+                                        $("#side-menu").html(htm);
+                                        if (hasChildrenSet) {
+                                            $($("#side-menu>li")[0]).removeClass("active");
+                                            $("#home").attr('src', paramsUrl);
+                                        }
+                                        // menuHtml = htm;
+                                    } else {
+                                        $("#home").attr('src', '');
+                                    };
+                                    if(params){
+                                        var paramsUrl = params.split("=");
+                                        if(paramsUrl.length==2){
+                                            $("#home").attr("src", paramsUrl[1]);
+                                        }else if(paramsUrl.length>2){
+                                            paramsUrl.splice(0,1);
+                                            var url = paramsUrl.join("=");
+                                            $("#home").attr("src", url);
+                                        }
+                                    };
+                                });
+							</script>
+						</ul>
+					</div>
+				</div>
+				<!-- end 左边导航 -->
+			</div>
+		</div>
+		<!-- begin 工作区 -->
+		<div class="view-framework-main">
+			<div class="view-framework-workspace">
+				<iframe id="home" name="home" frameborder="0" scrolling="no" width="100%" height="100%"></iframe>
+			</div>
+		</div>
+		<!-- end 工作区 -->
+	</div>
+	<!-- end 首页主体 -->
+</div>
+
+<!-- 外部JS引入 -->
+<script src="${_static}/js/lib/metisMenu/jquery.metisMenu.js"></script>
+<script src="${_static}/js/lib/bootstrap/3.3.6/bootstrap.min.js"></script>
+<script src="${_static}/js/lib/metisMenu/hplus.min.js"></script>
+<script src="${_static}/js/lib/tipsy/jquery.tipsy.js"></script>
+<script src="${_static}/js/lib/layer/layer.js"></script>
+<script src="${_static}/js/index.js"></script>
+
+<!-- 自定义JS -->
+<script type="text/javascript">
+    if (window.top!=window.self){
+        top.location.href="${_cp}/module/index";
+    }
+    /*var startTime = new Date(); //开始时间
+    var endTime = new Date(); //结束时间 服务器时间
+    var timeEquation = Math.abs(new Date(endTime).getTime() - new Date(startTime).getTime()); //时间差的毫秒数
+    var days = Math.floor(timeEquation / (24 * 3600 * 1000));
+    //计算出小时数
+    var leave1 = timeEquation % (24 * 3600 * 1000); //计算天数后剩余的毫秒数
+    var hours = Math.floor(leave1 / (3600 * 1000));
+    var leave2 = leave1 % (3600 * 1000); //计算小时数后剩余的毫秒数
+    //计算相差分钟数
+    var minutes = Math.floor(leave2 / (60 * 1000));
+    //计算相差秒数
+    var leave3 = leave2 % (60 * 1000); //计算分钟数后剩余的毫秒数
+    //计算出相差天数
+    var seconds = Math.round(leave3 / 1000);
+    var updateUserName = "${l_u_i_s.name!''}";
+    str = "当前用户：" + updateUserName + "  在线时长 :" + (hours <= 9 ? ('0' + hours) : hours) + "小时" + (minutes <= 9 ? ('0' + minutes) : minutes) + "分钟" + (seconds <= 9 ? ('0' + seconds) : seconds) + "秒";
+    $("#tm").text(str);
+    setInterval("show()", 1000);
+
+    function show() {
+        seconds++;
+        if (seconds > 59) {
+            seconds = 0;
+            minutes++;
+            if (minutes > 59) {
+                minutes = 0;
+                hours++;
+            }
+        }
+        str = "当前用户：" + updateUserName + "  在线时长 :" + (hours <= 9 ? ('0' + hours) : hours) + "小时" + (minutes <= 9 ? ('0' + minutes) : minutes) + "分钟" + (seconds <= 9 ? ('0' + seconds) : seconds) + "秒";
+        $("#tm").text(str);
+    };*/
+
+    //信息按钮点解事件
+    function openInfo() {
+        layer.open({
+            type: 2,
+            id: 'addPerson',
+            title: '消息提醒列表',
+            shadeClose: false,
+            scrollbar: false,
+            shade: 0.4,
+            area: ['80%', '88%'],
+            content: "${_cp }/comm/toMyMsg.do",
+            btn: ['关闭'],
+            end: msgNum,
+        });
+    }
+
+    var li_count = $('.index-top-shortcut ul li').length;
+    var othis;
+    $('.index-top-shortcut ul li').each(function (index) {
+        othis = $(this);
+        othis.animate({
+            'right': othis.outerWidth() * (li_count - index - 1),
+            'opacity': 1
+        }, 1000);
+    });
+
+    $(function () {
+        $("#index-top-userinfo").hover(function () {
+            $(".navbar-ctrl").show();
+        }, function () {
+            $(".navbar-ctrl").hide();
+        });
+    });
+    $("body").click(function () {
+        home.removeAllRanges();
+    });
+    $("body").on("click", "#side-menu li", function () {
+		sessionStorage.setItem('folderArray',"");
+        removeAllRanges();
+    });
+
+    function removeAllRanges() {
+        window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+    }
+    $("#conclusionShow").popover({
+        html: true,
+        content: '<div id="content"></div>'
+    }).on("mouseenter", function () {
+        var _this = this;   // 这里的this触发的dom,需要存起来 否则在下面 .popover的逻辑中this会变为弹出的dom
+        var isShow=$(".popover");
+        if(isShow.length==0){
+            $(_this).popover("show");
+        };
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide");
+            }
+        }, 300);
+    }).on("mousemove",function(){
+        var isShow=$(".popover");
+        if(isShow.length==0) {
+            $("#conclusionShow").popover("show");
+        }
+    }).on('shown.bs.popover', function () {
+        var ps =  $(".popoverCss li p.ptitle");
+        for (var i = 0; i < ps.length; i++) {
+            if(ps[i].offsetHeight > 40){
+                var html = ps[i].innerText;
+                var temp = "";
+                ps[i].innerText = temp;
+                var j = 0;
+                while(ps[i].offsetHeight <= 40){
+                    temp = html.substring(0, j+1);
+                    j++;
+                    ps[i].innerText = temp;
+                }
+                var leng = temp.length-2;
+                ps[i].innerText=temp.substring(0,leng)+"···";
+            }
+        }
+    });
+    $("body").on("mouseleave",".popover", function () {
+        setTimeout(function () {
+            if (!$("#conclusionShow:hover").length) {
+                $("#conclusionShow").popover("hide");
+            }
+        }, 300);
+    });
+    $("#index-top-msg").click (function(){
+        window.open(gateUrl+'/gxqpt-center/admin/home?type=all');
+    }) ;
+    function hiddenBtn(){
+        $(".layui-layer-btn0").css("display","none");
+	}
+</script>
+
+</body>
+
+</html>

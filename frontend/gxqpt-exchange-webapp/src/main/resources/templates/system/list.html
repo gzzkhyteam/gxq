@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			.search-form li input{
+				width: 125px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>系统列表</span>
+						</h3>
+					</div>
+				</div>
+				<div class="main_container row">
+					<form id="searchDataForm" action="" class="search-form" autocomplete="off">
+						<ul class="clearfix">
+							<li class="pull-left">
+								<label class="control-label" style="text-align: right;">系统名称：</label>
+								<input name="sysName" class="" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">系统状态：</label>
+                            	<select name="status" class="chosen-select" style="width: 80px;">
+                                	<option value="">全部</option>
+                                    <option value="1">在用</option>
+                                    <option value="2">停用</option>
+                                    <option value="3">整改中</option>
+                                </select>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">系统承建商：</label>
+                                <input name="contractor" class="" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">系统图架构：</label>
+                            	<select name="sysArch" class="chosen-select" style="width: 80px;">
+                                	<option value="">全部</option>
+                                    <option value="1">B/S</option>
+							        <option value="2">C/S</option>
+                                </select>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">系统主要数据：</label>
+                            	<input name="majorData" class="" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<button type="button" class="btn btn-primary search-button" onclick="searchBtn()">
+                            		<span class="glyphicon glyphicon-search"></span> 查询
+                                </button>
+							</li>
+							<li class="pull-left marginAuto">
+								<!--<button type="button" class="btn btn-primary btn-create" onclick="window.location.href='${_cp}/module/systemCreate'">-->
+                            		<!--新增-->
+                                <!--</button>-->
+								<!-- /*按钮权限开始*/-->
+								<script type="text/javascript" id="exchange_system_create">
+                                    resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_system_create",
+                                        btnHtml :"<button type=\"button\" class=\"btn btn-primary btn-create\" onclick=\"window.location.href='${_cp}/module/systemCreate'\">新增</button>",
+                                        htmlInsert: true
+                                    });
+								</script>
+								<!-- /*按钮权限end*/-->
+							</li>
+						</ul>
+                    </form>
+					<table id="systemList" class="default-table tab-title-top">
+						<thead>
+							<tr>
+								<th width="60">序号</th>
+								<th width="150">现有信息化系统名称</th>
+								<th>系统承建商</th>
+								<th>承建商联系人</th>
+								<th>联系电话</th>
+								<th>访问地址</th>
+								<th>数据存储地</th>
+								<th>数据库类型</th>
+								<th>数据量</th>
+								<th width="150">操作</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+					<div class="text-center">
+						<ul class="pagination" id="pagination" ></ul>
+						<p class="pull-right currentPage">共<span class="total">0</span>条数据，当前第<i id="pageNum" class="colorBlue">1</i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+            var parm={
+                data:{},
+                pageNo:"${pageNo}",
+                pageSize:10
+            };
+            searchBtn();
+            function searchBtn(){//查询
+                var dataDTO =$("#searchDataForm").serializeJSON();
+                if(dataDTO){
+                    dataDTO.status=parseInt(dataDTO.status);
+                    dataDTO.sysArch=parseInt(dataDTO.sysArch);
+                }
+                parm.data=dataDTO;
+                parm.pageNo = 1;
+                getList(parm);
+            }
+
+            /*获取系统列表*/
+            function  getList(parm) {
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/dataapi/system/findSys',
+                    data:JSON.stringify(parm),
+                    success:function(rows){
+                        var html=""
+                        if (rows.data){
+                            rows.data.list.forEach(function(value,index){
+                                value = dealElement(value);
+                                var dbName="";
+                                if(value.dbType==2){
+                                    dbName="Mysql";
+                                };
+                                if(value.dbType==1){
+                                    dbName="Oracle";
+                                };
+                                if(value.dbType==3){
+                                    dbName="SQL Server";
+                                };
+                                var valueDataCount = value.dataCount=="0"?"":value.dataCount;
+                                var num = (rows.data.pageNum-1)*10+index+1;
+                                html+='<tr>';
+                                html+='<td>'+num+'</td>';
+                                html+='<td>'+value.sysName+'</td>';
+                                html+='<td>'+value.contractor+'</td>';
+                                html+='<td>'+value.contName+'</td>';
+                                html+='<td>'+value.contTel+'</td>';
+                                html+='<td>'+value.url+'</td>';
+                                html+='<td>'+value.dataAddress +'</td>';
+                                html+='<td>'+dbName+'</td>';
+                                html+='<td>'+ valueDataCount +'</td>';
+                                html+='<td>';
+                                // html+='<a href="${_cp}/module/systemView?id='+value.id+'&pageNo='+parm.pageNo+'">详情</a>';
+                                html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                    resource_code : "exchange_system_detail",
+                                    //btnHtml :'<a href="${_cp}/module/systemView?id='+value.id+'&pageNo='+parm.pageNo+'">详情</a>',
+                                    btnHtml :'<span class="oper-separator" ></span><a class="ui-button" href="${_cp}/module/systemView?id='+value.id+'&pageNo='+parm.pageNo+'">{{name}}</a>',
+                                    htmlInsert: false
+                                });
+                                // html+='<a href="${_cp}/module/systemEdit?id='+value.id+'&pageNo='+parm.pageNo+'">修改</a>';
+                                html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                    resource_code : "exchange_system_update",
+                                   // btnHtml :'<a href="${_cp}/module/systemEdit?id='+value.id+'&pageNo='+parm.pageNo+'">修改</a>',
+                                    btnHtml :'<span class="oper-separator" ></span><a class="ui-button" href="${_cp}/module/systemEdit?id='+value.id+'&pageNo='+parm.pageNo+'">{{name}}</a>',
+                                    htmlInsert: false
+                                });
+                                // html+='<a href="avascript:void(0);" onclick="remove('+value.id+')">删除</a>';
+                                html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                    resource_code : "exchange_system_delete",
+                                  //  btnHtml :'<a href="avascript:void(0);" onclick="remove('+value.id+')">删除</a>',
+                                    btnHtml :'<span class="oper-separator" ></span><a class="ui-button" href="javascript:void(0);" onclick="remove(\''+value.id+'\')">{{name}}</a>',
+                                    htmlInsert: false
+                                });
+                                html+='</td>';
+                                html+='</tr>';
+                            });
+                            if(rows.data.list.length==0){
+                                html+="<tr><td class='text-center' colspan='10'>暂无数据</td></tr>"
+                                $(".pagination,.currentPage").css("display","none");
+                            } else {
+                                $(".pagination,.currentPage").css("display","block");
+                            };
+                            $("#systemList tbody").html(html);
+                            $('#totalPages').text(rows.data.pages);
+                            $('.total').text(rows.data.total);
+                            jqPaginator(rows.data);
+                            var height=document.getElementById("container").scrollHeight;
+                            $("#home", window.parent.document).height(height);
+                        }else{
+                            html+="<tr><td class='text-center' colspan='10'>暂无数据</td></tr>";
+                            $("#systemList tbody").html(html);
+                            $(".pagination,.currentPage").css("display","none");
+                            var height=document.getElementById("container").scrollHeight;
+                            $("#home", window.parent.document).height(height);
+                        }
+                    }
+                });
+            };
+            function remove(id){//删除
+                parent.layer.confirm("您确定要删除该条信息吗？",{
+                    title:'温馨提示',
+                    shade: [0.4,'#000'],
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    ajaxHengyun({
+                        type:"GET",
+                        dataType: 'json',
+                        url:  '${_gate_url}/api/exchange/dataapi/system/deleteById',
+                        data:{id:id},
+                        success:function(rows){
+                            if (rows.data){
+                                parent.layer.msg("删除成功！",{time:1000});
+                                getList(parm);
+                            }else{
+                                parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                            }
+                        }
+                    });
+                });
+            };
+		</script>
+	</body>
+</html>

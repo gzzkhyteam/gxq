@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta http-equiv="Expires" content="0" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+<!-- begin 外部CSS引入 -->
+<link href="${_js}/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+<link href="${_js}/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="${_cp}/static/css/reset.css">
+<link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${_lib}/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${_lib}/font-awesome/css/font-awesome.min.css">
+<!--
+    <link rel="stylesheet" type="text/css"
+        href="${_lib}/chosen/chosen.min.css">
+    -->
+<link type="text/css" rel="stylesheet" href="${_lib}/layer/skin/layer.css"/>
+<link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+<link rel="stylesheet" type="text/css" href="${_lib}/jquery-step/jquery.step.css">
+<link type="text/css" rel="stylesheet" href="${_lib}/ValidateForm/Validform.css"/>
+<link rel="stylesheet" href="${_cp}/static/themes/blue/css/ui.css">
+<link rel="stylesheet" href="${_cp}/static/css/app.css">
+<!-- end 外部CSS引入 -->
+
+<link rel="stylesheet" href="${_cp}/static/css/taskRecvFile/add.css">
+
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_js}/hengyun/hengyun_ajax.js"></script>
+
+
+</head>
+	<div class="workspace-body">
+		<div class="console-container">
+			<div class="row">
+				<div class="col-sm-12">
+					<!-- begin 标题 -->
+					<div class="console-title console-title-border clearfix">
+						<div class="pull-left">
+							<h5>
+								收发文管理 > <font color="#0099cc">收文登记</font>
+							</h5>
+						</div>
+					</div>
+					<!-- begin 页面内容主体 -->
+					<div class="list-section">
+						<div class="list-content">
+							<div class="form-inline view-info" id="taskRecvFileInfo">
+
+								<fieldset style="border: 1px solid #ccc;padding: 10px;">
+								<input type="hidden" id="taskRecvFileId" value=""/>
+								<input type="hidden" id="operateTag" value=""/>
+								<form  id="taskRecvFile">
+									<input type="hidden" name="id" id="id" value=""/>
+									<div class="col-sm-12">
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w84"> <span
+													class="text-danger">*</span> <span>来文类型</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<select onchange="changeFileNo(this)" id="fileTypeselect" class="form-control" name="target">
+														<option value="综合保障类">综合保障类</option>
+														<option value="征求意见类">征求意见类</option>
+														<option value="筑党办发">筑党办发</option>
+														<option value="黔府发">黔府发</option>
+														<option value="筑府发">筑府发</option>
+														<option value="筑委专议">筑委专议</option>
+														<option value="筑党专议">筑党专议</option>
+														<option value="筑府办函">筑府办函</option>
+														<option value="黔府函">黔府函</option>
+														<option value="黔党函">黔党函</option>
+														<option value="黔府办函">黔府办函</option>
+														<option value="黔党办函7">黔党办函</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w84"> <span
+													class="text-danger">*</span> <span>来文机关</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<div class="form-control-wrap">
+														<input class="form-control" value="" name="docUnit"  datatype="*" nullmsg="来文机关不允许为空"
+														id="docUnit">
+														<input class="form-control" value="receive" name="docType"  type="hidden">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w84">  <span>发文号</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<div class="form-control-wrap">
+														<input class="form-control" value="" name="docNum" id="docNum">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w84"> <span>收文时间</span>
+													<span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<input class="form-control" 
+													value="" onclick="WdatePicker({isShowWeek:true,dateFmt:'yyyy-MM-dd'})" name="docTime" id="docTime"  />
+												</div>
+											</div>
+										</div>
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w84"> <span
+													class="text-danger">*</span> <span>收文编号</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<input id="fileNo1Input" class="form-control" value="" name="docCode" >
+												</div>
+											</div>
+										</div>
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w84"> <span
+													class="text-danger">*</span> <span>密级</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<select class="form-control" name="rank" disabled id="rank">
+
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w84"> <span
+													class="text-danger">*</span> <span>文件标题</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<input class="form-control" value="" name="title" datatype="*" nullmsg="文件标题不允许为空" id="title">
+												</div>
+											</div>
+										</div>
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w84"> <span
+													class="text-danger">*</span> <span>紧急程度</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<select class="form-control" name="urgencyDegree" id="urgencyDegree">
+														<option value="平急">平急</option>
+														<option value="急件">急件</option>
+														<option value="加急">加急</option>
+														<option value="特急">特急</option>
+														<option value="特提">特提</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="clear" style="margin-bottom: 10px"></div>
+										<div class="">
+											<div class="">
+												<label class="control-label w84 pull-left"> <span
+													class="text-danger">*</span> <span>内容概要</span> <span>：</span>
+												</label>
+												<div class="w90 pull-left">
+													<textarea id="content" class="form-control" name="content" rows="5"
+														style="width:100%;"  datatype="*1-400" nullmsg="内容概要不允许为空" errormsg="请输入不超过400个字符"
+															  placeholder="请输入内容，400字以内"></textarea>
+												</div>
+											</div>
+										</div>
+										<div class="clear" style="margin-bottom: 10px"></div>
+										<div class="">
+											<div class="w90 pull-left file-container">
+												<div id="container" style="margin: 0;padding: 0;">
+													<div id="uploader1" class="uploader uploader1-active">
+														<div id="dndArea1" class="placeholder dndArea dndArea1-active"></div>
+														<div id="filePicker1" class="filePicker"></div>
+														<input type="text" value="" name="attachmentName" id="attachmentName" style="display: none;">
+														<input type="text" value="" name="attachmentUrl" id="attachmentUrl" style="display: none;">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="clearfix"  style="margin-bottom: 10px"></div>
+										<div class="">
+											<div class="">
+												<label class="control-label w84 pull-left"> <span
+													class="text-danger"></span> <span>备注</span> <span>：</span>
+												</label>
+												<div class="w90 pull-left">
+													<textarea class="form-control" id="desc" name="desc" rows="5"
+														style="width:100%;" datatype="*1-400" errormsg="请输入不超过400个字符"
+															  placeholder="请输入内容，400字以内"></textarea>
+												</div>
+											</div>
+										</div>
+										<div class="clearfix"  style="margin-bottom: 20px"></div>
+										<div class="text-center">
+											<span class="btn btn-primary go-back"  id="btnClose">关闭</span>
+											<button class="btn btn-primary" id="btnSubmit">保存</button>
+										</div>
+									</div>
+									</form>
+								</fieldset>
+								<fieldset>
+									<div class="col-sm-12" style="margin-top: 20px;border: 1px solid #ccc;padding: 10px">
+										<div class="list-section" style="padding:5px;">
+											<div class="list-content">
+												<div class="form-inline view-info">
+													<fieldset>
+														<!-- begin 表格 -->
+														<div class="grid-section" style="font-size: 12px!important;">
+															<table id="list">
+															</table>
+															<div id="pager"></div>
+														</div>
+														<!-- end 表格  -->
+													</fieldset>
+													<div class="clear"></div>
+												</div>
+											</div>
+										</div>
+										<div class="text-center" style="margin-bottom:15px;">
+											<a href="javascript:void(0)" onclick="openDialog()"><span class="glyphicon glyphicon-plus"></span>添加拟办意见</a>
+										</div>
+									</div>
+									
+									<!--<div id="adviseFrom" class="col-sm-12" style="border: 1px solid #ccc;padding: 10px;margin-top: 20px">
+										
+										<div id="textInfo" style="margin-left: 30px;font-size: 12px;">
+											<p>建 议：</p>
+											<p><span class="pull-left" style="margin-left:40px;color: #333;">1.</span>
+											<input class="form-control" style="width: 64%" id="textInfoTitle" name="adviseInstructions" value=""></input></p>
+											<div class="textIndent" style="margin-bottom: 10px;">
+												<span class="pull-left" style="margin-left:40px;color: #333;">2.</span>
+												<textarea id="textInfoContent" placeHolder="1000字以内" name="advisePlease" style="color: #333;" class="pull-left form-control" rows="5" cols="100"></textarea>
+												<div class="clear"></div>
+											</div>
+											<p class="textIndent" >3.<textarea id="submittedInfo" placeHolder="1000字以内" name="adviseCooperate" style="color: #333;" class="form-control" rows="5" cols="100"></textarea></p>
+											<p>妥 否，请示。</p>
+										</div> 
+										<div class="clearfix"  style="margin-bottom: 20px"></div>
+										<div class="text-center">
+											<button class="btn btn-primary" onclick="btnSubmitAdvise()">提交拟办意见</button>
+											&lt;!&ndash; <br><span style="color: red">(请先添加完任务信息后，再修改并提交拟办意见)</span> &ndash;&gt;
+										</div>
+									</div>-->
+								</fieldset>
+								<div class="clear"></div>
+							</div>
+						</div>
+					</div>
+					<!-- end 页面内容主体 -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="display: none;">
+
+	</div>
+
+	<!--begin 外部JS引入 -->
+
+	<script type="text/javascript"
+		src="${_lib}/jqgrid/js/jquery.jqGrid.js"></script>
+	<script type="text/javascript"
+		src="${_lib}/jqgrid/i18n/grid.locale-cn.js"></script>
+	<script type="text/javascript"
+		src="${_lib}/chosen/chosen.jquery.min.js"></script>
+	<script type="text/javascript"
+		src="${_lib}/My97DatePicker/WdatePicker.js"></script>
+
+	<script type="text/javascript"
+		src="${_lib}/jquery-step/jquery.step.js"></script>
+	<script type="text/javascript"
+		src="${_lib}/layer/layer.js"></script>
+	<script type="text/javascript"
+		src="${_cp}/static/themes/blue/js/ui.js"></script>
+
+
+	<script type="text/javascript" src="${_lib}/ValidateForm/Validform_v5.3.2_min.js"></script>
+	<script type="text/javascript" src="${_lib}/ValidateForm/Valid.js"></script>
+	<script type="text/javascript" src="${_lib}/jqueryform/jquery.form.js"></script>
+
+
+	<script type="text/javascript" src="${_js}/app.js"></script>
+	<!--end 外部JS引入 -->
+	<script type="text/javascript" src="${_js}/lj.js"></script>
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+<!-- <script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreFile.js"></script> -->
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYUploadFile.js"></script>
+	<!--begin 自定义JS -->
+	<script type="text/javascript">
+		function getQuery (name) {
+			var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if(r!=null)return  unescape(r[2]); return null;  
+		}
+
+		$(function() {
+			Date.prototype.format = function(fmt) { 
+		        var o = { 
+		            "M+" : this.getMonth()+1,                 //月份 
+		            "d+" : this.getDate(),                    //日 
+		            "h+" : this.getHours(),                   //小时 
+		            "m+" : this.getMinutes(),                 //分 
+		            "s+" : this.getSeconds(),                 //秒 
+		            "q+" : Math.floor((this.getMonth()+3)/3), //季度 
+		            "S"  : this.getMilliseconds()             //毫秒 
+		        }; 
+		        if(/(y+)/.test(fmt)) {
+		            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+		        }
+		        for(var k in o) {
+		            if(new RegExp("("+ k +")").test(fmt)){
+		                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+		            }
+		        }
+		        return fmt;
+		    }
+
+          	$("#list").jqGrid({
+                url : '',
+                colNames : [ '任务名称', '任务类型','经办人', '完成时限', '任务内容', '紧急程度', '备注'],
+                colModel : [ {name : 's1',index : 's1',width : '60'},
+                    {name : 's2',index : 's2',width : '100'},
+                    {
+                    	name : 's3',
+                    	index : 's3',
+                    	formatter: function (cellValue, options, rowObject) {
+                    		switch (rowObject.s3) {
+		                        case 2:
+		                        case '2':
+		                            return '隋智超';
+		                        case 3:
+		                        case '3':
+		                            return '郭嘉龙';
+		                        case 4:
+		                        case '4':
+		                            return '岳金成';
+		                    }
+                    	}
+                    },
+                    {name : 's4',index : 's4',width : '80'},
+                    {name : 's5',index : 's5',width : '80'},
+                    {name : 's6',index : 's6',width : '100'},
+                    {name : 's7',index : 's7',width : '100'} ],
+                pager : '#pager',
+                height : 'auto',
+                jsonReader : {
+                    root : 'rows',
+                    page : 'page',
+                    total : 'total',
+                    records : 'records'
+                },
+                prmNames : {
+                    page : "page", // 表示请求页码的参数名称
+                    rows : "rows" // 表示请求行数的参数名称
+                }
+            });
+
+
+            $(".filelist li").each(function () {
+                $(this).hover(function () {
+                    $(this).find(".file-panel").slideDown();
+                },function () {
+                    $(this).find(".file-panel").slideUp();
+                })
+            });
+
+            $('#taskRecvFileId').val(getQuery('taskRecvFileId') || '');
+
+            var taskRecvFileId = $('#taskRecvFileId').val();
+            if (taskRecvFileId) {
+            	getDetailById(taskRecvFileId);
+            }
+
+            function getDetailById (id) {
+                ajaxHengyun({
+                    type: 'GET',
+                    url:'${_gate_url}/api/developer/fastapplicationdoc/taskDetail?id='+id,
+                    success: function (res) {
+                        var data = res.data;
+                        $('#id').val(data.id);
+                        $('#docType').text(data.docType);
+                        $('#docUnit').val(data.docUnit);
+                        $('#docTime').val(new Date(data.docTime).format('yyyy-MM-dd'));
+                        $('#docNum').val(data.docNum);
+                        $('#fileNo1Input').val(data.docCode);
+                        $('#rank').val(data.rank);
+                        $('#title').val(data.title);
+                        $('#urgencyDegree').val(data.urgencyDegree || 18);
+                        $('#desc').text(data.desc);
+                        $('#content').text(data.content);
+
+						if (data.attachmentName) {
+							$('#attachmentName').val(data.attachmentName);
+							$('#attachmentUrl').val(data.attachmentUrl);
+							$('#dndArea1').text(data.attachmentName).css('background-image', 'url(' + data.attachmentUrl + ')');
+						}
+                    }
+                });
+            }
+
+		});
+        loadFile();
+        function loadFile() {
+            fileUpload2 = new FileUpload({
+                "filePicker": "filePicker1",
+                "dndArea": "dndArea1",
+                "uploader": "uploader1",
+                "jxButton": "jxButton1",
+                "busType": "emgnc",
+                "token": $.cookie("_token")
+            });
+        }
+        var FileList = new Array();
+        function successUpload(json) {
+        	if (json.data && json.data.list) {
+        		var file = json.data.list[0];
+        		$('#attachmentName').val(file.submittedFileName);
+				$('#attachmentUrl').val(file.url);
+				$('#dndArea1').css('background-image', 'url(' + file.url + ')').text(file.submittedFileName);
+        	}
+        }
+        // 新增拟办意见
+		function openDialog() {
+			var taskRecvFileId = $("#taskRecvFileId").val();
+			if(!taskRecvFileId){
+				parent.layer.alert("请先提交收文信息，再添加任务");
+				return ;
+			}
+			parent.layer.open({
+				type: 2,
+				id: 'add',
+				title: '添加拟办意见',
+				shadeClose: false,
+				scrollbar: false,
+				ignoreHidden: true,
+				shade: 0.6,
+				area: ['80%', '88%'],
+				content:['/gxqpt-fast/fast/'+taskRecvFileId+'/document/addTask?taskRecvFileId=' + taskRecvFileId, 'no'],
+			});
+		}
+		//添加页面数据用后台编程获取数据时可删除
+		var newrowid;
+		function addRow(taskProject,isNotAddAdvise) {
+			$("#operate").val("");
+			var selectedId = $("#list").jqGrid("getGridParam", "selrow");
+			var ids = jQuery("#list").jqGrid('getDataIDs');
+			//获得当前最大行号（数据编号）
+			var rowid = Math.max.apply(Math, ids);
+			//获得新添加行的行号（数据编号）
+			newrowid = rowid + 1;
+            var time = null;
+			if (taskProject["preFinishTime"] != null){
+			    time=taskProject["preFinishTime"].substring(0,10);
+			}
+			var dataRow = {
+				s1 : taskProject["taskName"],
+				s2 : taskProject["taskType"],
+				s3 : taskProject["agent"],
+				s4 : new Date(taskProject["finishTimeLimit"]).format('yyyy-MM-dd'),
+				s5 : taskProject["content"],
+				s6 : taskProject["urgencyDegree"],
+				s7 : taskProject["desc"]
+			};
+			//将新添加的行插入到第一列
+			$("#list").jqGrid("addRowData", newrowid, dataRow, "first");
+			if(isNotAddAdvise)
+			    return  ;
+			var html=$("#textInfoContent").html();
+			if(taskProject["managerName"]){
+				html+="请"+arrayPostionName(taskProject["managerName"],empInfo)+"牵头，";
+			};
+			if(setTabInfo(taskProject["cooperateManagerNames"])){
+				html+=arrayPostionName(setTabInfo(taskProject["cooperateManagerNames"]),empInfo)+"配合，";
+			};
+			if(setTabInfo(taskProject["deptNames"])){
+				html+=setTabInfo(taskProject["deptNames"])+"具体负责，";
+			};
+			if(setTabInfo(taskProject["cooperateDeptNames"])){
+				html+=setTabInfo(taskProject["cooperateDeptNames"])+"配合，";
+			};
+			if(setTabInfo(taskProject["handlerNames"])){
+				html+=arrayPostionName(setTabInfo(taskProject["handlerNames"]),empInfo)+"负责，";
+			};
+			if(time){
+				html+="在"+time+"之前，";
+			};
+			if(taskProject["content"]){
+				html+=taskProject["content"]+"。\n\r";
+			};
+			$("#textInfoContent").html(html);
+			/* 分送信息 begin */
+			var DeliveryHtml=$("#submittedInfo").text();
+			if($("#submittedInfo").text()){
+				if(setTabInfo(taskProject["deptNames"])){
+					DeliveryHtml+="、"+setTabInfo(taskProject["deptNames"]);
+				};
+				if(setTabInfo(taskProject["cooperateDeptNames"])){
+					DeliveryHtml+="、"+setTabInfo(taskProject["cooperateDeptNames"]);
+				};
+				if(setTabInfo(taskProject["handlerNames"])){
+					DeliveryHtml+="、"+setTabInfo(taskProject["handlerNames"]);
+				};
+			}else{
+				if(setTabInfo(taskProject["deptNames"])){
+					DeliveryHtml+=setTabInfo(taskProject["deptNames"])+"、";
+				};
+				if(setTabInfo(taskProject["cooperateDeptNames"])){
+					DeliveryHtml+=setTabInfo(taskProject["cooperateDeptNames"])+"、";
+				};
+				if(setTabInfo(taskProject["handlerNames"])){
+					DeliveryHtml+=setTabInfo(taskProject["handlerNames"])+"、";
+				};
+			}
+			if (DeliveryHtml){
+                var textInfoTitlePersons = DeliveryHtml.split("、");
+                for(var i = 0;i<textInfoTitlePersons.length;i++){
+                    if(textInfoTitlePersons[i]==''||textInfoTitlePersons[i]==null||typeof(textInfoTitlePersons[i])==undefined){
+                    	textInfoTitlePersons.splice(i,1);
+                        i=i-1;
+                    }
+                }
+                textInfoTitlePersons=removeDuplicatedItem(textInfoTitlePersons);
+                if(textInfoTitlePersons[0].indexOf("分送", 0) == -1){
+                	$("#submittedInfo").text("分送"+textInfoTitlePersons.join("、"));
+                } else {
+                	$("#submittedInfo").text(textInfoTitlePersons.join("、"));
+                }
+			}
+			/* 分送信息 end */
+		}
+		function setTabInfo(index){
+			var array=[];
+			if(index){
+				array=index.split(";");
+				if(array.length>1){
+					array.pop();
+					array=array.join("、");
+				}else{
+					array=array[0];
+				}
+			}else{
+				return false;
+			}
+			return array;
+		}
+		
+		$(function (){
+			//加载原有的任务
+			loadOldTaskProject(true);
+		});
+		function loadOldTaskProject(isNotAddAdvise){
+			var taskRecvFileId = $("#taskRecvFileId").val();
+			if(!taskRecvFileId || taskRecvFileId.length < 2)
+				return ;
+			// 清空表格的数据
+			$("#list").jqGrid("clearGridData");
+			ajaxHengyun({
+				type: 'GET',
+				url: "${_gate_url}/api/admin/fastapplicationdoc/taskExtraDetail",
+				data: {
+					taskId: taskRecvFileId
+				},
+				dataType: "json",
+				success:function (res){
+					if (!(res && res.data)) {
+						return;
+					}
+					var taskProjects = res.data;
+					var managerName=[];
+					var cooperateManagerNames=[];
+					if(!isNotAddAdvise){
+						$("#textInfoTitle").val("");
+						$("#textInfoContent").text("");
+						$("#submittedInfo").text("");
+					}
+					for (var i = 0; i < taskProjects.length; i++) {
+						addRow(taskProjects[i],isNotAddAdvise);
+						managerName.push(taskProjects[i].managerName);
+						cooperateManagerNames.push(taskProjects[i].cooperateManagerNames);
+					}
+					if(isNotAddAdvise)
+						return ;
+					var textInfoTitleVal="杨忠德、"+managerName.toString()+"、"+cooperateManagerNames;
+			        var textInfoTitlePersons = textInfoTitleVal.replace(/;/g,"").replace(/,/g,"、").split("、");
+			        // var textInfoTitlePersonsText =removeDuplicatedItem(textInfoTitlePersons);
+			        // var aa = textInfoTitlePersonsText.toString().replace(/,/g,"、");
+			        // arrayPostionName方法在app.js里面
+			        // 通过名称取职务
+			        // var aaa = arrayPostionName(aa,empInfo);
+			        // $("#textInfoTitle").val("呈"+aaa+"阅示：");
+				}
+			});
+		}
+
+        $('#btnSubmit').valid({
+            form: '#taskRecvFile',
+            showAllError: true,
+            checkpassed: function () {
+                //parent.layer.confirm("您确定保存吗？",{icon: 3, title:'确认'},submitFrom());
+                var taskRecvFileId = $("#taskRecvFileId").val();
+               // parent.layer.confirm("您确定提交吗？",{btn: ['提交','取消'],shade: false },function(index) {
+                    var postData = GetWebControls("#taskRecvFileInfo");
+                    postData["attachments"] = FileList;
+                    postData["docType"] = "receive";
+                    postData["appId"] = "${appId!''}";
+                    postData["docTime"] = Date.parse(new Date($("#docTime").val()));
+                    var url = '${_gate_url}/api/admin/fastapplicationdoc/saveDoc';
+                    if (taskRecvFileId) {
+                    	url = '${_gate_url}/api/admin/fastapplicationdoc/update';
+                    }
+                    ajaxHengyun({
+                        url: url,
+                        type: "post",
+                        dataType: 'json',
+                        data: JSON.stringify(postData),
+                        contentType: "application/json",
+                        success: function(data){
+                            //alert(4444);
+                            if(data.errmsg != 'ok'){
+                               // parent.layer.alert(data.errMsg, {icon: 3, title:'提示'}, function(index){
+                                parent.layer.alert("添加失败", {icon: 3, title:'提示'}, function(index){
+                                    parent.layer.closeAll();
+                                })
+                            }else{
+                            	if (!taskRecvFileId) {
+                            		$("#taskRecvFileId").val(data.data.id);
+                            	}
+                                parent.layer.msg("添加成功");
+                            }
+                        }
+                    });
+
+               // });
+            }
+        });
+
+        $('#btnClose').click(function (){
+            parent.layer.confirm("您确定关闭吗？",{btn: ['确定','取消'],shade: false },function(index) {
+                window.location.href = '/gxqpt-fast/fast/${appId}/document/taskRecvFile';
+                parent.layer.close(index);
+            });
+		})
+		/*function submitFrom(){
+		}*/
+		
+		/*
+		 自动获取页面控件值
+		 */
+	    function GetWebControls(element) {
+	        var reVal = "";
+	        $(element).find('input,select,textarea').each(function (r) {
+	            var id = $(this).prop('name');
+	            var value = $(this).val();
+	            var type = $(this).prop('type');
+	            if(id){
+	                switch (type) {
+	                    case "checkbox":
+	                        if ($(this).prop("checked")) {
+	                            reVal += '"' + id + '"' + ':' + '"1",';
+	                        } else {
+	                            reVal += '"' + id + '"' + ':' + '"0",';
+	                        }
+	                        break;
+	                    case "radio":
+	                        if ($(this).prop("checked")) {
+	                            reVal += '"' + id + '":' + '"' + $.trim(value) + '",';
+	                        }
+	                        break;
+	                    default:
+	                        if (value != null && $.trim(value) != "") { //如果值为空就传空，不需要传空格 -wgj
+	                            reVal += '"' + id + '"' + ':' + '"' + $.trim(value) + '",';
+	                        }else{
+	                        	reVal += '"' + id + '"' + ':' + 'null,';
+	                        }
+	                        break;
+	                }
+	            }
+	        });
+	        reVal = reVal.substr(0, reVal.length - 1);
+	        reVal = reVal.replace(/\\/g, '\\\\');
+	        reVal = reVal.replace(/\n/g, '\\n');
+	        return jQuery.parseJSON('{' + reVal + '}');
+	    }
+
+	function btnSubmitAdvise(){
+		var taskRecvFileId = $("#taskRecvFileId").val();
+		if(!taskRecvFileId){
+				parent.layer.alert("请先提交收文信息，再添加任务");
+				return ;
+		}
+		var adviseFrom = GetWebControls("#adviseFrom");
+		adviseFrom["id"]=taskRecvFileId;
+		$.ajax({
+			url: "",
+			type: "post",
+			dataType: 'json',
+			data: adviseFrom,
+			success: function(date){
+				if(date.success){
+					parent.layer.msg("添加成功");
+				}
+			}
+		});
+	} 
+	var empInfo = new Object();
+	function loadAllEmp(){
+		$.ajax({
+			url: "",
+			dataType: 'json',
+			success: function(date){
+				for (var i = 0; i < date.length; i++) {
+					empInfo[date[i].empName] = date[i];
+				}
+			}
+		});
+	}
+	loadAllEmp();
+	
+	var FileNoCache = {};
+	$(function (){
+	
+		var fileNo1 = $("#fileNo1Input").val();
+		if(fileNo1 && fileNo1.length > 1){
+			var fileType = $("#fileTypeselect").val();
+			var fileNo2 = $("#fileNo2Input").val();
+			var fileNos = [];
+			fileNos.push(fileNo1);
+			if(fileNo2 && fileNo2.length>1){
+				fileNos.push(fileNo2);
+			}
+			FileNoCache[fileType] = fileNos;
+		}
+		
+		$("#fileTypeselect").trigger("change");
+	})
+	function changeFileNo(obj){
+		var  fileNos = FileNoCache[obj.value];
+		if(fileNos != null){
+			putFileNo(fileNos);
+			return ;
+		}
+		$.ajax({
+		
+			url:"",
+			dataType:"json",
+			success:function (fileNos){
+				putFileNo(fileNos);
+				FileNoCache[obj.value] = fileNos;
+			}
+		});
+	}
+	
+	function putFileNo(fileNos){
+		$("#fileNo1Input").val(fileNos[0]);
+		$("#fileNo2Input").val(fileNos[1]?fileNos[1]:"");
+	}
+	</script>
+	<!--end 自定义JS -->
+</body>
+</html>

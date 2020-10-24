@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- 引入meta -->
+    <!-- begin 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css"
+          href="${_static}/css/reset.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib }/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib }/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib }/font-awesome/css/font-awesome.min.css">
+    <!--
+    <link rel="stylesheet" type="text/css"
+        href="${_lib}/chosen/chosen.min.css">
+    -->
+    <link rel="stylesheet" type="text/css" href="${_lib }/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib }/webuploader/webuploader.css">
+
+    <link rel="stylesheet" type="text/css" href="${_lib }/layer/skin/layer.css">
+
+    <link rel="stylesheet"
+          href="${_static}/themes/blue/css/ui.css">
+
+    <link rel="stylesheet" href="${_static}/css/app.css">
+    <!-- end 外部CSS引入 -->
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+
+    <!-- begin 自定义样式 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        label.control-label {
+            text-align: right;
+        }
+
+        table.infoList tr th {
+            border: 1px solid #e1e6eb;
+            padding: 10px 12px;
+            vertical-align: middle;
+            width: 180px;
+            font-weight: normal;
+        }
+
+        table.infoListTab tr th {
+            width: auto;
+        }
+
+        .upuserhead {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .uploader {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td input.form-control {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td select.form-control {
+            width: 100%;
+        }
+
+        .changeRed {
+            color: red;
+        }
+        .changeBlue {
+            color: blue;
+        }
+    </style>
+    <!-- end   自定义样式 -->
+</head>
+<body>
+
+<div class="workspace-body">
+
+    <div class="console-container">
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>会议管理</h5>
+                    </div>
+                    <div id="createRole" class="pull-right">
+                        <button class="btn btn-primary btn-create">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            新增会议
+                        </button>
+                        <!--<button class="btn btn-primary btn-remindset">-->
+                            <!--<span class="glyphicon glyphicon-plus"></span>-->
+                            <!--提醒设置-->
+                        <!--</button>-->
+                    </div>
+                </div>
+                <!-- end 标题 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <div class="pull-left margin-top-1">
+                                    <form action="" class="form-inline search-form">
+
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>会议名称：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <input id="meetName" class="form-control" name="name"/>
+                                                </div>
+                                            </div>
+
+                                            <!--<div class="form-group">-->
+                                                <!--<label class="control-label">-->
+                                                    <!--<span class="text-danger"></span>-->
+                                                    <!--<span>会议时间：</span>-->
+                                                <!--</label>-->
+                                                <!--<div class="form-control-wrap ">-->
+                                                    <!--<input class="form-control Wdate" name="conferenceDate"/>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>参会状态：</span>
+                                                </label>
+                                                <div class="form-control-wrap ">
+                                                    <select id="joinStatusSel" name="joinStatus" class="form-control select-w"
+                                                            style="width: 153px;">
+                                                        <option value="-1">全部</option>
+                                                        <option value="0">通知中</option>
+                                                        <option value="1">确认参加</option>
+                                                        <option value="2">不参加</option>
+                                                        <option value="3">发起人</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>会议状态：</span>
+                                                </label>
+                                                <div class="form-control-wrap ">
+                                                    <select id="meetStatusSel" name="meetStatus" class="form-control select-w"
+                                                            style="width: 153px;">
+                                                        <option value="-1">全部</option>
+                                                        <option value="1">通知中</option>
+                                                        <option value="2">部分确认</option>
+                                                        <option value="3">全部确认</option>
+                                                        <option value="4">已取消</option>
+                                                        <option value="5">部分拒绝</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap text-right">
+                                                    <button type="button" class="btn btn-primary search-button">
+                                                        <span class="glyphicon glyphicon-search"></span>
+                                                        查询
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                                <div class="col-sm-12" style="padding:0;">
+
+                                    <div>
+                                        <div class="inline-block"></div>
+                                        <div class="inline-block margin-left"></div>
+                                    </div>
+
+                                    <!-- begin 表格 -->
+                                    <div class="grid-section">
+
+                                        <table id="list">
+                                        </table>
+
+                                        <div id="pager"></div>
+
+                                    </div>
+                                    <!-- end 表格  -->
+
+                                </div>
+
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+
+<!--begin 外部JS引入 -->
+
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js?v=1.0.0"></script>
+
+<!--end 外部JS引入 -->
+
+<!--begin 自定义JS -->
+<script type="text/javascript">
+    $("#createRole").css("display", "none");
+    var createStatus = "${createMeet}";
+    var approveStatus = "${approveMeet}";
+    if (createStatus == 1) {
+        $("#createRole").css("display", "block");
+    }
+
+    $(function () {
+        var meetStatus = $("#meetStatusSel").val();
+        var joinStatus = $("#joinStatusSel").val();
+        var meetName = $("#meetName").val();
+        $("#list").jqGrid({
+            mtype: 'POST',
+            url:"${_gate_url}/api/developer/meet/findMeetList",
+            postData:{data:{appId : "${appId!''}", name:meetName,meetStatus: meetStatus, joinStatus: joinStatus},pageNo:1,pageSize:20},
+            datatype:"json",
+            contentType:'application/json',
+            serializeGridData:function(postData){
+                return JSON.stringify(postData);
+            },
+            colNames: ['会议名称', '会议主持人', '出席领导', '会议时间', '会议地点', '参会人员', '会议通知时间', '会议状态', '参会状态', '会议备注', '参会备注', '操作'],
+            colModel: [
+                {name: 'meetName', index: 'meetName', sortable: false},
+                {name: 'moderator', index: 'moderator', sortable: false},
+                {name: 'joinLeader', index: 'joinLeader', sortable: false},
+                {name: 'startTime', index: 'startTime'},
+                {name: 'meetAddress', index: 'meetAddress', sortable: false},
+                {name: 'meetJoiners', index: 'meetJoiners', sortable: false},
+                {name: 'noticeTime', index: 'noticeTime', sortable: false},
+                {name: 'meetStatus', index: 'meetStatus', sortable: false, formatter:function (cellValue, options, rowObject) {
+                    switch (cellValue){
+                        case 1:
+                            return "通知中";
+                        case 2:
+                            return "部分确认";
+                        case 3:
+                            return "全部确认";
+                        case 4:
+                            return "已取消";
+                        case 5:
+                            return "部分拒绝";
+                    }
+                }},
+                {name: 'joinStatus', index: 'joinStatus', sortable: false, formatter:function (cellValue, options, rowObject) {
+                    switch (cellValue){
+                        case 0:
+                            return "通知中";
+                        case 1:
+                            return "确认参加";
+                        case 2:
+                            return "不参加";
+                        case 3:
+                            return "发起人";
+                    }
+                }},
+                {name: 'meetRemark', index: 'remark', sortable: false},
+                {name: 'remark', index: 'remark', sortable: false},
+                {name: 'act', title: false, width: '400', sortable: false, formatter: function (cellValue, options, rowObject) {
+                    var cancel = '<a href="' + '${_cp}/fast/${appId}/meet/cancel?id=' + rowObject.id + '" class="handle">取消</a>';
+                    var deal = '<a href="' + '${_cp}/fast/${appId}/meet/deal?id=' + rowObject.id + '" class="handle">处理</a>';
+                    var detail = '<a href="' + '${_cp}/fast/${appId}/meet/view?id=' + rowObject.id + '" class="handle">详情</a>';
+                    //如果会议已经取消， 就啥也不能操作了
+                    if (rowObject.meetStatus == 4){
+                        return detail;
+                    }
+                    //只有发起人可以取消会议
+                    if (rowObject.joinStatus == 3){
+                        return cancel +"  " + detail;
+                    }else if (rowObject.joinStatus == 0 ){
+                        //只处理在通知中的会议，已经处理过的就不重复处理了
+                        return deal +"  " + detail;
+                    }else{
+                        return detail;
+                    }
+                }}],
+            jsonReader : {
+                root:"data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            onPaging:function(pgButton){
+
+                var pageNo=$(".ui-pg-input").val();
+                pageNo=parseInt(pageNo);
+                var total=$("#sp_1_pager_toppager").text();
+                total=parseInt(total);
+                if(pgButton=="next"){
+                    if(pageNo>=total){
+                        return false;
+                    }else{
+                        pageNo+=1;
+                    }
+                }else if(pgButton=="prev"){
+                    if(pageNo>1){
+                        pageNo-=1;
+                    }else{
+                        return false;
+                    }
+                }else if(pgButton=="last"){
+                    pageNo=total;
+                }else if(pgButton=="first"){
+                    pageNo=1;
+                }
+                var pageSize=$(".ui-pg-selbox").val();
+                if(pageNo!=0){
+                    $("#list").setGridParam({postData: {data:{appId : "${appId!''}", name:meetName,meetStatus: meetStatus},pageNo:pageNo,pageSize:pageSize}}).trigger("reloadGrid");
+                    return false;
+                }
+            },
+            pager: '#pager',
+            height: 'auto'
+        });
+
+        // 初始化查询按钮
+        $("button.search-button").click(function () {
+            var meetStatus = $("#meetStatusSel").val();
+            var joinStatus = $("#joinStatusSel").val();
+            var meetName = $("#meetName").val();
+            var data = {data:{appId : "${appId!''}",name:meetName,meetStatus: meetStatus, joinStatus: joinStatus},pageNo:1,pageSize:20};
+            $("#list").setGridParam({postData: data}).trigger("reloadGrid");
+        })
+
+    });
+
+
+    /**
+     * 注册返回按钮点击事件
+     */
+    $("button.btn-create").click(function () {
+        window.location.href = 'create';
+
+    });
+    /**
+     * 提醒设置按钮点击事件
+     */
+    $("button.btn-remindset").click(function () {
+        window.location.href = 'remindSet';
+
+    });
+
+    function aDelete(index) {
+        var trObj = $(index).parent().parent();
+        var trObjChild = $(index).parent().parent().find('td')[1];
+        var Id = $(trObj).attr("id");
+        var name = $(trObjChild).attr("title");
+        $(this).removePromote({
+            controlId: '#list',//jqgrad表格id
+            controlName: '您确定要删除会议名称为' + name + '的工作计划信息吗？',//提示内容
+            url: '${_gate_url}/deleteById.do',//删除操作的路径
+            id: Id,//参数Id
+            successInfo: '删除成功！',//成功后的提示信息
+            errorInfo: '删除失败,请重试！'//失败后的提示信息
+        });
+    }
+</script>
+<!--end 自定义JS -->
+</body>
+</html>

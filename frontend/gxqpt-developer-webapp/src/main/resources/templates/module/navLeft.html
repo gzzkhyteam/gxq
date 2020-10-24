@@ -1,0 +1,175 @@
+<div class="left-slider">
+    <div class="title-bar">
+        工作台
+    </div>
+    <!-- <a id="myTask" href="${_cp}/module/myTaskList" class="list-group clearfix">
+        <div class="app-icon app-icon5"></div>
+        <div class="text-title">
+            我的任务
+        </div>
+    </a>
+    <a id="appService" href="${_cp}/module/appList" class="list-group clearfix">
+        <div class="app-icon app-icon1"></div>
+        <div class="text-title">
+            应用管理
+        </div>
+    </a>
+    <a id="provide" href="${_cp}/module/provideList" class="list-group clearfix">
+        <div class="app-icon app-icon1"></div>
+        <div class="text-title">
+            功能管理
+        </div>
+    </a>
+    <a id="myCall" href="${_cp}/module/myCallList" class="list-group clearfix">
+        <div class="app-icon app-icon1"></div>
+        <div class="text-title">
+            调用管理
+        </div>
+    </a>
+    <a id="hostManage" href="${_cp}/module/hostList" class="list-group clearfix">
+        <div class="app-icon app-icon3"></div>
+        <div class="text-title">
+            主机管理
+        </div>
+    </a>
+    <div id="typeManage" class="list-group clearfix open">
+        <div class="app-icon app-icon2"></div>
+        <div class="text-title">
+            类型维护
+        </div>
+        <i class="right-icon fa fa-angle-left"></i>
+        <ul class="list-box">
+            <li id="appType" class="list-item text-title"><a href="${_cp}/module/appTypeList">应用类型维护</a></li>
+            <li id="functionType" class="list-item text-title"><a href="${_cp}/module/functionTypeList">功能类型维护</a></li>
+        </ul>
+    </div>
+    <a id="functionCallTrack" href="${_cp}/module/functionCallTrack" class="list-group clearfix">
+        <div class="app-icon app-icon8"></div>
+        <div class="text-title">
+            功能调用跟踪
+        </div>
+    </a>
+    <a id="callAnalysis" href="${_cp}/module/peakAnalysis" class="list-group clearfix">
+        <div class="app-icon app-icon8"></div>
+        <div class="text-title">
+            调用情况分析
+        </div>
+    </a> -->
+</div>
+
+    <script type="text/javascript">
+        var flag = true;
+        $(function () {
+            var menuList = resourceJs.init("${_gate_url!''}", "${_app_id!''}", "${l_u_i_s.id!''}").findMenu({cache: true});
+            if(!menuList || menuList.length < 1){
+            	return ;
+            }
+            var menuHtml = builderMenu(menuList,1);
+            $(".left-slider").append(menuHtml);
+            menBudilerSuccessPostProce();
+        });
+        function builderMenu(menuList,level){
+			if(menuList && menuList.length>0) {
+				var html="";
+            	if(level > 1){
+            		html = '<i class="right-icon fa fa-angle-left"></i><ul class="list-box">';
+            	}
+
+                for (var i = 0; i < menuList.length; i++) {
+                    var menu = menuList[i];
+                    var lastStr = getMenuLastStr(menu.url);
+                    if(level > 1){
+                    	html += '<li id="'+lastStr+'" class="list-item text-title"><a href="${_cp}/'+menu.url+'">'+menu.name+'</a></li>';
+                    	//html += builderMenu(menu.children,level+1);
+                    	continue ;
+                    }
+                    if(!menu.children || menu.children.length == 0){
+                    	html += '<a id="'+lastStr+'" href="${_cp}/'+menu.url+'" class="list-group clearfix"><div class="app-icon '+menu.icon+'"></div><div class="text-title">'+menu.name+'</div></a>';
+                    } else {
+                    	html += '<div id="typeManage" class="list-group clearfix open"><div class="app-icon '+menu.icon+'"></div><div class="text-title">类型维护</div>';
+                    	html += builderMenu(menu.children,level+1);
+                    	html += '</ul></div>';
+                    }
+
+                }
+                return html;
+            } else {
+				return "";
+			}
+		}
+
+        function getMenuLastStr(url){
+
+        	if(!url){
+        		return "";
+        	}
+            var index = url.lastIndexOf("/");
+            if(index < 0){
+            	return url;
+            } else {
+            	return url.substring(index+1,1000);
+            }
+        }
+    </script>
+    
+
+<script>
+        var openVal = "";
+        function menBudilerSuccessPostProce(){
+        	
+            //初始化左边的菜单栏
+            initLeftSlider();
+            /*左边菜单栏图标新增鼠标悬浮事件*/
+            $('.left-slider .list-group').mouseenter(function () {
+                openVal = $(this).hasClass('open')
+                $(this).addClass("open");
+            })
+            $('.left-slider .list-group').mouseleave(function () {
+                if (!openVal) {
+                    $(this).removeClass("open");
+                }
+            })
+            /*左边菜单栏图标新增鼠标悬浮事件*/
+
+            /*点击打开菜单*/
+            $('.left-slider .list-group').click(function () {
+                var _this = $(this);
+                _this.siblings().removeClass('open').find('.list-box').slideUp();
+                _this.siblings().find('.right-icon').removeClass('fa-angle-down').addClass('fa-angle-left');
+                if (openVal) {
+                    openVal = false;
+                    _this.removeClass("open");
+                    _this.find('.list-box').slideUp();
+                    _this.find('.right-icon').removeClass('fa-angle-down').addClass('fa-angle-left');
+                } else {
+                    _this.addClass("open");
+                    openVal = true;
+                    _this.find('.list-box').slideDown();
+                    _this.find('.right-icon').removeClass('fa-angle-left').addClass('fa-angle-down');
+                }
+            })
+            /*阻止点击单项关闭组的问题*/
+            $('.left-slider .list-group .list-box').click(function (e) {
+                e.stopPropagation();
+            });
+        }
+
+        
+        function initLeftSlider() {
+            $('.left-slider .list-group').removeClass("open");
+            $('.left-slider .list-group').removeClass("active");
+            if (pageType.open) {
+                $.each(pageType.open, function (idx, val) {
+                    $('#' + val).addClass("open");
+                })
+                $.each(pageType.act, function (idx, val) {
+                    $('#' + val).addClass("active");
+                })
+            } else {
+                $('#' + pageType).addClass("open");
+            }
+            var listGroup = $('.left-slider .list-group.open');
+            $(listGroup).find('.right-icon').removeClass('fa-angle-left').addClass('fa-angle-down');
+            $(listGroup).find('ul.list-box').slideDown();
+        }
+</script>

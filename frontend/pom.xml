@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.hengyunsoft</groupId>
+		<artifactId>hengyun-boot-dependencies</artifactId>
+		<version>1.1-SNAPSHOT</version>
+	</parent>
+
+	<groupId>com.hengyunsoft.gxqpt</groupId>
+	<artifactId>gxqpt-frontend</artifactId>
+	<version>1.1-SNAPSHOT</version>
+	<modules>
+		<module>base-frontend</module>
+		<module>gxqpt-center-webapp</module>
+		<module>gxqpt-authority-webapp</module>
+		<module>gxqpt-standard-webapp</module>
+		<module>gxqpt-msgs-webapp</module>
+		<module>gxqpt-logs-webapp</module>
+		<module>gxqpt-sms-webapp</module>
+		<module>gxqpt-modular-webapp</module>
+		<module>gxqpt-warn-webapp</module>
+		<module>gxqpt-file-webapp</module>
+		<module>gxqpt-developer-webapp</module>
+		<module>gxqpt-search-webapp</module>
+		<module>gxqpt-exchange-webapp</module>
+		<!-- <module>gxqpt-fast-webapp</module> -->
+		<module>gxqpt-screen-webapp</module>
+		<module>gxqpt-mt-webapp</module>
+	</modules>
+	<name>${project.artifactId}</name>
+
+	<description>一体化平台基础包</description>
+	<packaging>pom</packaging>
+
+	<properties>
+		<beetl.starter.version>0.0.3</beetl.starter.version>
+		<shiro-version>1.4.0</shiro-version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.hengyunsoft</groupId>
+				<artifactId>sso-core-client</artifactId>
+				<version>2.0-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-core</artifactId>
+				<version>${shiro-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-spring</artifactId>
+				<version>${shiro-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-ehcache</artifactId>
+				<version>${shiro-version}</version>
+			</dependency>
+
+
+			<!--<dependency> -->
+			<!--<groupId>com.piggsoft</groupId> -->
+			<!--<artifactId>beetl-spring-boot-starter</artifactId> -->
+			<!--<version>${beetl.starter.version}</version> -->
+			<!--</dependency> -->
+			<!--<dependency> -->
+			<!--<groupId>com.piggsoft</groupId> -->
+			<!--<artifactId>beetl-spring-boot-autoconfigue</artifactId> -->
+			<!--<version>0.0.3</version> -->
+			<!--</dependency> -->
+			<!--<dependency> -->
+			<!--<groupId>com.ibeetl</groupId> -->
+			<!--<artifactId>beetl</artifactId> -->
+			<!--<version>${beetl.version}</version> -->
+			<!--</dependency> -->
+			<!--<dependency> -->
+			<!--<groupId>com.ibeetl</groupId> -->
+			<!--<artifactId>beetl-framework-starter</artifactId> -->
+			<!--<version>1.1.12.RELEASE</version> -->
+			<!--</dependency> -->
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<!-- 热部署 -->
+		<!--<dependency> -->
+		<!--<groupId>org.springframework.boot</groupId> -->
+		<!--<artifactId>spring-boot-devtools</artifactId> -->
+		<!--<optional>true</optional> -->
+		<!--<scope>true</scope> -->
+		<!--</dependency> -->
+		<!--<dependency> -->
+		<!--<groupId>org.springframework.boot</groupId> -->
+		<!--<artifactId>spring-boot-configuration-processor</artifactId> -->
+		<!--<optional>true</optional> -->
+		<!--</dependency> -->
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<!-- 资源文件拷贝插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<!-- java编译插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>

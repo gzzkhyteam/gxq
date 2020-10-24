@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>数据源管理</span> &gt; <span class="page-title-scend">数据源详情</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="window.location.href='${_cp}/module/dataSourceList?pageNo=${pageNo}'">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div id="unit" class="view_item">
+								<table class="table default-table tab-border-no-layer borderCollapse">
+									<tbody>
+										<tr>
+											<th width="130">数据源名称：</th>
+											<td id="sourceName" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>数据库类型：</th>
+											<td id="dbType" class="viewTd"></td>
+										</tr>
+										<tr class="tr_hidden name">
+											<th>数据库名称：</th>
+											<td id="dbName" class="viewTd"></td>
+										</tr>
+										<tr class="tr_hidden typeConnect">
+											<th>连接类型：</th>
+											<td id="contType" class="viewTd"></td>
+										</tr>
+										<tr class="tr_hidden ipAddress">
+											<th>主机名或IP地址：</th>
+											<td id="dbAddress" class="viewTd"></td>
+										</tr>
+										<tr class="tr_hidden port">
+											<th>端口：</th>
+											<td id="dbPort" class="viewTd"></td>
+										</tr>
+										<tr class="tr_hidden serverOrSid">
+											<th id="serverName">服务名：</th>
+											<td id="serverType" class="viewTd"></td>
+										</tr>
+										<!--<tr class="tr_hidden database">
+											<th>初始数据库：</th>
+											<td class="viewTd"></td>
+										</tr>
+										<tr class="tr_hidden Verification">
+											<th>验证：</th>
+											<td class="viewTd"></td>
+										</tr>-->
+										<tr class="tr_hidden userName">
+											<th>用户名：</th>
+											<td id="dbAccount" class="viewTd"></td>
+										</tr>
+										<!--<tr class="tr_hidden password">
+											<th>密码：</th>
+											<td id="dbPassword" class="viewTd"></td>
+										</tr>-->
+										<!--<tr class="tr_hidden SQLite">
+											<th>类型：</th>
+											<td class="viewTd"></td>
+										</tr>
+										<tr class="tr_hidden SQLite">
+											<th>数据库文件：</th>
+											<td class="viewTd"></td>
+										</tr>-->
+										<tr>
+											<th>关联系统：</th>
+											<td id="unitId" class="viewTd"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+            /*获取关联系统*/
+            /* var systemListInfo=[]
+            getSystemList();
+            function getSystemList(){
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/dataapi/system/findSelectInfo',
+                    success:function(rows){
+                        if(rows.data){
+                            rows.data.forEach(function(value,index){
+                                systemListInfo.push(value);
+                                getInfo("${id}");
+                            });
+                        }
+                    }
+                });
+            };*/
+            getInfo("${id}");
+            function getInfo(id){//获取详情
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/dataapi/dbSource/getById',
+                    data:{id:id},
+                    success:function(rows){
+                        if (rows.data){
+                            rows.data = dealElement(rows.data,"");
+                            $("#sourceName").text(rows.data.sourceName);
+                            if(rows.data.dbType==2){
+                                $(".tr_hidden").css("display","none");
+                                $(".name, .ipAddress, .port, .userName, .password").css("display","table-row");
+                                $("#dbType").text("Mysql");
+                            }else if(rows.data.dbType==1){
+                                $(".tr_hidden").css("display","none");
+                                $(".name,.serverOrSid, .ipAddress, .port, .userName, .password").css("display","table-row");
+                                $("#dbType").text("Oracle");
+                            }else if(rows.data.dbType==3){
+                                $(".tr_hidden").css("display","none");
+                                $(".name, .ipAddress, .Verification, .userName, .password").css("display","table-row");
+                                $("#dbType").text("SQL Server");
+                            }
+                            $("#dbName").text(rows.data.dbName);
+                            $("#contType").text(rows.data.contType);
+                            $("#dbAddress").text(rows.data.dbAddress);
+                            $("#dbPort").text(rows.data.dbPort);
+                            // $("#serverType").text(rows.data.serverType);
+							if(rows.data.serverType==0){
+                                $("#serverName").text("服务名：");
+                                $("#serverType").text(rows.data.dbName);
+							};
+							if(rows.data.serverType==1){
+                                $("#serverName").text("SID：");
+                                $("#serverType").text(rows.data.dbName);
+							};
+                            $("#dbAccount").text(rows.data.dbAccount);
+                            // $("#dbPassword").text(rows.data.dbPassword);
+                            $("#unitId").text(rows.data.systemName);
+                            /*systemListInfo.forEach(function(row,index){
+                                if(row.unitId==rows.data.unitId){
+                                    $("#unitId").text(row.sysName);
+                                }
+                            });*/
+							updateIformHeight();
+                        }
+                    }
+                });
+            }
+            //格式化对象中的值
+            function dealElement(obj,val){
+                if ( obj === null || obj === undefined || obj === "" ) return obj;
+                for ( var key in obj ){
+                    if ( obj[key] == null){
+                        obj[key]=val;
+                    }
+                }
+                return obj;
+            }
+		</script>
+	</body>
+</html>

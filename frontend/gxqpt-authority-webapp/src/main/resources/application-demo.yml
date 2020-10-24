@@ -1,0 +1,59 @@
+##################################################
+# 注意: 正式环境配置文件
+# 这个配置文件中reids，rabbitmq，eureka等资源链接正式服务器
+##################################################
+gxqpt:
+  protocol: http
+  variable:
+    gate-url: ${gxqpt.protocol}://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}   # 统一网关的链接前缀
+  hostname:
+    redis: 192.168.30.165     # 根据自己环境修改
+    rabbitmq: 192.168.30.165   # 根据自己环境修改
+    nginx: 127.0.0.1       # 根据自己环境修改
+    eureka: 192.168.30.80     # 根据自己环境修改
+    center: 192.168.30.84
+    gate: 192.168.30.81     # 根据自己环境修改
+    authority: 192.168.30.84  # 根据自己环境修改
+  config:
+    logout-url: ${gxqpt.protocol}://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${gxqpt.context-path.center}/admin/index
+    index-url: ${gxqpt.protocol}://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path:}/module/index
+    login-url: ${gxqpt.protocol}://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path:}/login
+  port:
+    nginx: 10087
+    eureka: 10030
+    gate: 10003
+    center: 10001
+
+sso:
+  local-ip: ${gxqpt.hostname.authority}
+  local-port: ${server.port}
+  server-ip: ${gxqpt.hostname.center}         #    [统一认证 center-webapp ip]
+  server-port: ${gxqpt.port.center}           #  【统一认证 center-webapp 端口】
+  callback-logout-url: http://${sso.local-ip}:${sso.local-port}${server.context-path}/login/logout    #退出是center系统通知本系统，故走内网
+  service: ${gxqpt.protocol}://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path}/login/validate    #在center登录成功后，是浏览器重定向跳转到本系统，故是外网地址
+  validate-url: http://${sso.server-ip}:${sso.server-port}${gxqpt.context-path.center}/svalidate      #验证是本系统直接去center系统获取登录者信息，故内网地址
+  sso-server-login-url: ${gxqpt.protocol}://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${gxqpt.context-path.center}/slogin  #本系统重定向到center系统去登录的地址    故外网地址
+  sso-server-logout-url: ${gxqpt.protocol}://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${gxqpt.context-path.center}/logout   #本系统重定向到center系统去退出的地址    故外网地址
+
+
+spring:
+  profiles:
+    active: demo
+  rabbitmq:
+    port: 5672
+    password: gxqpt
+    username: gxqpt
+  redis:
+    port: 16379
+    password: SbtyMveYNfLzTks7H0apCmyStPzWJqjy
+    key-prefix: demo
+    pool:
+      max-active: 100
+      min-idle: 2
+      max-idle: 8
+      max-wait: 100
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/

@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+<script type="text/javascript" src="${_js}/uploadfile.js"></script>
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+<!-- begin 外部CSS引入 -->
+<link type="text/css" rel="stylesheet" href="${_lib }/jqgrid/css/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${_lib }/font-awesome/css/font-awesome.min.css">
+<link type="text/css" rel="stylesheet" href="${_lib }/chosen/chosen.min.css">
+<link type="text/css" rel="stylesheet" href="${_lib }/webuploader/webuploader.css">
+<link type="text/css" rel="stylesheet" href="${_lib }/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=1.0.0">
+    <link rel="stylesheet" href="${_static}/css/app.css?v=1.0.0">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+
+<!-- end 外部CSS引入 -->
+<!-- 自定义样式 begin -->
+<style type="text/css">
+    .row {
+        margin: 0 0;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+    }
+
+    .list-section {
+        padding-bottom: 24px;
+        background: #fff;
+    }
+
+    .form-inline .control-label {
+        margin-bottom: 0;
+        margin-left: -16px;
+        vertical-align: middle;
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+        margin: 4px 0px 0;
+        margin-right: 10px;
+        margin-bottom: 3px;
+        margin-left: 70px;
+        margin-top: 5px;
+        line-height: normal;
+    }
+
+    .downFile {
+        background: #28b5d6;
+        margin-top: 9px;
+        margin-left: 10px;
+    }
+
+    .align_center {
+        text-align: center;
+    }
+
+    .filelist li {
+        list-style: none;
+        width: 180px;
+        height: 180px;
+        margin-right: 15px;
+        margin-bottom: 15px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .filelist .title {
+        width: 100%;
+        height: 25px;
+        color: #f5f5f5;
+        background: rgba(0, 0, 0, 0.5);
+        text-align: center;
+        line-height: 25px;
+        transform: rotate(45deg);
+        position: absolute;
+        top: 30px;
+        right: -50px;
+
+    }
+
+    .filelist .file-panel {
+        position: absolute;
+        z-index: 10;
+        bottom: -30px;
+        background: rgba(0, 0, 0, 0.5);
+        width: 100%;
+        text-align: right;
+        padding: 5px;
+    }
+
+    .imgWrap {
+        line-height: 180px;
+        text-align: center;
+        background: #ccc;
+    }
+</style>
+<!-- 自定义样式 end -->
+
+
+</head>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>请假申请审批详情</h5>
+                    </div>
+
+                    <div class="pull-right">
+
+                        <button class="btn btn-default go-back">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            返回
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="col-sm-12">
+                        <input type="hidden" id="aproveType" value="">
+                        <div class="inline-block"></div>
+                        <div class="inline-block margin-left"></div>
+
+                        <!--  可查看-->
+                        <div class="form-horizontal view-info">
+                            <div class="qingjia">
+                                <fieldset>
+                                    <ul>
+                                        <li>
+                                            <label class="view-lab1 widths">申请人</label><span
+                                                class="view-text"></span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">请假类型</label><span
+                                                class="view-text"></span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">开始时间</label><span
+                                                class="view-text"> </span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">结束时间</label><span
+                                                class="view-text"> </span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">工作代理人</label><span
+                                                class="view-text"></span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">提交时间</label><span
+                                                class="view-text"></span>
+                                        </li>
+                                        <li class="col1">
+                                            <label class="view-lab1 widths">请假事由</label><span class="view-text"
+                                                                                              style="width: calc(100% - 127px);line-height: normal;overflow: auto"></span>
+                                        </li>
+
+                                    </ul>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <h5>附件展示信息</h5>
+                        <ul class="filelist">
+
+                        </ul>
+
+
+                                            <fieldset>
+                                                <h5>审批意见</h5>
+                                                <div>
+                                                    <table class="table defaultTable defaultTableTop">
+                                                        <tbody>
+                                                        <tr>
+                                                            <th>审批意见</th>
+                                                            <td>
+                                                                同意！！！
+                                                                驳回！！！
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>说明</th>
+                                                            <td></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </fieldset>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<script type="text/javascript" src="${_js}/lib/webuploader/HYCore.js"></script>
+<!--end 外部JS引入 -->
+
+<!-- 自定义JS -->
+<script type="text/javascript">
+    var aproveType = $("#aproveType").val();
+    var vs = "请假申请";
+    if (aproveType == "1") {
+        vs = "请假申请";
+    } else if (aproveType == "2") {
+        vs = "出差申请";
+    } else {
+        vs = "";
+    }
+    if ("请假申请" == vs) {
+        $(".qingjia").css("display", "block");
+        $(".chuchai").css("display", "none");
+        $(".putong").css("display", "none");
+    } else if ("出差申请" == vs) {
+        $(".qingjia").css("display", "none");
+        $(".chuchai").css("display", "block");
+        $(".putong").css("display", "none");
+    } else {
+        $(".qingjia").css("display", "none");
+        $(".chuchai").css("display", "none");
+        $(".putong").css("display", "block");
+    }
+    function downLoad() {
+        window.location.href = "${_cp}/bg/comm/file/downLoaderZip.do?applyId=";
+    }
+    $(function () {
+        $(".filelist li").each(function () {
+            $(this).hover(function () {
+                $(this).find(".file-panel").animate({
+                    bottom: 0
+                })
+            }, function () {
+                $(this).find(".file-panel").animate({
+                    bottom: "-30px"
+                })
+            })
+        })
+    })
+</script>
+
+
+</body>
+</html>

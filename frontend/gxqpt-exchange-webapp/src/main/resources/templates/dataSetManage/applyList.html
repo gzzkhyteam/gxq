@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>数据集审核</span>
+						</h3>
+					</div>
+				</div>
+				<div class="main_container row">
+					<form id="searchApplyDataSetForm" action="" class="search-form" autocomplete="off">
+						<ul class="clearfix">
+							<li class="pull-left magRt8">
+								<label class="control-label">数据集名称：</label>
+                            	<input name="setName" class="w120" placeholder=""/>
+							</li>
+							<li class="pull-left magRt8">
+								<label class="control-label">关联目录：</label>
+								<input name="dirName" class="w120" placeholder=""/>
+							</li>
+							<li class="pull-left magRt8">
+								<label class="control-label">申请类型：</label>
+                            	<select id="applyType" name="applyType" class="chosen-select w100">
+                                	<option value="">全部</option>
+                                    <option value="1">新增</option>
+                                    <option value="2">修改</option>
+                                </select>
+							</li>
+							<li class="pull-left magRt8">
+								<label class="control-label">审核状态：</label>
+                            	<select id="type" name="status" class="chosen-select w100">
+                                	<option value="">全部</option>
+                                    <option value="1">审批</option>
+                                    <option value="2">驳回</option>
+                                    <option value="3">已上架</option>
+                                    <option value="4">已下架</option>
+                                </select>
+							</li>
+							<li class="pull-left magRt8">
+								<label class="control-label">申请时间：</label>
+                            	<input id="first" name="startTime" class="Wdate w120" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd', maxDate:'#F{$dp.$D(\'end\')||\'%y-%M-%d\'}'})" placeholder=""/>
+                            	<span class="color-warning">-</span>
+								<input id="end" name="endTime" class="Wdate w120" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd', minDate:'#F{$dp.$D(\'first\')}',maxDate:'%y-%M-%d'})" placeholder=""/>
+							</li>
+							<li class="pull-right marginAuto">
+								<button type="button" class="btn btn-primary search-button" onclick="searchBtn()">
+                            		<span class="glyphicon glyphicon-search"></span> 查询
+                                </button>
+							</li>
+						</ul>
+                    </form>
+					<table id="dataSetAppList" class="default-table tab-title-top">
+						<thead>
+							<tr>
+								<!--<th width="60">选择</th>-->
+								<th>数据集名称 </th>
+								<th>数据集标识</th>
+								<th>申请类型</th>
+								<th>数据类型</th>
+								<th>创建理由</th>
+								<th width="180">申请时间</th>
+								<th>审核状态</th>
+								<th>处理意见</th>
+								<th width="140">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!--<tr>
+								<td>
+									<input type="checkbox"  name="checkbox"/>
+								</td>
+								<td>人口信息 </td>
+								<td>HSMNJ</td>
+								<td>人口信息</td>
+								<td>HSMNJ</td>
+								<td>上架申请</td>
+								<td>结构化</td>
+								<td>2018-04-06</td>
+								<td>已审核</td>
+								<td></td>
+								<td>
+									<a href="${_cp}/module/dataSetView">详情</a>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="checkbox"  name="checkbox"/>
+								</td>
+								<td>人口信息 </td>
+								<td>HSMNJ</td>
+								<td>人口信息</td>
+								<td>HSMNJ</td>
+								<td>上架申请</td>
+								<td>结构化</td>
+								<td>2018-04-06</td>
+								<td>待审核</td>
+								<td></td>
+								<td>
+									<a href="${_cp}/module/dataSetView">详情</a>
+									<a href="javascript:void(0);">通过</a>
+									<a href="javascript:void(0);" onclick="subFunction()">驳回</a>
+								</td>
+							</tr>-->
+						</tbody>
+					</table>
+					<div class="text-center">
+						<ul class="pagination" id="pagination" ></ul>
+						<p class="pull-right currentPage">共<span class="total">0</span>条数据，当前第<i id="pageNum" class="colorBlue">1</i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript">
+
+		    function subFunction(taskId,status) {
+		        var title="";
+		        if(status=="1"){
+                    title="同意意见";
+				}else{
+                    title="驳回意见";
+				};
+	            parent.layer.prompt({
+	                formType:2,
+	                title:title,
+	                area: ['500px','270px'],
+	                yes: function(index, layero){
+	                    var iframeWin = layero.find('.layui-layer-input');
+	                    var val = $(iframeWin).val();
+						var handleDTO = new Object();
+                        handleDTO.taskId =taskId;
+                        handleDTO.status =status;
+                        handleDTO.content =val;
+                        ajaxHengyun({
+                            type:"POST",
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            url:  '${_gate_url}/api/exchange/task/set/dateSetHandleDemand ',
+                            data:JSON.stringify(handleDTO),
+                            success:function(rows){
+                                parent.home.searchBtn();
+                                parent.layer.close(index);
+                            }
+                        })
+
+	                }
+	            });
+	        }
+            var parm={
+                data:{},
+                pageNo:"${pageNo}",
+                pageSize:"10"
+            };
+            searchBtn();
+            function searchBtn(){//查询
+                var dataDTO =$("#searchApplyDataSetForm").serializeJSON();
+                dataDTO.startTime = dataDTO.startTime ? (dataDTO.startTime + ' 00:00:00') : ''
+                dataDTO.endTime = dataDTO.endTime ? (dataDTO.endTime + ' 23:59:59') : ''
+                parm.data=dataDTO;
+                parm.pageNo = 1;
+                getList(parm);
+            }
+            getList(parm);
+            /*获取数据源列表*/
+            function  getList(parm) {
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/task/getDataSetTask ',
+                    data:JSON.stringify(parm),
+                    success:function(rows){
+
+                        var html=""
+                        if (rows.data){
+                            rows.data.list.forEach(function(value,index){
+                                var value=dealElement(value);
+                                //数据集类型:1,非结构化文件；2，结构化文件；3，API调用；4，数据库读取
+                                var setTypeName = "";
+                                if(value.setType ==1 ){
+                                    setTypeName = "非结构化文件";
+                                }else if(value.setType ==2){
+                                    setTypeName = "结构化文件";
+                                }else if(value.setType ==3){
+                                    setTypeName = "API调用";
+                                }else if(value.setType ==4){
+                                    setTypeName = "数据库读取";
+                                }
+                                //状态:-1，暂存 1，审批中；2，驳回；3，已上架；4，已下架
+                                var statusName="";
+                                if(value.status == -1){
+                                    statusName ="暂存"
+                                }else if(value.status ==1 ){
+                                    statusName = "审批中";
+                                }else if(value.status ==2){
+                                    statusName = "驳回";
+                                }else if(value.status ==3){
+                                    statusName = "已上架";
+                                }else if(value.status ==4){
+                                    statusName = "已下架";
+                                }
+                                //申请类型 1：新增，2修改
+								var applyTypeName = "";
+								if(value.applyType ==1){
+                                    applyTypeName = "新增";
+								}else if(value.applyType ==2){
+                                    applyTypeName = "修改";
+								}
+                                html+='<tr>';
+                                value.reason=  value.reason.replace(/"([^"]*)"/g ,"“$1”");
+                                // html+='<td>'+'<input type="checkbox"  name="checkbox"/>'+'</td>';
+                                html+='<td>'+value.setName+'</td>';
+                                html+='<td>'+value.setCode+'</td>';
+                                html+='<td>'+applyTypeName+'</td>';
+                                html+='<td>'+setTypeName+'</td>';
+                                html+='<td title="'+ value.reason+'">'+ value.reason+'</td>';
+                                html+='<td>'+fmtDateTime(value.applyTime) +'</td>';
+                                html+='<td>'+statusName+'</td>';
+                                html+='<td>'+value.dealContext+'</td>';
+                                html+='<td>';
+                                html+='<a href="${_cp}/module/dataSetView?taskId='+ value.taskId + '&pageNo='+parm.pageNo+'">详情</a>';
+                                if(value.status ==1 ) {
+                                    html += '<a href="javascript:void();" onclick="subFunction(\'' + value.taskId + '\',1)">通过</a>';
+                                    html += '<a href="javascript:void();" onclick="subFunction(\'' + value.taskId + '\',2)">驳回</a>';
+                                };
+                                html+='</td>';
+                                html+='</tr>';
+                            });
+                            if(rows.data.list.length==0){
+                                html+="<tr><td class='text-center' colspan='8'>暂无数据</td></tr>"
+                                $(".pagination,.currentPage").css("display","none");
+                            } else {
+                                $(".pagination,.currentPage").css("display","block");
+                            };
+                            $("#dataSetAppList tbody").html(html);
+                            $('#totalPages').text(rows.data.pages);
+                            $('.total').text(rows.data.total);
+                            jqPaginator(rows.data);
+                            updateIformHeight();
+                        }else{
+                            html+="<tr><td class='text-center' colspan='8'>暂无数据</td></tr>";
+                            $("#dataSetAppList tbody").html(html);
+                            $(".pagination,.currentPage").css("display","none");
+                            updateIformHeight();
+                        }
+                    }
+                });
+            }
+
+		</script>
+	</body>
+</html>

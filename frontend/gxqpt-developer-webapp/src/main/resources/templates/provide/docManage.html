@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>应用服务管理 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+    <style type="text/css">
+        #editor {
+            height: 100%;
+        }
+
+        #edui1_iframeholder {
+            min-height: 500px !important;
+        }
+        .listTitle .title{
+            width: calc(100% - 45px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .ztreeList ul li.active{
+            border-right: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                功能管理 > <span class="active">帮助文档</span>
+            </div>
+            <a href="javascript:" class="button-icon pull-right" onclick="history.back()">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="block clearfix">
+                <div class="text-title">文档信息</div>
+                <div class="col-lg-3 col-md-3 col-sm-3 ztreeList">
+                    <h3 class="listTitle clearfix"><div class="title pull-left">${moduleName}</div> <i class="fa fa-plus fa-lg pull-right"
+                                                           style="margin: 4px 12px;cursor: pointer;color: #31d0ff;"
+                                                           ng-click="changeAdd()"></i></h3>
+                    <ul ng-if="docList.length">
+                        <li ng-repeat="doc in docList" ng-class="{'active':doc.id == activeId}"
+                            ng-click="changeDoc(doc.id)"><div class="left" style="width: calc(100% - 22px);overflow: hidden;
+                            text-overflow: ellipsis;">{{doc.title}}</div><i
+                                class="fa fa-trash text-danger pull-right fa-lg" style="margin-right: -2px"
+                                ng-click="deleteDoc($event,doc.id)"></i></li>
+                    </ul>
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-9">
+                    <div>
+                        <form class="form-horizontal" id="dataForm">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span
+                                        class="text-danger">*&nbsp;</span>模块名称</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control moduleInp" ng-model="doc.title" datatype="*"
+                                           nullmsg="模块名称不能为空">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">排序权重</label>
+                                <div class="col-sm-10">
+                                    <input type="number" onkeyup="value=value.replace(/[^\d]/g,'')" class="form-control moduleInp" ng-model="doc.order"
+                                           placeholder="值小越小排序越靠前">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="hidden">
+                                    <div id="filePicker2" class="filePicker photoFilePicker"></div>
+                                    <div id="uploader2" class="uploader photoUploader">
+                                        <div class="queueList">
+                                            <ul id="file_html" class="filelist">
+                                            </ul>
+                                            <div id="dndArea2" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                                <p></p>
+                                            </div>
+                                        </div>
+                                        <div class="statusBar" style="display:none;">
+                                            <div class="progress">
+                                                <span class="text">0%</span> <span class="percentage"></span>
+                                            </div>
+                                            <div class="info"></div>
+                                            <div class="btns">
+                                                <div id="jxButton2" class="jxButton"></div>
+                                                <div class="uploadBtn">开始上传</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="filePicker1" class="filePicker photoFilePicker"></div>
+                                    <div id="uploader1" class="uploader photoUploader">
+                                        <div class="queueList">
+                                            <ul id="file_html1" class="filelist">
+                                            </ul>
+                                            <div id="dndArea1" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                                <p></p>
+                                            </div>
+                                        </div>
+                                        <div class="statusBar" style="display:none;">
+                                            <div class="progress">
+                                                <span class="text">0%</span> <span class="percentage"></span>
+                                            </div>
+                                            <div class="info"></div>
+                                            <div class="btns">
+                                                <div id="jxButton1" class="jxButton"></div>
+                                                <div class="uploadBtn">开始上传</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label class="col-sm-2 control-label"><span
+                                        class="text-danger">*&nbsp;</span>模块内容</label>
+                                <div class="col-sm-10">
+                                    <script id="editor" type="text/plain"></script>
+                                    <code id="testcon" style="display:none;"></code>
+                                </div>
+                            </div>
+                            <div class="button-bar button-bar-center" style="margin-top:50px;margin-left: 18%">
+                                <button type="button" ng-if="!isEdit" class="btn btn-primary  btn-submit" ng-click="save()">新增
+                                </button>
+                                <button type="button" ng-if="isEdit" class="btn btn-primary  btn-submit" ng-click="save()">更新
+                                </button>
+                                <button type="button" class="btn btn-default " onclick="history.back();return false;">取消
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script>
+    var pageType = "provideList";
+    var _GATE_URL = "${_gate_url}";
+    window.UEDITOR_HOME_URL = "${_static}/js/lib/ueditor/";
+</script>
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.all.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreFile.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreImg.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script>
+    // var pageType="provide";
+    // var _GATE_URL = "${_gate_url}";
+    // var ue = UE.getEditor('editor');
+    // UE.registerUI('uploadimg', function(editor, uiName) {
+    //     //注册按钮执行时的command命令，使用命令默认就会带有回退操作
+    //     editor.registerCommand(uiName, {
+    //         execCommand: function() {
+    //             alert('execCommand:' + uiName)
+    //         }
+    //     });
+    //     //创建一个button
+    //     var uploadimg = new UE.ui.Button({
+    //         //按钮的名字
+    //         name: "uploadimg",
+    //         //提示
+    //         title: "图片上传",
+    //         //添加额外样式，指定icon图标，这里默认使用一个重复的icon
+    //         cssRules: 'background-position: -380px 0px;',
+    //         //点击时执行的命令
+    //         onclick: function() {
+    //             //这里可以不用执行命令,做你自己的操作也可
+    //             // editor.execCommand(uiName);
+    //
+    //             $("#uploader1 .webuploader-element-invisible").click();
+    //         }
+    //     });
+    //     //当点到编辑内容上时，按钮要做的状态反射
+    //     editor.addListener('selectionchange', function() {
+    //         var state = editor.queryCommandState(uiName);
+    //         if (state == -1) {
+    //             uploadimg.setDisabled(true);
+    //             uploadimg.setChecked(false);
+    //         } else {
+    //             uploadimg.setDisabled(false);
+    //             uploadimg.setChecked(state);
+    //         }
+    //     });
+    //     //因为你是添加button,所以需要返回这个button
+    //     return uploadimg;
+    // });
+    // UE.registerUI('uploadfiles', function(editor, uiName) {
+    //     //注册按钮执行时的command命令，使用命令默认就会带有回退操作
+    //     editor.registerCommand(uiName, {
+    //         execCommand: function() {
+    //             alert('execCommand:' + uiName)
+    //         }
+    //     });
+    //     //创建一个button
+    //     var uploadfiles = new UE.ui.Button({
+    //         //按钮的名字
+    //         name: "uploadfiles",
+    //         //提示
+    //         title: "附件上传",
+    //         //添加额外样式，指定icon图标，这里默认使用一个重复的icon
+    //         cssRules: 'background-position: -620px -40px;',
+    //         //点击时执行的命令
+    //         onclick: function() {
+    //             //这里可以不用执行命令,做你自己的操作也可
+    //             // editor.execCommand(uiName);
+    //             $("#filePicker1 .webuploader-element-invisible").click();
+    //         }
+    //     });
+    //     //当点到编辑内容上时，按钮要做的状态反射
+    //     editor.addListener('selectionchange', function() {
+    //         var state = editor.queryCommandState(uiName);
+    //         if (state == -1) {
+    //             uploadfiles.setDisabled(true);
+    //             uploadfiles.setChecked(false);
+    //         } else {
+    //             uploadfiles.setDisabled(false);
+    //             uploadfiles.setChecked(state);
+    //         }
+    //     });
+    //     //因为你是添加button,所以需要返回这个button
+    //     return uploadfiles;
+    // });
+    // /* 附件上传 begin */
+    // var token = getToken();
+    // var folderId="-1";
+    // var dataType="";
+    // loadFile();
+    // function loadFile() {
+    //     fileUpload = new FileUploadImg({
+    //         "filePicker" : "filePicker2",
+    //         "dndArea" : "dndArea2",
+    //         "uploader" : "uploader2",
+    //         "jxButton" : "jxButton2",
+    //         "folderId":folderId,
+    //         "dataType":dataType,
+    //         "token":token,
+    //         "_isAdmin":true
+    //     });
+    //     fileUpload = new FileUpload({
+    //         "filePicker" : "filePicker1",
+    //         "dndArea" : "dndArea1",
+    //         "uploader" : "uploader1",
+    //         "jxButton" : "jxButton1",
+    //         "folderId":folderId,
+    //         "dataType":dataType,
+    //         "token":token,
+    //         "_isAdmin":true
+    //     });
+    // }
+    // function successUpload(json) {
+    //     var url = json.data.list[0].url;
+    //     UE.getEditor('editor').focus();
+    //     UE.getEditor('editor').execCommand('inserthtml','<img src="'+url+'"/>');
+    // };
+    // function successUploadFile(json) {
+    //     var url = json.data.list[0].url;
+    //     var name = json.data.list[0].submittedFileName;
+    //     var urlDownload = "${_gate_url}/api/file/file/download?url=" + url + "&filename=" + name;
+    //     html='<a href="'+urlDownload+'">'+name+'</a>';
+    //     $("#testcon").html(html);
+    //     window.setTimeout(function(){
+    //         UE.getEditor('editor').focus();
+    //         UE.getEditor('editor').execCommand('inserthtml',$('#testcon').html());
+    //     },1000);
+    // };
+</script>
+</body>
+<script>
+    /* 附件上传 begin */
+    var _GATE_URL = "${_gate_url}";
+    var token = getToken();
+    var folderId = "-1";
+    var dataType = "";
+    loadFile();
+
+    function loadFile() {
+        fileUpload = new FileUploadImg({
+            "filePicker": "filePicker2",
+            "dndArea": "dndArea2",
+            "uploader": "uploader2",
+            "jxButton": "jxButton2",
+            "folderId": folderId,
+            "dataType": dataType,
+            "token": token,
+            "_isAdmin": true
+        });
+        fileUpload = new FileUpload({
+            "filePicker": "filePicker1",
+            "dndArea": "dndArea1",
+            "uploader": "uploader1",
+            "jxButton": "jxButton1",
+            "folderId": folderId,
+            "dataType": dataType,
+            "token": token,
+            "_isAdmin": true
+        });
+    }
+
+    function successUpload(json) {
+        var url = json.data.list[0].url;
+        UE.getEditor('editor').focus();
+        UE.getEditor('editor').execCommand('inserthtml', '<img src="' + url + '"/>');
+    };
+
+    function successUploadFile(json) {
+        var url = json.data.list[0].url;
+        var name = json.data.list[0].submittedFileName;
+        var urlDownload = "${_gate_url}/api/file/file/download?url=" + url + "&filename=" + name;
+        html = '<a href="' + urlDownload + '">' + name + '</a>';
+        $("#testcon").html(html);
+        window.setTimeout(function () {
+            UE.getEditor('editor').focus();
+            UE.getEditor('editor').execCommand('inserthtml', $('#testcon').html());
+        }, 1000);
+    };
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http) {
+        var pageType = "provideList";
+        var ue = UE.getEditor('editor');
+        $scope.isEdit = true; //是否是编辑状态
+
+        function initValid() {
+            setTimeout(function () {
+                //初始化表单验证
+                $('#dataForm').Validform({
+                    btnSubmit: '.btn-submit',
+                    showAllError: true,
+                    beforeSubmit: function () {
+                        $scope.save();
+                        return false;
+                    }
+                });
+            }, 50);
+        }
+
+        ue.addListener('ready', function () {
+            $scope.getTitleList();
+        })
+        UE.registerUI('uploadimg', function (editor, uiName) {
+            //注册按钮执行时的command命令，使用命令默认就会带有回退操作
+            editor.registerCommand(uiName, {
+                execCommand: function () {
+                    alert('execCommand:' + uiName)
+                }
+            });
+            //创建一个button
+            var uploadimg = new UE.ui.Button({
+                //按钮的名字
+                name: "uploadimg",
+                //提示
+                title: "图片上传",
+                //添加额外样式，指定icon图标，这里默认使用一个重复的icon
+                cssRules: 'background-position: -380px 0px;',
+                //点击时执行的命令
+                onclick: function () {
+                    //这里可以不用执行命令,做你自己的操作也可
+                    // editor.execCommand(uiName);
+
+                    $("#uploader1 .webuploader-element-invisible").click();
+                }
+            });
+            //当点到编辑内容上时，按钮要做的状态反射
+            editor.addListener('selectionchange', function () {
+                var state = editor.queryCommandState(uiName);
+                if (state == -1) {
+                    uploadimg.setDisabled(true);
+                    uploadimg.setChecked(false);
+                } else {
+                    uploadimg.setDisabled(false);
+                    uploadimg.setChecked(state);
+                }
+            });
+            //因为你是添加button,所以需要返回这个button
+            return uploadimg;
+        });
+        UE.registerUI('uploadfiles', function (editor, uiName) {
+            //注册按钮执行时的command命令，使用命令默认就会带有回退操作
+            editor.registerCommand(uiName, {
+                execCommand: function () {
+                    alert('execCommand:' + uiName)
+                }
+            });
+            //创建一个button
+            var uploadfiles = new UE.ui.Button({
+                //按钮的名字
+                name: "uploadfiles",
+                //提示
+                title: "附件上传",
+                //添加额外样式，指定icon图标，这里默认使用一个重复的icon
+                cssRules: 'background-position: -620px -40px;',
+                //点击时执行的命令
+                onclick: function () {
+                    //这里可以不用执行命令,做你自己的操作也可
+                    // editor.execCommand(uiName);
+                    $("#filePicker1 .webuploader-element-invisible").click();
+                }
+            });
+            //当点到编辑内容上时，按钮要做的状态反射
+            editor.addListener('selectionchange', function () {
+                var state = editor.queryCommandState(uiName);
+                if (state == -1) {
+                    uploadfiles.setDisabled(true);
+                    uploadfiles.setChecked(false);
+                } else {
+                    uploadfiles.setDisabled(false);
+                    uploadfiles.setChecked(state);
+                }
+            });
+            //因为你是添加button,所以需要返回这个button
+            return uploadfiles;
+        });
+
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.getTitleList = function (activeId) {
+            $http.get(urlPrev + '/serviceModuleDoc/findMoudleDoc', {
+                params: {moduleId: '${moduleId}'},
+                headers: getHeaders(),
+            }).success(function (res) {
+                if (res.errmsg == "ok") {
+                    $scope.docList = res.data;
+                    if (res.data && res.data.length) {
+                        $scope.isEdit = true;
+                        if (!activeId) {
+                            $scope.activeId = res.data[0].id;
+                            $scope.doc.title = res.data[0].title;
+                            $scope.doc.order = res.data[0].order;
+                            ue.setContent(res.data[0].content);
+                        } else {
+                            $scope.activeId = activeId;
+                        }
+                    } else {
+                        $scope.isEdit = false;
+                    }
+                } else {
+                    layer.msg("保存失败！",{icon:7});
+                }
+            });
+        }
+        //切换文档模块
+        $scope.changeDoc = function (id) {
+            $.each($scope.docList, function (index, value) {
+                if (value.id == id) {
+                    $scope.isEdit = true;
+                    $scope.activeId = id;
+                    $scope.doc.title = value.title;
+                    $scope.doc.order = value.order;
+                    ue.setContent(value.content);
+                }
+            });
+        }
+        $scope.doc = {moduleId: '${moduleId}'};
+        //切换成新增状态
+        $scope.changeAdd = function () {
+            $scope.isEdit = false;
+            $scope.activeId = null;
+            $scope.doc.title = null;
+            $scope.doc.order = null;
+            ue.setContent('');
+        }
+        $scope.save = function () {
+            if($scope.doc.title.length>50){
+                layer.msg('模块名称过长',{icon:7});
+                return false;
+            }
+            $scope.doc.content = ue.getContent();
+            $scope.doc.searchContent = ue.getContentTxt();
+            $scope.doc.searchTitle = '${moduleName}-' + $scope.doc.title;
+            var urlStr = null;
+            if ($scope.isEdit) {
+                urlStr = 'serviceModuleDoc/updateById';
+                $scope.doc.id = $scope.activeId;
+            } else {
+                urlStr = 'serviceModuleDoc/save';
+            }
+            $http.post(urlPrev + urlStr, $scope.doc, {
+                headers: getHeaders(),
+            }).success(function (res) {
+                if (res.errmsg == "ok") {
+                    $(".btn-reset").click();
+                    layer.msg("保存成功！", {icon: 6});
+                    $scope.isEdit ? $scope.getTitleList($scope.activeId) : $scope.getTitleList(res.data.id);
+                } else  if(res.errcode==75000 || res.errcode==75001
+                    || res.errcode==75003 || res.errcode==75004){
+                        layer.msg(res.errmsg);
+                }else{
+                        layer.msg("保存失败！", {icon: 7});
+              }
+            });
+        }
+        $scope.deleteDoc = function ($event, id) {
+            parent.layer.confirm('确定删除吗？', {
+                shadeClose: true,
+                shade: 0.4,
+                btn: ['确定', '取消'] //按钮
+            }, function (value, index, elem) {
+                $event.stopPropagation();
+                $http.get(urlPrev + "/serviceModuleDoc/deleteById", {
+                    params: {id: id},
+                    headers: getHeaders(),
+                }).success(function (res) {
+                    if (res.errmsg == "ok") {
+                        $scope.getTitleList();
+                        layer.closeAll();
+                    } else {
+                        layer.msg("删除失败！",{icon:7});
+                    }
+                });
+            }, function () {
+            });
+        }
+    })
+</script>
+</html>

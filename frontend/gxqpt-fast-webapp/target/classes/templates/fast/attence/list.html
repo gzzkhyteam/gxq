@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <!--<link rel="stylesheet" type="text/css" href="${_lib}/webuploader/webuploader.css">-->
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_css}/app.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/layer/skin/layer.css">
+
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <!-- end 外部CSS引入 -->
+
+    <!-- begin 自定义样式 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+        }
+
+        .list-section {
+            padding: 5px 10px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        .grid-section {
+        }
+
+        .ui-jqgrid .ui-jqgrid-btable tbody tr.jqgrow td, .ui-jqgrid {
+            background: #fff;
+        }
+
+        .ui-th-ltr, .ui-jqgrid .ui-jqgrid-htable th.ui-th-ltr, .ui-jqgrid .ui-jqgrid-btable {
+            text-align: center;
+        }
+
+        .task-box {
+            height: 90px;
+            line-height: 90px;
+            text-align: center;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            width: 24%;
+            margin-right: 1%;
+        }
+
+        .task-box img {
+            margin-top: -15px;
+        }
+
+        .task-box span {
+            display: inline-block;
+            width: 120px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-weight: bold;
+            line-height: 30px;
+            position: absolute;
+            transform: rotate(45deg);
+            text-align: center;
+            top: 10px;
+            right: -35px;
+            letter-spacing: 5px;
+
+        }
+
+        .task-box em {
+            font-size: 36px;
+            color: #fff;
+            font-style: normal;
+            padding: 0 20px;
+        }
+    </style>
+    <!-- end   自定义样式 -->
+</head>
+<body>
+
+<div class="workspace-body">
+
+    <div class="console-container">
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>
+                            考勤管理 > <font color="#0099cc">考勤统计</font>
+                        </h5>
+                    </div>
+
+
+                </div>
+                <!-- end 标题 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <div class="pull-left margin-top-1">
+                                    <form action="" class="form-inline search-form">
+
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>姓名：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <input class="form-control" name="userName"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>处室：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w153" name="orgCode">
+                                                        <option value="">请选择</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>-->
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>时间：</span>
+                                                </label>
+                                                <div class="form-control-wrap ">
+                                                    <input id="starTime" class="form-input Wdate"
+                                                           onfocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',maxDate:getStarTime('endTime')})"
+                                                           name="startDate"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>至</span>
+                                                </label>
+                                                <div class="form-control-wrap ">
+                                                    <input id="endTime" class="form-input Wdate"
+                                                           onfocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',minDate:getStarTime('starTime')})"
+                                                           name="endDate"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>加班：</span>
+                                                </label>
+
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w153" name="extraworkCondition">
+                                                        <option value="">请选择</option>
+                                                        <option value="3">&lt;</option>
+                                                        <option value="2">=</option>
+                                                        <option value="1">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="extraworkHour" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>请假：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w153" name="leaveCondition">
+                                                        <option value="">请选择</option>
+                                                        <option value="3">&lt;</option>
+                                                        <option value="2">=</option>
+                                                        <option value="1">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="leaveHour" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>迟到：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w153" name="lateCondition">
+                                                        <option value="">请选择</option>
+                                                        <option value="3">&lt;</option>
+                                                        <option value="2">=</option>
+                                                        <option value="1">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="lateHour" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>早退：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w153" name="earlyCondition">
+                                                        <option value="">请选择</option>
+                                                        <option value="3">&lt;</option>
+                                                        <option value="2">=</option>
+                                                        <option value="1">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="earlyHour" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>外勤：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w153" name="outsideCondition">
+                                                        <option value="">请选择</option>
+                                                        <option value="3">&lt;</option>
+                                                        <option value="2">=</option>
+                                                        <option value="1">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="outsideHour" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>-->
+
+
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap text-right">
+                                                    <button type="button" class="btn btn-primary search-button">
+                                                        <span class="glyphicon glyphicon-search"></span>
+                                                        查询
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="list-section">
+                                        <div class="list-content">
+                                            <div class="form-inline view-info">
+                                                <fieldset>
+                                                    <!-- begin 表格 -->
+                                                    <div class="grid-section">
+                                                        <table id="list">
+                                                        </table>
+                                                    </div>
+                                                    <!-- end 表格  -->
+                                                </fieldset>
+                                                <div class="clear"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<!--<script type="text/javascript" src="${_lib }/webuploader/webuploader.min.js"></script>-->
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js?v=1.0.0"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+<script type="text/javascript" src="${_js}/zkCore.js"></script>
+
+<!--begin 自定义JS -->
+<script type="text/javascript">
+    $(function() {
+        //考勤统计
+        $("#list").jqGrid(
+            {
+                mtype: 'POST',
+                url : '${_gate_url}/api/developer/attence/attencemng/findBy',
+                postData:{data:{appId:"${appId}"},pageNo:1,pageSize:10},
+                datatype:"json",
+                contentType:'application/json',
+                serializeGridData:function(postData){
+                    return JSON.stringify(postData);
+                },
+                colNames : [ '姓名','应出勤(天)','正常出勤(天)','外勤(小时)','加班(小时)','请假(小时)','出差(小时)','迟到(小时)','早退(小时)','旷工(次)','实际工作(小时)'],
+                colModel : [
+                    {name : 'userName',index : 'userName', sortable : false,"width":'210'},
+                    {name : 'ycqDay',index : 'ycqDay', sortable : false,"width":'210'},
+                    {name : 'sjcqDay',index : 'sjcqDay', sortable : false,"width":'210'},
+                    {name : 'outsideHour',index : 'outsideHour', sortable : false,"width":'210'},
+                    {name : 'extraworkHour',index : 'extraworkHour', sortable : false,"width":'210'},
+                    {name : 'leaveHour',index : 'leaveHour', sortable : false,"width":'210'},
+                    {name : 'businessHour',index : 'businessHour', sortable : false,"width":'210'},
+                    {name : 'lateHour',index : 'lateHour', sortable : false,"width":'210'},
+                    {name : 'earlyHour',index : 'earlyHour', sortable : false,"width":'210'},
+                    {name : 'neglectHour',index : 'neglectHour', sortable : false,"width":'210'},
+                    {name : 'actualHour',index : 'actualHour', sortable : false,"width":'210'}],
+                pager : '#pager',
+                height : 'auto',
+                jsonReader : {
+                    root:"data.list",
+                    page: "data.pageNum",
+                    total: "data.pages",
+                    records: "data.total"
+                },
+                prmNames : {
+                    page : "page", // 表示请求页码的参数名称
+                    rows : "rows" // 表示请求行数的参数名称
+                }
+            });
+        // 初始化查询按钮
+        $("button.search-button").click(function () {
+            $("#list").jqGrid("clearGridData");
+            var formObj = $("form.search-form").serializeObject();
+            formObj.appId="${appId}";
+            var postData = {
+                postData:{
+                    data:formObj,pageNo:1,pageSize:10
+                }
+            }
+            $("#list").setGridParam(postData).trigger("reloadGrid");
+        });
+        initExport("#list");
+        /**
+         * 注册返回按钮点击事件
+         */
+        $("button.btn-create").click(function() {
+            window.location.href = 'create.do';
+        });
+
+    });
+    $('.WdateYear').off('focus').on('focus',function(){
+        WdatePicker({lang:'zh-cn',skin:'whyGreen',dateFmt:'yyyy-MM',isShowToday:false});
+    });
+
+
+</script>
+<!--end 自定义JS -->
+
+</body>
+</html>

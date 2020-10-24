@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- begin 外部CSS引入 -->
+   <link type="text/css" rel="stylesheet"  href="${_lib }/jqgrid/css/ui.jqgrid.css">
+    <link type="text/css" rel="stylesheet" href="${_lib }/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_lib }/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_lib }/layer/skin/layer.css">
+    <link href="${_js}/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="${_js}/lib/webuploader/upload.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=1.0.0">
+    <link rel="stylesheet" href="${_static}/css/app.css?v=1.0.0">
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <!-- end 外部CSS引入 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        label.control-label {
+            width: 100px;
+            text-align: right;
+        }
+
+        table.infoList tr th {
+            border: 1px solid #e1e6eb;
+            padding: 10px 12px;
+            vertical-align: middle;
+            width: 180px;
+            font-weight: normal;
+        }
+
+        table.infoListTab tr th {
+            width: auto;
+        }
+
+        .upuserhead {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .uploader {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td input.form-control {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td select.form-control {
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5 id="titleChange">基本信息</h5>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-default go-back">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            取消
+                        </button>
+                    </div>
+                </div>
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <input type="hidden" id="aproveType" value="">
+                                <form id="jiabanData" class="dataForm" method="post">
+                                    <div class="jiaban">
+                                        <div class="pull-left">
+                                        </div>
+                                        <fieldset class="div1">
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>补签类型</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <select id="businessType" name="businessType"
+                                                                    class="form-control w153">
+                                                                <option value="">请选择补签类型</option>
+                                                                <option value="0"
+                                                                >内勤
+                                                                </option>
+                                                                <option value="1"
+                                                                >外勤
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="id" value="">
+                                            <input type="hidden" name="approveId" value="">
+                                            <div class="col-sm-12">
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label">
+                                                        <span class="text-danger">*</span>
+                                                        <span>审批人</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div id="addPerson_bqsp" class="form-control-wrap input-group">
+                                                        <input type="text" class="form-control imgs"
+                                                               id="addPerson_bqspEmpName"
+                                                               name="addPerson_bqspEmpName" value=""
+                                                               style="width: 384px;">
+                                                        <span class="input-group-btn">
+								                            	<button class="btn btn-primary" type="button"><span
+                                                                        class="glyphicon glyphicon-plus"></span></button>
+								                         </span>
+                                                    </div>
+                                                    <input class="form-control" type="hidden" id="addPerson_bqspEmp"
+                                                           name="addPerson_bqspEmp" value=""/>
+                                                </div>
+                                            </div>
+                                                </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field" style="margin: 0;">
+                                                    <div class="form-group" style="margin: 0">
+                                                        <label class="control-label w120" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>补签日期</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input id='supplyDate' class="form-control Tdate"
+                                                                   style="width: 205px;"
+                                                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})"
+                                                                   name="supplyDate"
+                                                                   value=""
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span class="text-danger">*</span>
+                                                            <span>备注</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                             <textarea id="descript" class="form-control"
+                                                                       style="width: 430px;"
+                                                                       name="descript"
+                                                                       rows="5" cols="" dataType="*" nullmsg="请填写加班内容"
+                                                                       errormsg="请填写加班内容"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="control-label w84 pull-left">
+                                                        <span class="text-danger">*</span>
+                                                        <span>附件上传</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div id="wrapper4" class="pull-left"
+                                                         style="margin:0;width:calc(100%  - 153px);">
+                                                        <div id="container" style="margin: 0;padding: 0;">
+                                                            <div id="uploader" class="uploader">
+                                                                <ul class="show-file">
+
+                                                                </ul>
+                                                                <!--头部，相册选择和格式选择-->
+                                                                <div class="queueList">
+                                                                    <div id="dndArea" class="placeholder dndArea"
+                                                                         style="padding-top: 85px;">
+                                                                        <div id="filePicker" class="filePicker"></div>
+                                                                        <p>或将文件拖到这里，单次最多可选300</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="statusBar" style="display:none;">
+                                                                    <div class="progress">
+                                                                        <span class="text">0%</span> <span
+                                                                            class="percentage"></span>
+                                                                    </div>
+                                                                    <div class="info"></div>
+
+                                                                    <div class="btns">
+                                                                        <div id="jxButton" class="jxButton"></div>
+                                                                        <div class="uploadBtn">开始上传</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                                    <div>
+                                                                        <h5>审批意见</h5>
+                                                                        <table class="table defaultTable defaultTableTop">
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <th>审批意见</th>
+                                                                                <td>
+                                                                                    同意!
+                                                                                    驳回!
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th>说明</th>
+                                                                                <td></td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                <div class="text-center">
+                                                    <button class="btn btn-primary btn-submit" type="button"
+                                                            onclick="saveData();">
+                                                        <span class="glyphicon glyphicon-ok"></span>
+                                                        提交
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </form>
+                                <!-- end 页面内容主体 -->
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <!-- begin 页面内容主体 -->
+            </div>
+        </div>
+    </div>
+    <!--begin 外部JS引入 -->
+    <script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+    <script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="${_js}/lib/webuploader/webuploader.js"></script>
+    <script type="text/javascript" src="${_js}/lib//webuploader/HYCore.js"></script>
+    <!--end 外部JS引入 -->
+
+    <!--begin 自定义JS -->
+    <script type="text/javascript">
+        $(function () {
+            loadFile();
+        });
+        function loadFile() {
+            //请假文件
+            fileUpload1 = new FileUpload({
+                "filePicker": "filePicker",
+                "dndArea": "dndArea",
+                "uploader": "uploader",
+                "jxButton": "jxButton",
+                "busType": "b_work_appr_attence_supply"
+            });
+        }
+        var fileList = new Array();
+        function successUpload(json) {
+            debugger;
+            var fileInfo = json.fileInfo;
+            fileList.push(fileInfo);
+        }
+        //添加加班审批人
+        $("#addPerson_bqsp").click(function () {
+            var personIdList = $("#addPerson_bqspEmp").val();
+            personId = "addPerson_bqsp";
+            addsendPerson(personIdList);
+        });
+        function addsendPerson(personIdList) {
+            parent.layer.open({
+                type: 2,
+                title: '添加审批人',
+                shadeClose: false,
+                scrollbar: false,
+                shade: 0.6,
+                area: ['80%', '88%'],
+                content: "addPerson.do?personIdList=" + personIdList,
+                btn: ['<span class="glyphicon glyphicon-ok"></span> 添加', '<span class="glyphicon glyphicon-backward"></span> 取消'],
+                yes: function (index, layero) {
+                    var iframe = "layui-layer-iframe" + index;
+                    parent[iframe].loaderParentPage();
+                }
+            });
+        }
+
+        var empLists = [];
+        function getPerson(datas) {
+            document.getElementById(personId + "Emp").value = datas.empId;
+            document.getElementById(personId + "EmpName").value = datas.name;
+            if (datas.empObj != undefined && datas.empObj.length > 0) {
+                for (var i in datas.empObj) {
+                    empLists.push(datas.empObj[i]);
+                }
+            }
+
+        }
+
+        function addPersonWhenSum(type, empIdsJson) {
+            console.log(type);
+            console.log(empIdsJson);
+            var approvePersons = [];
+            var sortId = 1;
+            var empIds = empIdsJson.split(",");
+            for (var i = 0; i < empIds.length; i++) {
+                var personName = null;
+                for (var j in empLists) {
+                    if (empLists[j].id == empIds[i]) {
+                        personName = empLists[j].empName;
+                        break;
+                    }
+                }
+                var approvePerson = {
+                    personType: type,
+                    personId: empIds[i],
+                    personName: personName
+                };
+                if (approvePerson.personType == '1') {
+                    approvePerson.approveSortId = sortId;
+                    sortId++;
+                }
+                approvePersons.push(approvePerson);
+
+            }
+            return approvePersons;
+        }
+
+        function saveData() {
+            var o = {};
+            o.attrs = fileList;
+            var approvePersonList = [];
+            var personIdList0 = $("#addPerson_bqsprEmp").val();//请假
+            if (personIdList0 == "") {
+                $(this).alertInfo("请选择审批人");
+                return false;
+            }
+            approvePersonList = addPersonWhenSum('1', $("#addPerson_bqspEmp").val());
+            o.apprId = "";
+            o.id = "";
+            o.supplyDate = $("#supplyDate").val()+":00";
+            o.type = $("#type").val();
+            o.descript = $("#descript").val();
+            o.attrs = fileList;
+            o.apprPersonList = approvePersonList;
+            o = JSON.stringify(o);
+            $.ajax({
+                url: "updateAttenceSupply.do",
+                type: 'post',
+                data: o,
+                contentType: 'application/json;charset=utf-8', //设置请求头信息
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+                    if (data.result == "faild") {
+                        $(this).alertInfo(data.msg);
+                    } else {
+                        layer.closeAll();
+                        window.location.href = "list.do";
+                    }
+                },
+                error: function () {
+                    parent.layer.closeAll();
+                }
+            });
+        }
+    </script>
+    <!--end 自定义JS -->
+</body>
+</html>
+
+
+
+
+

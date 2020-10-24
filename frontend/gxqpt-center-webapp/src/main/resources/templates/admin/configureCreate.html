@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/module.css">
+</head>
+<body>
+<div class="workspace-body configure">
+    <div class="col-sm-12 col-xs-12">
+        <div class="list-content">
+            <div class="form-inline">
+                <h3>快速入口名称</h3>
+                <input type="text" name="" id="name" class="folderName" readonly/>
+            </div>
+        </div>
+    </div>
+    <div id="rendUrls"></div>
+    <div class="col-sm-12 col-xs-12">
+        <div class="list-content">
+            <div class="form-inline">
+                <!--<h3>url</h3>-->
+                <input type="hidden" name="allUrl" id="urlId" value="" class="folderName"/>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-xs-12">
+        <div class="list-content">
+            <div class="form-inline">
+                <h3>应用选择</h3>
+                <select id="type" name="type" class="form-control chosen-select-search set-form" onchange="getSystemName(this)"></select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-xs-12">
+        <div class="list-content">
+            <div class="form-inline">
+                <h3>菜单选择</h3>
+                <div class="zTreeDemoBackground left">
+                    <ul id="ztree" class="ztree"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.exedit.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    var appId,resourceId,icon,url;
+    /*获取应用列表*/
+    getAppList();
+    function getAppList(){
+        ajaxHengyun({
+            type:"GET",
+            async:false,
+            url: "${_gate_url}/api/developer/application/findAppVisibleForSelf",
+            data:{type:1},
+            datatype:'json',
+            success:function(rows){
+                if (rows.data){
+                    var html="";
+                    var urls="";
+                    rows.data.forEach(function(value, index){
+                        if(index==0){
+                            appId=value.appId;
+                        };
+                        html+='<option value="'+value.appId+'" id="'+index+'">'+value.name+'</option>';
+                        urls+='<input type="hidden" value="'+value.indexUrl+'"  id="urlIds'+index+'"/>';
+                    });
+                    $("#type").html(html);
+                    $("#type").trigger("chosen:updated");
+                    $("#rendUrls").html(urls);
+                };
+            },
+        });
+    }
+
+    var systemName=$("#type").find("option:selected").text();
+    var configureName="";
+    $("#name").val(systemName);
+    /*-----加载树形结构-----*/
+    var setting = {
+        data: {
+            key : {
+                name : 'name'
+            },
+            simpleData : {
+                enable : true,
+                idKey : 'id',
+                pIdKey : 'pId',
+                rootPId : -1
+            }
+        },
+        callback: {
+            onClick: onClick,
+        }
+    };
+    getTree();
+    function getTree(){
+        ajaxHengyun({
+            type:"get",
+            async:false,
+            url: "${_gate_url}/api/admin/p/resource/findAllCanOperateMenuByAidUid",
+            data:{appId:appId,userId:'${l_u_i_s.id}'},
+            datatype:'json',
+            success:function(rows){
+                var name=$("#system").text();
+                if (rows.data){
+                    var zNodes=[
+                        {id:"-1", name:"全部菜单", children:builderTree(rows.data) }
+                    ]
+                    //资源树配置
+                    $.fn.zTree.init($("#ztree"), setting, zNodes);
+                }
+            },
+        });
+    }
+    function builderTree(r){
+        if(!r || r.length == 0){
+            return ;
+        }
+        r.forEach(function (value, index) {
+
+            var isChildOrg = true;
+            if(!value.children || value.children.length == 0){
+                value.children = [];
+                isChildOrg = false;
+            }
+            value.icon="";
+            if(isChildOrg){
+                builderTree(value.children);
+            }
+            return ;
+        });
+        return r;
+    }
+    //点击资源节点获取节点信息
+    function onClick(event, treeId, treeNode) {
+        event.preventDefault();
+        if(treeNode.name){
+            configureName=treeNode.name;
+            resourceId=treeNode.id;
+            icon="${_static}/images/icon_default.png";
+            url=treeNode.url;
+            var currId = "#urlIds" + $("#type option:selected").attr("id");
+            var selecetedSysUrl = $(currId).val();
+            $("#urlId").val(selecetedSysUrl);//放置当前选择系统url
+            var curUrlValue = $("#urlId").val();
+            if(curUrlValue!=""&&curUrlValue!=null&&curUrlValue!="null"){
+                if(typeof (url) !="undefined"){
+                    var systemId = $("#type option:selected").attr("id");
+                    if(systemId=="0" || systemId=="1" || systemId=="4" || systemId=="5" || systemId=="28"){
+                        url = curUrlValue+"#"+url;
+                    }else{
+                        url = curUrlValue+"?url="+url;
+                    }
+                }else{
+                    url = curUrlValue;
+                }
+            }
+            $("#urlId").val(url);//重新组装url
+            $("#name").val(systemName+"-"+configureName);
+        }
+        return false;
+    };
+    //获取系统名称
+    function getSystemName(ele){
+        systemName = $(ele).find("option:selected").text();
+        var currId = "#urlIds" + $("#type option:selected").attr("id");
+        var selecetedSysUrl = $(currId).val();
+        if(selecetedSysUrl!=""&&selecetedSysUrl!=null&&selecetedSysUrl!="null"){
+            $("#urlId").val(selecetedSysUrl);//放置当前选择系统url
+        }else{
+            $("#urlId").val("");//清空
+        }
+        appId = $(ele).val();
+        $("#name").val(systemName);
+        getTree();
+    };
+    //提交方法
+    function save(index){
+        var appResourceName = $("#name").val();
+        if(!appResourceName){
+            parent.layer.msg("快捷入口名称不能为空！",{time:1500});
+            return false;
+        };
+        if(appResourceName.length>20){
+            parent.layer.msg("快捷入口名称应限制在20字内！",{time:1500});
+            return false;
+        };
+        if(!resourceId || resourceId=="-1"){
+            parent.layer.msg("请选择资源！",{time:1500});
+            return false;
+        }
+        var FastEntryDto={
+            appId:appId,
+            resourceId:resourceId,
+            appResourceName:appResourceName,
+            desc:appResourceName,
+            url:url,
+            icon:icon
+        }
+        ajaxHengyun({
+            type:"POST",
+            contentType : 'application/json',
+            url: "${_gate_url}/api/admin/fastEntry/save",
+            data:JSON.stringify(FastEntryDto),
+            datatype:'json',
+            success:function(rows){
+                if(rows.data){
+                    parent.getInfoList();
+                    parent.layer.close(index);
+                }
+            },
+        });
+        console.log(FastEntryDto);
+    };
+</script>
+</body>
+</html>

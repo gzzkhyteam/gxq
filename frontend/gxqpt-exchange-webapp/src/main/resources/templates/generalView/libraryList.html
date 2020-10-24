@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span id="content">整体概览</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="main_right pull-right" style="width: 100%;">
+						<div class="main_right_top clearfix">
+							<div class="pull-left">
+								<div class="shop" id="search">
+									<span class="shop_tel">[共<span class="colorBlue" id="apiCount">0</span>个API接口]</span>
+									<span class="shop_btn active" onclick="getTypeList(1)" style="">更新时间</span>
+									<span class="shop_btn" onclick=getTypeList(2)>访问量</span>
+									<span class="shop_btn" onclick=getTypeList(3)>下载量</span>
+								</div>
+							</div>
+							<div class="pull-right relative">
+								<div class="search">
+									<input type="text" placeholder="请输入关键字" id="searchKey"   oninput="getTypeList()" autocomplete="off"/>
+									<span class="fa fa-search"></span>
+								</div>
+							</div>
+						</div>
+						<!--元目录数据-->
+						<div class="main_right_content" id="bottomId">
+							<div class="item" >
+								<div class="item_div text-center">
+									暂无数据
+								</div>
+							</div>
+						</div>
+						<div class="text-center">
+							<ul class="pagination" id="pagination" ></ul>
+							<p class="pull-right currentPage">共<i id="totalNum" class="colorBlue"></i>条数据，当前第<i id="pageNum" class="colorBlue"></i>页/共<i id="totalPages"  class="colorBlue">10</i>页</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+            var busCode = "${busCode}";
+            var content = "基础库";
+            if(busCode=='special_type'){
+                content = '专题库';
+			}else if(busCode=='theme'){
+                content = '主题库';
+			}
+			$("#content").html(content);
+            if(busCode)
+            var busKey = "${busKey}";
+            var parm = {
+                data:{
+                    busCode:busCode,
+                    busKey: busKey,
+                    indexNo:1,
+                },
+                pageNo:1,
+                pageSize:6,
+            };
+            //单位，领域，主题，行业服务数据分页按钮点击方法
+            $(".shop_btn").click(function(){
+               $(".shop_btn").removeClass("active");
+               $(this).addClass("active");
+			});
+            //加载元目录数据
+            function getTypeList(indexNo){
+                parm.data.indexNo=indexNo;
+                parm.pageNo=1;
+                getList(parm);
+            };
+            getList(parm);
+			//加载列表
+            function getList(parm){
+
+                $("#bottomId").html("");
+                getApiCount(busCode,busKey);
+                var searchKey=$("#searchKey").val();
+                parm.data.searchKey=searchKey;
+                var botmHtml="";
+                ajaxHengyun({
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data:JSON.stringify(parm),
+                    url: '${_gate_url}/api/exchange/overview/getBottomDirListByType',
+                    success: function (rows) {
+                        if(rows.data){
+                            if(rows.data.list.length>0){
+                                rows.data.list.forEach(function(value,index){
+                                    var domainName=value.domainName;
+                                    if(value.domainName==null || value.domainName==''){
+                                        domainName='';
+                                    }
+                                    var themeThreeName=value.themeThreeName;
+                                    if(value.themeThreeName==null || value.themeThreeName=='' ){
+                                        themeThreeName='';
+                                    }
+                                    var industryThreeName=value.industryThreeName;
+                                    if(value.industryThreeName==null || value.industryThreeName=='' ){
+                                        industryThreeName='';
+                                    }
+                                    var serviceThreeName=value.serviceThreeName;
+                                    if(value.serviceThreeName==null || value.serviceThreeName=='' ){
+                                        serviceThreeName='';
+                                    }
+                                    botmHtml+='<div class="item" >';
+                                    botmHtml+='<h3>'+value.dirName+'</h3>';
+                                    botmHtml+='<div class="item_div">';
+                                    botmHtml+='<span class="clearfix"><b class="pull-left">更新时间：</b><i class="pull-left">'+value.updateTime+'</i></span>';
+                                    botmHtml+='<span class="clearfix"><b class="pull-left">访问量：</b><i class="pull-left">'+value.seeCount+'</i></span>';
+                                    botmHtml+='<span class="clearfix"><b class="pull-left">数据量：</b><i class="pull-left">'+value.dataCount+'</i></span>';
+                                    botmHtml+='<span class="clearfix"><b class="pull-left">下载量：</b><i class="pull-left">'+value.downCount+'</i></span>';
+                                    botmHtml+='<a class="pull-right" href="javascript:void(0);" onclick="generalView(\''+value.id+'\')">详情</a>';
+                                    botmHtml+='</div>';
+                                    botmHtml+='<div class="item_div">';
+                                    botmHtml+='<span class="clearfix"><b class="pull-left">数据领域：</b><i class="pull-left">'+domainName+'</i></span>';
+                                    botmHtml+='<span class="clearfix"><b class="pull-left">主题分类：</b><i class="pull-left">'+themeThreeName+'</i></span>';
+                                    botmHtml+='<span class="clearfix"><b class="pull-left">行业分类：</b><i class="pull-left">'+industryThreeName+'</i></span>';
+                                    botmHtml+='<span class="clearfix"><b class="pull-left">服务分类：</b><i class="pull-left">'+serviceThreeName+'</i></span>';
+                                    botmHtml+='</div>';
+                                    botmHtml+='</div>';
+
+                                });
+                            }else{
+                                botmHtml+='<div class="item" >';
+                                botmHtml+='<div class="item_div text-center">';
+                                botmHtml+='暂无数据';
+                                botmHtml+='</div>';
+                                botmHtml+='</div>';
+                            };
+
+                            $("#bottomId").html(botmHtml);
+                            $('#totalPages').text(rows.data.pages);
+                            $('#totalNum').text(rows.data.total);
+                            jqPaginatorById(rows.data,"pagination");
+                        }else{
+                            $(".pagination,.currentPage").css("display","none");
+                            parent.layer.msg(res.errmsg+"，请重试！",{time:3000});
+                        };
+                        updateIformHeight();
+                    }
+                });
+
+            }
+
+            //获取每个类型的api数量
+            function getApiCount(busCode,busKey){
+                ajaxHengyun({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '${_gate_url}/api/exchange/overview/getApiCountByType?busCode='+busCode+"&busKey="+busKey,
+                    success: function (rows) {
+                        $("#apiCount").html(rows.data.apiCount);
+                    }
+                });
+            }
+
+            //详情并更新查看次数
+            function generalView(id){
+                window.location.href='${_cp}/module/generalView?pageType=three&busCode='+busCode+'&busKey='+busKey+"&id="+id;
+                // if(dataType==1){
+                //     window.location.href='${_cp}/module/generalView?id='+id+'&unitId='+unitId;
+                // }
+                // else if(dataType==2){
+                //     window.location.href='${_cp}/module/unstructuredView?id='+id+'&unitId='+unitId;
+                // }
+                ajaxHengyun({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '${_gate_url}/api/exchange/overview/updateSeeCount?id='+id,
+                    success: function (rows) {
+
+                    }
+                });
+            }
+
+            // function getBottomData(){
+            //     $("#bottomId").html("");
+            //     getApiCount(parmObj.data.busCode,parmObj.data.unitId);
+            //     var searchKey=$("#searchKey").val();
+            //     parmObj.data.searchKey=searchKey;
+            //     var botmHtml="";
+            //     ajaxHengyun({
+            //         type: 'POST',
+            //         dataType: 'json',
+            //         contentType: 'application/json',
+            //         data:JSON.stringify(parmObj),
+            //         url: '${_gate_url}/api/exchange/overview/getBottomDirList',
+            //         success: function (rows) {
+            //             if(rows.data){
+            //                 if(rows.data.list.length>0){
+            //                     rows.data.list.forEach(function(value,index){
+            //                         var domainName=value.domainName;
+            //                         if(value.domainName==null || value.domainName==''){
+            //                             domainName='';
+            //                         }
+            //                         var themeThreeName=value.themeThreeName;
+            //                         if(value.themeThreeName==null || value.themeThreeName=='' ){
+            //                             themeThreeName='';
+            //                         }
+            //                         var industryThreeName=value.industryThreeName;
+            //                         if(value.industryThreeName==null || value.industryThreeName=='' ){
+            //                             industryThreeName='';
+            //                         }
+            //                         var serviceThreeName=value.serviceThreeName;
+            //                         if(value.serviceThreeName==null || value.serviceThreeName=='' ){
+            //                             serviceThreeName='';
+            //                         }
+            //                         botmHtml+='<div class="item" >';
+            //                         botmHtml+='<h3>'+value.dirName+'</h3>';
+            //                         botmHtml+='<div class="item_div">';
+            //                         botmHtml+='<span class="clearfix"><b class="pull-left">更新时间：</b><i class="pull-left">'+value.updateTime+'</i></span>';
+            //                         botmHtml+='<span class="clearfix"><b class="pull-left">访问量：</b><i class="pull-left">'+value.seeCount+'</i></span>';
+            //                         botmHtml+='<span class="clearfix"><b class="pull-left">数据量：</b><i class="pull-left">'+value.dataCount+'</i></span>';
+            //                         botmHtml+='<span class="clearfix"><b class="pull-left">下载量：</b><i class="pull-left">'+value.downCount+'</i></span>';
+            //                         botmHtml+='<a class="pull-right" href="javascript:void(0);" onclick="generalView(\''+value.id+'\','+value.dataType+',\''+parmObj.data.unitId+'\')">详情</a>';
+            //                         botmHtml+='</div>';
+            //                         botmHtml+='<div class="item_div">';
+            //                         botmHtml+='<span class="clearfix"><b class="pull-left">数据领域：</b><i class="pull-left">'+domainName+'</i></span>';
+            //                         botmHtml+='<span class="clearfix"><b class="pull-left">主题分类：</b><i class="pull-left">'+themeThreeName+'</i></span>';
+            //                         botmHtml+='<span class="clearfix"><b class="pull-left">行业分类：</b><i class="pull-left">'+industryThreeName+'</i></span>';
+            //                         botmHtml+='<span class="clearfix"><b class="pull-left">服务分类：</b><i class="pull-left">'+serviceThreeName+'</i></span>';
+            //                         botmHtml+='</div>';
+            //                         botmHtml+='</div>';
+			//
+            //                     });
+            //                 }else{
+            //                     botmHtml+='<div class="item" >';
+            //                     botmHtml+='<div class="item_div text-center">';
+            //                     botmHtml+='暂无数据';
+            //                     botmHtml+='</div>';
+            //                     botmHtml+='</div>';
+            //                 };
+			//
+            //                 $("#bottomId").html(botmHtml);
+            //                 $('#totalPages').text(rows.data.pages);
+            //                 $('#totalNum').text(rows.data.total);
+            //                 jqPaginatorById(rows.data,"pagination");
+            //             }else{
+            //                 $(".pagination,.currentPage").css("display","none");
+            //                 parent.layer.msg(res.errmsg+"，请重试！",{time:3000});
+            //             };
+            //             updateIformHeight();
+            //         }
+            //     });
+			//
+            // }
+		</script>
+	</body>
+</html>

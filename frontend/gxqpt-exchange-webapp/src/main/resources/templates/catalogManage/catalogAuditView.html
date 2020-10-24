@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>交换共享系统</title>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+	<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+	<div class="main clearfix">
+		<div class="row marginTop">
+			<div class="current pull-left">
+				<h3 class="page-title">
+					<span>目录审核</span> &gt; <span class="page-title-scend">详情</span>
+				</h3>
+			</div>
+			<div class="back pull-right">
+				<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+			</div>
+		</div>
+		<div class="view_container row">
+			<div class="main_left pull-left">
+				<div id="ztreeContainer" class="ztreeContainer">
+					<h3 class="clearfix">
+						<span class="pull-left item_tle">数据目录</span>
+					</h3>
+					<div class="search">
+						<input type="text" placeholder="请输入关键字搜索" autocomplete="off"/>
+						<span class="fa fa-search"></span>
+					</div>
+					<ul id="ztree" class="ztree"></ul>
+					<div class="text-center">
+						<a href="${_cp}/module/editList" class="btn btn-primary">目录修改列表</a>
+						<a href="javascript:void(0);" class="btn btn-primary" onclick="auditPage()">审核</a>
+					</div>
+				</div>
+			</div>
+			<div class="main_right pull-right">
+				<div id="secondPage" class="secondPage">
+					<div id="unit" class="view_item">
+						<h3>单位信息</h3>
+						<table class="table default-table tab-border-no-layer borderCollapse">
+							<tbody>
+							<tr>
+								<th width="130">单位全称：</th>
+								<td class="viewTd dirName"></td>
+							</tr>
+							<tr>
+								<th>单位简称：</th>
+								<td id="unitAbbr" class="viewTd"></td>
+							</tr>
+							<tr>
+								<th>单位标识：</th>
+								<td class="viewTd dirType"></td>
+							</tr>
+							<tr>
+								<th>单位描述：</th>
+								<td class="viewTd desc"></td>
+							</tr>
+							<tr>
+								<th>数据量：</th>
+								<td class="viewTd dataCount"></td>
+							</tr>
+							<tr>
+								<th>数据查看次数：</th>
+								<td class="viewTd seeCount"></td>
+							</tr>
+							<tr>
+								<th>数据下载次数：</th>
+								<td class="viewTd downCount"></td>
+							</tr>
+							<tr>
+								<th>发布状态：</th>
+								<td class="viewTd status"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="catalog" class="view_item">
+						<h3>目录信息</h3>
+						<table class="table default-table tab-border-no-layer borderCollapse">
+							<tbody>
+							<tr>
+								<th width="130">目录名称：</th>
+								<td class="viewTd dirName"></td>
+							</tr>
+							<!-- <tr>
+								<th>目录编码：</th>
+								<td class="viewTd dirCode"></td>
+							</tr> -->
+							<tr>
+								<th>目录标识：</th>
+								<td class="viewTd dirType"></td>
+							</tr>
+							<tr>
+								<th>目录描述：</th>
+								<td class="viewTd desc"></td>
+							</tr>
+							<tr>
+								<th>是否为底层目录：</th>
+								<td class="viewTd">否</td>
+							</tr>
+							<tr>
+								<th>数据量：</th>
+								<td class="viewTd dataCount"></td>
+							</tr>
+							<tr>
+								<th>数据查看次数：</th>
+								<td class="viewTd seeCount"></td>
+							</tr>
+							<tr>
+								<th>数据下载次数：</th>
+								<td class="viewTd downCount"></td>
+							</tr>
+							<tr>
+								<th>发布状态：</th>
+								<td class="viewTd status"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+
+
+					<div id="catalogBottom" class="view_item">
+						<h3>元目录信息</h3>
+						<table class="table default-table tab-border-no-layer borderCollapse">
+							<col width="240"/>
+							<col />
+							<col width="80"/>
+							<col />
+							<tbody>
+							<tr>
+								<th>目录名称：</th>
+								<td colspan="3" class="viewTd dirType"></td>
+							</tr>
+							<tr>
+								<th>目录标识：</th>
+								<td colspan="3" class="viewTd dirType"></td>
+							</tr>
+							<tr>
+								<th>目录描述：</th>
+								<td colspan="3" class="viewTd desc"></td>
+							</tr>
+							<tr>
+								<th>是否为底层目录：</th>
+								<td colspan="3" class="viewTd">是</td>
+							</tr>
+							<tr>
+								<!-- <th>目录编码：</th>
+								<td class="viewTd dirCode"></td> -->
+								<th>主题分类：</th>
+								<td class="viewTd theme"></td>
+							</tr>
+							<tr>
+								<th>行业分类：</th>
+								<td class="viewTd industry"></td>
+								<th>服务分类：</th>
+								<td class="viewTd service"></td>
+							</tr>
+							<tr>
+								<th>数据类型：</th>
+								<td class="viewTd dataType"></td>
+								<th>开放方式：</th>
+								<td class="viewTd openWay"></td>
+							</tr>
+							<tr class="openWayNo">
+								<th>共享方式：</th>
+								<td colspan="3" class="viewTd shareWay"></td>
+							</tr>
+							<tr class="shareWayNo">
+								<th>不开放、不共享、有条件共享原因：</th>
+								<td colspan="3" class="viewTd reason"></td>
+							</tr>
+							<tr class="shareWayNo">
+								<th>默认共享部门：</th>
+								<td colspan="3" class="viewTd shareUnit"></td>
+							</tr>
+							<tr>
+								<th>数据量：</th>
+								<td class="viewTd dataCount"></td>
+								<th>查看次数：</th>
+								<td class="viewTd seeCount"></td>
+							</tr>
+							<tr>
+								<th>下载次数：</th>
+								<td class="viewTd downCount"></td>
+								<th>发布状态：</th>
+								<td class="viewTd status"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="field" class="view_item">
+						<h3>字段信息</h3>
+						<table class="table default-table tab-border-no-layer borderCollapse">
+							<tbody>
+							<tr>
+								<th width="130">字段名称：</th>
+								<td id="fieldName" class="viewTd"></td>
+							</tr>
+							<tr>
+								<th>数据类型：</th>
+								<td id="fieldType" class="viewTd"></td>
+							</tr>
+							<tr>
+								<th>字段标识：</th>
+								<td id="fieldCode" class="viewTd"></td>
+							</tr>
+							<tr>
+								<th>字段描述：</th>
+								<td class="viewTd desc"></td>
+							</tr>
+							<tr>
+								<th>发布状态：</th>
+								<td class="viewTd status"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.exedit.js" charset="utf-8"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var FieldType=[];
+    var unitList=[];
+    getFieldType();
+    getUnitList();
+    /* 生成树 */
+
+    var setting = {
+        view: {
+            selectedMulti: false,
+            fontCss: getFont,
+            showLine: false,
+            showIcon: false
+        },
+        data: {
+            key: {
+                name: 'dirName'
+            },
+            simpleData: {
+                idKey: 'id',
+                enable: true
+            }
+        },
+        callback: {
+            onClick: onClick,
+            onExpand: zTreeOnExpand
+        },
+        async: {
+            enable: true,
+            url:getUrl,
+            type:'GET',
+            dataType: 'json',
+            otherParam:[],
+            autoParam:[],
+            dataFilter: filter
+        }
+    };
+    function setCheck() {
+        var zTree = $.fn.zTree.getZTreeObj("ztree"),
+            type = {
+                "Y": 'ps',
+                "N": 'ps'
+            };
+        zTree.setting.check.chkboxType = type;
+    }
+    function getUrl(treeId, treeNode){//设置获取字段信息路径
+        return "${_gate_url}/api/exchange/element/getList?dirId="+treeNode.id;
+    }
+    function filter(treeId, parentNode, childNodes) {//获取字段信息
+
+        if (!childNodes.data) return null;
+        for (var i=0, l=childNodes.data.length; i<l; i++) {
+            childNodes.data[i].type='field';
+            childNodes.data[i].dirName = childNodes.data[i].fieldName.replace(/\.n/g, '.');
+        }
+        return childNodes.data;
+    }
+    getZtree();
+    function getZtree(){
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/directory/findDataTree',
+            data:{parentId: "-1"},
+            datatype: "json",
+            success: function (rows) {
+                if(rows.data){
+                    builderTree(rows.data);
+                    var zNodes =[
+                        { dirName:"数据目录", type:"heelNode", open:true,
+                            children: rows.data,
+                        },
+                    ];
+                    $.fn.zTree.init($("#ztree"), setting, zNodes);
+                    getUnitInfo(rows.data[0].id);
+                }
+            }
+        });
+    }
+
+    function builderTree(r){
+
+        if(!r || r.length == 0){
+            return ;
+        }
+        r.forEach(function (value, index) {
+
+            var isChildOrg = true;
+            if(!value.children || value.children.length == 0){
+                value.children = [];
+                isChildOrg = false;
+            };
+
+            if(value.parentId=="-1"){
+                value.type="unit" ;
+            }else{
+                if(value.isBottom=="1"){
+                    value.type="catalog" ;
+                }else if(value.isBottom=="2"){
+                    value.type="catalog_bottom" ;
+                };
+            }
+            value.isParent=true;
+            if(isChildOrg){
+                builderTree(value.children);
+            }
+            return ;
+        });
+        return r;
+    }
+
+    function onClick(e, treeId, treeNode) {
+        $("#secondPage .view_item").css("display","none");
+        if(treeNode.type=="unit"){
+            $("#unit").css("display","block");
+            getUnitInfo(treeNode.id);
+        }else if(treeNode.type=="catalog"){
+            $("#catalog").css("display","block");
+            getUnitInfo(treeNode.id);
+        }else if(treeNode.type=="catalog_bottom"){
+            $("#catalogBottom").css("display","block");
+            getUnitInfo(treeNode.id);
+        }else if(treeNode.type=="field"){
+            $("#field").css("display","block");
+            getDataElement(treeNode.id);
+        };
+        return false;
+    };
+    function getFont(treeId, node) {
+        return node.font ? node.font : {};
+    };
+    setHeight();
+    function setHeight(){
+        var leftHeight=$("#ztreeContainer").prop('scrollHeight');
+        var rightHeight=$("#secondPage").prop('scrollHeight');
+        if(leftHeight && rightHeight){
+            $(".view_container .main_left,.view_container .main_right").css("min-height",Math.max(leftHeight,rightHeight)+30);
+        }
+    }
+    function zTreeOnExpand() {
+        setHeight();
+        var height=document.getElementById("container").scrollHeight;
+        $("#home", window.parent.document).height(height);
+    };
+
+    function releaseApply(){
+        parent.layer.prompt({//申请发布
+            formType:2,
+            title:"申请理由",
+            area: ['500px','270px'],
+            shade: [0.9, '#000'],
+            yes: function(index, layero){
+                var iframeWin = layero.find('.layui-layer-input');
+                var val = $(iframeWin).val();
+                parent.layer.msg('得到了'+val);
+                parent.layer.close(index);
+            }
+        });
+    }
+    /*获取目录信息*/
+    function getUnitInfo(id){
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/directory/get',
+            data:{id: id},
+            datatype: "json",
+            success: function (rows) {
+                if(rows.data){
+                    var rowVal = dealElement(rows.data);
+                    $(".dataCount").text( rowVal.dataCount);
+                    $(".seeCount").text( rowVal.seeCount);
+                    $(".downCount").text( rowVal.downCount);
+                    if(rowVal.status==1){
+                        $(".status").text("未发布");
+                    }
+                    if(rowVal.status==2){
+                        $(".status").text("审批中");
+                    }
+                    if(rowVal.status==3){
+                        $(".status").text("驳回");
+                    }
+                    if(rowVal.status==4){
+                        $(".status").text("已发布");
+                    }
+                    $("#unitAbbr").text( rowVal.unitAbbr);
+                    $(".dirName").text( rowVal.dirName);
+                    $(".dirType").text( rowVal.dirType);
+                    $(".desc").text( rowVal.desc);
+                    $(".dirCode").text(rowVal.dirCode);
+                    $(".reason").text(rowVal.reason);
+                    var themeName="";
+                    if(rowVal.themeOneName!=""){
+                        themeName+=rowVal.themeOneName;
+                        if(rowVal.themeTwoName!=""){
+                            themeName+=">"+rowVal.themeTwoName;
+                            if(rowVal.themeThreeName!=""){
+                                themeName+=">"+rowVal.themeThreeName;
+                            }
+                        }
+                    }
+                    $(".theme").text(themeName);
+                    var industryName="";
+                    if(rowVal.industryOneName!=""){
+                        industryName+=rowVal.industryOneName;
+                        if(rowVal.industryTwoName!=""){
+                            industryName+=">"+rowVal.industryTwoName;
+                            if(rowVal.industryThreeName!=""){
+                                industryName+=">"+rowVal.industryThreeName;
+                            }
+                        }
+                    }
+                    $(".industry").text(industryName);
+                    var serviceName="";
+                    if(rowVal.serviceOneName!=""){
+                        serviceName+=rowVal.serviceOneName;
+                        if(rowVal.serviceTwoName!=""){
+                            serviceName+=">"+rowVal.serviceTwoName;
+                            if(rowVal.serviceThreeName!=""){
+                                serviceName+=">"+rowVal.serviceThreeName;
+                            }
+                        }
+                    }
+                    $(".service").text(serviceName);
+                    if(rowVal.dataType==1){
+                        $(".dataType").text("结构化数据");
+                    }
+                    if(rowVal.dataType==2){
+                        $(".dataType").text("非结构化数据");
+                    }
+                    if(rowVal.shareWay==1){
+                        $(".shareWay").text("无条件共享");
+                        $(".shareWayNo").css("display","none");
+                    }
+                    if(rowVal.shareWay==2){
+                        $(".shareWay").text("有条件共享");
+                        $(".shareWayNo").css("display","table-row");
+                    }
+                    if(rowVal.shareWay==3){
+                        $(".shareWay").text("不共享");
+                        $(".shareWayNo").css("display","table-row");
+                    }
+                    if(rowVal.openWay==1){
+                        $(".openWay").text("开放");
+                        $(".openWayNo,.shareWayNo").css("display","none");
+                    }
+                    if(rowVal.openWay==2){
+                        $(".openWay").text("不开放");
+                        $(".openWayNo").css("display","table-row");
+                    }
+                    if(rowVal.unitIds.length>0){
+                        var shareUnitName=[];
+                        rowVal.unitIds.forEach(function(value,index){
+                            unitList.forEach(function(item,num){
+                                if(value==item.id){
+                                    shareUnitName.push(item.name_);
+                                }
+                            });
+                        });
+                        $(".shareUnit").text(shareUnitName.join("，"));
+                    }
+                };
+                zTreeOnExpand();
+            }
+        });
+    }
+    function getFieldType(){//获取数据类型
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/dataapi/api/findByDictCode',
+            data:{pId: "date_type"},
+            datatype: "json",
+            success: function (rows) {
+                if(rows.data){
+                    FieldType= rows.data;
+                }
+            }
+        });
+    }
+    function getUnitList(){//获取单位列表
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/directory/getOrgList ',
+            datatype: "json",
+            success: function (rows) {
+                if(rows.data){
+                    unitList=rows.data;
+                }
+            }
+        });
+    }
+    function getDataElement(id){//获取字段
+        ajaxHengyun({
+            type:"GET",
+
+            dataType: 'json',
+            url:  '${_gate_url}/api/exchange/element/get',
+            data:{id:id},
+            success:function(rows){
+                if(rows.data){
+                    var rowVal=dealElement(rows.data);
+                    FieldType.forEach(function(value,index){
+                        if(value.id==rowVal.fieldType){
+                            $("#fieldType").text(value.dictName);
+                        }
+                    });
+                    $("#fieldName").text(rowVal.fieldName);
+                    $("#unitId").text(rowVal.unitId);
+                    $("#fieldCode").text(rowVal.fieldCode);
+                    $(".desc").text( rowVal.desc);
+                };
+                zTreeOnExpand();
+            }
+        });
+    };
+    function auditPage(){//审核
+        parent.layer.open({
+            id: 'auditPage',
+            type: 2,
+            anim:6,
+            title: '审核',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['600px', '350px'],
+            shade: [0.9, '#000'],
+            content: "../catalogManage/auditPage.html",
+            btn: ['提交','取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("auditPage");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>应用服务管理 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/jqueryPagination/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                主机管理 > 主机应用 > <span class="active">列表</span>
+            </div>
+            <a href="javascript:" class="button-icon pull-right" onclick="history.back()">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="table-box">
+                <div class="top-bar">
+                    <div class="form-inline pull-left">
+                        <div class="form-group">
+                            <label class="sr-only">Password</label>
+                            <select class="form-control" ng-model="host.appId">
+                                <option value="">---所属应用---</option>
+                                <option ng-repeat="system in systemList" value="{{system.appId}}">{{system.name}}</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary btn-search" ng-click="reloadApp()">查询</button>
+                    </div>
+                    <div class="button-group pull-right">
+                        <a class="btn btn-primary" href="${_cp}/module/addHostApp?id=${id}">新增主机应用</a>
+                    </div>
+                </div>
+                <table class="table table-darck table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th width="50" align="center"></th>
+                        <th>所属应用</th>
+                        <th>分配内存(G)</th>
+                        <th>分配硬盘(G)</th>
+                        <th>部署目录</th>
+                        <th width="150" class="text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="host in hostList">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td>{{host.applicationName}}</td>
+                        <td>{{host.mem}}</td>
+                        <td>{{host.harddisk}}</td>
+                        <td>{{host.installPath}}</td>
+                        <td class="act">
+                            <a href="${_cp}/module/editHostApp?id={{host.id}}">修改</a>
+                            <a href="${_cp}/module/viewHostApp?id={{host.id}}">详情</a>
+                            <a href="javascript:" ng-click="remove(host.id)">删除</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="bottom-bar alignCenter">
+                    <div id="pagination_9"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqueryPagination/js/pagination.min.js"></script>
+<script type="text/javascript">
+    var pageType = "hostList";
+</script>
+</body>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        var pagination;
+        $scope.host = {};
+        //获取应用列表
+        $scope.getSystem = function () {
+            $http.get(urlPrev + 'application/find',{
+                headers: getHeaders(),
+            }).success(function (res) {
+                $scope.systemList = res.data;
+            })
+        }
+        $scope.getSystem();
+        //获取主机列表
+        $scope.host.hostId = '${id}';
+        $scope.getApp = function(currPage,pageSize,load) {
+            $http.post(urlPrev + 'hostInstall/pageFindList',{data:$scope.host,pageNo:currPage || 1,pageSize:pageSize || 20},{
+                headers: getHeaders(),
+            }).success(function (res) {
+                $scope.hostList = res.data.list;
+                /*处理分页*/
+                if(load) {
+                    $("#pagination_9").pagination('setPage', 1, res.data.pages, res.data.total);
+                }else{
+                    pagination = $("#pagination_9").pagination({
+                        totalPage:res.data.pages,
+                        totalSize:res.data.total,
+                        pageSizeOpt: [
+                            {'value': 5, 'text': '5条/页'},
+                            {'value': 10, 'text': '10条/页'},
+                            {'value': 15, 'text': '15条/页'},
+                            {'value': 20, 'text': '20条/页','selected': true}
+                        ],
+                        callBack: function (currPage, pageSize) {
+                            $scope.getHost(currPage,pageSize);
+                        }
+                    });
+                }
+            })
+        }
+        $scope.getApp();
+        $scope.reloadApp = function () {
+            $scope.getApp(1,pagination.get(0).pageText.pageSize,true);
+        }
+        $scope.updataStatus = function (code,id) {
+            $http.post(urlPrev + 'host/updateStatus',{id:id,status:code},{
+                headers: getHeaders(),
+            }).success(function (res) {
+                // if(res.data){
+                //     $scope.getHost();
+                //     layer.msg('操作成功',{icon:6});
+                // }
+                if(res.errcode == 0){
+                    $scope.getHost();
+                    layer.msg('操作成功',{icon:6});
+                }
+            })
+        }
+        $scope.remove = function (id) {
+            layer.confirm("您确定要删除吗？", {
+                title: '温馨提示',
+                shade: [0.4, '#000'],
+                btn: ['确定', '取消'] //按钮
+            }, function (index) {
+                $http.post(urlPrev + 'hostInstall/deleteById',null,{
+                    params:{id:id},
+                    headers: getHeaders(),
+                }).success(function (res) {
+                    // if(res.data){
+                    //     $scope.getHost();
+                    //     layer.msg('操作成功',{icon:6});
+                    // }
+                    if(res.errcode == 0){
+                        layer.close(index);
+                        layer.msg('操作成功',{icon:6});
+                        $scope.getApp();
+                    }
+                })
+            });
+        }
+    }).service('token', function () {
+        this.getToken = function () {
+            // return $.cookie('token');
+            return getToken();
+        }
+    }).filter('formatStatus',function () {
+        return function (text) {
+            if(text == 0){
+                return '停用';
+            }else if(text == 1){
+                return '启用';
+            }
+        }
+    })
+    /*angularJS*/
+</script>
+
+</html>

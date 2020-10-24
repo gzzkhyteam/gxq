@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>数据集管理</span> &gt; <span class="page-title-scend">详情</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<!--<a class="btn_back" href="${_cp}/module/dataSetApplyList?pageNo=${pageNo}">返回上一页</a>-->
+						<a class="btn_back" href="javascript:history.back();">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div id="unit" class="view_item">
+								<h3 class="tle marginTop">基本信息</h3>
+								<table class="table default-table tab-border-no">
+									<tbody>
+										<tr>
+											<th width="139">申请编号：</th>
+											<td id="applyCode" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>申请人：</th>
+											<td id="applyUserName" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>数据集名称：</th>
+											<td id="setName" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>数据量：</th>
+											<td id="dataCount" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>关联目录：</th>
+											<td id="relatedDirectoryName" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>数据表名：</th>
+											<td id="tableCode" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>申请原因：</th>
+											<td id="reason" class="viewTd"></td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="marginTop fileListDiv">
+									<h3 class="tle">文件列表</h3>
+									<table id="fileList" class="default-table tab-title-top">
+										<thead>
+										<tr>
+											<th width="80">序号</th>
+											<th>文件名称</th>
+											<th>文件编号</th>
+											<th width="100">操作</th>
+										</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</div>
+								<h3 id="fieldInfoTil" class="tle disNone">字段信息</h3>
+								<table id="fieldInfo" class="default-table tab-title-top disNone">
+									<thead>
+										<tr>
+											<th width="60">序号</th>
+											<th>字段名称</th>
+											<th>字段类型</th>
+											<th>字段描述</th>
+											<th>规则</th>
+											<th>默认值</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+								<div id="catalogFieldInfo"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+            getView();
+            function getView(){//获取详情
+                ajaxHengyun({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "${_gate_url}/api/exchange/set/showFlowDataSetInfo",
+                    data: {taskId:"${taskId}"},
+                    success: function (rows) {
+                        if(rows.data){
+                            var value=dealElement(rows.data);
+                        	$("#applyCode").text(value.applyCode);
+                        	$("#applyUserName").text(value.applyUserName);
+                        	$("#setName").text(value.setName);
+                        	$("#tableCode").text(value.tableCode);
+                        	if(value.dataCount){
+                                if(value.setType==1 || value.setType==2){
+                                    $("#dataCount").text(value.dataCount+"个");
+                                }else if(value.setType==3 || value.setType==4){
+                                    $("#dataCount").text(value.dataCount+"条");
+                                };
+							}else{
+                                $("#dataCount").text(0);
+							}
+                        	var name=[];
+                        	$("#reason").text(value.reason);
+                        	var fieldHtml = "";
+                            if(value.paramFileds.length>0){
+                                $("#fieldInfoTil,#fieldInfo ").css("display","table");
+								value.paramFileds.forEach(function(fieldValue,num){
+									fieldHtml += '<tr>';
+									fieldHtml += '<td>'+(parseInt(num)+1)+'</td>';
+									fieldHtml += '<td>'+fieldValue.fieldCode+'</td>';
+									fieldHtml += '<td>'+fieldValue.fieldType+'</td>';
+									fieldHtml += '<td>'+fieldValue.fieldName+'</td>';
+									fieldHtml += '<td>';
+									if(fieldValue.rule=="1"){
+										fieldHtml+='大于';
+									}else if(fieldValue.rule=="2"){
+										fieldHtml+='小于';
+									}else if(fieldValue.rule=="3"){
+										fieldHtml+='等于';
+									}else if(fieldValue.rule=="4"){
+										fieldHtml+='模糊';
+									}else if(fieldValue.rule=="5"){
+										fieldHtml+='小于等于';
+									}else if(fieldValue.rule=="6"){
+										fieldHtml+='大于等于';
+									}
+									fieldHtml += '</td>';
+									fieldHtml += '<td>'+fieldValue.value+'</td>';
+									fieldHtml += '</tr>';
+								});
+								$("#fieldInfo tbody").html(fieldHtml);
+							};
+                            //附件信息
+                            var filesList=rows.data.files;
+                            if(filesList){
+                                var html="";
+                                var file={};
+                                for(var i in filesList){
+                                    var num = parseInt(i)+1;
+                                    file.filePath=filesList[i].filePath;
+                                    file.oldName=filesList[i].oldName;
+                                    file.busId=filesList[i].busId;
+                                    html+='<tr>';
+                                    html+='<td class="xh">'+num+'</td>';
+                                    html+='<td>'+filesList[i].oldName+'</td>';
+                                    html+='<td>'+filesList[i].busId+'</td>';
+                                    html+='<td>';
+                                    html+='<a href="javascript:void(0);" onclick="downLoadFolder(\''+filesList[i].filePath+'\',\''+filesList[i].oldName+'\')">下载</a>';
+                                    html+='</td>';
+                                    html+='</tr>';
+                                    var uploadFileNameText=$("#uploadFileName").text();
+                                    if(!uploadFileNameText){
+                                        $("#uploadFileName").text(filesList[i].oldName);
+                                    }else{
+                                        $("#uploadFileName").text(uploadFileNameText+'，'+filesList[i].oldName);
+                                    }
+                                };
+                                $("#fileList tbody").append(html);
+                                $("#catalogFieldInfo").css("display","none");
+							}else{
+								$(".fileListDiv").css("display","none");
+							}
+
+
+
+
+							var setHtml = "";
+							value.relatedDirectory.forEach(function(setValue,number){
+                                name.push(setValue.name);
+                                setHtml += '<h3 class="tle">目录('+setValue.name+')关联字段</h3>';
+                                setHtml += '<table class="default-table tab-title-top">';
+                                setHtml += '<thead>';
+                                setHtml += '<tr>';
+                                setHtml += '<th width="60">序号</th>';
+                                setHtml += '<th>数据集字段</th>';
+                                setHtml += '<th>字段编码</th>';
+                                setHtml += '<th>字段名称</th>';
+                                setHtml += '</tr>';
+                                setHtml += '</thead>';
+                                setHtml += '<tbody>';
+                                setValue.list.forEach(function(setList,index){
+									setHtml += '<tr>';
+									setHtml += '<td> '+(parseInt(index)+1)+' </td>';
+									setHtml += '<td> '+setList.setField+' </td>';
+									setHtml += '<td> '+setList.fieldCode+' </td>';
+									setHtml += '<td> '+setList.fieldName+' </td>';
+									setHtml += '</tr>';
+								})
+                                setHtml += '</tbody>';
+                                setHtml += '</table>';
+							});
+                        	$("#relatedDirectoryName").text(name.join("，"));
+                        	$("#catalogFieldInfo").html(setHtml);
+                            updateIformHeight();
+                        }
+                    }
+                });
+            };
+            function downLoadFolder(url, folderName){//文件下载
+                var urlDownload = "${_gate_url}/api/file/file/download?url=" + url + "&filename=" + folderName;
+                window.open(urlDownload);
+            }
+		</script>
+	</body>
+</html>

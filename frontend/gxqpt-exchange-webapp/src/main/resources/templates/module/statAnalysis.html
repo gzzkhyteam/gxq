@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/echarts/echarts-ext.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			.unitName{display: none}
+		</style>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>共享交换分析</span>
+						</h3>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div class="col-md-12 col-lg-12 col-sm-12">
+							<div id="top_left" class="analysis"></div>
+						</div>
+						<div class="col-md-12 col-lg-12 col-sm-12">
+							<div id="top_right" class="analysis"></div>
+						</div>
+						<div class="col-md-12 col-lg-12 col-sm-12">
+							<div id="middle" class="analysis"></div>
+						</div>
+						<div class="col-md-12 col-lg-12 col-sm-12">
+							<div id="bottom" class="analysis"></div>
+						</div>
+						<div class="col-md-8 col-lg-8 col-sm-8">
+							<div id="dirMonthData" class="analysis"></div>
+						</div>
+						<div class="col-md-4 col-lg-4 col-sm-4">
+							<div id="catalogTotal" class="analysis"></div>
+						</div>
+						<div class="col-md-12 col-lg-12 col-sm-12">
+							<div id="dirMonthCallInfo" class="analysis"></div>
+						</div>
+						<div id="unitAnalysis" class="col-md-12 col-lg-12 col-sm-12" style="background: #fff;">
+						</div>
+						<div class="col-md-12 col-lg-12 col-sm-12" style="background: #fff; margin-top: 20px;">
+							<div class="row">
+								<div class="current pull-left">
+									<ul class="navsecond clearfix">
+										<li class="pull-left" data-shareType="1">
+											<a class="active" href="javascript:">开放数据跟踪</a>
+										</li>
+										<li class="pull-left" data-shareType="2">
+											<a href="javascript:">共享数据跟踪</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<table id="dataList" class="default-table tab-title-top">
+								<thead>
+								<tr>
+									<th width="60">序号</th>
+									<th>目录名称</th>
+									<th>API名称</th>
+									<th width="200">调用IP地址</th>
+									<th class="unitName">调用账户</th>
+									<th width="180">调用时间</th>
+									<th width="120">调用数据量</th>
+								</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+							<div class="text-center">
+								<ul class="pagination" id="pagination" ></ul>
+								<p class="pull-right currentPage">共<span class="total">0</span>条数据，当前第<i id="pageNum" class="colorBlue">1</i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+            var _gateUrl = "${_gate_url}";
+		</script>
+		<script type="text/javascript" src="${_static}/js/statAnalysis.js"></script>
+	</body>
+</html>

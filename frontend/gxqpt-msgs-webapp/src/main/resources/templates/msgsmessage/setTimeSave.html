@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <script type="text/javascript" src="${_static}/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+    <style>
+        label{
+            line-height: 32px;
+            margin: 10px 0 0 25px;
+        }
+        input.Wdate{
+            width: 380px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <label class="pull-left">发送时间：</label>
+    <input id="startTime" class="pull-left form-control Wdate">
+    <script>
+        $('.Wdate').off('focus').on('focus',function(){
+            WdatePicker({skin:'twoer', lang:'zh-cn',minDate:'%y-%M-%d %H:{%m+1}:%s', dateFmt:'yyyy-MM-dd HH:mm:ss'});
+        });
+        function save(index){
+            var time = $("#startTime").val();
+            if(!time){
+                parent.layer.msg("请选择发送时间！",{time:2000});
+            }else{
+                if(!CompareDate(time,new Date())){
+                    parent.layer.msg("您设置的日期已过期，请重新设置！",{time:2000});
+                    return false;
+                };
+                parent.home.getFormData("0",time);
+                parent.layer.close(index);
+            }
+        }
+        function CompareDate(d1,d2){
+            return ((new Date(d1.replace(/-/g,"\/"))) > d2);
+        };
+    </script>
+</body>
+</html>

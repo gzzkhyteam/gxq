@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Expires" content="0" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <!-- begin 外部CSS引入 -->
+    <link type="text/css" rel="stylesheet" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_lib}/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib}/jquery-step/jquery.step.css">
+
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+
+    <link rel="stylesheet" href="${_css}/app.css">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_js}/hengyun/hengyun_ajax.js"></script>
+    <!-- end 外部CSS引入 -->
+    <script type="text/javascript" src="${_lib}/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+        }
+
+        .list-section {
+            padding: 5px 10px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        .grid-section {
+        }
+
+        .ui-jqgrid .ui-jqgrid-btable tbody tr.jqgrow td, .ui-jqgrid {
+            background: #fff;
+        }
+
+        .ui-th-ltr, .ui-jqgrid .ui-jqgrid-htable th.ui-th-ltr, .ui-jqgrid .ui-jqgrid-btable
+        {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>
+                            发文管理
+                        </h5>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary btn-submits" type="button" onclick="addDcpg();">
+                            <span class="glyphicon glyphicon-add"></span> 新建发文
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="margin-top-1" id="infos">
+                        <form action="" class="form-inline search-form"  style="margin-top: 20px;">
+                            <div class="form-field">
+                                <div class="form-group">
+                                    <label class="control-label w84">
+                                        <span class="text-danger"></span>
+                                        <span>处理状态：</span>
+                                    </label>
+                                    <div class="form-control-wrap">
+                                        <select id="handleStatusId" name="handleStatus" class="form-control" style="width: 156px;">
+                                            <option value="processing" selected>待办</option>
+                                            <option value="finished">已办</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-group">
+                                    <label class="control-label w84">
+                                        <span class="text-danger"></span>
+                                        <span>文件名称：</span>
+                                    </label>
+                                    <div class="form-control-wrap">
+                                        <input class="form-control" name="attachmentName" id="attachmentNameId">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-group">
+                                    <label class="control-label w84">
+                                        <span class="text-danger"></span>
+                                        <span>发文编号：</span>
+                                    </label>
+                                    <div class="form-control-wrap">
+                                        <input class="form-control" name="docNum" id="docNumId">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-group">
+                                    <label class="control-label w84">
+                                        <span class="text-danger"></span>
+                                        <span>正文关键字：</span>
+                                    </label>
+                                    <div class="form-control-wrap">
+                                        <input class="form-control" name="content" id="contentId">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<div class="form-field">
+                                <div class="form-group">
+                                    <label class="control-label w84">
+                                        <span class="text-danger"></span>
+                                        <span>拟稿人：</span>
+                                    </label>
+                                    <div class="form-control-wrap">
+                                        <input class="form-control" name="draftedPersonName" id="draftedPersonNameId">
+                                    </div>
+                                </div>
+                            </div>-->
+                            <div class="form-field">
+                                <div class="form-group">
+                                    <label class="control-label w84">
+                                        <span class="text-danger"></span>
+                                        <span>发文日期：</span>
+                                    </label>
+                                    <div class="form-control-wrap">
+                                        <input class="form-control Wdate" onclick="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd'})" name="startTime" id="startTimeId">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        <span class="text-danger"></span>
+                                        <span>至</span>
+                                    </label>
+                                    <div class="form-control-wrap">
+                                        <input class="form-control Wdate" onclick="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd'})" name="endTime" id="endTimeId">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-group">
+                                    <div class="form-control-wrap text-right">
+                                        <button type="button" class="btn btn-primary search-button" onclick="btn_Search()"><span class="glyphicon glyphicon-search"></span> 查询</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <!-- begin 表格 -->
+                                <div class="grid-section">
+                                    <table id="list">
+                                    </table>
+                                    <div id="pager"></div>
+                                </div>
+                                <!-- end 表格  -->
+                            </fieldset>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <fieldset>
+                        <!--<div class="col-sm-12" id="addMyStep">
+                             <div class="step-body" id="myStep">
+                                <div class="step-header" style="width:100%">
+                                    <ul>
+                                        <li><p>收文登记</p></li>
+                                        <li><p>处室领导审核</p></li>
+                                        <li><p>分管领导审核</p></li>
+                                        <li><p>主要领导审核</p></li>
+                                        <li><p>制发</p></li>
+                                        <li><p>办结</p></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>-->
+                    </fieldset>
+                </div>
+                <!-- end 页面内容主体 -->
+            </div>
+        </div>
+    </div>
+</div>
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib}/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib}/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib}/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib}/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript"
+        src="${_lib}/jquery-step/jquery.step.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+
+<script type="text/javascript" src="${_js}/app.js"></script>
+<!--end 外部JS引入 -->
+<!--begin 自定义JS -->
+<script type="text/javascript">
+    $(function() {
+        Date.prototype.format = function(fmt) {
+            var o = {
+                "M+" : this.getMonth()+1,                 //月份
+                "d+" : this.getDate(),                    //日
+                "h+" : this.getHours(),                   //小时
+                "m+" : this.getMinutes(),                 //分
+                "s+" : this.getSeconds(),                 //秒
+                "q+" : Math.floor((this.getMonth()+3)/3), //季度
+                "S"  : this.getMilliseconds()             //毫秒
+            };
+            if(/(y+)/.test(fmt)) {
+                fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+            }
+            for(var k in o) {
+                if(new RegExp("("+ k +")").test(fmt)){
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+                }
+            }
+            return fmt;
+        }
+
+
+
+
+        //$("#addMyStep").html(myStep());
+        //addStep(0);
+        //var postData = GetWebControls("#btn_Search_form");
+        $("#list").jqGrid({
+            mtype: 'POST',
+            postData:{pageNo:1,pageSize:10, data: {"docType":"send","handleStatus":"processing","appId": '${appId!""}'}},
+            url: '${_gate_url}/api/admin/fastapplicationdoc/page',
+            datatype: "json",
+            contentType : 'application/json',
+            serializeGridData:function(postData){
+                return JSON.stringify(postData);
+            },
+            colNames : [ '发文编号', '文件名', '发送单位', '发文日期','密级','操作'],
+            colModel : [{name : 'docNum',index : 'docNum', width : '60'},
+                {name : 'attachmentName', index : 'attachmentName'},
+                {name : 'docUnit',index : 'docUnit',width : '100'},
+                {name : 'createTime',index : 'createTime',width : '100',formatter :fmtTime},
+                {name : 'rank',index : 'rank',width : '100',formatter:function(cellvalue, options, rawObject){
+                        if(cellvalue=="18"){
+                            return '普通';
+                        }else if(cellvalue=="13"){
+                            return '秘密';
+                        }else if(cellvalue=="9"){
+                            return '机密';
+                        }else{
+                            return '绝密';
+                        }
+                    }},
+                {name : 'id',index : 'id',title : false,width : '230',align : 'center',formatter : formatterAct} ],
+            rowNum : 10,
+            onSelectRow: function(id){
+                var rowData = $('#list').jqGrid('getRowData',id);
+                $("#addMyStep").find("#myStep").remove();
+                $("#addMyStep").html(myStep());
+                var status =0;
+                if(rowData.flowStatus=='公文发起'){
+                    status=1;
+                }else if(rowData.flowStatus=='处室领导审批'){
+                    status=2;
+                }else if(rowData.flowStatus=='分管领导审批'){
+                    status=3;
+                }else if(rowData.flowStatus=='主要领导审批'){
+                    status=4;
+                }else if(rowData.flowStatus=='发文制号'){
+                    status=5;
+                }else{
+                    status=6;
+                }
+                addStep(status);
+            },
+            jsonReader : {
+                root : 'data.list',
+                page : 'data.page',
+                total : 'data.total',
+                records : 'data.records'
+            },
+            prmNames : {
+                page : "page", // 表示请求页码的参数名称
+                rows : "rows" // 表示请求行数的参数名称
+            },
+            pager : '#pager',
+            height : 'auto',
+
+        });
+    });
+    function myStep(){
+        var myStep = "<div class='step-body' id='myStep'>";
+        myStep += "<div class='step-header' style='width:100%'>";
+        myStep += "<ul>";
+        myStep += "<li><p>发文登记</p></li>";
+        myStep += "<li><p>处室领导审批</p></li>";
+        myStep += "<li><p>分管领导审批</p></li>";
+        myStep += "<li><p>主要领导审批</p></li>";
+        myStep += "<li><p>发文制号</p></li>";
+        myStep += "<li><p>办结</p></li>";
+        myStep += "</ul>";
+        myStep += "</div>";
+        myStep += "</div>";
+        return myStep;
+    }
+    function fmtTime(cellvalue, options, rawObject) {
+        return new Date(rawObject.createTime).format('yyyy-MM-dd');
+        if(time==null){
+            return '';
+        }
+        //return time.substring(0,10);
+    }
+    //流程进度条
+    function addStep(i) {
+        var step = $("#myStep").step({
+            animate : true,
+            initStep : i,
+            speed : 1000
+        });
+    }
+    function formatterAct(cellvalue, options, rawObject) {//cellvalue：要被格式化的值
+        //options：对数据进行格式化时的参数设置，格式为：
+        //{ rowId: rid, colModel: cm}
+        //rowObject：行数据
+
+        var handleStatus = rawObject.handleStatus;
+        var linkStatus = rawObject.linkStatus;
+        var title = rawObject.title;
+        var docType = rawObject.docType;
+        var returnValue = "";
+        /*if (handleStatus == "processing") {
+            returnValue += '<a class="ui-button" onclick="hengyunConfirm(\''+rawObject+'\',submitAudit);return false;" href="javascript:">';
+            returnValue += '<i class="fa fa-pencil fa-fw"></i>审批</a>';
+            returnValue += '<span class="oper-separator"></span>';
+            returnValue += '<a class="ui-button" href="addOrUpdate.do?taskSenFileId='+cellvalue+'">';
+            returnValue += '<i class="fa fa-pencil fa-fw"></i>编辑</a>';
+            returnValue += '<span class="oper-separator"></span>';
+        }
+*/
+        if(handleStatus == "processing"){
+            // returnValue += '<a class="ui-button" onclick="hengyunConfirm("'+cellvalue+'","'+title+'","'+docType+'","submitAudit");return false;" href="javascript:">';
+            returnValue += '<a class="ui-button" onclick="submitAudit(\''+cellvalue+'\',\''+title+'\',\''+docType+'\');return false;" href="javascript:">';
+            //returnValue += '<a class="ui-button" onclick="hengyunConfirm(\''+cellvalue+'\',+\''title+'\',\''+docType+'\',submitAudit);return false;" href="javascript:">';
+            returnValue += '<i class="fa fa-pencil fa-fw"></i>提交</a>';
+            returnValue += '<span class="oper-separator"></span>';
+            returnValue += '<a class="ui-button" href="addOrUpdate.do?taskSenFileId='+cellvalue+'">';
+            returnValue += '<i class="fa fa-pencil fa-fw"></i>编辑</a>';
+            returnValue += '<span class="oper-separator"></span>';
+        }
+        if(linkStatus == "mainLeader"){
+            returnValue += '<a class="ui-button" onclick="hengyunConfirm(\''+cellvalue+'\',submitAudit);return false;" href="javascript:">';
+            returnValue += '<i class="fa fa-pencil fa-fw"></i>办结</a>';
+            returnValue += '<span class="oper-separator"></span>';
+        }
+
+        //returnValue += '<span class="oper-separator"></span>';
+        returnValue += '<a class="ui-button" href="getSendFileDetail.do?taskSenFileId=' + cellvalue
+            + '">';
+        returnValue += '<i class="fa fa-eye"></i>详情</a>';
+        return returnValue;
+    }
+
+    function sendFileNumFormatter(cellvalue, options, rawObject){
+        if(rawObject["documentT"])
+            return rawObject["documentT"] + "【"+ rawObject["documentYear"]+"】"+rawObject["documentNum"]+"号";
+        else
+            return "";
+    }
+    function addDcpg() {
+        window.location.href = "addTaskSendFile";
+        //window.location.href = "task/xzTask.do";
+
+    }
+
+    function submitAudit(id,title,docType){
+
+        parent.layer.confirm("您确定提交吗？",{icon: 3, title:'确认'},
+            function(){
+                var postData = {"id":id,"title":title,"docType":docType,"appId": '${appId!""}'};
+
+                ajaxHengyun({
+                    url: '${_gate_url}/api/admin/fastapplicationdoc/approve',
+                    type: "post",
+                    dataType: 'json',
+                    data: JSON.stringify(postData),
+                    contentType: "application/json",
+                    success: function(res){
+                        if(res.errmsg == 'ok'){
+                            btn_Search();
+                            parent.layer.alert("操作成功");
+                        } else {
+                            parent.layer.alert(res.errMsg);
+                        }
+                    }
+                });
+
+            },
+            function(){parent.layer.closeAll();});
+
+    }
+
+
+    /* function hengyunConfirm(params,method) {
+         parent.layer.confirm("您确定提交吗？",{icon: 3, title:'确认'},function(){method(params);},function(){parent.layer.closeAll();});
+     }
+     function submitAudit(rawObject){
+         var postData = {"id":rawObject.id,title:rawObject.title,docType:rawObject.docType};
+         ajaxHengyun({
+             url: '${_gate_url}/api/admin/fastapplicationdoc/approve',
+             type: "post",
+             dataType: 'json',
+             data: JSON.stringify(postData),
+             contentType: "application/json",
+             success: function(res){
+                 if(res.errmsg == 'ok'){
+                     //query();
+                     parent.layer.alert("操作成功");
+                 } else {
+                     parent.layer.alert(res.errMsg);
+                 }
+             }
+         });
+     }*/
+    //关键字搜索
+    function btn_Search() {
+        /*$("#addMyStep").find("#m5yStep").remove();
+          $("#addMyStep").html(myStep());
+          addStep(0);
+        var postData = GetWebControls("#infos");
+        jQuery("#list").jqGrid('setGridParam', {
+            postData : postData,
+            page : 1
+        }).trigger('reloadGrid');*/
+
+
+        var postData = {
+            data: {
+                //处理状态
+                handleStatus: $('#handleStatusId option:selected').val(),
+                // 文件名称
+                fileName: $('#attachmentNameId').val(),
+                // 收文编号
+                docNum: $('#docNumId').val(),
+                // 来文类型
+                docType: "send",
+                //应用ID
+                appId: '${appId!""}',
+                // 正文关键字
+                content: $('#contentId').val(),
+                // 申请时间-开始
+                startTime: $('#startTimeId').val(),
+                // 申请时间-结束
+                endTime: $('#endTimeId').val()
+            },
+            // pageNo: pageNo || $(".ui-pg-input").val() || 0,
+            // pageSize: pageSize || $(".ui-pg-selbox").val() || 20
+            pageNo: 1,
+            pageSize: 10
+        }
+        jQuery("#list").jqGrid('setGridParam', {
+            postData : postData,
+            page : 1
+        }).trigger('reloadGrid');
+        /*jQuery("#list").jqGrid('setGridParam',
+            {pageNo:1,pageSize:10, data: {"docType":"receive","handleStatus":"processing"}}
+        ).trigger('reloadGrid');*/
+    }
+    /*
+     自动获取页面控件值
+     */
+    function GetWebControls(element) {
+        var reVal = "";
+        $(element).find('input,select,textarea').each(
+            function(r) {
+                var id = $(this).prop('name');
+                var value = $(this).val();
+                var type = $(this).prop('type');
+                if (id) {
+                    switch (type) {
+                        case "checkbox":
+                            if ($(this).prop("checked")) {
+                                reVal += '"' + id + '"' + ':' + '"1",';
+                            } else {
+                                reVal += '"' + id + '"' + ':' + '"0",';
+                            }
+                            break;
+                        case "radio":
+                            if ($(this).prop("checked")) {
+                                reVal += '"' + id + '":' + '"' + $.trim(value)
+                                    + '",';
+                            }
+                            break;
+                        default:
+                            if (value != "") { //如果值为空就传空，不需要传空格 -wgj
+                                reVal += '"' + id + '"' + ':' + '"'
+                                    + $.trim(value) + '",';
+                            } else {
+                                reVal += '"' + id + '"' + ':' + '"",';
+                            }
+                            break;
+                    }
+                }
+            });
+        reVal = reVal.substr(0, reVal.length - 1);
+        reVal = reVal.replace(/\\/g, '\\\\');
+        reVal = reVal.replace(/\n/g, '\\n');
+        return jQuery.parseJSON('{' + reVal + '}');
+    }
+    // $("#handleStatus").change(function(){
+    // window.location.href="listPage.do?status="+"DONE"
+    // })
+</script>
+<!--end 自定义JS -->
+</body>
+</html>

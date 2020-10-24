@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+        <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+	</head>
+	<body class="bgNone">
+		<div class="workspace-body">
+			<div id="console-container" class="clearfix">
+				<div class="col-sm-12">
+					<div class="general_list_main clearfix">
+						<div class="main_bottom col-lg-12 col-sm-12">
+							<div class="view_item">
+								<form id="dataForm" class="form-horizontal">
+									<table class="table default-table tab-border-no-layer">
+										<tbody>
+											<tr>
+												<th width="100">审核结果：</th>
+												<td>
+													<select id="status" id="status" name="status" class="form-control chosen-select selWid-form-search">
+														<option value="1">通过</option>
+														<option value="2">驳回</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>审核意见：</th>
+												<td>
+													<textarea id="content" name="content" rows="5" cols="" class="form-control" datatype="*0-1000" errormsg="审核意见长度限制1000字符以内！"></textarea>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<button id="shareDealSubmitBtn" type="button" class="btn hidden" >提交</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<script type="text/javascript">
+			var layerDealNumChw = null;
+            $('#shareDealSubmitBtn').valid({
+                form: '#dataForm',
+                showAllError: true,
+                ignoreHidden: true,
+                checkpassed: function () {
+					   submitFunShareDeal(layerDealNumChw);
+                }
+            });
+            function save(num){
+                layerDealNumChw = num;
+                $('#shareDealSubmitBtn').click()
+			};
+            /*提交方法*/
+            function submitFunShareDeal(num){
+                var dto={};
+                dto.taskId="${id}";
+                dto.applyType="${applyType}";
+                dto.content=$("#content").val();
+                dto.status=$("#status").val();
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/task/handleapi',
+                    data:JSON.stringify(dto),
+                    success:function(rows){
+                        if (rows.errcode === 0){
+                            parent.layer.msg("审批成功！",{time:1000});
+							parent.home.reloadList();
+                            parent.layer.close(num);
+                        }else{
+                            parent.layer.msg(rows.errmsg,{time:3000});
+                        }
+                    }
+                });
+            }
+		</script>
+	</body>
+</html>

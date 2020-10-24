@@ -1,0 +1,172 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>大屏展示</title>
+<link rel="stylesheet" href="${_static}/platform_bg/nui/css/nui.css" />
+<link rel="stylesheet" href="${_static}/platform_bg/css/index.css" />
+<link rel="stylesheet" href="${_static}/css_base/base.css" />
+<link rel="stylesheet" href="${_static}/css/supervisionBase.css" />
+<link rel="stylesheet" href="${_static}/css/supervision.css" />
+<script src="${_static}/js/jquery-1.11.1.min.js"></script>
+<script src="${_static}/platform_bg/js/banner.js"></script>
+<script src="${_static}/js/supervision.js"></script>
+<script src="${_static}/js/base.js"></script>
+<script src="${_static}/js/echarts-ext.js"></script>
+<script src="${_static}/js/echarts-gl.js"></script>
+<script src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script src="${_static}/js/hengyun/jquery.cookie.js"></script>
+<style type="text/css">
+	.py_big_head {
+		background: url(${_static}/v1/img/logo.png) no-repeat;
+		-webkit-background-size: 100% 100%;
+		background-size: 100% 100%;
+	}
+</style>
+</head>
+<body>
+	<div class="content">
+		<div id="index" class="section platform_bg" style="overflow: hidden;">
+			<div class="banner-img"></div>
+			<canvas id="canvas"></canvas>
+		</div>
+	</div>
+	<!-- 内容区-->
+	<div class="py_big_con clearfix">
+		<div class="big_head">
+			<div class="date_">
+				<div class="date"></div>
+			</div>
+			<div class="nav">
+				<ul class="py_ul_l clearfix">
+					<li><a href="${_cp}/module/v3/main"> 数聚高新 </a></li>
+					<li></li>
+					<li><a href="${_cp}/module/v3/share"> 共享交换 </a></li>
+					<li></li>
+					<li><a href="${_cp}/module/v3/appIntegrate"> 应用集成 </a></li>
+					<li><a href="${_cp}/module/v3/operate"> 运维监控 </a></li>
+					<li></li>
+					<li><a href="${_cp}/module/v3/jbtz"> 降本提质 </a></li>
+					<li></li>
+					<li><a href="${_cp}/module/v3/supervision"> 预警监管 </a></li>
+				</ul>
+				<a href="javascript:void(0);" class="py_big_head clearfix"></a>
+
+			</div>
+			<ul class="num-group">
+				<li class="num-item">
+					<div class="title">未处理</div>
+					<div class="icon_number" id="unprocessed">
+						
+						<div class="unit">个</div>
+					</div>
+				</li>
+				<li class="num-item">
+					<div class="title">已处理</div>
+					<div class="icon_number" id="processed">
+						
+						<div class="unit">个</div>
+					</div>
+				</li>
+				<li class="num-item">
+					<div class="title">预警处理平均时间</div>
+					<div class="icon_number" id="processedTime">
+						
+						<div class="unit">小时</div>
+					</div>
+				</li>
+			</ul>
+
+		</div>
+		<div class="py_bug_con">
+			<div class="py_big_content">
+				<div class="py_big_l">
+					<div class="sshdl">
+						<h2>部门-应用-预警情况分析</h2>
+						<a href="javascript:void(0);">
+							<div class="py_big_l_pub">
+								<div id="dataPlatform_glqk" style="width: 100%; height: 100%;"></div>
+							</div>
+						</a>
+					</div>
+					<div class="hddx clearfix">
+						<div class="py_big_bottom_l">
+							<h2>平台预警级别情况</h2>
+							<div class="py_bottom_l_con" id="dataPlatform_platformError">
+								<!--<div id="dataPlatform_platformError"  style="width: 100%;height: 100%;">-->
+							</div>
+						</div>
+						<div class="py_big_bottom_r">
+							<h2>应用预警情况分析</h2>
+							<div class="py_bottom_l_con" style="">
+								<div id="dataPlatform_yyyjqk" style="width: 100%; height: 100%;"></div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="py_big_m">
+					<div class="map_m">
+						<h2>应用预警情况</h2>
+						<div class="map_m_con">
+							<div id="dataPlatform_ssdy" style="width: 100%; height: 100%;"></div>
+						</div>
+					</div>
+					<div class="list_table">
+						<h2>预警产生处理情况</h2>
+						<div class="list_table_con">
+							<div id="dataPlatform_yjcscl" style="width: 100%; height: 100%;"></div>
+						</div>
+					</div>
+
+				</div>
+			</div></div></div>
+</body>
+<script type="text/javascript">
+		var gateUrl = "${_gate_url}";
+		//var gateUrl = "http://127.0.0.1:10086";
+		$(function(){
+			status(null);
+		})
+		function status(appid){
+			ajaxHengyun({
+		        url: gateUrl + "/api/warn/fairwarn/status?appid="+(appid ? appid : ''),
+		        success: function (rdate) {
+		        	var data = rdate.data;
+		        	if(data!=null && data.length>0){
+		        		var count = 0;
+		        		var time = 0;
+		        		var uncount = 0;
+		       
+		        		for(var i=0;i<data.length;i++){
+		        			if(data[i].status=='已处理'){
+		        				count = data[i].count;
+		        				time = Math.round(data[i].time);
+		        			}
+		        			if(data[i].status=='未处理'){
+		        				uncount = data[i].count;            
+		        			}
+		        		}
+		        		if(count < 10){
+		        			count = "0" + count;
+		        		}
+		        		if(time < 10){
+		        			time = "0" + time;
+		        		}
+		        		if(uncount < 10){
+		        			uncount = "0" + uncount;
+		        		}
+        				buildI("#processed", count) ;
+        				//$("#processedTime").find("span").text(time); 
+        				buildI("#processedTime", time) ;
+        				buildI("#unprocessed", uncount) ;
+		        	}
+		        },error: function (date) {
+		        	
+		        }
+		    });
+		}
+		
+	</script>
+
+</html>

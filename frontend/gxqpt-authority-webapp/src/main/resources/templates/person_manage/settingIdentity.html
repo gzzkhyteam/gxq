@@ -1,0 +1,300 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+		<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+		<link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+		<link rel="stylesheet" href="${_static}/css/core/module.css">
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="${_static}/js/app.js"></script>
+        <script src="${_static}/js/lib/layer/layer.js"></script>
+		<script type="text/javascript" src="${_static}/js/module.js"></script>
+		<style>
+			.ui-jqgrid .ui-jqgrid-view .ui-jqgrid-labels input{display: none;}
+		</style>
+	</head>
+	<body>
+		<div class="workspace-body">
+			<div class="clearfix">
+				<!-- begin 页面内容主体 -->
+				<div class="col-lg-12 col-md-12 marginTop clearfix"ng>
+	                <div class="list-section">
+	                    <div class="list-content">
+	                        <div class="form-inline">
+	                            <fieldset>
+                            		<div class="grid-section">
+	                                    <table id="list">
+	                                    </table>
+	                                    <div id="pager"></div>
+	                                </div>
+	                            </fieldset>
+	                        </div>
+	                    </div>
+	                </div>
+				</div>
+				<!-- end 页面内容主体 -->
+			</div>
+		</div>
+		<script type="text/javascript">
+            var info = {};
+		    $(function () {
+				$("#list").jqGrid({
+                    mtype: 'POST',
+                    url: "${_gate_url}/api/admin/empIdentity/page",
+                    postData: {pageNo: 1, pageSize: 20,data:{userId:"${id}"}},
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    serializeGridData: function (postData) {
+                        return JSON.stringify(postData);
+                    },
+			        colNames: ['userId','姓名', '单位ID','单位','部门ID', '部门','岗位ID','岗位','职务ID','职务','说明','isheader','是否单位一把手','isleader','是否单位领导','人员职责','启用标记','操作'],
+			        colModel: [{
+                        name: 'userId',
+                        index: 'userId',
+                        hidden:true,
+                    },{
+			            name: 'userName',
+			            index: 'userName',
+			        }, {
+                        name: 'orgId',
+                        index: 'orgId',
+                        hidden:true,
+                    }, {
+			            name: 'orgName',
+			            index: 'orgName',
+			        }, {
+                        name: 'deptId',
+                        index: 'deptId',
+                        hidden:true,
+                    }, {
+			            name: 'deptName',
+			            index: 'deptName',
+			        },{
+                        name: 'postId',
+                        index: 'postId',
+                        hidden:true,
+                    },{
+                        name: 'postName',
+                        index: 'postName',
+                    },{
+                        name: 'dutyId',
+                        index: 'dutyId',
+                        hidden:true,
+                    },{
+                        name: 'dutyName',
+                        index: 'dutyName',
+                    },{
+                        name: 'description',
+                        index: 'description',
+                    },{
+                        name: 'isheader',
+                        index: 'isheader',
+                        hidden: true
+                    },{
+                        name: 'isheader',
+                        index: 'isheader',
+                        formatter:function (cellvalue, options, rawObject) {
+                            if(cellvalue=='1'){
+                                return '是';
+                            }else if(cellvalue=='0'){
+                                return '否';
+                            }else{
+                                return '-';
+                            }
+                        }
+                    },{
+                        name: 'isleader',
+                        index: 'isleader',
+                        hidden:true,
+                    },{
+                        name: 'isleader',
+                        index: 'isleader',
+                        formatter:function (cellvalue, options, rawObject) {
+                            if(cellvalue=='1'){
+                                return '是';
+                            }else if(cellvalue=='0'){
+                                return '否';
+                            }else{
+                                return '-';
+                            }
+                        }
+                    },{
+                        name: 'userduty',
+                        index: 'userduty',
+                    },{
+                        name: 'isenable',
+                        index: 'isenable',
+                        formatter:function (cellvalue, options, rawObject) {
+                            if(cellvalue=='1'){
+                                return '是';
+                            }else if(cellvalue=='0'){
+                                return '<font color="red">否</font>';
+                            }else{
+                                return '-';
+                            }
+                        }
+                    },{
+                        name: 'act',
+                        index: 'act',
+                        title: false,
+                        width: '180',
+                        align: 'left',
+                        formatter: formatterAct
+                    }],
+                    jsonReader: {
+                        root: "data.list",
+                        page: "data.pageNum",
+                        total: "data.pages",
+                        records: "data.total"
+                    },
+			        pager: '#pager',
+			        height: 'auto',
+                    onPaging: function (pgButton) {
+                        var pageNo = $(".ui-pg-input").val();
+                        pageNo = parseInt(pageNo);
+                        var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                        total = parseInt(total);
+                        if (pgButton == "next") {
+                            if (pageNo >= total) {
+                                return false;
+                            } else {
+                                pageNo += 1;
+                            }
+                        } else if (pgButton == "prev") {
+                            if (pageNo > 1) {
+                                pageNo -= 1;
+                            } else {
+                                return false;
+                            }
+                        } else if (pgButton == "last") {
+                            pageNo = total;
+                        } else if (pgButton == "first") {
+                            pageNo = 1;
+                        }
+                        var pageSize = $(".ui-pg-selbox").val();
+                        if (pageNo != 0) {
+                            $("#list").setGridParam({
+                                postData: {
+                                    pageNo: pageNo,
+                                    pageSize: pageSize,
+                                    data:{userId:"${id}"}
+                                }
+                            }).trigger("reloadGrid");
+                            return false;
+                        }
+                    },
+				});
+		    });
+            function reloadJqgrid(){
+                $("#list").setGridParam({
+                    postData: {pageNo: 1, pageSize: 20,data:{userId:"${id}"}},
+                }).trigger("reloadGrid");
+            }
+            /* 提交方法 */
+            function settingIdentity(id) {
+                var curRowData = jQuery("#list").jqGrid('getRowData', id);
+                info.id=curRowData.userId;
+                info.identityId=id;
+                info.mainorgid=curRowData.orgId;
+                info.mainorgname=curRowData.orgName;
+                info.maindeptid=curRowData.deptId;
+                info.maindeptname=curRowData.deptName;
+                info.mainduty=curRowData.dutyId;
+                info.maindutyname=curRowData.dutyName;
+                info.mainpost=curRowData.postId;
+                info.mainpostname=curRowData.postName;
+                info.isheader=curRowData.isheader;
+                info.isleader=curRowData.isleader;
+                parent.layer.confirm("您确定将该身份设为该用户主要身份？",{
+                    title:'温馨提示',
+                    shade: [0.4,'#000'],
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    ajaxHengyun({
+                        type:"POST",
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        url: "${_gate_url}/api/admin/emp/settingIdentity",
+                        data:JSON.stringify(info),
+                        success:function(rows){
+                            if (rows.data){
+                                parent.layer.msg("设定成功！",{icon:6,time:1000});
+                                parent.home.reloadJqgrid();
+                                parent.layer.closeAll();
+                            }else{
+                                parent.layer.msg("设定出错，请重试！",{time:1000});
+                            }
+                        }
+                    });
+                });
+            }
+
+            function formatterAct(cellvalue, options, rawObject) {
+                var returnValue = "";
+                returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick="settingIdentity(\''+rawObject.id+'\')">设为主身份</a>';
+                returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick="update(\''+rawObject.id+'\')">修改</a>';
+                returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick="del(\''+rawObject.id+'\')">删除</a>';
+                return returnValue;
+            }
+            $(function () {
+                $(".btn-add").click(function(){
+                    createIdentity();
+                });
+            });
+
+            function update(id){
+                var curRowData = jQuery("#list").jqGrid('getRowData', id);
+                var mainorgid = curRowData.orgId;
+                var maindeptid = curRowData.deptId;
+                var systemCode ="${systemCode}" ;
+                layer.open({
+                    id: 'updateIdentity',
+                    type: 2,
+                    anim:6,
+                    title: '修改身份信息',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['80%', '80%'],
+                    content: "${_cp}/power/updateIdentity?mainorgid="+mainorgid+"&maindeptid="+maindeptid+"&systemCode="+systemCode+"&id="+id,
+                    btn: ['<span class="glyphicon glyphicon-ok"></span> 确定','<span class="glyphicon glyphicon-remove"></span> 取消'],
+                    yes: function (index, layero) {
+                        var iframeWin = window[layero.find('iframe')[0]['name']];
+                        iframeWin.save(index);
+                    }
+                });
+            }
+
+            function del(id){
+                parent.layer.confirm("您确定删除该身份？",{
+                    title:'温馨提示',
+                    shade: [0.4,'#000'],
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    ajaxHengyun({
+                        type:"GET",
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        url: "${_gate_url}/api/admin/empIdentity/removeById?id="+id,
+                        success:function(rows){
+                            if (rows.data){
+                                parent.layer.msg("删除成功！",{icon:6,time:1000});
+                                reloadJqgrid();
+                            }else{
+                                parent.layer.msg("删除，请重试！",{time:1000});
+                            }
+                        }
+                    });
+                });
+            }
+		</script>
+	</body>
+</html>

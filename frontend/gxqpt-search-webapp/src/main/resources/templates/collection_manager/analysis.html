@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+
+<head>
+    <base href="<%=basePath%>">
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" href="${_static}/js/lib/jsonview/jquery.jsonview.min.css">
+
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jsonview/jquery.jsonview.min.js"></script>
+    <style type="text/css">
+        #right-box {
+            width: 100%;
+            height: calc(100% - 65px);
+            border: 0;
+        }
+    </style>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        搜索管理系统 &gt; 数据管理 &gt; <span class="page-title-scend">关键字分析</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="list-section">
+                <form id="createCollFrom" action="" class="form-inline search-form">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <span class="text-danger"></span>
+                            <span>索引分词：</span>
+                        </label>
+                        <div class="form-control-wrap">
+                            <input id="keyWord" type="text" name="keyWord"
+                                   class="form-control search-name" style="width: 300px"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            <span class="text-danger"></span>
+                            <span>查询关键字：</span>
+                        </label>
+                        <div class="form-control-wrap">
+                            <input id="queryWord" type="text" name="keyWord"
+                                   class="form-control search-name" style="width: 300px"/>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>选择集合：</span>
+                            </label>
+                            <select id="app-source" name="collection"
+                                    class="form-control chosen-select selWid-form-search"></select>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>选择字段：</span>
+                            </label>
+                            <select id="field-source" name="field-source"
+                                    class="form-control chosen-select selWid-form-search">
+                                <option value="title">title</option>
+                                <
+                                <option value="content">content</option>
+                                ption>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <div class="form-control-wrap text-right">
+                                <button type="button" class="btn btn-primary search-button" onclick="analysis()">
+                                    <span class="glyphicon glyphicon-search"></span> 分析结果
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--显示结果集-->
+            <div id="right-box" class="list-section">
+                <div id="searchIndexRes" style="width: 45%;height: 90%;float: left">
+                    <span>关键字分词结果</span>
+                    <div id="showSearchIndexRes" style="width: 98%;height: 98%;background: #A3BAD9;overflow: auto;">
+
+                    </div>
+                </div>
+                <div id="searchQueryRes" style="width: 45%;height: 90%;float: left">
+                    <span>查询关键字匹配结果</span>
+                    <div id="showSearchQueryRess" style="width: 98%;height: 98%;background:#999999;overflow: auto;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    var height = $("#right-box").height() - 80;
+    getMyCollection();
+
+    function getMyCollection() {
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/search/adminModule/showMyCollection',
+            // url:'http://192.168.1.124:9770/api/admin/system/getBySource',
+            success: function (res) {
+                if (res || res.data.optCollList) {
+                    $.each(res.data.optCollList, function (index, item) {
+                        var option = '<option value = ' + item.collectionCode + '>' + item.collectionName + '</option>';
+                        $('#app-source').append(option);
+                    });
+                }
+            }
+        })
+    }
+
+    //显示用户的集合列表
+    function analysis() {
+        $('#showSearchIndexRes').html('');
+        $('#showSearchQueryRess').html('');
+        var keyWord = $('#keyWord').val();
+        var queryWord=$('#queryWord').val();
+        var collection = $('#app-source').val();
+        var field = $('#field-source').val();
+
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/search/searchModule/analysisField',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: {keyWord: keyWord,queryWord:queryWord, collection: collection, field: field},
+            success: function (res) {
+                if (res.data) {
+                    $("#showSearchIndexRes").JSONView(res.data.indexStr);
+                    $("#showSearchQueryRess").JSONView(res.data.queryStr);
+                }
+            }
+        })
+
+    }
+</script>
+</body>
+
+</html>

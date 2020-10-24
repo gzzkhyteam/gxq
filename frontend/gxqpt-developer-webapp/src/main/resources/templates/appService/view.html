@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                应用管理 > <span class="active">详情</span>
+            </div>
+            <a href="${_cp}/module/appList" class="button-icon pull-right">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="block">
+                <div class="text-title">应用信息</div>
+                <div class="content">
+                    <table class="tab">
+                        <tbody>
+                        <tr>
+                            <th>应用名称：</th>
+                            <td>{{app.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>是否公有应用：</th>
+                            <td>{{app.publicIs}}</td>
+                        </tr>
+                        <tr>
+                            <th>应用编码：</th>
+                            <td>{{app.code}}</td>
+                        </tr>
+                        <tr>
+                            <th>eureka注册中心实例id：</th>
+                            <td>{{app.serviceId}}</td>
+                        </tr>
+                        <tr>
+                            <th>AppID：</th>
+                            <td>{{app.appId}}</td>
+                        </tr>
+                        <tr>
+                            <th>appSecret：</th>
+                            <td><strong onclick="showAppSecret(this)" style="cursor: pointer;color: #095;">查看</strong></td>
+                        </tr>
+                        <tr>
+                            <th>完整根地址：</th>
+                            <td>{{app.fullRootPath}}</td>
+                        </tr>
+                        <tr>
+                            <th>首页地址：</th>
+                            <td>{{app.indexUrl}}</td>
+                        </tr>
+                        <tr>
+                            <th>所属单位：</th>
+                            <td>{{app.orgName}}</td>
+                        </tr>
+                        <tr>
+                            <th>应用类型：</th>
+                            <td>{{app.appType}}</td>
+                        </tr>
+                        <tr>
+                            <th>应用分类：</th>
+                            <td>{{app.typeName}}</td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>{{app.status}}</td>
+                        </tr>
+                        <tr>
+                            <th>序号：</th>
+                            <td>{{app.orderNo}}</td>
+                        </tr>
+                        <tr>
+                            <th>提供方：</th>
+                            <td>{{app.provider}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复建设开发周期：</th>
+                            <td>{{app.reduceTime}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复建设开发成本：</th>
+                            <td>{{app.reduceBuildCost}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复使用成本：</th>
+                            <td>{{app.reduceUseCost}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复维护成本：</th>
+                            <td>{{app.reduceProtectCost}}</td>
+                        </tr>
+                        <tr>
+                            <th>初始预计工期：</th>
+                            <td>{{app.originalTime}}</td>
+                        </tr>
+                        <tr>
+                            <th>初始预计成本：</th>
+                            <td>{{app.originalCost}}</td>
+                        </tr>
+                        <tr>
+                            <th>使用图标：</th>
+                            <td><img ng-src="{{app.logoUrl}}" style="width: 50px;height: 50px;"></td>
+                        </tr>
+                        <tr>
+                            <th>应用描述：</th>
+                            <td>{{app.desc}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script>
+    var pageType="appList";
+</script>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+	var appSecret = "无权访问";
+    app.controller('controller', function ($scope, $http,findStr) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.appTypeList = [{
+            code: 1, text: '应用'
+        }, {
+            code: 2, text: '服务'
+        }, {
+            code: 3, text: '既是应用也是服务'
+        }];
+        $scope.statusList = [{
+            code: 'true', text: '启用'
+        }, {
+            code: 'false', text: '禁用'
+        }];
+        getApp();
+        function getApp() {
+            var id = '${id}';
+            $http.get(urlPrev + 'application/getDetails',{
+                params:{id:id},
+                headers:getHeaders(),
+            }).success(function (res) {
+            	
+            	getAppSecret(urlPrev,res.data.appId);
+                $scope.app = res.data;
+                $scope.app.appType = findStr.byCode(res.data.appType,$scope.appTypeList);
+                $scope.app.status = findStr.byCode(res.data.status,$scope.statusList);
+                $scope.app.publicIs = $scope.app.publicIs?"是":"否";
+            })
+        };
+        function getAppSecret(urlPrev, appId){
+
+        	$http.get(urlPrev + 'application/getAppSecret',{
+                params:{appId: appId},
+                headers: getHeaders(),
+            }).success(function (res) {
+            	console.log(res);
+            	
+            	appSecret = res.data == null?"":res.data;
+            })
+        } 
+    }).service('token', function () {
+        this.getToken = function () {
+             return $.cookie('token');
+        }
+    }).service('findStr',function () {
+        this.byCode = function (code,dataList) {
+            var code = code;
+            var text = '';
+            $.each(dataList,function (index,value) {
+                if(value.code == code){
+                    text = value.text;
+                    return false;
+                }
+            })
+            return text;
+        }
+    })
+    
+    function showAppSecret(elem){
+        elem.innerText = appSecret;
+    }
+    /*angularJS*/
+</script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<template>
+    <Layout>
+		<Content>
+			<Breadcrumb>
+				<BreadcrumbItem>统一监管平台</BreadcrumbItem>
+				<BreadcrumbItem>单位预警分析</BreadcrumbItem>
+			</Breadcrumb>
+			<Card>
+				<Form ref="formValidate" :model='formData' :rules="ruleValidate" inline :label-width="100">
+					<FormItem label="时间">
+                        <DatePicker v-model="defaultDate" type="year" placeholder="选择时间" style="width: 200px"></DatePicker>
+					</FormItem>
+					<FormItem>
+						<Button type="info" @click="refreshAnalyze">查看分析</Button>
+					</FormItem>
+				</Form>
+			</Card>
+        <Layout style="background:#fff;">
+            <carouseList :data='unitList' :arrowType='arrowType'></carouseList>
+            <Layout>
+                <Col span="14"></Col>
+                <Col span="9"></Col>
+                <Row type="flex" justify="space-between">
+                  <Col span="11">
+                    <chart-card title="各单位预警状态">
+                      <unitWarnState ref="unitWarnState" />
+                    </chart-card>
+                  </Col>
+                  <Col span="11">
+                    <chart-card title="各单位预警类别情况">
+                      <unit-category ref="unitCategorye" />
+                    </chart-card>
+                  </Col>
+                </Row>
+                <Row type="flex" justify="space-between">
+                  <Col span="11">
+                    <chart-card title="各单位预警处理对比分析">
+                      <unit-manage ref="unitManageData" />
+                    </chart-card>
+                  </Col>
+                  <Col span="11">
+                    <chart-card title="各单位预警级别情况">
+                      <unit-level ref="unitLevel" />
+                    </chart-card>
+                  </Col>
+                </Row>
+            </Layout>
+        </Layout>
+		</Content>
+	</Layout>    
+</template>
+
+<script>
+import api from '@/api/axiosApi'
+import superviseApiList from '@/api/superviseApiList'
+// echart图外层容器，包括卡片样式
+import chartCard from './echarts/chartCard.vue'
+import countUp from '@/components/hengyun/countUp.vue'
+// 各单位预警状态
+import unitWarnState from './echarts/unitWarnState.vue'
+// 各单位预警类别情况
+import unitCategory from './echarts/unitCategory.vue'
+// 各单位预警处理对比分析
+import unitManage from './echarts/unitManage.vue'
+// 各单位预警级别情况
+import unitLevel from './echarts/unitLevel.vue'
+// 顶部滑动列表模块
+import carouseList from "./modal/carouseList.vue";
+export default {
+    components: {
+      'chart-card': chartCard,
+      countUp,
+      unitWarnState,
+      carouseList,
+      'unit-category': unitCategory,
+      'unit-manage': unitManage,
+      'unit-level': unitLevel
+    },
+    data(){
+        return{
+            arrowType:'never',
+            unitList:[],//单位列表
+            defaultDate:new Date(),//获取今年年份
+            orgIds:[],//初始化单位集合
+            ruleValidate:{},
+            formData:{}
+        }
+    },
+    mounted(){
+        this.init();
+    },
+    methods:{
+        init(){
+            this.getUnitData(this.defaultDate.getFullYear().toString());
+        },
+        getUnitData(year){//获取基本单位id
+            api(superviseApiList.findOrgByUser).then((res) => {
+                if(res.data.errcode == 0) {
+                    // this.formData.unitName = res.data.data[0].name;
+                    // this.unitList = res.data.data;
+                    for(var i = 0;i<res.data.data.length;i++){
+                        this.orgIds.push(res.data.data[i].id);
+                    }
+                    this.getFindSurvey(year);
+                    this.getFindPublicSuperviseStatus(year);
+                    this.getFindTypeLists(year);
+                    this.getFindPublicHandle(year);
+                    this.getFildLevelList(year);
+                }else{
+                    console.log(res.data.errmsg);
+                }
+            }, (error) => {})
+        },
+        getFindSurvey(y){//获取所有单位关联未处理预警的数量
+            let data = {},currData=[];
+            data['orgIds'] = this.orgIds;
+            if(y)data.date=y;
+            api(superviseApiList.findSurvey,data).then((res) => {
+                if(res.data.errcode == 0) {
+                    // 两层数组的里面一层，每满8个就push一次
+                    let subArr = []
+                    const appListTemp = []
+                    // 遍历所有的应用信息
+                    res.data.data.map((data, idx) => {
+                        subArr.push({
+                        color: "#F7645D",
+                        idName: data.name,
+                        count: data.num,
+                        countSize: "#50",
+                        introText: data.name,
+                        link: `/unitWarnAnalyzeView/${data.id}`
+                    })
+                        if(subArr.length === 8 || idx === res.data.data.length - 1) {
+                            appListTemp.push(subArr)
+                            subArr = []
+                        }
+                    })
+                    this.unitList = appListTemp;
+                    if(this.unitList.length>1){
+                        this.arrowType='always';
+                    };
+                    // for(var i = 0;i<res.data.data.length;i++){
+                    //     //整理参数
+                    //     res.data.data[i].color = "#F7645D";
+                    //     res.data.data[i].idName = res.data.data[i].id;
+                    //     res.data.data[i].count = res.data.data[i].num;
+                    //     res.data.data[i].countSize = "#50";
+                    //     res.data.data[i].introText = res.data.data[i].name;
+                    //     res.data.data[i].link =  `/unitWarnAnalyzeView/${res.data.data[i].id}`;
+                    //     currData.push(res.data.data[i]);
+                    //     if((i != 0 && (i + 1) % 8 == 0) || i == res.data.data.length - 1) {
+                    //         this.unitList.push(currData);
+                    //         currData = [];
+                    //     }
+                    //     if(this.unitList.length>1){
+                    //         this.arrowType='always';
+                    //     };
+                    // }
+                }else{
+                    console.log(res.data.errmsg);
+                }
+            }, (error) => {})
+        },
+        getFindPublicSuperviseStatus(y){//各单位预警状态
+            const vm = this
+            let data = {};
+            data['orgIds'] = vm.orgIds;
+            if(y)data.date=y;
+            api(superviseApiList.findPublicSuperviseStatus,data).then((res) => {
+                if(res.data.errcode == 0) {
+                    vm.$refs.unitWarnState.refresh(res.data.data);
+                }else{
+                    console.log(res.data.errmsg);
+                }
+            }, (error) => {})
+        },
+        getFindTypeLists(y){//各单位预警类别情况
+            let data = {};
+            data['ids'] = this.orgIds;
+            if(y)data.date=y;
+            api(superviseApiList.findTypeList,data).then((res) => {
+                if(res.data.errcode == 0) {
+                    this.$refs.unitCategorye.refresh(res.data.data);
+                }else{
+                    console.log(res.data.errmsg);
+                }
+            }, (error) => {})
+        },
+        getFindPublicHandle(y){//各单位预警处理时长对比分析
+            let data = {};
+            data['orgIds'] = this.orgIds;
+            if(y)data.date=y;
+            api(superviseApiList.findPublicHandle,data).then((res) => {
+                if(res.data.errcode == 0) {
+                    this.$refs.unitManageData.refresh(res.data.data);
+                }else{
+                    console.log(res.data.errmsg);
+                }
+            }, (error) => {})
+        },
+        getFildLevelList(y){//各单位预警级别情况
+            let data = {};
+            data['ids'] = this.orgIds;
+            if(y)data.date=y;
+            api(superviseApiList.fildLevelList,data).then((res) => {
+                if(res.data.errcode == 0) {
+                    this.$refs.unitLevel.refresh(res.data.data);
+                }else{
+                    console.log(res.data.errmsg);
+                }
+            }, (error) => {})
+        },
+        // getUnit(val){//获取选项卡单位
+        //     this.formData.year = val;
+        //     console.log(val);
+        // },
+        changeYear(val){//选取年份
+            this.init(val);//初始化界面
+        },
+        refreshAnalyze(){//查看刷新的分析
+            this.unitList = [];
+            const year = this.defaultDate.getFullYear().toString()
+            this.getFindSurvey(year);
+            this.getFindPublicSuperviseStatus(year);
+            this.getFindTypeLists(year);
+            this.getFindPublicHandle(year);
+            this.getFildLevelList(year);
+        }
+    },
+}
+</script>
+
+<style lang="less" scoped>
+.radioMod{
+    width:80%;
+    height:100%;
+    padding:10px 0;
+    border:1px solid #ccc;
+    border-radius: 50%;
+    margin: 30px auto;
+}
+.mf{
+    margin-left:2%;
+}
+.radioTxt{
+    width:100px;
+    height:100px;
+    margin:35px auto;
+    font-size:20px;
+    text-align: center
+}
+.card-title{
+    text-align: center;
+    background-color: #888;
+}
+</style>

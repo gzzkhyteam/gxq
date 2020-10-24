@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.css"/>
+<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${_static}/css/com_base.css"/>
+<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+<title>服务监控系统</title>
+</head>
+<header>
+    <div class="navber_header clearfix">
+        <div class="left logo">
+            服务监控系统
+        </div>
+        <ul class="left lava_with_border fix" id="navber_header_ul">
+            <li><a href="${_cp}/module/index">首页</a></li>
+            <!--<li><a href="${_cp}/module/appServiceCreate">开发接入</a></li>-->
+            <li><a href="${_cp}/module/functionCenter">功能中心</a></li>
+            <li>
+                <a class="docInfoText" href="javascript:void(0);">文档中心</a>
+                <ul class="docInfo">
+                    <li><a href="${_cp}/module/apiDoc">API文档</a></li>
+                    <li><a href="${_cp}/module/helpDoc/">帮助文档</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!--<div class="right login">-->
+            <!--<a href="${_logout_url!''}" data-type = "document">退出</a>-->
+            <!--<a href="${_loginUrl!''}" data-type = "document">登录</a>-->
+        <!--</div>-->
+        <ul class="left lava_with_border fix right" id="navber_header_ul_login">
+            <!--<li><a href="${_cp}/module/provideList">我的提供</a></li>-->
+            <!--<li><a href="${_cp}/module/myCallList">我的调用</a></li>-->
+            <li><a href="${_cp}/module/myTaskList">工作台</a></li>
+            <!--<li><a href="javascript:void(0);">消息</a></li>-->
+            <li id="index-top-msg">
+                <a id="conclusionShow" href="javascript:void(0);" data-title="消息列表" data-container="body" data-toggle="popover"  data-placement="bottom" data-trigger="click" data-html=true data-content="">
+                    <span>消息</span>
+                    <span id="msgElement"></span>
+                </a>
+            </li>
+            <li class="login">
+                <a class="userTxt" href="javascript:void(0);"><span class="userName">${(l_u_i_s.name)!''}</span>&nbsp;
+                    <!--<img id="rotate" class="" src="${_static}/images/icon0_0.png"/>-->
+                </a>
+                <!--<ul class="userInfo">
+                    &lt;!&ndash;<li><a href="javascript:void(0);" onclick="repassword()">密码修改</a></li>&ndash;&gt;
+                    <li><a href="${_logout_url!''}">退出</a></li>
+                </ul>-->
+            </li>
+            <li class="login"><a href="${_logout_url!''}" data-type = "document">平台首页</a></li>
+            <li class="logout"><a href="${_loginUrl!''}" data-type = "document">登录</a></li>
+        </ul>
+    </div>
+</header>
+</html>
+<script type="text/javascript" src="${_static}/js/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_resource.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/com_base.js"></script>
+<script>
+	var _cp = "${_cp}";
+    var gateUrl="${_gate_url}";
+	var userId = "${l_u_i_s.id}";
+	if(userId){
+	    $(".login").removeClass("hidden");
+	    $(".logout").addClass("hidden");
+    }else{
+        $(".logout").removeClass("hidden");
+        $(".login").addClass("hidden");
+    }
+    $(".userTxt,.userInfo").off("mouseenter").on("mouseenter",function(){
+        $("#rotate").addClass("rotate");
+        $(".userInfo").css("display","inline-block");
+    });
+    $(".userTxt,.userInfo").off("mouseleave").on("mouseleave",function(){
+        $("#rotate").removeClass("rotate");
+        $(".userInfo").css("display","none");
+    });
+    $(".docInfoText ,.docInfo").off("mouseenter").on("mouseenter",function(){
+        $(".docInfo").css("display","inline-block");
+    });
+    $(".docInfoText ,.docInfo").off("mouseleave").on("mouseleave",function(){
+        $(".docInfo").css("display","none");
+    });
+    $("#conclusionShow").popover({
+        html: true,
+        content: '<div id="content"></div>'
+    }).on("mouseenter", function () {
+        var _this = this;   // 这里的this触发的dom,需要存起来 否则在下面 .popover的逻辑中this会变为弹出的dom
+        var isShow=$(".popover");
+        if(isShow.length==0){
+            $(_this).popover("show");
+        };
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide");
+            }
+        }, 300);
+    }).on("mousemove",function(){
+        var isShow=$(".popover");
+        if(isShow.length==0) {
+            $("#conclusionShow").popover("show");
+        }
+    }).on('shown.bs.popover', function () {
+        var ps =  $(".popoverCss li p.ptitle");
+        for (var i = 0; i < ps.length; i++) {
+            if(ps[i].offsetHeight > 40){
+                var html = ps[i].innerText;
+                var temp = "";
+                ps[i].innerText = temp;
+                var j = 0;
+                while(ps[i].offsetHeight <= 40){
+                    temp = html.substring(0, j+1);
+                    j++;
+                    ps[i].innerText = temp;
+                }
+                var leng = temp.length-2;
+                ps[i].innerText=temp.substring(0,leng)+"···";
+            }
+        }
+    });
+    $("body").on("mouseleave",".popover", function () {
+        setTimeout(function () {
+            if (!$("#conclusionShow:hover").length) {
+                $("#conclusionShow").popover("hide");
+            }
+        }, 300);
+    });
+    $("#conclusionShow").click (function(){
+        window.open(gateUrl+'/gxqpt-center/admin/home?type=all');
+    }) ;
+</script>
+<script type="text/javascript" src="${_static}/js/com_msg.js"></script>

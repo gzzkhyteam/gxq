@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>数据集管理</span> &gt; <span>新建数据集</span> &gt; <span class="page-title-scend">关联目录</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div class="layerDataApply minHeight360 clearfix">
+								<h3>关联目录</h3>
+								<table class="table default-table tab-border-no-layer">
+									<tbody>
+										<tr>
+											<td>
+												<input type="text" name="setName" id="selCatalog" class="form-control" autocomplete="off"/>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="text-center">
+								<button type="button" class="btn btn-primary" onclick="history.back()">上一步</button>
+								<button type="button" class="btn btn-primary" onclick="save()">提交</button>
+								<button type="button" class="btn btn-primary" onclick="loadFirstPage()">取消</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+            function loadFirstPage(){
+                window.location.href='${_cp}/module/dataSetManageList?pageNo=1';
+            }
+			var catalogIds=[];
+            $("#selCatalog").click(function(){
+                var catalogIdsString=catalogIds.join(",");
+                parent.layer.open({
+                    id: 'openZtree',
+                    type: 2,
+                    anim:6,
+                    title: '目录选择',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['750px', '600px'],
+                    shade: [0.9, '#000'],
+                    content: "${_cp}/module/dataSetCatalogZtree?type=&catalogIds="+catalogIdsString,
+                    btn: ['确定','取消'],
+                    yes: function (index, layero) {
+                        var html=layero.context;
+                        var Id=html.getElementById("openZtree");
+                        var iframe=$(Id).find("iframe").attr("name");
+                        var rowData = parent[iframe].save(index);
+                    },
+                });
+            });
+            function setCatalog(catalogId,catalogName){
+                catalogIds=catalogId;
+                $("#selCatalog").val(catalogName.join(","));
+               if(catalogId.length>0){
+                   for(var i in catalogId){
+                       getFieldList(catalogId[i],catalogName[i]);
+				   }
+			   }
+            }
+            var optionHtml="<option value='-1'>请选择</option>";
+            getFieldInfo();
+            function getFieldInfo(){//获取数据集字段名称
+                ajaxHengyun({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "${_gate_url}/api/exchange/set/getTableInfo",
+                    data: {tableCode:"${tableCode}",dataSourcId:"${dataSourcId}"},
+                    success: function (rows) {
+                        if (rows.data) {
+                            var fields=rows.data.fieldList;
+                            for(var i in fields){
+                                optionHtml+='<option value="'+fields[i].fieldCode+'">'+fields[i].fieldCode+'</option>';
+                            }
+                        }
+                    }
+                });
+            };
+            function getFieldList(id,name){//生成目录字段列表
+                ajaxHengyun({
+                    type: 'GET',
+                    url: "${_gate_url}/api/exchange/element/getList?dirId="+id,
+                    data:{parentId: "-1"},
+                    datatype: "json",
+                    success: function (rows) {
+                        if(rows.data){
+                            var html="";
+                            html+='<h3>'+name+'</h3>';
+                            html+='<table class="default-table tab-title-top catalogFieldTable" data-id="'+id+'" data-type="'+name+'">';
+                            html+='<thead>';
+                            html+='<tr>';
+                            html+='<th>目录字段名称</th>';
+                            html+='<th>目录字段标识</th>';
+                            html+='<th>数据集字段名称</th>';
+                            html+='</tr>';
+                            html+='</thead>';
+                            html+='<tbody>';
+                            rows.data.forEach(function(value,index){
+                                html+='<tr>';
+                                html+='<td class="fieldName">'+value.fieldName+'</td>';
+                                html+='<td class="fieldCode" data-id="'+value.id+'" data-type="'+value.fieldType+'">'+value.fieldCode+'</td>';
+                                html+='<td>';
+                                html+='<select class="form-control setField">';
+                                html+=optionHtml;
+                                html+='</select>';
+                                html+='</td>';
+                                html+='</tr>';
+							});
+                            html+='</tbody>';
+                            html+='</table>';
+                        };
+						$(".layerDataApply").append(html);
+                        updateIformHeight();
+                    }
+                });
+			}
+			function save(){//提交
+                if(catalogIds.length<1){
+                    parent.layer.msg("请选择目录！",{time:1000});
+                    return false;
+				}else{
+                    var setFieldEle = $(".layerDataApply .setField");
+                    if(setFieldEle){
+                        var setFieldEleLenght=0;
+                        setFieldEle.each(function(no,ele){
+                            var setFieldEleVal = $(ele).val();
+                            if(setFieldEleVal=="-1"){
+                                setFieldEleLenght+=1;
+							}
+						});
+                        if(setFieldEleLenght==setFieldEle.length){
+                            parent.layer.msg("请至少选择一个数据集字段名称！",{time:1000});
+                            return false;
+						}
+					}
+                    var dataDTO={};
+                    dataDTO.id="${id}";
+                    dataDTO.directory=[];
+                    dataDTO.editType = 1;
+					var catalogFieldTableEle=$(".catalogFieldTable");
+					if(catalogFieldTableEle){
+					    catalogFieldTableEle.each(function(index,value){
+                            var secondDirectory={};
+                            secondDirectory.directoryId=$(value).attr("data-id");
+                            secondDirectory.name=$(value).attr("data-name");
+                            secondDirectory.list=[];
+							var trEle = $(value).find("tr");
+							if(trEle){
+							    trEle.each(function(num,row){
+                                    var secondList={};
+                                    secondList.dirId = $(row).find('.fieldCode').attr("data-id");
+                                    secondList.fieldCode = $(row).find('.fieldCode').text();
+                                    secondList.fieldType = $(row).find('.fieldCode').attr("data-type");
+                                    secondList.setField = $(row).find('.setField').val();
+									if(secondList.setField!="-1"){
+                                        secondDirectory.list.push(secondList);
+									}
+								});
+							}
+							dataDTO.directory.push(secondDirectory);
+						});
+					};
+                    ajaxHengyun({
+                        type:"POST",
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        url:  '${_gate_url}/api/exchange/set/selectDic',
+                        data:JSON.stringify(dataDTO),
+                        success:function(rows){
+                            if (rows.data){
+                                parent.layer.msg("新增成功！",{time:1000});
+                                window.location.href="${_cp}/module/dataSetManageList?pageNo=1";
+                            }else{
+                                parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                            }
+                        }
+                    });
+
+
+				}
+			}
+		</script>
+	</body>
+</html>

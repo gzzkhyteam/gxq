@@ -1,0 +1,20 @@
+gxqpt:
+  hostname:
+    eureka: 192.168.1.204
+    monitor: 192.168.1.204
+    rabbitmq: 192.168.1.204
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${gxqpt.hostname.eureka:eureka.gxqpt.com}:10030${gxqpt.context-path.eureka}/eureka/
+
+spring:
+  profiles:
+    active: test
+  rabbitmq:
+    port: 5672
+    username: guest
+    password: guest
+
+

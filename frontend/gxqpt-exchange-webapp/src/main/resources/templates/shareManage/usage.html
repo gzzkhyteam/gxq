@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<!--<div class="row">-->
+					<!--<div class="current pull-left">-->
+						<!--<ul class="navsecond clearfix">-->
+							<!--<li class="pull-left"><a href="applyList.html">共享申请</a></li>-->
+							<!--<li class="pull-left"><a class="active" href="apiList.html">API管理</a></li>-->
+							<!--<li class="pull-left"><a href="demandList.html">需求申请</a></li>-->
+						<!--</ul>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="row marginTop">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>API管理</span> &gt; <span class="page-title-scend">使用情况</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="row marginTop">
+					<h3 class="colorBlue">调用总次数：<span id="totalNum">0</span></h3>
+				</div>
+				<div class="main_container row">
+					<form action="" class="search-form" autocomplete="off">
+						<ul class="clearfix">
+							<li class="pull-left">
+								<label class="control-label">单位名称：</label>
+                            	<input name="orgName" class="" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">调用时间：</label>
+								<input name="callDate" class="Wdate" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<button type="button" class="btn btn-primary search-button">
+                            		<span class="glyphicon glyphicon-search"></span> 查询
+                                </button>
+							</li>
+						</ul>
+                    </form>
+					<table id="useList" class="default-table tab-title-top">
+						<thead>
+							<tr>
+								<th>单位名称 </th>
+								<th>授权有效期限</th>
+								<th>调用时间</th>
+								<th>交换数据量</th>
+								<th>调用时长</th>
+							</tr>
+						</thead>
+						<tbody>	</tbody>
+					</table>
+					<div class="text-center">
+						<ul class="pagination" id="pagination" ></ul>
+						<p class="pull-right currentPage">共<span class="total">0</span>条数据，当前第<i id="pageNum" class="colorBlue">1</i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+            var orgName = "";
+            var callDate = "";
+            var apiId = "${id}";
+
+            function initParam() {
+                orgName = $("input[name='orgName']").val();
+                callDate = $("input[name='callDate']").val();
+            }
+
+            function getParam() {
+                initParam();
+                parm = {
+                    data: {orgName: orgName, callDate: callDate, apiId: apiId},
+                    pageNo: 1,
+                    pageSize: 10
+                }
+            }
+
+            getParam();
+            getList(parm);
+            getTotalNum(apiId);
+			var totalNum =0;
+            /*获取使用列表*/
+            function getList(parm) {
+                ajaxHengyun({
+                    type: "POST",
+                    async: false,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: '${_gate_url}/api/exchange/dataapi/api/findapiuse',
+                    data: JSON.stringify(parm),
+                    success: function (rows) {
+                        var html = ""
+                        if (rows.data) {
+                            rows.data.list.forEach(function (value, index) {
+                                totalNum +=1;
+                                value = dealElement(value);
+                                html += '<tr>';
+                                html += '<td>' + value.orgName + '</td>';
+                                html += '<td>' + fmtDate(value.limitTime) + '</td>';
+                                html += '<td>' + fmtDateTime(value.visitTime) + '</td>';
+                                html += '<td>' + value.dataCount + '</td>';
+                                html += '<td>' + value.rsponseTime + '</td>';
+                                html += '</tr>';
+                            });
+                            if(rows.data.list.length==0){
+                                html+="<tr><td class='text-center' colspan='5'>暂无数据</td></tr>"
+                                $(".pagination,.currentPage").css("display","none");
+                            } else {
+                                $(".pagination,.currentPage").css("display","block");
+                            };
+                            $("#useList tbody").html(html);
+                            $('#totalPages').text(rows.data.pages);
+                            $('.total').text(rows.data.total);
+                            jqPaginator(rows.data);
+                            var height=document.getElementById("container").scrollHeight;
+                            $("#home", window.parent.document).height(height);
+                        }else{
+                            html+="<tr><td class='text-center' colspan='5'>暂无数据</td></tr>";
+                            $("#useList tbody").html(html);
+                            $(".pagination,.currentPage").css("display","none");
+                            var height=document.getElementById("container").scrollHeight;
+                            $("#home", window.parent.document).height(height);
+                        }
+						$("#totalNum").text(rows.data.total);
+                    }
+                });
+            };
+            $(".search-button").click(function () {
+                getParam();
+                getList(parm);
+            })
+
+            /*获取使用列表*/
+            function getTotalNum(apiId) {
+                ajaxHengyun({
+                    type: "POST",
+                    url: '${_gate_url}/api/exchange/dataapi/api/findapiusetotalnum',
+                    data: {id:apiId},
+                    success: function (rows) {
+
+                        if (rows.data) {
+                            $("#totalNum").text(rows.data);
+                        }
+                    }
+                });
+            };
+		</script>
+	</body>
+</html>

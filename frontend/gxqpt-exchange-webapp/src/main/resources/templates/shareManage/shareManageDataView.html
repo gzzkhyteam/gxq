@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+		<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+		<style>
+			.ui-th-column, .ui-jqgrid .ui-jqgrid-htable th.ui-th-column{
+				text-align: center;
+				padding: 6px 0;
+				border:1px solid #ddd;
+			}
+			.ui-jqgrid tr.ui-row-ltr td{
+				text-align: center;
+				padding: 6px 0;
+				border:1px solid #ddd;
+			}
+			.ui-jqgrid .ui-jqgrid-hdiv,
+			.ui-jqgrid .ui-jqgrid-bdiv{
+				overflow-x: auto;
+			}
+		</style>
+	</head>
+	<body class="bgNone">
+		<div class="workspace-body">
+			<div id="console-container" class="clearfix">
+				<div class="col-sm-12" style="padding-top: 20px">
+					<table id="viewList">
+					</table>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqPaginator/jqPaginator.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+		<script type="text/javascript">
+           var jqTitle = [];
+           var jqdata = [];
+           var id = "${id}";
+           var type = "${type}";
+            var url = "";
+            if(type == 3){
+               url= "${_gate_url}/api/exchange/set/queryDataByDataSet?setId="+id+"&page=1";
+			}else {
+                url = "${_gate_url}/api/exchange/dataapi/api/dataView?id="+id+"&type="+type;
+			}
+           getViewDataByDirId();
+           function getViewDataByDirId() {
+                ajaxHengyun({
+                    type: 'POST',
+                    url: url,
+                    async:false,
+                    datatype: "json",
+                    success: function (rows) {
+                        if (rows.data && rows.errcode ==0) {
+                            jqTitle=rows.data.fileds;
+                            jqdata=rows.data.rowData;
+                            pageInit();
+                        }else {
+                            parent.layer.msg(rows.errmsg,{time:1500});
+						}
+                    }
+                });
+            }
+		   function pageInit(){
+                var names=[];
+                var model = [];
+                //此处因为数据源数组中的结构相同且不为空，直接遍历索引为0的数据即可
+                for(var i=0;i<jqTitle.length;i++){
+                    var fieldName = jqTitle[i].fieldName;
+                    names.push(fieldName);
+                    model.push({
+                        name:fieldName,
+                        index:fieldName,
+                        // width:200
+                    });
+                }
+                var isShrinkToFit = false;
+                if(names.length>=5){
+                    isShrinkToFit  = false;
+				}else{
+                    isShrinkToFit  = true;
+				}
+                //创建jqGrid组件
+                jQuery("#viewList").jqGrid(
+                    {
+                        datatype : "json",//请求数据返回的类型。可选json,xml,txt
+                        colNames : names,//jqGrid的列显示名字
+                        colModel : model,
+                        rowNum : 3,//一页显示多少条
+                        rowList : [1],//可供用户选择一页显示多少条
+                        pager : '#pager2',//表格页脚的占位符(一般是div)的id
+                        sortname : 'id',//初始化的时候排序的字段
+                        sortorder : "desc",//排序方式,可选desc,asc
+                        mtype : "post",//向后台请求数据的ajax的类型。可选post,get
+                        viewrecords : true,
+                        caption : "数据样例",//表格的标题名字
+						height : 180,
+						width : 800,
+                        shrinkToFit:isShrinkToFit,
+                        autoScroll: true,
+                    });
+                //将jqdata的值循环添加进jqGrid
+				var rows = jqdata.length;
+				if(rows>2){
+				    rows = 2;
+				}
+				var objectList=[];
+				for(var i=0;i<=rows;i++){
+				    var list = jqdata[i];
+				    if(list){
+						var object ={};
+						for (j=0;j<list.length;j++){
+							var key = names[j];
+							var value = list[j];
+							object[key] = value;
+						}
+						objectList.push(object);
+					}
+				}
+                for (var i = 0; i <=rows; i++) {
+                    jQuery("#viewList").jqGrid('addRowData', i + 1, objectList[i]);
+                }
+                // jqdata=[{"userid":01,"username":"皮皮虾","password":"动态biubiubiu"},{"userid":02,"username":"象拔蚌","password":"动态boomboomboom"}];
+                // debugger;
+                // //此处因为数据源数组中的结构相同且不为空，直接遍历索引为0的数据即可
+                // $.each(jqdata[0], function(key,value) {
+                //     names.push(key);
+                //     model.push({
+                //         name:key,
+                //         index:key,
+                //         width:100
+                //     });
+                // });
+                // //创建jqGrid组件
+                // jQuery("#list2").jqGrid(
+                //     {
+                //         datatype : "json",//请求数据返回的类型。可选json,xml,txt
+                //         colNames : names,//jqGrid的列显示名字
+                //         colModel : model,
+                //         rowNum : 10,//一页显示多少条
+                //         rowList : [ 10, 20, 30 ],//可供用户选择一页显示多少条
+                //         pager : '#pager2',//表格页脚的占位符(一般是div)的id
+                //         sortname : 'id',//初始化的时候排序的字段
+                //         sortorder : "desc",//排序方式,可选desc,asc
+                //         mtype : "post",//向后台请求数据的ajax的类型。可选post,get
+                //         viewrecords : true,
+                //         caption : "JSON Example"//表格的标题名字
+                //     });
+                // //将jqdata的值循环添加进jqGrid
+                // for (var i = 0; i <= jqdata.length; i++) {
+                //     jQuery("#viewList").jqGrid('addRowData', i + 1, jqdata[i]);
+                // }
+                if(isShrinkToFit){
+                	$(".ui-jqgrid .ui-jqgrid-hdiv").css("overflow-x","hidden");
+				}
+		   }
+		</script>
+	</body>
+</html>

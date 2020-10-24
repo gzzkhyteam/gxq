@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+	<meta http-equiv="Expires" content="0"/>
+	<meta name="renderer" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+	<link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+	<link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/core/module.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/sys_com/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <style type="text/css">
+        .default-table {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="workspace-body">
+	<div class="col-md-12 col-lg-12">
+		<div class="row">
+			<!--内容-->
+			<div class="list-section">
+				<div class="list-content">
+					<div class="form-inline">
+						<form autocomplete="off" id="myForm" method="post">
+							<table class="table default-table tab-border-no">
+								<tbody>
+								<tr>
+									<th width="100">字典条目名称：</th>
+									<td><input class="form-control inp-form" name="name" dataType="*1-100" errormsg="只能输入长度为1-100的字符" nullmsg="字典条目名称不能为空"/></td>
+								</tr>
+								<tr>
+									<th>数据字典编码 ：</th>
+									<td><input class="form-control inp-form" disabled name="code" dataType="*1-20" errormsg="只能输入长度为1-20的字符" nullmsg="数据字典编码不能为空"/></td>
+								</tr>
+								<tr>
+									<th>排序权重 ：</th>
+									<td><input type="number" class="form-control inp-form"  ignore="ignore"  name="orderNum" dataType="integeP" errormsg="请输入整数！"/></td>
+								</tr>
+								<tr>
+									<th>是否启用 ：</th>
+									<td><select class="form-control" name="isEnable">
+										<option value="true">是</option>
+										<option value="false">否</option>
+									</select></td>
+								</tr>
+								<tr>
+									<th>描述：</th>
+									<td><textarea class="form-control inp-form" dataType="*0-200" name="description"></textarea></td>
+								</tr>
+								</tbody>
+							</table>
+                            <button type="hidden" class="btn-submit"></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript">
+    var urlPre = '${_gate_url}/api/admin/';
+    var Index = null;
+    function save(index){
+        Index = index;
+        $('.btn-submit').click();
+    }
+
+    //获取字典类型详情
+	(function getType() {
+        ajaxHengyun({
+            type:'get',
+            url:urlPre + 'dictionary/get',
+            data:{id:'${id}'},
+            success:function (res) {
+                if(res.data){
+                    $('#myForm').find('input[name="name"]').val(res.data.name);
+                    $('#myForm').find('input[name="code"]').val(res.data.code);
+                    $('#myForm').find('input[name="orderNum"]').val(res.data.orderNum);
+                    $('#myForm').find('select[name="isEnable"]').val(res.data.isEnable.toString());
+                    $('#myForm').find('textarea[name="description"]').val(res.data.description);
+                }
+            }
+        })
+    })();
+
+    $('.btn-submit').valid({
+        form: '#myForm',
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            var name = $('#myForm').find('input[name="name"]').val();
+            var code = $('#myForm').find('input[name="code"]').val();
+            var orderNum = $('#myForm').find('input[name="orderNum"]').val();
+            var isEnable = $('#myForm').find('select[name="isEnable"]').val();
+            var description = $('#myForm').find('textarea[name="description"]').val();
+            ajaxHengyun({
+                type:'post',
+                url:urlPre + 'dictionary/update',
+                contentType:'application/json;charset=UTF-8',
+                data:JSON.stringify({name:name,code:code,orderNum:orderNum,isEnable:isEnable,description:description,
+                    appId:parent.home.app.appId,dictionaryTypeId:parent.home.currNode.id,id:'${id}'}),
+                success:function (res) {
+                    if(res.data){
+                        parent.layer.msg("修改成功！",{icon: 6,time:1000});
+                        parent.home.secondhome.reloadList();
+                        parent.layer.close(Index);
+                    }
+                }
+            })
+        }
+    });
+</script>
+</body>
+
+</html>

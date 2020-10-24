@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统</title>
+    <link rel="stylesheet" href="${_static}/css/index.css?v=3"/>
+</head>
+<body>
+
+<div class="container" ng-app="app" ng-controller="controller" ng-cloak>
+    <div class="search">
+        <div class="search_content">
+            <!-- <div class="input-group">
+                <input type="text" class="form-control" placeholder="输入关键字搜索" ng-model="key">
+                <span class="input-group-addon search_btn" ng-click="search()">搜索</span>
+            </div>
+            <ul class="search_content_ul clearfix" id="searchExample"></ul> -->
+            <#include "/module/search.html">
+            <div class="flow">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="left">
+                        <h3><span>1</span>创建功能</h3>
+                        <ul>
+                            <li>创建应用</li>
+                            <li>应用安全开发指南</li>
+                            <li>设计规范</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 alignCenter">
+                    <div class="item_center">
+                        <h3><span>2</span>申请功能</h3>
+                        <ul>
+                            <li>了解产品</li>
+                            <li>快速接入</li>
+                            <li>帮助文档及api</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="right">
+                        <h3><span>3</span>开始开发</h3>
+                        <ul>
+                            <li>对接接口</li>
+                            <li>开发功能</li>
+                            <li>上线应用</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="main_item clearfix">
+            <h3 class="clearfix">
+                <span class="left main_item_title">热门产品</span>
+            </h3>
+            <a href="${_cp}/module/helpDoc?moduleId={{app.id}}" class="main_item_conter clearfix"
+               ng-repeat="app in hostAppList">
+                <div class="left">
+                    <img ng-src="{{app.logo || '${_static}/images/default.png'}}" onError="app.logo='${_static}/images/default.png'"/>
+                </div>
+                <div class="right">
+                    <h3>{{app.name}}</h3>
+                    <p>{{app.desc}}</p>
+                </div>
+            </a>
+        </div>
+        <div ng-if="ft.children.length" id={{ft.code}} class="main_item clearfix"
+             ng-repeat="ft in functionList | orderBy:id">
+            <h3 class="clearfix">
+                <span class="left main_item_title">{{ft.name}}</span>
+            </h3>
+            <a href="${_cp}/module/helpDoc?moduleId={{f.id}}" class="main_item_conter clearfix" ng-repeat="f in ft.children" ng-class="{expire: f.status == 10, stopped: f.status == 20}">
+                <div class="left">
+                    <img ng-src="{{f.logo || '${_static}/images/default.png'}}" onError="f.logo='${_static}/images/default.png'"/>
+                </div>
+                <div class="right">
+                    <h3>{{f.name}}<span class="tips">{{f.status == 10 ? '(已过时)' : ''}}</span></h3>
+                    <p>{{f.desc}}</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+</body>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.functionList = [];
+        $scope.key = '';
+        //获取功能类型
+        $scope.getFunctionType = function () {
+            $http.get(urlPrev + 'dictionary/getCodeList', {
+                params: {code: 'module.type'},
+                headers: getHeaders(),
+            }).success(function (res) {
+                if (res.data && res.data.length) {
+                    $scope.functionTypeList = res.data;
+                    $scope.getFunction();
+                }
+            });
+        }
+        $scope.getFunctionType();
+        
+        //获取功能列表
+        $scope.getFunction = function () {
+            var n = 0;
+            $.each($scope.functionTypeList, function (index, value) {
+                (function (index, value) {
+                    $http.get(urlPrev + 'assignModule/findAllMoudlesNoPage', {
+                        params: {moduleType: value.code},
+                        headers: getHeaders(),
+                    }).success(function (res) {
+                        n++;
+                        var obj = {};
+                        obj.code = value.code;
+                        obj.name = value.name;
+                        if(res.data){
+                        	obj.children = [];
+                        	for(var i in res.data){
+                        		if(i > 7)
+                        			break;
+                        		obj.children.push(res.data[i]);
+                        	}
+                        }
+                        $scope.functionList.splice(index, 0, obj);
+                        if ($scope.functionTypeList.length == n) {
+                            setTimeout(function () {
+                                $(window).trigger("load");
+                            }, 100)
+                        }
+                    })
+                })(index, value);
+            })
+        }
+    })
+</script>
+</html>

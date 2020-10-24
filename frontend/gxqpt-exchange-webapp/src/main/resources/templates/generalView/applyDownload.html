@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>交换共享系统</title>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/webuploader.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/upload.css" />
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+	<div class="main clearfix">
+		<div class="row">
+			<div class="current pull-left">
+				<h3 class="page-title">
+					<span>整体概览</span> &gt; <span class="page-title-scend">申请下载</span>
+				</h3>
+			</div>
+			<div class="back pull-right">
+				<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+			</div>
+		</div>
+		<div class="view_container view_container_first row">
+			<div class="main_right pull-right">
+				<div id="secondPage" class="secondPage">
+					<div id="unit" class="view_item">
+						<form id="dataForm" autocomplete="off">
+							<input type="hidden" id="apiId" name="apiId" value="">
+							<input type="hidden" id="dirId" name="dirId" value="${catalogId}">
+							<input type="hidden" id="applyType" name="applyType" value="3">
+							<table class="table default-table tab-border-no-layer">
+								<tbody>
+                                <col width="120"/>
+                                <col />
+                                <col width="150"/>
+                                <col />
+								<tr>
+									<th >API名称：</th>
+									<td colspan="3">
+										<input type="text" name="apiName" id="apiName" class="form-control" readonly/>
+									</td>
+								</tr>
+								<tr>
+									<th>申请授权截止期限：</th>
+									<td>
+										<input type="text" name="limtTime" id="limtTime" class="form-control Wdate" dataType="*" nullmsg="请填写授权截止日期！"/>
+									</td>
+								</tr>
+								<tr>
+									<th>申请原因：</th>
+									<td colspan="3">
+										<textarea name="reason" id="reason" rows="5" cols="" class="form-control" dataType="*" nullmsg="请填写申请原因！"></textarea>
+									</td>
+								</tr>
+								<tr>
+									<th>附件上传：</th>
+									<td colspan="3">
+										<div class="pull-left downFileText">
+											<div id="uploadFileName" class="form-control text-left" style="padding: 0 12px"></div>
+										</div>
+										<div class="pull-right downFileBtn">
+											<div id="filePicker" class="filePicker photoFilePicker"></div>
+											<div id="uploader" class="uploader photoUploader hidden">
+												<div class="queueList">
+													<ul id="file_html" class="filelist">
+													</ul>
+													<div id="dndArea" class="placeholder dndArea" style="padding-top: 85px;">
+
+														<p> </p>
+													</div>
+												</div>
+												<div class="statusBar" style="display:none;">
+													<div class="progress">
+														<span class="text">0%</span> <span class="percentage"></span>
+													</div>
+													<div class="info"></div>
+													<div class="btns">
+														<div id="jxButton" class="jxButton"></div>
+														<div class="uploadBtn">开始上传</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+							<div class="text-center">
+								<button type="button" class="btn btn-primary btn-save">提交</button>
+								<button type="button" class="btn btn-primary" onclick="history.back()">取消</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script>
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script src="${_static}/js/lib/webuploader/webuploader.js" type="text/javascript" ></script>
+<script src="${_static}/js/lib/webuploader/HYCore.js" type="text/javascript" ></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    /* 附件上传 begin */
+    var token = $.cookie("_token");
+    var folderId="-1";
+    var dataType="";
+    loadFile();
+    function loadFile() {
+        fileUpload = new FileUpload({
+            "filePicker" : "filePicker",
+            "dndArea" : "dndArea",
+            "uploader" : "uploader",
+            "jxButton" : "jxButton",
+            "folderId":folderId,
+            "dataType":dataType,
+            "token":token,
+            "_isAdmin":true
+        });
+    }
+    var files=[];
+    function successUploadFile(rows) {
+        if(rows.data.list.length>0){
+            var file={};
+            for(var i in rows.data.list){
+                file.filePath=rows.data.list[i].url;
+                file.oldName=rows.data.list[i].submittedFileName;
+                files.push(file);
+                var uploadFileNameText=$("#uploadFileName").text();
+                if(!uploadFileNameText){
+                    $("#uploadFileName").text(rows.data.list[i].submittedFileName);
+                }else{
+                    $("#uploadFileName").text(uploadFileNameText+'，'+rows.data.list[i].submittedFileName);
+                }
+            };
+        }
+    };
+    $('.btn-save').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            save();
+        }
+    });
+    function save(){
+        var dto =$("#dataForm").serializeJSON();
+        if(dto.dataFmat=="json"){
+            dto.dataFmat=1;
+        }else{
+            dto.dataFmat=2;
+        }
+        dto.fileList =files;
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/exchange/apply/saveshareapply',
+            data: JSON.stringify(dto),
+            success: function (rows) {
+                if (rows.data) {
+                    window.location.href="${_cp}/module/shareMagApplyList";
+                }else{
+                    parent.layer.msg(rows.errmsg,{time:1500});
+                }
+            }
+        });
+    }
+	var apiId = "${catalogId}";
+    getDataSetView();
+    function getDataSetView(){//根据目录Id获取非结构话文件API信息
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/dataapi/api/getapiinfobyunstrid",
+            data: {apiId:apiId},
+            success: function (rows) {
+                if(rows.data){
+                    $("#apiName").val(rows.data.apiName);
+                    $("#apiId").val(rows.data.apiId);
+                };
+            }
+        });
+    };
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.exedit.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js?v=1"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <style type="text/css">
+        .node_name {
+            display: inline-block;
+            width: 75px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        标准管理系统 &gt;<span class="page-title-scend">标准分类管理</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main clearfix">
+            <!--左侧树形-->
+            <div class="content clearfix">
+                <div class="organ-list-tree pull-left">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"><h5>标准化分类</h5></div>
+                        <div class="panel-body">
+                            <div class="zTreeDemoBackground left">
+                                <ul id="ztree" class="ztree"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--右侧表单内容-->
+                <div id="right-box" class="right-box pull-left">
+                    <div style="height:60px;width:100%;background-color:#CDDCEF"></div>
+                    <form id="myForm" action="" method="post">
+                        <table class="table  table-title-left">
+                            <input id="parentId" name="parentId" type="hidden"/>
+                            <tbody>
+                                <tr>
+                                    <th width="100">分类名称</th>
+                                    <td>
+                                        <input class="form-control inp-form" id="name" name="name" readonly="readonly" style="background-color: white;"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>分类描述</th>
+                                    <td>
+                                        <textarea style="height:350px;width:100%;font-size:12px;color:#545;text-indent: 5px;" id="description" name="description" readonly="readonly"></textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    //在新增编辑页面需要判断是新增类，还是子类时使用的参数。
+    var nodeid = "";
+    var parentid = "";
+
+    //标准化管理树配置
+    var setting = {
+        data: {
+            key: {
+                name: 'name'
+            },
+            simpleData: {
+                enable: true,//设置是否启用简单数据格式
+                idKey: 'id',//设置启用简单数据格式时id对应的属性名称
+                pIdKey: 'pId',//设置启用简单数据格式时parentId对应的属性名称,ztree根据id及pid层级关系构建树结构
+                rootPId: -1
+            }
+        },
+        view: {
+            addHoverDom: addHoverDom,
+            removeHoverDom: removeHoverDom
+        },
+        edit: {
+            enable: true,
+            showRemoveBtn: showRemoveBtn,
+            showRenameBtn: true,
+            removeTitle: "删除",
+            renameTitle: "编辑"
+        },
+        callback: {
+            onClick: onClick,
+            beforeEditName: beforeEditName,
+            beforeRemove: beforeRemove,
+            beforeDrag: beforeDrag,
+            beforeDrop: beforeDrop
+        }
+    };
+
+    /*  获取分类树 */
+    getTree();
+    function getTree() {
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            url: "${_gate_url}/api/standard/classify/getTree?clearCache="+Math.random(),
+            datatype: 'json',
+            data: {id: '${id!}'},
+            contentType: 'application/json',
+            success: function (rows) {
+                if (rows.data) {
+                    //加载分类树
+                    $.fn.zTree.init($("#ztree"), setting, rows.data);
+                    //加载树后默认展开根节点
+                    var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    var nodes = treeObj.getNodes();
+                    if (nodes.length > 0) {
+                        for (var i = 0; i < nodes.length; i++) {
+                            treeObj.expandNode(nodes[i], true, false, false);
+                        }
+                    }
+                    clearClassifyInfo();
+                }
+            }
+        });
+    }
+
+    //有下级分类时不显示删除按钮
+    function showRemoveBtn(treeId, treeNode) {
+        return !treeNode.isParent;
+    }
+
+    //移除添加分类按钮
+    function removeHoverDom(treeId, treeNode) {
+        $('#add_' + treeNode.tId).unbind().remove();
+    }
+
+    //点击添加按钮
+    function addHoverDom(treeId, treeNode) {
+        var obj = $('#' + treeNode.tId + '_span');
+        if ($('#add_' + treeNode.tId).length > 0) {
+            return;
+        }
+        var menu = '<span id="add_' + treeNode.tId + '" class="button add" title="新增"></span>';
+        obj.after(menu);
+        var btn = $('#add_' + treeNode.tId);
+        if (btn) {
+            btn.bind('click', function () {
+                if (treeNode.getParentNode() != null) {
+                    parentid = treeNode.getParentNode().id;
+                } else {
+                    parentid = '';
+                }
+                nodeid = treeNode.id;
+                createPage(parentid, nodeid);
+            });
+        }
+    }
+
+    function beforeDrag(treeId, treeNodes) {
+        for (var i = 0, l = treeNodes.length; i < l; i++) {
+            if (treeNodes[i].drag === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function beforeDrop(treeId, treeNodes, targetNode, moveType) {
+        var currentId = treeNodes[0].id;//获得被拖拽的节点id
+        var locateId = targetNode.id;//获得目标id
+        var drop = drag(appId, locateId, currentId, moveType);
+        return drop;
+    }
+
+    function setCheck() {
+        var zTree = $.fn.zTree.getZTreeObj("ztree");
+        var isCopy = true;
+        var isMove = true;
+        var prev = true;
+        var inner = true;
+        var next = true;
+        zTree.setting.edit.drag.isCopy = isCopy;
+        zTree.setting.edit.drag.isMove = isMove;
+        showCode(1, ['setting.edit.drag.isCopy = ' + isCopy, 'setting.edit.drag.isMove = ' + isMove]);
+        zTree.setting.edit.drag.prev = prev;
+        zTree.setting.edit.drag.inner = inner;
+        zTree.setting.edit.drag.next = next;
+        showCode(2, ['setting.edit.drag.prev = ' + prev, 'setting.edit.drag.inner = ' + inner, 'setting.edit.drag.next = ' + next]);
+    }
+
+    function showCode(id, str) {
+        var code = $("#code" + id);
+        code.empty();
+        for (var i = 0, l = str.length; i < l; i++) {
+            code.append("<li>" + str[i] + "</li>");
+        }
+    }
+
+    //点击编辑按钮
+    function beforeEditName(treeId, treeNode) {
+        var id = treeNode.id;
+        editPage(id);
+        return false;
+    }
+
+
+    //删除分类
+    function beforeRemove(treeId, treeNode) {
+        parent.layer.confirm('确定删除'+treeNode.name+'吗？', {
+            shadeClose: true,
+            shade: 0.4,
+            btn: ['确定', '取消'] //按钮
+        }, function (value, index, elem) {
+            ajaxHengyun({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: "${_gate_url}/api/standard/file/isRelevanceDocument",
+                data: {classifyId: treeNode.id},
+                success: function (rows) {
+                    if (rows.data) {
+                        parent.layer.msg(treeNode.name+"下有关联的文档，无法删除！", {icon: 4, time: 2000});
+                        return false;
+                    } else {
+                        ajaxHengyun({
+                            type: "GET",
+                            async: false,
+                            dataType: 'json',
+                            url: "${_gate_url}/api/standard/classify/delete",
+                            data: {id: treeNode.id},
+                            success: function (rows) {
+                                if (rows.data) {
+                                    $.fn.zTree.getZTreeObj(treeId).removeNode(treeNode);
+                                    parent.layer.msg(treeNode.name+"删除成功！", {icon: 6, time: 2000});
+                                } else {
+                                    parent.layer.msg(treeNode.name+"删除失败，请稍后重试！", {icon: 5,time: 2000});
+                                }
+                            }
+                        });
+                        return false;
+                    }
+                }
+            });
+            clearClassifyInfo();//删除后清除右侧显示分类信息
+        }, function () {
+        });
+        return false;
+    }
+
+    //点击树形节点后，在右侧显示出分类名称，分类描述。
+    function onClick(event, treeId, treeNode) {
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            url: "${_gate_url}/api/standard/classify/get",
+            datatype: 'json',
+            data: {id: treeNode.id},
+            contentType: 'application/json',
+            success: function (rows) {
+                $('#name').val(rows.data.name);
+                $('#description').val(rows.data.description);
+            }
+        });
+        return false;
+    }
+
+    //获取子节点的最大code
+    function getLastCode(resNode) {
+        var parentNode = resNode;
+        var parentCode = parentNode.code;
+        var childNodes = parentNode.children;
+        var childCode = '';
+        if (childNodes) {
+            var lastCode = 0;
+            childNodes.forEach(function (n) {
+                n = parseInt(n.code);
+                lastCode = n > lastCode ? n : lastCode;
+            });
+            childCode = parseInt(lastCode) + 1 + '';
+            var lastCodeLength = lastCode.length;
+            var childCodeLength = childCode.length;
+            var prefix = '';
+            for (var i = 0; i < lastCodeLength - childCodeLength; i++) {
+                prefix += '0';
+            }
+            childCode = prefix + childCode;
+        } else {
+            childCode = parentCode + '001';
+        }
+        return childCode;
+    }
+
+    //添加分类树中的信息
+    function addChildNode(node) {
+        var zTree = $.fn.zTree.getZTreeObj('ztree');
+        zTree.addNodes(parentNode, -1, node);
+        parent.layer.closeAll();
+        parent.layer.msg("分类新增成功！", {icon: 6, time: 2000});
+    }
+
+    //更新分类树中的信息
+    function updateNode(res) {
+        var zTree = $.fn.zTree.getZTreeObj('ztree');
+        var node = zTree.getNodeByParam("id", res.id, null);
+        node.name = res.name;
+        zTree.updateNode(node);
+        parent.layer.closeAll();
+        parent.layer.msg("分类编辑成功！", {icon: 6, time: 2000});
+    }
+
+    /* 弹出新增页面 */
+    function createPage(parentid, nodeid) {
+        parent.layer.open({
+            id: 'create',
+            type: 2,
+            anim: 6,
+            title: '新增分类',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '500px'],
+            content: "${_cp}/standard/classifyCreate?parentid=" + parentid + "&nodeid=" + nodeid,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确定', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("create");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+        clearClassifyInfo();//新增后清除右侧显示分类信息
+    }
+
+    /* 弹出编辑页面 */
+    function editPage(id) {
+        parent.layer.open({
+            id: 'create',
+            type: 2,
+            anim: 6,
+            title: '编辑分类',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '500px'],
+            content: "${_cp}/standard/classifyEdit?id=" + id,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确定', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("create");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+        clearClassifyInfo();//更新后清除右侧显示分类信息
+    }
+
+    //分类树刷新后清除右侧分类信息
+    function clearClassifyInfo() {
+        $("#myForm").trigger('reset');
+    }
+</script>
+</body>
+</html>

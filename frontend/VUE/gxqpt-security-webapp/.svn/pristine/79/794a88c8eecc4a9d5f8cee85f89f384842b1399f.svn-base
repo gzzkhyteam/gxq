@@ -1,0 +1,254 @@
+<template>
+	<Layout>
+		<Content>
+			<Breadcrumb>
+				<BreadcrumbItem>国信优易</BreadcrumbItem>
+				<BreadcrumbItem>服务器管理</BreadcrumbItem>
+			</Breadcrumb>
+			<Card>
+				<Form :model="serverData" ref="searchformData" inline :label-width="80">
+					<FormItem label="CPU" prop="cpu">
+						<Select class="queryItem" v-model="serverData.cpu">
+							<Option value="2">2核</Option>
+							<Option value="4">4核</Option>
+							<Option value="8">8核</Option>
+							<Option value="16">16核</Option>
+						</Select>
+					</FormItem>
+					<FormItem label="内存" prop="operatingMemory">
+						<Select class="queryItem" v-model="serverData.operatingMemory">
+							<Option value="2">2GB</Option>
+							<Option value="4">4GB</Option>
+							<Option value="8">8GB</Option>
+							<Option value="16">16GB</Option>
+							<Option value="32">32GB</Option>
+							<Option value="64">64GB</Option>
+						</Select>
+					</FormItem>
+					<FormItem label="操作系统" prop="operatingSystem">
+						<Select class="queryItem" v-model="serverData.operatingSystem">
+							<Option value="Windows server 32位">windows server 32 位</Option>
+							<Option value="aliyun Linux 64位">aliyun Linux 64位</Option>
+							<Option value="centos 32位">centos 32位</Option>
+						</Select>
+					</FormItem>
+					<FormItem label="所属网络" prop="network">
+						<Select class="queryItem" v-model="serverData.network">
+							<Option value="zwww">政务外网</Option>
+							<Option value="hlw">互联网</Option>
+							<Option value="zw">专网</Option>
+						</Select>
+					</FormItem>
+					<FormItem>
+						<Button type="info" @click="search">查询</Button>
+						<Button type="info" @click="add">新增</Button>
+					</FormItem>
+				</Form>
+				<hy-table ref="selection" :data="data" :columns="columns" :total="pageOption.total" :page-size="pageOption.pageSize" @on-change="pageChange" @on-page-size-change="changePageSize" show-sizer show-elevator/>
+			</Card>
+		</Content>
+		<Modal v-model="editState" title="编辑" class-name="vertical-center-modal" width="70%">
+			<servermgr-edit ref="servermgrEdit" v-on:examine="editSave"></servermgr-edit>
+			<div slot="footer">
+				<Button type="info" @click="editSubmit('servermgrEdit')">确定</Button>
+				<Button type="text" @click="editClose">关闭</Button>
+			</div>
+		</Modal>
+	</Layout>
+</template>
+<script>
+	import servermgrEdit from './children/editServer'
+	import api from '@/api/axiosApi'
+	import softhardApiList from '@/api/softhardApiList'
+	export default {
+		data() {
+			return {
+				serverData: {//查询参数
+					cpu:"",
+					operatingMemory:"",
+					operatingSystem:"",
+					network:"",
+				},
+				pageOption: { //分页参数
+					current: 1,
+					total: 0,
+					pageSize: 20
+				},
+				columns: [{//列表表头数据
+					title: '序号',
+					type: 'index',
+					width: 60,
+					align: 'center'
+				}, {
+					title: '服务器ID',
+					key: 'serverId'
+				}, {
+					title: '管理单位',
+					key: 'orgname'
+				}, {
+					title: '管理员',
+					key: 'manageUname'
+				}, {
+					title: 'CPU核数',
+					key: 'cpuCount'
+				}, {
+					title: '内存',
+					key: 'memorySize'
+				}, {
+					title: '操作系统',
+					key: 'system'
+				}, {
+					title: '所属网络',
+					key: 'netScope'
+				}, {
+					title: '开通时间',
+					key: 'openTime'
+				}, {
+					title: '最近变更时间',
+					key: 'updateTime',
+				}, {
+					title: '变更次数',
+					key: 'changeCount',
+					render: (h, params) => {
+						const vm = this
+						const num = params.row.changeNum
+						const change = h('span', {
+							class: 'handle',
+							domProps: {
+								innerHTML: num
+							},
+							on: {
+								click() {
+									vm.gotoCtrl(num)
+								}
+							}
+						})
+						return h('div', [change])
+					}
+				}, {
+					title: '操作',
+					type: 'act',
+					width: 200,
+					align: 'center',
+					render: (h, params) => {
+						return h('div', [
+							h('span', {
+								class: 'handle',
+								on: {
+									click: () => {
+										this.$router.push({
+											path: '/server/detail'
+										});
+									}
+								}
+							}, '详情'),
+							h('span', {
+								class: 'handle',
+								on: {
+									click: () => {
+										console.log("删除");
+									}
+								}
+							}, '删除'),
+							h('span', {
+								class: 'handle',
+								on: {
+									click: () => {
+										this.$router.push({
+											path: '/server/edit'
+										});
+									}
+								}
+							}, '修改')
+						]);
+					}
+				}],
+				data: [],//列表数据
+				editState: false,//编辑显示状态
+			}
+		},
+		components: {
+			servermgrEdit,
+		},
+		mounted() {
+			this.servermanagerPage(); //查询服务分配管理分页
+		},
+		methods: {
+			pageChange(num) { //页码改变的回调
+				this.pageOption.current = num;
+				this.findMachineList();
+			},
+			changePageSize(num) { //切换每页条数时的回调
+				this.pageOption.pageSize = num;
+				this.findMachineList();
+			},
+			servermanagerPage() { // 查询服务分配管理分页
+				this.data = [];
+				var formData = {
+					"data": { ...this.serverData
+					}, //Object.assign({}, this.searchCondition),
+					"pageNo": this.pageOption.current,
+					"pageSize": this.pageOption.pageSize
+				};
+				api(softhardApiList.servermanagerPage, formData).then((res) => {
+					if(res.status == 200 && res.data.data) {
+						this.data = res.data.data.list;
+						if(this.data.length>0){
+							this.pageOption.pageSize = res.data.data.pageSize;
+							this.pageOption.total = res.data.data.total;
+							this.pageOption.current = res.data.data.pageNum;
+						};
+					}
+				}, (err) => {
+					//dong something...
+				})
+			},
+			editSubmit(name) {//编辑提交方法
+				this.$refs[name].handleSubmit();
+			},
+			editSave(param) { //保存主机数据
+			},
+			add() {//新增
+				this.editState = true;
+			},
+			editClose() { //关闭编辑
+				this.editState = false;
+				this.actId = null;
+			},
+			search() {
+				console.log("查看");
+			},
+			
+			// 操作
+			gotoCtrl(idx) {
+				console.log(idx);
+			}
+		}
+	}
+</script>
+<style lang="less" scoped="scoped">
+	.queryItem {
+		width: 200px;
+	}
+	
+	.act-btn-group {
+		button {
+			margin: 0 12px;
+		}
+	}
+	
+	.ivu-modal-footer {
+		display: none;
+	}
+	
+	.access-list {
+		span.handle {
+			margin: 0 5px;
+			display: inline-block;
+			cursor: pointer;
+			&:hover {
+				color: #57a3f3;
+			}
+		}
+	}
+</style>

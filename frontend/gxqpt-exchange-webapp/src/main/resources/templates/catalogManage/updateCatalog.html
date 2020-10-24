@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+	</head>
+	<body class="bgNone">
+		<div class="workspace-body">
+			<div id="console-container" class="clearfix">
+				<div class="col-sm-12">
+					<div class="general_list_main clearfix">
+						<div class="main_bottom col-lg-12 col-sm-12">
+							<div class="view_item">
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<table class="table default-table tab-border-no-layer borderCollapse">
+										<caption>修改后</caption>
+										<tbody>
+											<tr>
+												<th width="120">目录名称：</th>
+												<td id="dirName" class="viewTd">
+												</td>
+											</tr>
+											<tr>
+												<th>目录编码：</th>
+												<td id="dirCode" class="viewTd">
+												</td>
+											</tr>
+											<tr>
+												<th>目录标识：</th>
+												<td id="dirType" class="viewTd">
+													2
+												</td>
+											</tr>
+											<tr>
+												<th>目录描述：</th>
+												<td id="desc" class="viewTd">
+												</td>
+											</tr>
+											<tr>
+												<th>是否为元目录：</th>
+												<td id="isBottom" class="viewTd">
+													否
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<table class="table default-table tab-border-no-layer borderCollapse">
+										<caption>修改前</caption>
+										<tbody>
+										<tr>
+											<th width="120">目录名称：</th>
+											<td id="dirNamePre" class="viewTd">
+											</td>
+										</tr>
+										<tr>
+											<th>目录编码：</th>
+											<td id="dirCodePre" class="viewTd">
+											</td>
+										</tr>
+										<tr>
+											<th>目录标识：</th>
+											<td id="dirTypePre" class="viewTd">
+												2
+											</td>
+										</tr>
+										<tr>
+											<th>目录描述：</th>
+											<td id="descPre" class="viewTd">
+											</td>
+										</tr>
+										<tr>
+											<th>是否为元目录：</th>
+											<td id="isBottomPre" class="viewTd">
+												否
+											</td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+		<script type="text/javascript" src="${_static}/js/com.js" charset="utf-8"></script>
+		<script type="text/javascript">
+            getCatalogInfo("${id}");
+            getCatalogInfoPre("${id}");
+			function getCatalogInfo(id){
+                ajaxHengyun({
+                    type:"GET",
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/directory/get',
+					data:{id:id},
+                    success:function(rows){
+                        if(rows.data){
+							var rowsObject=dealElement(rows.data);
+							$("#dirName").text(rowsObject.dirName);
+							$("#dirCode").text(rowsObject.dirCode);
+                            $("#applyCode").text(rowsObject.applyCode);
+							$("#desc").text(rowsObject.desc);
+                        }
+                    }
+                });
+			}
+
+			function getCatalogInfoPre(id){
+                ajaxHengyun({
+                    type:"GET",
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/directory/getDirectoryWare',
+					data:{id:id},
+                    success:function(rows){
+                        if(rows.data){
+							var rowsObject=dealElement(rows.data);
+							$("#dirNamePre").text(rowsObject.dirName);
+							$("#dirCodePre").text(rowsObject.dirCode);
+                            $("#applyCodePre").text(rowsObject.applyCode);
+							$("#descPre").text(rowsObject.desc);
+                        }
+                    }
+                });
+			}
+		</script>
+	</body>
+</html>

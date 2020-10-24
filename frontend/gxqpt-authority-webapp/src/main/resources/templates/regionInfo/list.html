@@ -1,0 +1,259 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" href="${_static}/css/core/infoMaintain.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.exedit.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <style>
+        .ztree li span {
+            display: inline-block;
+            max-width: 136px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        权限管理系统 &gt; 信息维护 &gt; <span class="page-title-scend">地区信息维护</span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="col-sm-12">
+            <div class="general_list_main clearfix">
+                <div id="main_left" class="main_left pull-left">
+                    <div class="conter item">
+                        <h3 class="clearfix">
+                            <span class="pull-left item_tle">地区信息</span>
+                        </h3>
+                        <ul id="ztree" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="main_right">
+                    <iframe id="secondhome" name="secondhome" frameborder="0" scrolling="no" width="100%" height="100%" style="min-height: 380px;" src="${_cp}/power/regionView.html"  onload="iframeOnload()"></iframe>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    var id="";
+    var fullName=[];
+    /* 生成树 */
+    var setting = {
+        view: {
+            addHoverDom: addHoverDom,
+            removeHoverDom: removeHoverDom,
+            selectedMulti: false,
+            addDiyDom:addDiyDom,
+        },
+        edit: {
+            enable: true,
+            showRemoveBtn: showRemoveBtn,
+            showRenameBtn: showRenameBtn,
+            removeTitle: "删除",
+            renameTitle: "编辑",
+        },
+        data: {
+            key: {
+                name: 'name'
+            },
+            simpleData: {
+                idKey: 'id',
+                enable: true
+            }
+        },
+        callback: {
+            beforeEditName: beforeEditName,
+            onClick: onClick,
+            beforeRemove:zTreeOnRemove,
+        },
+    };
+
+
+    function addDiyDom(treeId, treeNode) {
+        var spaceWidth = 5;
+        var switchObj = $("#" + treeNode.tId + "_switch"),
+            icoObj = $("#" + treeNode.tId + "_ico");
+        switchObj.remove();
+        icoObj.before(switchObj);
+
+        if (treeNode.level > 1) {
+            var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
+            switchObj.before(spaceStr);
+        }
+        var spantxt=$("#" + treeNode.tId + "_span").html();
+        if(spantxt.length>17){
+            spantxt=spantxt.substring(0,17)+"...";
+            $("#" + treeNode.tId + "_span").html(spantxt);
+        }
+    }
+
+    function beforeEditName(treeId, treeNode) {
+        var fullNameString="";
+        fullName=[];
+        var treeObj = $.fn.zTree.getZTreeObj("ztree");
+        var node = treeObj .getNodeByParam("id", treeNode.id, null);
+        treeObj.selectNode(node);
+        if (node && node.id!='-1') {
+            getFullName(node);
+            if(fullName.length>0){
+                fullNameString=encodeURIComponent(fullName.reverse().join(''));
+            }
+        }
+        id = treeNode.id;
+        $("#secondhome").attr("src","${_cp}/power/regionEdit?id="+treeNode.id+"&fullNameString="+fullNameString);
+        return false;
+    }
+    function showRemoveBtn(treeId, treeNode) {
+        if(!treeNode.children || !treeNode.children.length>0){
+            return true;
+        }
+    }
+    function showRenameBtn(treeId, treeNode) {
+        if(treeNode.type=="rootNode"){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function addHoverDom(treeId, treeNode) {
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+            + "' title='新增' onfocus='this.blur();'></span>";
+        sObj.after(addStr);
+        var btn = $("#addBtn_"+treeNode.tId);
+        if (btn) btn.bind("click", function(){
+            var fullNameString="";
+            fullName=[];
+            var treeObj = $.fn.zTree.getZTreeObj("ztree");
+            var node = treeObj .getNodeByParam("id", treeNode.id, null);
+            treeObj.selectNode(node);
+            if (node && node.id!='-1') {
+                getFullName(node);
+                if(fullName.length>0){
+                    fullNameString=encodeURIComponent(fullName.reverse().join(''));
+                }
+            }
+            $("#secondhome").attr("src","${_cp}/power/regionCreate?parentId="+treeNode.id+"&fullNameString="+fullNameString);
+            return false;
+        });
+    };
+    function zTreeOnRemove(e, treeId, treeNode) {
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/admin/area/delete",
+            data:{id:treeId.id},
+            success:function(rows){
+                if(rows.data ){
+                    top.layer.msg("删除地区信息成功！",{icon:6,time:1000});
+                    getAreaTree("-1");
+                    return true;
+                }else{
+                    top.layer.msg("删除地区信息出错，请重试！",{time:1000});
+                    return false;
+                }
+            }
+        });
+    }
+    function getFullName(treeNode){
+        var treeObj = $.fn.zTree.getZTreeObj("ztree");
+        var node = treeObj .getNodeByParam("id", treeNode.id, null);
+        fullName.push(treeNode.name);
+        if (node.parentId &&  node.parentId!="-1") {
+            var parentNode = node.getParentNode();
+            if(parentNode){
+                getFullName(parentNode);
+            }
+        }else{
+            return ;
+        }
+    }
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+    };
+    function onClick(e, treeId, treeNode) {
+        id=treeNode.id;
+        $("#secondhome").attr("src","${_cp}/power/regionView");
+        return false;
+    };
+
+    getAreaTree("-1");
+    function getAreaTree(parentId){
+        ajaxHengyun({
+            type: "GET",
+            // url: "${_gate_url}/api/admin/area/findAreaTree",
+            url: "${_gate_url}/api/admin/area/findAreaTree",
+            datatype: 'json',
+            data:{parentId:parentId},
+            success: function (rows) {
+                if(!rows.data) return false;
+                var zNodes =[
+                    {
+                        id:"-1",
+                        name:"地区信息",
+                        type:"rootNode",
+                        open:true,
+                        children: rows.data,
+                    },
+                ];
+                $.fn.zTree.init($("#ztree"), setting, zNodes);
+                 var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                 var nodes = treeObj.getNodes();
+                 treeObj.selectNode(nodes[0].children[0]);
+                id=rows.data[0].id;
+
+                $("#secondhome").attr("src","${_cp}/power/regionView");
+                return false;
+            }
+        })
+    }
+    function savePage(val){
+        getAreaTree("-1");
+        var treeObj = $.fn.zTree.getZTreeObj("ztree");
+        var node = treeObj .getNodeByParam("id", val, null);
+        treeObj.selectNode(node);
+        id=val;
+        $("#secondhome").attr("src","${_cp}/power/regionView");
+    }
+    /*获取区域树*/
+    function iframeOnload(){
+        if(typeof secondhome.getAreaTreeById=='function'){
+            secondhome.getAreaTreeById(id);
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                我的任务 > <span class="active">详情</span>
+            </div>
+            <a class="button-icon pull-right" onclick="history.back()">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="block">
+                <div class="text-title">任务详情</div>
+                <div class="content">
+                    <table class="tab">
+                        <tbody ng-if="task.taskType == 'appApply' || task.taskType == 'appAudit'">
+                        <tr>
+                            <th>应用名称：</th>
+                            <td>{{task.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>是否公有应用：</th>
+                            <td>{{task.publicIs}}</td>
+                        </tr>
+                        <tr>
+                            <th>AppID：</th>
+                            <td>{{task.appId}}</td>
+                        </tr>
+                        <tr>
+                            <th>首页地址：</th>
+                            <td>{{task.indexUrl}}</td>
+                        </tr>
+                        <tr>
+                            <th>所属单位：</th>
+                            <td>{{task.orgName}}</td>
+                        </tr>
+                        <tr>
+                            <th>应用分类：</th>
+                            <td>{{task.appType | appType}}</td>
+                        </tr>
+                        <tr>
+                            <th>应用类型：</th>
+                            <td>{{task.type | filterType}}</td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>{{task.status}}</td>
+                        </tr>
+                        <tr>
+                            <th>序号：</th>
+                            <td>{{task.orderNo}}</td>
+                        </tr>
+                        <tr>
+                            <th>提供方：</th>
+                            <td>{{task.provider}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复建设开发周期：</th>
+                            <td>{{task.reduceTime}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复建设开发成本：</th>
+                            <td>{{task.reduceBuildCost}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复使用成本：</th>
+                            <td>{{task.reduceUseCost}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复维护成本：</th>
+                            <td>{{task.reduceProtectCost}}</td>
+                        </tr>
+                        <tr>
+                            <th>初始预计工期：</th>
+                            <td>{{task.originalTime}}</td>
+                        </tr>
+                        <tr>
+                            <th>初始预计成本：</th>
+                            <td>{{task.originalCost}}</td>
+                        </tr>
+                        <tr>
+                            <th>使用图标：</th>
+                            <td><img ng-src="{{task.logoUrl}}" style="width: 50px;height: 50px;"></td>
+                        </tr>
+                        <tr>
+                            <th>应用描述：</th>
+                            <td>{{task.desc}}</td>
+                        </tr>
+                        <tr>
+                            <th>申请人：</th>
+                            <td>{{task.applyUserName}}</td>
+                        </tr>
+                        <tr>
+                            <th>申请备注：</th>
+                            <td>{{task.applyDesc}}</td>
+                        </tr>
+                        <tr>
+                            <th>应用描述：</th>
+                            <td>{{task.desc}}</td>
+                        </tr>
+                        <tr ng-if="task.auditStatus != 1">
+                            <th>审批描述：</th>
+                            <td>{{task.auditDesc}}</td>
+                        </tr>
+                        </tbody>
+                        <tbody ng-if="task.taskType == 'moduleApply' || task.taskType == 'moduleAudit'">
+                        <tr>
+                            <th>功能名称：</th>
+                            <td>{{task.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>功能编码：</th>
+                            <td>{{task.code}}</td>
+                        </tr>
+                        <tr>
+                            <th>功能类型：</th>
+                            <td>{{task.moduleTypeMap.moduleTypeName}}</td>
+                        </tr>
+                        <tr>
+                            <th>功能状态：</th>
+                            <td>{{task.status}}</td>
+                        </tr>
+                        <tr>
+                            <th>联系人邮箱：</th>
+                            <td>{{task.email}}</td>
+                        </tr>
+                        <tr>
+                            <th>swagger  url：</th>
+                            <td>{{task.apiSyncUrl}}</td>
+                        </tr>
+                        <tr>
+                            <th>是否公开可见：</th>
+                            <td>{{task.publicLook}}</td>
+                        </tr>
+                        <tr>
+                            <th>是否公开使用：</th>
+                            <td>{{task.publicIs}}</td>
+                        </tr>
+                        <tr>
+                            <th>申请备注：</th>
+                            <td>{{task.applyDesc}}</td>
+                        </tr>
+                        <tr>
+                            <th>功能描述：</th>
+                            <td>{{task.desc}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复建设开发周期：</th>
+                            <td>{{task.reduceTime}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复建设开发成本：</th>
+                            <td>{{task.reduceCost}}</td>
+                        </tr>
+                        <tr>
+                            <th>使用图标：</th>
+                            <td>
+                                <img ng-src="{{task.logo}}" style="width: 50px;height: 50px;"></img>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>源于服务：</th>
+                            <td>{{task.appName}}</td>
+                        </tr>
+                        <tr>
+                            <th>APPID：</th>
+                            <td>{{task.appId}}</td>
+                        </tr>
+                        <tr>
+                            <th>申请人：</th>
+                            <td>{{task.applyUserName}}</td>
+                        </tr>
+                        <!--<tr>
+                            <th>申请备注：</th>
+                            <td>{{task.applyDesc}}</td>
+                        </tr>-->
+                        <!--<tr>-->
+                        <!--<th>使用图标：</th>-->
+                        <!--<td>{{task.logo?task.applyDesc:task.auditDesc}}</td>-->
+                        <!--</tr>-->
+                        </tbody>
+                        <tbody ng-if="task.taskType == 'assignApply' || task.taskType == 'assignAudit'">
+                        <tr>
+                            <th>功能名称：</th>
+                            <td>{{task.moduleName}}</td>
+                        </tr>
+                        <tr>
+                            <th>功能编码：</th>
+                            <td>{{task.code}}</td>
+                        </tr>
+                        <tr>
+                            <th>申请使用应用：</th>
+                            <td>{{task.appName}}</td>
+                        </tr>
+                        <tr>
+                            <th>appID：</th>
+                            <td>{{task.appId}}</td>
+                        </tr>
+                        <tr>
+                            <th>申请人：</th>
+                            <td>{{task.applyUserName}}</td>
+                        </tr>
+                        <tr>
+                            <th>申请备注：</th>
+                            <td>{{task.applyDesc}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script>
+    var pageType = "myTaskList";
+</script>
+</body>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http, token) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        //获取任务详情
+        $scope.getTask = function (currPage, pageSize) {
+            $http.post(urlPrev + 'applyManager/getApplyDetail', {id: '${id}', taskType: '${taskType}'}, {
+                headers: getHeaders(),
+            }).success(function (res) {
+            	var taskType = "${taskType}";
+            	var status = "";
+            	if(taskType == "moduleAudit"){
+            		if(res.data.status == 1){
+            			status = "正常使用中";
+	                }else if(res.data.status == 10){
+	                	status = "已过时";
+	                }else{
+	                	status = "停止使用";
+	                }
+            	} else {
+	                if(res.data.status == 'true'){
+	                	status = "启用";
+	                }else{
+	                	status = "禁用";
+	                }
+                }
+            	res.data.status = status;
+                if(res.data.publicIs == true){
+                    res.data.publicIs = "是";
+                }else{
+                    res.data.publicIs = "否";
+                }
+                if(res.data.publicLook == true){
+                    res.data.publicLook = "是";
+                }else{
+                    res.data.publicLook = "否";
+                }
+                $scope.task = res.data;
+            })
+        }
+        $scope.getTask();
+    }).service('token', function () {
+        this.getToken = function () {
+            // return $.cookie('token');
+            return getToken();
+        }
+    }).filter('formateTaskType', function () {
+        return function (text) {
+            if (text == 'appApply') {
+                return '应用申请';
+            } else if (text == 'moduleApply') {
+                return '功能申请';
+            } else if (text == 'assignApply') {
+                return '调用申请';
+            } else if (text == 'appAudit') {
+                return '应用审批';
+            } else if (text == 'moduleAudit') {
+                return '功能审批';
+            } else if (text == 'assginAudit') {
+                return '调用审批';
+            }
+        }
+    }).filter('formateTaskRole', function () {
+        return function (text) {
+            if (text.indexOf('Apply') >= 0) {
+                return '申请';
+            } else {
+                return '审批';
+            }
+        }
+    }).filter('formateAuditStatus', function () {
+        return function (text) {
+            if (text == '1') {
+                return '待审核';
+            } else if (text == '2') {
+                return '审核通过';
+            } else if (text == '3') {
+                return '审核不通过';
+            }
+        }
+    }).filter('isAudit', function () {
+        return function (text) {
+            if (text.indexOf('Audit') >= 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }).filter('appType', function () {
+        return function (text) {
+            if (text == '1') {
+                return '应用';
+            } else if (text == '2') {
+                return '服务';
+            } else if (text == '3') {
+                return '既是应用也是服务';
+            }
+        }
+    }).filter('filterType', function () {
+        return function (text) {
+            if (text == 'jryy') {
+                return '接入应用';
+            } else if (text == 'zcpt') {
+                return '支撑平台';
+            } else if (text == 'zcyy') {
+                return '支撑应用';
+            } else if (text == 'zcfw') {
+                return '支撑服务';
+            } else if (text == 'zcfwmk') {
+                return '支撑模块';
+            }
+        }
+    })
+    /*angularJS*/
+</script>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>渠道群组管理</title>
+		<link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/message/common.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/css/message/channel.css" />
+		<link rel="stylesheet" href="${_static}/css/core/module.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/message/drafts.css">
+	</head>
+	<style type="text/css">
+		.channel li{
+			/*height: 40px;*/
+			line-height: 30px;
+			color: #000;
+			background: #eee;
+			padding-left: 10px;
+			border-top: 1px solid #ccc;
+		}
+		.channel_checkContent>div{
+				width: 100%;
+			}
+	</style>
+	<body style="background: #ffffff;border: 1px solid #eee;overflow: hidden;">
+		<!-- 渠道详情 -->
+		<div id="channel_check" class="panel-body panel-tabContent channel_check" style="display: block;position: relative;padding-top: 0;">
+			<form id="channel_checkContent" class="form-inline form-inline-two channel_checkContent" style="width: 100%;margin: 0;">
+				<div class="form-group" style="height: 40px;line-height:40px;border-bottom: 1px solid #ddd;">
+					<label for="recipient-name" class="control-label text-right" style="float: left;margin-left: 18%;color: #666;">&nbsp;群组名称   :   </label>
+					<span id="channel_groupName" style="float: left;margin-left: 15px;font-size: 16px;color: #000;" disabled="disabled"></span>
+				</div>
+				<div class="form-group " style="width: 96%;margin-left: 18% !important;margin-top: 30px !important;height: auto;">
+					<label for="recipient-name" class="control-label text-right" style="float: left;float:left;text-align: left;color: #666;">&nbsp;包含渠道   :   </label>
+					<div class="qudaoBox1 channel" style="height:auto !important;float:left;width: 70%;margin-left: 10px;">
+					</div>
+				</div>
+				<div class="form-group" style="margin-bottom: 20px;height:auto!important;width: 68%;margin-left: 18% !important;float: left;">
+					<label for="recipient-name" class="control-label text-right fl" style="padding-left: 35px;color: #666;">说明:</label>
+					<textarea name="" id="channel_groupDescript" cols="30" rows="10" style="width:80%;height:100px;margin-left: 17px;resize:none" disabled="disabled"></textarea>
+				</div>
+			</form>
+		</div>
+		<!-- 渠道详情 -->
+		<div class="layer_bottom" style="box-sizing: border-box;">
+			<a href="###" id="channel_cancel" style="background: #fff;color: #4898d5;">关闭</a>
+			<!--<a href="###" id="channel_add">确认</a>-->
+
+		</div>
+	</body>
+	<script type="text/javascript" src="${_static}/js/jquery-1.8.0.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+	<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+	<script type="text/javascript" src="${_static}/js/jquery.combobox.js"></script>
+	<script>
+        $("#channel_cancel").click(function(){
+            layer.closeAll()
+            var index = parent.layer.getFrameIndex(window.name)
+            parent.layer.close(index)
+        })
+		$(function() {						
+		//    点击查看详情
+			ajaxHengyun({
+				type: "GET",
+				url: "${_gate_url}/api/msgs/channelgroup/get",
+				data: {
+					"id": "${id}"
+				},
+				success: function(res) {
+					$("#channel_groupName").html(res.data.name)
+					$("#channel_groupDescript").html(res.data.explain)
+					$(".channel").empty();
+					var channels = res.data.channels;
+					for(var i=0;i<channels.length;i++){
+						var channel = channels[i];
+						$(".channel").append(
+							'<li class="channel_grouptype" style="width:80%;float:left">' + '<span style="width:25%;float:left">' + channel.type + '</span>'
+						);
+						$(".channel_grouptype").eq(i).append(
+							'<span style="float:left;width:50%">' + '<i style="color:#000">' + channel.name + '</i>' + '</span>' + '</li>'
+						);					
+					}					
+				}
+			});
+		});			
+	</script>
+
+</html>
+

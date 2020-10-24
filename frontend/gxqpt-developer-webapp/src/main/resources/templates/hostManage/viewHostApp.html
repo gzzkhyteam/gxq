@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                主机管理 > 主机应用 > <span class="active">详情</span>
+            </div>
+            <a href="javascript:" class="button-icon pull-right" onclick="history.back()">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="block">
+                <div class="text-title">查看主机应用信息</div>
+                <div class="content">
+                    <table class="tab">
+                        <tbody>
+                        <tr>
+                            <th>所属应用：</th>
+                            <td>{{app.applicationName}}</td>
+                        </tr>
+                        <!--<tr>-->
+                            <!--<th>使用主机：</th>-->
+                            <!--<td>{{app.hostName}}</td>-->
+                        <!--</tr>-->
+                        <tr>
+                            <th>部署目录：</th>
+                            <td>{{app.installPath}}</td>
+                        </tr>
+                        <tr>
+                            <th>分配内存(G)：</th>
+                            <td>{{app.mem}}</td>
+                        </tr>
+                        <tr>
+                            <th>分配硬盘(G)：</th>
+                            <td>{{app.harddisk}}</td>
+                        </tr>
+                        <tr>
+                            <th>访问地址：</th>
+                            <td>{{app.indexUrl}}</td>
+                        </tr>
+                        <tr>
+                            <th>部署时间：</th>
+                            <td>{{app.createTime | date:'yyyy-MM-dd'}}</td>
+                        </tr>
+                        <!--<tr>-->
+                            <!--<th>申请使用截止日期：</th>-->
+                            <!--<td></td>-->
+                        <!--</tr>-->
+                        <tr>
+                            <th>部署人：</th>
+                            <td>{{app.userName}}</td>
+                        </tr>
+                        <tr>
+                            <th>备注：</th>
+                            <td>{{app.remark}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script>
+    var pageType="hostList";
+</script>
+</body>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http, token) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.app = {};
+        /*获取主机应用详情*/
+        $scope.getApp = function () {
+            $http.post(urlPrev + 'hostInstall/findforEdit',null,{
+                params:{id:'${id}'},
+                headers: getHeaders(),
+            }).success(function (res) {
+                $scope.app = res.data;
+            })
+        }
+        $scope.getApp();
+    }).service('token', function () {
+        this.getToken = function () {
+            // return $.cookie('token');
+            return getToken();
+        }
+    })
+    /*angularJS*/
+</script>
+</html>

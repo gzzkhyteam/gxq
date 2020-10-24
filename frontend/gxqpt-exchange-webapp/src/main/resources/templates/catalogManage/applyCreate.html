@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>交换共享系统</title>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+	<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+	<div class="main clearfix">
+		<div class="row">
+			<div class="current pull-left">
+				<ul class="navsecond clearfix">
+					<li class="pull-left"><a href="${_cp}/module/dataCatalogManage">数据目录管理</a></li>
+					<li class="pull-left"><a class="active" href="${_cp}/module/applyList">目录发布跟踪</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row marginTop">
+			<div class="current pull-left">
+				<h3 class="page-title">
+					<span>目录发布管理</span> &gt; <span>目录发布跟踪</span> &gt; <span class="page-title-scend">新增</span>
+				</h3>
+			</div>
+			<div class="back pull-right">
+				<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+			</div>
+		</div>
+		<div class="view_container row">
+			<div class="main_left pull-left">
+				<div id="ztreeContainer" class="ztreeContainer">
+					<h3 class="clearfix">
+						<span class="pull-left item_tle">数据目录</span>
+					</h3>
+					<div class="search">
+						<input id="searchTxt" type="text" placeholder="请输入关键字搜索" autocomplete="off"/>
+						<span id="searchBtn" class="fa fa-search" onclick="ztreeSearch();"></span>
+					</div>
+					<ul id="ztree" class="ztree"></ul>
+					<div class="text-left colorSm">
+						<p>变动操作说明：</p>
+						<p>
+							<sapn style="color: #333;">正常</sapn>
+							<sapn style="color: #00FFFF">新增</sapn>
+							<sapn style="color: #0000FF">修改</sapn>
+							<sapn style="color: #FF0000">删除</sapn>
+							<sapn style="color: #2e63b3">启用</sapn>
+							<sapn style="color: #CCCCCC">禁用</sapn>
+						</p>
+					</div>
+					<div class="text-center">
+						<a href="javascript:void(0);" class="btn btn-primary" onclick="ztreeReset();">重置</a>
+						<a href="javascript:void(0);" class="btn btn-primary" onclick="editListApply()">目录发布申请</a>
+						<a href="javascript:void(0);" class="btn btn-primary hidden" onclick="releaseApply()">目录发布</a>
+					</div>
+				</div>
+			</div>
+			<div class="main_right pull-right">
+				<div id="secondPage" class="secondPage">
+					<div id="unit" class="view_item">
+						<h3>单位信息
+							<input type="hidden" id="unitType">
+							<button id="unitTypeDisable" type="button" class="btn btn-default pull-right disNone" onclick="disableCatalog('unitType')">禁用</button>
+							<button id="unitTypeEnable" type="button" class="btn btn-default pull-right disNone" onclick="enableCatalog('unitType')">启用</button>
+							<button type="button" class="btn btn-primary pull-right autoCreate magRight10" onclick="autoCreateCatalogs('unitType')">自动创建目录</button>
+						</h3>
+						<table class="table default-table tab-border-no-layer borderCollapse">
+							<tbody>
+							<tr>
+								<th width="130">单位全称：</th>
+								<td class="viewTd dirName"></td>
+							</tr>
+							<tr>
+								<th>单位简称：</th>
+								<td id="unitAbbr" class="viewTd"></td>
+							</tr>
+							<tr>
+								<th>单位标识：</th>
+								<td class="viewTd dirType"></td>
+							</tr>
+							<tr>
+								<th>单位描述：</th>
+								<td class="viewTd desc"></td>
+							</tr>
+							<tr>
+								<th>数据量：</th>
+								<td class="viewTd dataCount"></td>
+							</tr>
+							<tr>
+								<th>数据查看次数：</th>
+								<td class="viewTd seeCount"></td>
+							</tr>
+							<tr>
+								<th>数据下载次数：</th>
+								<td class="viewTd downCount"></td>
+							</tr>
+							<tr>
+								<th>发布状态：</th>
+								<td class="viewTd status"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="catalog" class="view_item">
+						<h3>目录信息
+							<input type="hidden" id="catalogType">
+							<button id="catalogTypeDisable" type="button" class="btn btn-default pull-right disNone" onclick="disableCatalog('catalogType')">禁用</button>
+							<button id="catalogTypeEnable" type="button" class="btn btn-default pull-right disNone" onclick="enableCatalog('catalogType')">启用</button>
+							<button type="button" class="btn btn-primary pull-right autoCreate magRight10" onclick="autoCreateCatalogs('catalogType')">自动创建目录</button>
+						</h3>
+						<table class="table default-table tab-border-no-layer borderCollapse">
+							<tbody>
+							<tr>
+								<th width="130">目录名称：</th>
+								<td class="viewTd dirName"></td>
+							</tr>
+							<!-- <tr>
+								<th>目录编码：</th>
+								<td class="viewTd dirCode"></td>
+							</tr> -->
+							<tr>
+								<th>目录标识：</th>
+								<td class="viewTd dirType"></td>
+							</tr>
+							<tr>
+								<th>目录描述：</th>
+								<td class="viewTd desc"></td>
+							</tr>
+							<tr>
+								<th>是否为底层目录：</th>
+								<td class="viewTd">否</td>
+							</tr>
+							<tr>
+								<th>数据量：</th>
+								<td class="viewTd dataCount"></td>
+							</tr>
+							<tr>
+								<th>数据查看次数：</th>
+								<td class="viewTd seeCount"></td>
+							</tr>
+							<tr>
+								<th>数据下载次数：</th>
+								<td class="viewTd downCount"></td>
+							</tr>
+							<tr>
+								<th>发布状态：</th>
+								<td class="viewTd status"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+
+
+					<div id="catalogBottom" class="view_item">
+						<h3>元目录信息
+							<input type="hidden" id="catalogBottomType">
+							<button id="catalogBottomTypeDisable" type="button" class="btn btn-default pull-right disNone" onclick="disableCatalog('catalogBottomType')">禁用</button>
+							<button id="catalogBottomTypeEnable" type="button" class="btn btn-default pull-right disNone" onclick="enableCatalog('catalogBottomType')">启用</button>
+							<button type="button" class="btn btn-primary pull-right autoCreate magRight10" onclick="autoCreateCatalogs('catalogBottomType')">自动创建目录</button>
+
+						</h3>
+						<table class="table default-table tab-border-no-layer borderCollapse">
+							<col width="240"/>
+							<col />
+							<col width="80"/>
+							<col />
+							<tbody>
+							<tr>
+								<th>目录名称：</th>
+								<td colspan="3" class="viewTd dirName"></td>
+							</tr>
+							<tr>
+								<th>目录标识：</th>
+								<td colspan="3" class="viewTd dirType"></td>
+							</tr>
+							<tr>
+								<th>目录描述：</th>
+								<td colspan="3" class="viewTd desc"></td>
+							</tr>
+							<tr>
+								<th>是否为底层目录：</th>
+								<td colspan="3" class="viewTd">是</td>
+							</tr>
+							<tr>
+								<!-- <th>目录编码：</th>
+								<td class="viewTd dirCode"></td> -->
+								<th>主题分类：</th>
+								<td class="viewTd theme"></td>
+							</tr>
+							<tr>
+								<th>行业分类：</th>
+								<td class="viewTd industry"></td>
+								<th>服务分类：</th>
+								<td class="viewTd service"></td>
+							</tr>
+							<tr>
+								<th>数据类型：</th>
+								<td class="viewTd dataType"></td>
+								<th>开放方式：</th>
+								<td class="viewTd openWay"></td>
+							</tr>
+							<tr class="openWayNo">
+								<th>共享方式：</th>
+								<td colspan="3" class="viewTd shareWay"></td>
+							</tr>
+							<tr class="shareWayNo">
+								<th>不开放、不共享、有条件共享原因：</th>
+								<td colspan="3" class="viewTd reason"></td>
+							</tr>
+							<tr class="shareWayNo">
+								<th>默认共享部门：</th>
+								<td colspan="3" class="viewTd shareUnit"></td>
+							</tr>
+							<tr>
+								<th>数据量：</th>
+								<td class="viewTd dataCount"></td>
+								<th>查看次数：</th>
+								<td class="viewTd seeCount"></td>
+							</tr>
+							<tr>
+								<th>下载次数：</th>
+								<td class="viewTd downCount"></td>
+								<th>发布状态：</th>
+								<td class="viewTd status"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="field" class="view_item">
+						<h3>字段信息</h3>
+						<table class="table default-table tab-border-no-layer borderCollapse">
+							<tbody>
+							<tr>
+								<th width="130">字段名称：</th>
+								<td id="fieldName" class="viewTd"></td>
+							</tr>
+							<tr>
+								<th>数据类型：</th>
+								<td id="fieldType" class="viewTd"></td>
+							</tr>
+							<tr>
+								<th>字段标识：</th>
+								<td id="fieldCode" class="viewTd"></td>
+							</tr>
+							<tr>
+								<th>字段描述：</th>
+								<td class="viewTd desc"></td>
+							</tr>
+							<tr>
+								<th>发布状态：</th>
+								<td class="viewTd status"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.exedit.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.exhide.js" charset="utf-8"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var FieldType=[];
+    var unitList=[];
+    var unitId="";
+    var autoCatalogUnitId="";
+    // getFieldType();
+    getUnitList();
+    /* 生成树 */
+
+    var setting = {
+        view: {
+            addHoverDom: addHoverDom,
+            removeHoverDom: removeHoverDom,
+            selectedMulti: false,
+            fontCss: getFont,
+            showLine: false,
+            showIcon: false
+        },
+        edit: {
+            enable: true,
+            showRemoveBtn: showRemoveBtn,
+            showRenameBtn: showRenameBtn,
+            removeTitle: "删除",
+            renameTitle: "编辑",
+        },
+        data: {
+            key: {
+                name: 'dirName'
+            },
+            simpleData: {
+                idKey: 'id',
+                enable: true
+            }
+        },
+        callback: {
+            beforeClick : beforeClick ,
+            beforeEditName: beforeEditName,
+            onClick: onClick,
+            beforeRemove:zTreeOnRemove,
+            onExpand: zTreeOnExpand
+        },
+        async: {
+            enable: true,
+            url:getUrl,
+            type:'GET',
+            dataType: 'json',
+            otherParam:[],
+            autoParam:[],
+            dataFilter: filter
+        }
+    };
+    function setCheck() {
+        var zTree = $.fn.zTree.getZTreeObj("ztree"),
+            type = {
+                "Y": 'ps',
+                "N": 'ps'
+            };
+        zTree.setting.check.chkboxType = type;
+    }
+    function getUrl(treeId, treeNode){//设置获取字段信息路径
+        return "${_gate_url}/api/exchange/element/getList?dirId="+treeNode.id;
+    }
+    function filter(treeId, parentNode, childNodes) {//获取字段信息
+
+        if (!childNodes.data) return null;
+        for (var i=0, l=childNodes.data.length; i<l; i++) {
+            childNodes.data[i].type='field';
+            childNodes.data[i].dirName = childNodes.data[i].fieldName.replace(/\.n/g, '.');
+        }
+        return childNodes.data;
+    }
+    var pIdList=[];
+    function ztreeReset(){
+        $("#searchTxt").val("");
+        ztreeSearch();
+    }
+    var oldSearchTxt="";
+    function ztreeSearch(){//目录搜索
+        var dirName=$("#searchTxt").val();
+        if(!dirName){
+            getZtree();
+            return false;
+        }
+        if(dirName==oldSearchTxt){
+            return false;
+		}else{
+            oldSearchTxt=dirName;
+		}
+        var zTree = $.fn.zTree.getZTreeObj("ztree");
+        var allNodes = zTree.getNodes();
+        allNodeList = zTree.transformToArray(allNodes);
+        for(var i in allNodeList){
+            if(allNodeList[i].type!="heelNode"){
+                var node = zTree.getNodeByParam("id", allNodeList[i].id, null);
+                zTree.hideNode(node);
+            }
+        };
+        var nodes = zTree.getNodesByParamFuzzy("dirName", dirName, null);
+        nodeList = zTree.transformToArray(nodes);
+        for(var i in nodeList){
+            var pId = nodeList[i].parentId;
+            var childList = nodeList[i].children;
+            if(pId){
+                var node = zTree.getNodeByParam("id", pId, null);
+                pIdList=[];
+                getTypeId(node);
+                if(pIdList.length>0){
+                    pIdList=pIdList.reverse();
+                    for(var m in pIdList){
+                        var nodeParent = zTree.getNodeByParam("id", pIdList[m], null);
+                        zTree.showNode(nodeParent);
+                    }
+                    var nodeLoad = zTree.getNodeByParam("id", nodeList[i].id, null);
+                    zTree.showNode(nodeLoad);
+                    if(i=="0"){
+                        zTree.expandNode(nodeLoad);
+                        zTree.setting.callback.onClick(null, zTree.setting.id, nodeLoad);
+                    }
+                    if(childList.length>0){
+                        var node = zTree.getNodeByParam("id", nodeList[i].id, null);
+                        zTree.showNode(node);
+                        getChildrenZtree(node);
+                    }
+                }
+            };
+        };
+        setInterval(function(){zTreeOnExpand();},300)
+    };
+    function getTypeId(treeNode){
+        var zTree = $.fn.zTree.getZTreeObj("ztree");
+        var node = zTree.getNodeByParam("id", treeNode.id, null);
+        pIdList.push(treeNode.id);
+        if (node.pId) {
+            var parentNode = node.getParentNode();
+            if(parentNode){
+                getTypeId(parentNode);
+            }
+        }else{
+            return ;
+        }
+    };
+    function getChildrenZtree(treeNode){
+        var zTree = $.fn.zTree.getZTreeObj("ztree");
+        var node = zTree .getNodeByParam("id", treeNode.id, null);
+        zTree.showNode(node);
+        if (node.children) {
+            var childrenList = node.children;
+            for(var j in childrenList){
+                var nodechildren = zTree.getNodeByParam("id", childrenList[j].id, null);
+                getChildrenZtree(nodechildren);
+            };
+        }else{
+            return ;
+        };
+    };
+    getZtree();
+    function getZtree(){
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/directory/findDataTree',
+            data:{unitId: "-1"},
+            datatype: "json",
+            success: function (rows) {
+                if(rows.data){
+                    builderTree(rows.data);
+                    var zNodes =[
+                        { dirName:"数据目录", type:"heelNode", open:true,id:'-1',
+                            children: rows.data,
+                        },
+                    ];
+                    $.fn.zTree.init($("#ztree"), setting, zNodes);
+                    getUnitInfo(rows.data[0].id);
+                    unitId=rows.data[0].id;
+                    $("#unitType").val(rows.data[0].id);
+                }
+            }
+        });
+    }
+    function builderTree(r){
+
+        if(!r || r.length == 0){
+            return ;
+        }
+        r.forEach(function (value, index) {
+
+            var isChildOrg = true;
+            if(!value.children || value.children.length == 0){
+                value.children = [];
+                isChildOrg = false;
+            };
+
+            if(value.parentId=="-1"){
+                value.type="unit" ;
+            }else{
+                if(value.isBottom=="1"){
+                    value.type="catalog" ;
+                }else if(value.isBottom=="2"){
+                    value.type="catalog_bottom" ;
+                };
+            }
+            value.isParent=true;
+            if(isChildOrg){
+                builderTree(value.children);
+            }
+            return ;
+        });
+        return r;
+    }
+    var log, className = "dark";
+    function beforeDrag(treeId, treeNodes) {
+        return false;
+    }
+    function beforeClick (treeId, treeNode) {
+        if(treeNode.type=="heelNode"){
+            return false;
+        }
+        return true;
+    }
+    function beforeEditName(treeId, treeNode) {
+        if(treeNode.type=="unit"){
+            editUnit(treeNode.id,treeNode.dirCode);
+        }else if(treeNode.type=="catalog"){
+            editCatalog(treeNode.id);
+        }else if(treeNode.type=="catalog_bottom"){
+            editCatalogBottom(treeNode.id);
+        }else if(treeNode.type=="field"){
+            editField(treeNode.id);
+        };
+        return false;
+    }
+    function showRemoveBtn(treeId, treeNode) {
+        if(treeNode.type=="heelNode" || treeNode.type=="unit" || treeNode.optType==4 || treeNode.optType==3 || treeNode.optType==6){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    function showRenameBtn(treeId, treeNode) {
+        if(treeNode.type=="heelNode" || treeNode.optType==4 || treeNode.optType==3 || treeNode.optType==6){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    var newCount = 1;
+    function addHoverDom(treeId, treeNode) {
+        var sObj = $("#" + treeNode.tId + "_span");
+        if(treeNode.type=="heelNode" || treeNode.optType==4 || treeNode.optType==3 || treeNode.optType==6) return;
+        if(treeNode.type=="catalog_bottom" && treeNode.dataType==2) return;
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        if (treeNode.editNameFlag || $("#updateBtn_"+treeNode.tId).length>0) return;
+        var addStr="";
+        if(treeNode.type!="field"){
+            addStr += "<span class='button add' id='addBtn_" + treeNode.tId
+                + "' title='新增' onfocus='this.blur();'></span>";
+        }
+        if(treeNode.wareId && treeNode.optType==2 && treeNode.type!="unit"){
+            addStr +="<span class='button update' id='updateBtn_" + treeNode.tId
+                + "' title='变动对比' onfocus='this.blur();'></span>";
+        }
+
+        sObj.after(addStr);
+        var btn = $("#addBtn_"+treeNode.tId);
+        if (btn) btn.bind("click", function(){
+            if(treeNode.type=="heelNode"){
+                createUnit();
+            }else if(treeNode.type=="unit"){
+                createCatalog(treeNode.id,treeNode.id);
+            }else if(treeNode.type=="catalog"){
+                createCatalog(treeNode.id,treeNode.unitId);
+            }else if(treeNode.type=="catalog_bottom"){
+                createField(treeNode.id,treeNode.unitId);
+            }
+            return false;
+        });
+        var btnUpdate = $("#updateBtn_"+treeNode.tId);
+        if (btnUpdate) btnUpdate.bind("click", function(){
+            if(treeNode.type=="catalog"){
+                updateCatalog(treeNode.id);
+            }else if(treeNode.type=="catalog_bottom"){
+                updateCatalogBottom(treeNode.id);
+            }else if(treeNode.type=="field"){
+                updateField(treeNode.id);
+            };
+            return false;
+        });
+    };
+    function zTreeOnRemove(e, treeId, treeNode) {
+        var url='${_gate_url}/api/exchange/directory/delete';
+        if(treeId.type=="field"){
+            url="${_gate_url}/api/exchange/element/delete";
+        }
+        ajaxHengyun({
+            type:"POST",
+            url:url,
+            data:{id:treeId.id},
+            datatype: "json",
+            success:function(rows){
+                if(rows.data){
+                    parent.layer.msg("删除成功！",{time:1000});
+                    var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    var node = treeObj.getNodeByParam("id", treeId.id, null);
+                    node.optType = 3;
+                    newNode = treeObj.updateNode(node);
+                    getAllChildrenNodes(node,3);
+                    return true;
+                }else{
+                    parent.layer.msg("删除失败，请稍后重试！",{time:1000});
+                    return false;
+                }
+            }
+        });
+        return false;
+    };
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+        $("#updateBtn_"+treeNode.tId).unbind().remove();
+    };
+    function onClick(e, treeId, treeNode) {
+        autoCatalogUnitId=treeNode.unitId;
+        $("#secondPage .view_item").css("display","none");
+        if(treeNode.type=="unit"){
+            $("#unit").css("display","block");
+            getUnitInfo(treeNode.id);
+            $("#unitType").val(treeNode.id);
+            $(".autoCreate").css("display","inline-block");
+            $("#unitTypeEnable").css("display","none");
+            if(treeNode.optType=="3" || treeNode.optType=="6"){
+                $(".autoCreate,#unitTypeDisable").css("display","none");
+            }
+            if(treeNode.optType=="5" ){
+                $("#unitTypeDisable").css("display","inline-block");
+            }
+            if(treeNode.optType=="4"){
+                $("#unitTypeEnable").css("display","inline-block");
+                $(".autoCreate").css("display","none");
+                $("#unitTypeDisable").css("display","none");
+            }
+            unitId=treeNode.id;
+        }else if(treeNode.type=="catalog"){
+            $("#catalog").css("display","block");
+            $("#catalogType").val(treeNode.id);
+            $(".autoCreate").css("display","inline-block");
+            $("#catalogTypeEnable").css("display","none");
+            if(treeNode.optType=="3" || treeNode.optType=="6"){
+                $(".autoCreate,#catalogTypeDisable").css("display","none");
+            }
+            if(treeNode.optType=="4"){
+                $("#catalogTypeEnable").css("display","inline-block");
+                $(".autoCreate").css("display","none");
+                $("#catalogTypeDisable").css("display","none");
+            }
+            if(treeNode.optType=="5" ){
+                $("#catalogTypeDisable").css("display","inline-block");
+            }
+            getUnitInfo(treeNode.id);
+        }else if(treeNode.type=="catalog_bottom"){
+            $("#catalogBottom").css("display","block");
+            $("#catalogBottomType").val(treeNode.id);
+            $(".autoCreate").css("display","inline-block");
+            $("#catalogBottomTypeEnable").css("display","none");
+            if(treeNode.optType=="3" || treeNode.optType=="6"){
+                $(".autoCreate,#catalogBottomTypeDisable").css("display","none");
+            }
+            if(treeNode.optType=="4"){
+                $("#catalogBottomTypeEnable").css("display","inline-block");
+                // $(".autoCreate").css("display","none");
+                $("#catalogBottomTypeDisable").css("display","none");
+            }
+            if(treeNode.optType=="5" ){
+                $("#catalogBottomTypeDisable").css("display","inline-block");
+            }
+            getUnitInfo(treeNode.id);
+        }else if(treeNode.type=="field"){
+            $("#field").css("display","block");
+            getDataElement(treeNode.id);
+        }
+        return false;
+    };
+    function addNodes(nodeInfo,id){//ztree新增节点
+
+        var treeObj = $.fn.zTree.getZTreeObj("ztree");
+        var parentZNode = treeObj.getNodeByParam("id", id, null);
+        var newNode = nodeInfo;
+        newNode.optType = 1;
+        if(parentZNode.open){
+            newNode = treeObj.addNodes(parentZNode, nodeInfo);
+        }else{
+            if(parentZNode.isBottom==2){
+                treeObj.reAsyncChildNodes(parentZNode, "refresh");
+            }else{
+                newNode = treeObj.addNodes(parentZNode, nodeInfo);
+            }
+        }
+    }
+    function updateNode(nodeInfo){//ztree更新节点
+
+        var treeObj = $.fn.zTree.getZTreeObj("ztree");
+        var node = treeObj.getNodeByParam("id", nodeInfo.id, null);
+        node.dirName = nodeInfo.dirName;
+        node.optType = 2;
+        newNode = treeObj.updateNode(node);
+    }
+    function getFont(treeId, node) {
+        if(node.optType==1){
+            return  {'color':'#00FFFF'};
+        };
+        if(node.optType==2){
+            return  {'color':'#0000FF'};
+        };
+        if(node.optType==3){
+            return  {'color':'#FF0000'};
+        };
+        if(node.optType==4){
+            return  {'color':'#CCCCCC'};
+        };
+        if(node.optType==6){
+            return  {'color':'#2e63b3'};
+        };
+    };
+    setHeight();
+    function setHeight(){
+        var leftHeight=$("#ztreeContainer").prop('scrollHeight');
+        var rightHeight=$("#secondPage").prop('scrollHeight');
+        if(leftHeight && rightHeight){
+            $(".view_container .main_left,.view_container .main_right").css("min-height",Math.max(leftHeight,rightHeight)+30);
+        }
+    }
+    function zTreeOnExpand() {
+        setHeight();
+        var height=document.getElementById("container").scrollHeight;
+        $("#home", window.parent.document).height(height);
+    };
+
+    function createUnit(){//单位新增
+        parent.layer.open({
+            id: 'editUnit',
+            type: 2,
+            anim:6,
+            title: '新增单位信息',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['720px', '500px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/createUnit",
+            btn: ['提交','取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("createUnit");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+    function editUnit(id,dirCode){//单位编辑
+        parent.layer.open({
+            id: 'editUnit',
+            type: 2,
+            anim:6,
+            title: '单位信息编辑',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['720px', '500px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/editUnit?id="+id+"&dirCode="+dirCode,
+            btn: ['提交','取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("editUnit");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+    function createCatalog(id,unitId){//新增目录信息
+        parent.layer.open({
+            id: 'createCatalog',
+            type: 2,
+            anim:6,
+            title: '新增目录信息',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '85%'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/createCatalog?id="+id+"&unitId="+unitId,
+            btn: ['提交','取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("createCatalog");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+    function editCatalog(id){//目录信息编辑
+        parent.layer.open({
+            id: 'editCatalog',
+            type: 2,
+            anim:6,
+            title: '目录信息编辑',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['720px', '500px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/editCatalog?id="+id,
+            btn: ['提交','取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("editCatalog");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+    function updateCatalog(id){//目录信息变动对比
+        parent.layer.open({
+            id: 'updateCatalog',
+            type: 2,
+            anim:6,
+            title: '目录信息变动对比',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '88%'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/updateCatalog?id="+id,
+            btn: ['取消'],
+        });
+    }
+    function editCatalogBottom(id){//元目录信息编辑
+        parent.layer.open({
+            id: 'editCatalogBottom',
+            type: 2,
+            anim:6,
+            title: '元目录信息编辑',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '88%'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/editCatalogBottom?id="+id,
+            btn: ['提交','取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("editCatalogBottom");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+    function updateCatalogBottom(id){//元目录信息变动对比
+        parent.layer.open({
+            id: 'updateCatalogBottom',
+            type: 2,
+            anim:6,
+            title: '元目录信息变动对比',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '88%'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/updateCatalogBottom?id="+id,
+            btn: ['取消'],
+        });
+    }
+    function createField(id,unitId){//字段信息新增
+        parent.layer.open({
+            id: 'createField',
+            type: 2,
+            anim:6,
+            title: '新增字段信息',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['720px', '560px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/createField?id="+id+"&unitId="+unitId,
+            btn: ['提交','取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("createField");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+    function editField(id){//字段信息编辑
+        parent.layer.open({
+            id: 'editField',
+            type: 2,
+            anim:6,
+            title: '字段信息编辑',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['720px', '560px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/editField?id="+id,
+            btn: ['提交','取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("editField");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+    function updateField(id){//字段信息变动对比
+        parent.layer.open({
+            id: 'updateField',
+            type: 2,
+            anim:6,
+            title: '字段信息变动对比',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '88%'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/updateField?id="+id,
+            btn: ['提交','取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("updateField");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+    function releaseApply(){
+        parent.layer.prompt({//申请发布
+            formType:2,
+            title:"申请理由",
+            area: ['500px','270px'],
+            shade: [0.9, '#000'],
+            yes: function(index, layero){
+                var iframeWin = layero.find('.layui-layer-input');
+                var val = $(iframeWin).val();
+                parent.layer.msg('得到了'+val);
+                parent.layer.close(index);
+            }
+        });
+    }
+    /*获取目录信息*/
+    function getUnitInfo(id){
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/directory/get',
+            data:{id: id},
+            datatype: "json",
+            success: function (rows) {
+                if(rows.data){
+                    var rowVal = dealElement(rows.data);
+                    $(".dataCount").text( rowVal.dataCount);
+                    $(".seeCount").text( rowVal.seeCount);
+                    $(".downCount").text( rowVal.downCount);
+                    if(rowVal.status==1){
+                        $(".status").text("未发布");
+                    }
+                    if(rowVal.status==2){
+                        $(".status").text("审批中");
+                    }
+                    if(rowVal.status==3){
+                        $(".status").text("驳回");
+                    }
+                    if(rowVal.status==4){
+                        $(".status").text("已发布");
+                    }
+                    $("#unitAbbr").text( rowVal.unitAbbr);
+                    $(".dirName").text( rowVal.dirName);
+                    $(".dirType").text( rowVal.dirType);
+                    $(".desc").text( rowVal.desc);
+                    $(".dirCode").text(rowVal.dirCode);
+                    $(".reason").text(rowVal.reason);
+                    var themeName="";
+                    if(rowVal.themeOneName!=""){
+                        themeName+=rowVal.themeOneName;
+                        if(rowVal.themeTwoName!=""){
+                            themeName+=">"+rowVal.themeTwoName;
+                            if(rowVal.themeThreeName!=""){
+                                themeName+=">"+rowVal.themeThreeName;
+                            }
+                        }
+                    }
+                    $(".theme").text(themeName);
+                    var industryName="";
+                    if(rowVal.industryOneName!=""){
+                        industryName+=rowVal.industryOneName;
+                        if(rowVal.industryTwoName!=""){
+                            industryName+=">"+rowVal.industryTwoName;
+                            if(rowVal.industryThreeName!=""){
+                                industryName+=">"+rowVal.industryThreeName;
+                            }
+                        }
+                    }
+                    $(".industry").text(industryName);
+                    var serviceName="";
+                    if(rowVal.serviceOneName!=""){
+                        serviceName+=rowVal.serviceOneName;
+                        if(rowVal.serviceTwoName!=""){
+                            serviceName+=">"+rowVal.serviceTwoName;
+                            if(rowVal.serviceThreeName!=""){
+                                serviceName+=">"+rowVal.serviceThreeName;
+                            }
+                        }
+                    }
+                    $(".service").text(serviceName);
+                    if(rowVal.dataType==1){
+                        $(".dataType").text("结构化数据");
+                    }
+                    if(rowVal.dataType==2){
+                        $(".dataType").text("非结构化数据");
+                    }
+                    if(rowVal.shareWay==1){
+                        $(".shareWay").text("无条件共享");
+                        $(".shareWayNo").css("display","none");
+                    }
+                    if(rowVal.shareWay==2){
+                        $(".shareWay").text("有条件共享");
+                        $(".shareWayNo").css("display","table-row");
+                    }
+                    if(rowVal.shareWay==3){
+                        $(".shareWay").text("不共享");
+                        $(".shareWayNo").css("display","table-row");
+                    }
+                    if(rowVal.openWay==1){
+                        $(".openWay").text("开放");
+                        $(".openWayNo,.shareWayNo").css("display","none");
+                    }
+                    if(rowVal.openWay==2){
+                        $(".openWay").text("不开放");
+                        $(".openWayNo").css("display","table-row");
+                    }
+                    if(rowVal.unitIds.length>0){
+                        var shareUnitName=[];
+                        rowVal.unitIds.forEach(function(value,index){
+                            unitList.forEach(function(item,num){
+                                if(value==item.id){
+                                    shareUnitName.push(item.name_);
+                                }
+                            });
+                        });
+                        $(".shareUnit").text(shareUnitName.join("，"));
+                    }
+                };
+                zTreeOnExpand();
+            }
+        });
+    }
+    /* function getFieldType(){//获取数据类型
+         ajaxHengyun({
+             type: 'GET',
+             url: '${_gate_url}/api/exchange/dataapi/api/findByDictCode',
+             data:{pId: "date_type"},
+             datatype: "json",
+             success: function (rows) {
+                 if(rows.data){
+                     FieldType= rows.data;
+                 }
+             }
+         });
+     }*/
+    function getUnitList(){//获取单位列表
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/directory/getOrgList ',
+            datatype: "json",
+            success: function (rows) {
+                if(rows.data){
+                    unitList=rows.data;
+                }
+            }
+        });
+    }
+    function getDataElement(id){
+        ajaxHengyun({
+            type:"GET",
+
+            dataType: 'json',
+            url:  '${_gate_url}/api/exchange/element/get',
+            data:{id:id},
+            success:function(rows){
+                if(rows.data){
+                    var rowVal=dealElement(rows.data);
+                    /* FieldType.forEach(function(value,index){
+                         if(value.id==rowVal.fieldType){
+                         }
+                     });*/
+                    $("#fieldType").text(rowVal.fieldType);
+                    $("#fieldName").text(rowVal.fieldName);
+                    $("#unitId").text(rowVal.unitId);
+                    $("#fieldCode").text(rowVal.fieldCode);
+                    $(".desc").text( rowVal.desc);
+                    if(rowVal.status==1){
+                        $(".status").text("未发布");
+                    }
+                    if(rowVal.status==2){
+                        $(".status").text("审批中");
+                    }
+                    if(rowVal.status==3){
+                        $(".status").text("驳回");
+                    }
+                    if(rowVal.status==4){
+                        $(".status").text("已发布");
+                    }
+                };
+                zTreeOnExpand();
+            }
+        });
+    }
+    function reloadPage(id,type){
+        $("#secondPage .view_item").css("display","none");
+        if(type=="unit"){
+            $("#unit").css("display","block");
+            $("#unitType").val(id);
+            getUnitInfo(id);
+        }else if(type=="catalog"){
+            $("#catalog").css("display","block");
+            $("#catalogType").val(id);
+            getUnitInfo(id);
+        }else if(type=="catalog_bottom"){
+            $("#catalogBottom").css("display","block");
+            $("#catalogBottomType").val(id);
+            getUnitInfo(id);
+        }else if(type=="field"){
+            $("#field").css("display","block");
+            $("#fieldsType").val(id);
+            getDataElement(id);
+        };
+    }
+    function editListApply(){//目录发布申请
+        if(!unitId){
+            parent.layer.msg("请选择发布单位！",{item:1500});
+        }else{
+            window.location.href="${_cp}/module/editListApply?unitId="+unitId+"&pageType=1";
+        }
+    }
+    function autoCreateCatalogs(type){//自动生成目录
+        var id=$("#"+type).val();
+        parent.layer.open({
+            id: 'autoCreateCatalogs',
+            type: 2,
+            anim:6,
+            title: '自动创建目录',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['90%', '85%'],
+            content: "${_cp}/module/autoCreateCatalogs?catalogPid="+id+"&autoCatalogUnitId="+autoCatalogUnitId,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确定','<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("autoCreateCatalogs");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = top[iframe].save(index);
+            }
+        });
+    }
+    function disableCatalog(type){//目录禁用
+        var id=$("#"+type).val();
+        var dataVal={};
+        if(id){
+            id= id;
+        }
+        var url;
+        url='${_gate_url}/api/exchange/directory/disable';
+        dataVal={dirId:id};
+        ajaxHengyun({
+            type:"POST",
+            url: url,
+            data:dataVal,
+            datatype: "json",
+            success:function(rows){
+                if(rows.data){
+                    var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    var node = treeObj.getNodeByParam("id", id, null);
+                    node.optType = 4;
+                    getAllChildrenNodes(node,4);
+                    newNode = treeObj.updateNode(node);
+                    parent.layer.msg("禁用成功！",{time:1000});
+                    $("#"+type+"Enable").css("display","inline-block");
+                    $("#"+type+"Disable").css("display","none");
+                    return true;
+                }else{
+                    parent.layer.msg(rows.errmsg+"，请稍后重试！",{time:1000});
+                    return false;
+                }
+            }
+        });
+    }
+    function enableCatalog(type){//目录启用
+        var id=$("#"+type).val();
+        var dataVal={};
+        if(id){
+            id=id;
+        }
+        var url;
+        url='${_gate_url}/api/exchange/directory/enable';
+        dataVal={dirId:id};
+        ajaxHengyun({
+            type:"POST",
+            url: url,
+            data:dataVal,
+            datatype: "json",
+            success:function(rows){
+                if(rows.data){
+                    var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    var node = treeObj.getNodeByParam("id", id, null);
+                    node.optType = 6;
+                    newNode = treeObj.updateNode(node);
+                    getAllChildrenNodes(node,6);
+                    parent.layer.msg("启用成功！",{time:1000});
+                    $("#"+type+"Disable").css("display","inline-block");
+                    $("#"+type+"Enable").css("display","none");
+                    return true;
+                }else{
+                    parent.layer.msg(rows.errmsg+"，请稍后重试！",{time:1000});
+                    return false;
+                }
+            }
+        });
+    }
+    function getAllChildrenNodes(treeNode,result){
+        if (treeNode.isParent) {
+            var childrenNodes = treeNode.children;
+            if (childrenNodes) {
+                for (var i = 0; i < childrenNodes.length; i++) {
+                    var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    childrenNodes[i].optType=result;
+                    newNode = treeObj.updateNode(childrenNodes[i]);
+                    result = getAllChildrenNodes(childrenNodes[i], result);
+                }
+            }
+        }
+        return result;
+    }
+</script>
+</body>
+</html>

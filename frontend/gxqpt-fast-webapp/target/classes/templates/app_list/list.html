@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+
+	<head>
+		<base href="<%=basePath%>">
+		<!--<title>短信平台</title>-->
+		<meta http-equiv="Expires" content="0" />
+		<meta name="renderer" content="webkit" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+		<link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+		<link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+		<link rel="stylesheet" href="${_static}/css/core/module.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+		<link rel="stylesheet" href="${_static}/css/application/list.css">
+
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="${_static}/js/app.js"></script>
+		<script type="text/javascript" src="${_static}/js/module.js"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<style type="text/css">
+			#right-box {
+				width: 100%;
+				height: calc(100% - 65px);
+				border: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="workspace-body">
+			<div class="console-container clearfix">
+				<div class="col-sm-12">
+					<!-- begin 标题 -->
+					<div class="console-title console-title-border clearfix">
+						<div class="pull-left">
+							<h5 class="page-title">
+	                    		快速开发系统 &gt; 快速开发平台 &gt; <span class="page-title-scend">应用列表</span>
+	                        </h5>
+						</div>
+						<div class="pull-right">
+						</div>
+					</div>
+				</div>
+				<!-- begin 页面内容主体 -->
+				<div class="main">
+					<div class="list-section">
+						<form action="" class="form-inline search-form">
+							<div class="form-field">
+								<div class="form-group">
+									<label class="control-label">
+			                                	<span class="text-danger"></span>
+			                                    <span>应用名称：</span>
+			                                </label>
+									<div class="form-control-wrap">
+										<input class="form-control search-name" placeholder="" />
+									</div>
+								</div>
+							</div>
+							<!-- <div class="form-field">
+								<div class="form-group">
+									<label class="control-label">
+			                                	<span class="text-danger"></span>
+			                                    <span>创建人：</span>
+			                                </label>
+									<div class="form-control-wrap">
+										<input class="form-control create-user" placeholder="" />
+									</div>
+								</div>
+							</div> -->
+							<div class="form-group">
+								<label class="control-label">
+									<span class="text-danger"></span>
+									<span>业务类型：</span>
+								</label>
+								<select name="forType" class="form-control chosen-select selWid-form-search" id="searchType"></select>
+							</div>
+							<div class="form-field">
+								<div class="form-group">
+									<label class="control-label">
+										<span class="text-danger"></span>
+										<span>申请时间：</span>
+									</label>
+									<div class="form-control-wrap">
+										<input class="form-control start-time Wdate" placeholder="" />
+									</div>
+									<span>--</span>
+									<div class="form-control-wrap">
+										<input class="form-control end-time Wdate" placeholder="" />
+									</div>
+								</div>
+							</div>
+
+							<div class="form-field">
+								<div class="form-group">
+									<div class="form-control-wrap text-right">
+										<button type="button" class="btn btn-primary search-button" id="searchBtn">
+			                                <span class="glyphicon glyphicon-search"></span> 查询
+			                            </button>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-field">
+								<div class="form-group">
+									<div class="form-control-wrap text-right">
+										<button type="button" class="btn btn-primary" id="createApp">创建应用</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div id="right-box" class="list-section">
+						<!--<div class="list-content">-->
+						<!--<div class="form-inline">-->
+						<!--<fieldset>-->
+						<div class="grid-section">
+							<table id="list">
+							</table>
+							<div id="pager"></div>
+						</div>
+						<!--</fieldset>-->
+						<!--</div>-->
+						<!--</div>-->
+					</div>
+				</div>
+				<!-- end 页面内容主体 -->
+			</div>
+		</div>
+
+		<script type="text/javascript">
+		    var _GATE_URL = "${_gate_url}";
+		    var _CP = "${_cp}";
+		</script>
+		<script src="${_static}/js/lib/layer/layer.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/clipboard/clipboard.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/com.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/applist/list.js"></script>
+	</body>
+
+</html>

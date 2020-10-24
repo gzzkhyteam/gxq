@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css" />
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=0.1">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" href="${_static}/css/viewCss/applyManager/create.css">
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <!--标题-->
+            <div class="col-sm-12">
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5 class="page-title">
+                            应用程序管理 &gt; <span class="page-title-scend">新增</span>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <!--内容-->
+            <div class="col-sm-12">
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline">
+                            <form id="dataForm" action="" method="post">
+                                <table class="table default-table tab-border-no">
+                                    <col width="100"/>
+                                    <col />
+                                    <col width="100"/>
+                                    <col />
+                                    <tbody>
+                                    <tr>
+                                        <th span="2">名称：</th>
+                                        <td ><input class="form-control inp-form" name="appName" dataType="*2-4" nullmsg="请填写应用名称" maxlength="4" />2-4个字符</td>
+                                        <th>类型：</th>
+                                        <td >
+                                            <!-- <input type="radio" name="appType" value="1" disabled="disabled" />
+                                            <label>Android</label> -->
+                                            <input type="radio" name="appType" value="2" checked/>
+                                            <label>H5</label>
+                                        </td>
+                                    </tr>
+                                    <tr id="forH5">
+                                        <th>应用路径：</th>
+                                        <td><input class="form-control inp-form" name="appPath" dataType="*" nullmsg="请填写应用路径"/></td>
+                                    </tr>
+                                    <tr id="forAndroid" style="display: none;">
+                                        <th>包名：</th>
+                                        <td><input class="form-control inp-form" name="appPackageName" dataType="*" nullmsg="请填写包名"/></td>
+                                        <th>启动画面：</th>
+                                        <td><input class="form-control inp-form" name="appStartAct" dataType="*" nullmsg="请填写启动画面地址"/></td>
+                                    </tr>
+                                    <tr id="pathForAndroid" style="display: none;">
+                                        <th>apk上传：</th>
+                                        <td class="pRelative">
+                                            <div id="filePicker4" class="filePicker photoFilePicker"></div>
+                                            <div id="uploader4" class="uploader photoUploader">
+                                                <div class="queueList">
+                                                    <ul id="file_html4" class="filelist">
+                                                    </ul>
+                                                    <div id="dndArea4" class="placeholder dndArea" style="padding-top: 85px;">
+                                                        <p></p>
+                                                    </div>
+                                                </div>
+                                                <div class="statusBar" style="display:none;">
+                                                    <div class="progress">
+                                                        <span class="text">0%</span> <span class="percentage"></span>
+                                                    </div>
+                                                    <div class="info"></div>
+                                                    <div class="btns">
+                                                        <div id="jxButton4" class="jxButton"></div>
+                                                        <div class="uploadBtn">开始上传</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p id="fileName"></p>
+                                            <p class="upload-progress" style="display: none;">上传中...</p>
+                                        </td>
+                                        <th>apk地址：</th>
+                                        <td><input class="form-control inp-form" name="appPath" dataType="*" nullmsg="请上传apk" disabled /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>图标：</th>
+                                        <td class="pRelative">
+                                            <div id="filePicker3" class="filePicker photoFilePicker"></div>
+                                            <img class="iconPathStyle hidden" src=""/>
+                                            <div id="uploader3" class="uploader photoUploader">
+                                                <div class="queueList">
+                                                    <ul id="file_html3" class="filelist">
+                                                    </ul>
+                                                    <div id="dndArea3" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                                        <p></p>
+                                                    </div>
+                                                </div>
+                                                <div class="statusBar" style="display:none;">
+                                                    <div class="progress">
+                                                        <span class="text">0%</span> <span class="percentage"></span>
+                                                    </div>
+                                                    <div class="info"></div>
+                                                    <div class="btns">
+                                                        <div id="jxButton3" class="jxButton"></div>
+                                                        <div class="uploadBtn">开始上传</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input class="hidden" type="text" name="iconPath" dataType="*" nullmsg="请选择应用图标" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th span="2">排序：</th>
+                                        <td >
+                                            <input class="form-control inp-form" name="appOrder" type="text" datatype="integeP" nullmsg="不可为空" errormsg="只能为正整数" maxlength="5" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>是否显示：</th>
+                                        <td>
+                                            <input type="radio" name="isShow" value="2" checked/>
+                                            <label>是</label>
+                                            <input type="radio" name="isShow" value="1"/>
+                                            <label>否</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>应用说明：</th>
+                                        <td colspan="3" id="appExplain" class="pRelative">
+                                            <input class="hidden" type="text" dataType="*" nullmsg="请填写应用说明" value="">
+                                            <div id="testcon" class="hidden" ></div>
+                                            <div class="hidden">
+                                                <div id="filePicker2" class="filePicker photoFilePicker"></div>
+                                                <div id="uploader2" class="uploader photoUploader">
+                                                    <div class="queueList">
+                                                        <ul id="file_html" class="filelist">
+                                                        </ul>
+                                                        <div id="dndArea2" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                                            <p></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="statusBar" style="display:none;">
+                                                        <div class="progress">
+                                                            <span class="text">0%</span> <span class="percentage"></span>
+                                                        </div>
+                                                        <div class="info"></div>
+                                                        <div class="btns">
+                                                            <div id="jxButton2" class="jxButton"></div>
+                                                            <div class="uploadBtn">开始上传</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="filePicker1" class="filePicker photoFilePicker"></div>
+                                                <div id="uploader1" class="uploader photoUploader">
+                                                    <div class="queueList">
+                                                        <ul id="file_html1" class="filelist">
+                                                        </ul>
+                                                        <div id="dndArea1" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                                            <p></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="statusBar" style="display:none;">
+                                                        <div class="progress">
+                                                            <span class="text">0%</span> <span class="percentage"></span>
+                                                        </div>
+                                                        <div class="info"></div>
+                                                        <div class="btns">
+                                                            <div id="jxButton1" class="jxButton"></div>
+                                                            <div class="uploadBtn">开始上传</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <script id="editor" type="text/plain" style="width: 100%;"></script>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>申请组件：</th>
+                                        <td colspan="3">
+                                            <table id="list" border="1" style="border-collapse: collapse"></table>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                                <div class="center">
+                                    <button type="button" class="btn btn-primary btn-submit"> 提交 </button>
+                                    <a href="${_cp}/module/applyList">
+                                        <button type="button" class="btn btn-default"> 取消 </button>
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var _cp = "${_cp}";
+    var _GATE_URL = "${_gate_url}";
+    window.UEDITOR_HOME_URL = "${_static}/js/lib/ueditor/";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.all.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreFile.js?v=2"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreImg.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript" src="${_static}/js/ueditorCom.js"></script>
+<script type="text/javascript" src="${_static}/js/viewJs/apply/create.js?v=9"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+</body>
+<script type="text/javascript">
+    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/mt/appmanager/createAppFirst",
+        },"#addForm",{
+            attrName:"name",
+            prefix:"",
+            suffix:"",
+        });
+    })
+</script>
+</html>

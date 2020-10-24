@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <ul class="navsecond clearfix">
+                    <li class="pull-left">
+                        <script type="text/javascript" id="exchange_share_apply">
+                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "exchange_share_apply",
+                                btnHtml :'<a  href="${_cp}/module/shareMagApplyList" target="home">{{name}}</a>',
+                                htmlInsert: true
+                            });
+                        </script>
+                    </li>
+                    <li class="pull-left">
+                        <script type="text/javascript" id="exchange_api_manage">
+                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "exchange_api_manage",
+                                btnHtml :'<a  href="${_cp}/module/shareMagApiList" target="home">{{name}}</a>',
+                                htmlInsert: true
+                            });
+                        </script>
+                    </li>
+                    <li class="pull-left">
+                        <script type="text/javascript" id="exchange_require_manage">
+                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "exchange_require_manage",
+                                btnHtml :'<a class="active" href="${_cp}/module/shareMagDemandList" target="home">{{name}}</a>',
+                                htmlInsert: true
+                            });
+                        </script>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="main_container row">
+            <form action="" class="search-form" autocomplete="off">
+                <ul class="clearfix">
+                    <li class="pull-left">
+                        <label class="control-label">数据提供单位：</label>
+                        <input name="orgName" class="" placeholder=""/>
+                    </li>
+                    <li class="pull-left">
+                        <label class="control-label">处理状态：</label>
+                        <select id="" name="status" class="chosen-select">
+                            <option value="">全部</option>
+                            <option value="1">待审批</option>
+                            <option value="2">已驳回</option>
+                            <option value="3">通过，待封装API</option>
+                            <option value="4">已封装API</option>
+                        </select>
+                    </li>
+                    <li class="pull-left">
+                        <label class="control-label">申请时间：</label>
+                        <input name="startTime" class="Wdate" placeholder=""/>
+                        <span class="color-warning">-</span>
+                        <input name="endTime" class="Wdate" placeholder=""/>
+                    </li>
+                    <li class="pull-left">
+                        <button type="button" class="btn btn-primary search-button">
+                            <span class="glyphicon glyphicon-search"></span> 查询
+                        </button>
+                    </li>
+                    <li class="pull-right marginAuto">
+                       <!-- <a href="${_cp}/module/shareMagCreate" class="btn btn-primary btn-create">
+                            新增
+                        </a>-->
+                        <script type="text/javascript" id="exchange_require_create">
+                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "exchange_require_create",
+                                btnHtml :"<button type=\"button\" class=\"btn btn-primary pull-right autoCreate magRight1\" onclick=\"window.location.href='${_cp}/module/shareMagCreate'\">新增</button>",
+                                htmlInsert: true
+                            });
+                        </script>
+                    </li>
+                </ul>
+            </form>
+            <table  id="demandList" class="default-table tab-title-top">
+                <thead>
+                <tr>
+                    <th width="60">序号</th>
+                    <th>申请单位</th>
+                    <th width="120">申请时间</th>
+                    <th>需求内容</th>
+                    <th>用途</th>
+                    <th>申请原因</th>
+                    <th width="150">处理状态</th>
+                    <th width="150">操作</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div class="text-center">
+                <ul class="pagination" id="pagination"></ul>
+                <p class="pull-right currentPage">共<span class="total">0</span>条数据，当前第<i id="pageNum" class="colorBlue">1</i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var orgName = "";
+    var status = "";
+    var startTime = "";
+    var endTime = "";
+
+    function delayed(id) {//续期申请
+        parent.layer.open({
+            id: 'delayed',
+            type: 2,
+            anim: 6,
+            title: '续期申请',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['750px', '600px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/shareMagDelayed?id=" + id,
+            btn: ['提交申请', '取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("delayed");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+
+
+    function initParam() {
+        orgName = $("input[name='orgName']").val();
+        status = $("select[name='status']").val();
+        startTime = $("input[name='startTime']").val();
+        endTime = $("input[name='endTime']").val();
+    }
+
+    function getParam() {
+        initParam();
+        parm = {
+            data: {orgName: orgName, status: status, startTime: startTime, endTime: endTime},
+            pageNo: 1,
+            pageSize: 10
+        }
+    }
+
+    getParam();
+    getList(parm);
+
+    /*获取系统列表*/
+    function getList(parm) {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/exchange/dataapi/demand/find',
+            data: JSON.stringify(parm),
+            success: function (rows) {
+                var html = ""
+                if (rows.data) {
+                    rows.data.list.forEach(function (value, index) {
+                        value = dealElement(value);
+                        var status = value.status;
+                        if(status == 2){
+                            status = "已驳回";
+                        }else if(status == 3){
+                            status = "通过，待封装API";
+                        }else if(status ==4){
+                            status = "已封装API";
+                        }else {
+                            status = "待审批";
+                        }
+                        var num = (rows.data.pageNum-1)*10+index+1;
+                        html += '<tr>';
+                        html += '<td>' + num + '</td>';
+                        html += '<td title="' + value.unitName + '">' + value.unitName + '</td>';
+                        html += '<td>' + fmtDate(value.createTime) + '</td>';
+                        html += '<td title="' + value.content + '">' + value.content + '</td>';
+                        html += '<td title="' + value.purpose + '">' + value.purpose  + '</td>';
+                        html += '<td title="' + value.applyReason + '">' + value.applyReason + '</td>';
+                        html += '<td>' + status + '</td>';
+                        html += '<td>';
+                       // html += '<a href="${_cp}/module/shareMagDealView?id=' + value.id + '&pageNo=' + parm.pageNo + '">处理详情</a>';
+                        html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                            resource_code : "exchange_require_deal",
+                            btnHtml :'<a class="ui-button" href="${_cp}/module/shareMagDealView?id=' + value.id + '&pageNo=' + parm.pageNo + '">{{name}}</a>',
+                            htmlInsert: false
+                        });
+                        var apiId = value.apiId;
+                        if(apiId){
+                            //html += '<a href="${_cp}/module/shareMagView?id=' + value.apiId + '&pageNo=' + parm.pageNo + '">API详情</a>';
+                            html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "exchange_require_apidetail",
+                                btnHtml :'<a class="ui-button" href="${_cp}/module/shareMagView?id=' + value.apiId + '&pageNo=' + parm.pageNo + '">{{name}}</a>',
+                                htmlInsert: false
+                            });
+                        }
+                        html += '</td>';
+                        html += '</tr>';
+                    });
+                    if(rows.data.list.length==0){
+                        html+="<tr><td class='text-center' colspan='8'>暂无数据</td></tr>"
+                        $(".pagination,.currentPage").css("display","none");
+                    } else {
+                        $(".pagination,.currentPage").css("display","block");
+                    };
+                    $("#demandList tbody").html(html);
+                    $('#totalPages').text(rows.data.pages);
+                    $('.total').text(rows.data.total);
+                    jqPaginator(rows.data);
+                    var height=document.getElementById("container").scrollHeight;
+                    $("#home", window.parent.document).height(height);
+                }else{
+                    html+="<tr><td class='text-center' colspan='8'>暂无数据</td></tr>";
+                    $("#demandList tbody").html(html);
+                    $(".pagination,.currentPage").css("display","none");
+                    var height=document.getElementById("container").scrollHeight;
+                    $("#home", window.parent.document).height(height);
+                }
+            }
+        });
+    };
+    $(".search-button").click(function () {
+        getParam();
+        getList(parm);
+    })
+</script>
+</body>
+</html>

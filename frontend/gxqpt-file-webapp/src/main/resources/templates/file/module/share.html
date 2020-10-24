@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Expires" content="0"/>
+	<meta name="renderer" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/module.css">
+	<style type="text/css">
+		.table > tbody > tr > th{ vertical-align: top; font-weight: normal; text-align: right; border-top: 0;}
+		.table > tbody > tr > td{ vertical-align: top; padding-left: 24px; border: 0; text-align: left;}
+		.table > tbody > tr > td p{ text-align: left; }
+		.table > tbody > tr > td span{ margin: 0 20px 0 5px; display: inline; font-weight: normal;}
+		.table > tbody > tr > td label{ font-weight: normal;}
+		.table > tbody > tr > td select{ width: auto;}
+		input[type="radio"], input[type="checkbox"] {vertical-align: middle; margin-top: -2px;}
+		.show-link {margin-top: 20px; display: none;}
+		.show-link-title{color: #3b8cff;}
+		.show-link-content,.pasd{padding: 9px 16px; border: 1px solid #ddd; border-radius: 5px; margin: 20px 0;}
+	</style>
+</head>
+<body>
+<div class="workspace-body">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="list-content">
+				<div class="form-inline">
+					<table id="share-link" class="table">
+						<tbody>
+						<tr>
+							<th>分享形式</th>
+							<td>
+								<p>
+									<input type="radio" name="radio" value="1" checked/><label><span>加密</span>仅限拥有密码者可查看，更加隐私安全</label>
+								</p>
+								<p>
+									<input type="radio" name="radio" value="0"/><label><span>公开</span>任何人可查看或下载</label>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<th>有效期</th>
+							<td>
+								<select id="valid" class="form-control chosen-select">
+									<option value="NUL" selected>永久有效</option>
+									<option value="DAY">1天</option>
+									<option value="WEEK">7天</option>
+								</select>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+					<div class="show-link">
+						<p class="show-link-title"><i class="fa fa-check-square"></i> 成功创建链接</p>
+						<p class="show-link-content clearfix"><span id="link-val" class="pull-left" onclick="copyContent(this)"></span> <span id="time-val" class="pull-right"></span></p>
+						<p>提取密码 <span id="pasd-val" class="pasd">无</span> </p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    $("select.chosen-select").each(function() {//无搜索
+        $(this).chosen({
+            disable_search:true,
+        });
+    });
+    var token = $.cookie("_token");
+    var _user_id = $.cookie("_user_id");
+    var _user_name = encodeURIComponent($.cookie("_user_name"));
+    document.oncontextmenu = function () { return false; };
+    function save() {
+        var ids = "${id}";
+        var idList = ids.split(",");
+        var parm = {
+            "idList": [],
+            "isPwd": true,
+            "valid": ""
+        };
+        parm.idList=idList;
+        if($("input[name='radio']:checked").val()==1){
+            parm.isPwd=true;
+        }
+        if($("input[name='radio']:checked").val()==0){
+            parm.isPwd=false;
+        }
+        parm.valid=$("#valid").val();
+        $.ajax({
+            type:"POST",
+
+            headers: {"token": token,"_isAdmin": true, "_user_id":_user_id, "_user_name":_user_name},
+            contentType:"application/json",
+            url: "${_gate_url}/api/file/share/save",
+            data:JSON.stringify(parm),
+            dataType:'json',
+            success:function(rows){
+                if(rows.data){
+                    $("#link-val").text(rows.data.url);
+                    if(rows.data.sharePassword){
+                        $("#pasd-val").text(rows.data.sharePassword);
+					}
+                    if(rows.data.valid=="NUL"){
+                        $("#time-val").text("| 连接永久有效");
+                    }else if(rows.data.valid=="DAY"){
+                        $("#time-val").text("| 链接1天后失效");
+                    }else if(rows.data.valid=="WEEK"){
+                        $("#time-val").text("| 链接7天后失效");
+                    }
+                    $("#share-link").css("display","none");
+                    $(".show-link").css("display","block");
+                    parent.hiddenBtn();
+                }else{
+                    parent.layer.msg("创建分享失败，请稍后再试！");
+				}
+            }
+        });
+    }
+    function copyContent(obj) {
+        var Url2=document.getElementById("link-val").innerText;
+        var oInput = document.createElement('input');
+        oInput.value = Url2;
+        document.body.appendChild(oInput);
+        oInput.select();
+        document.execCommand("Copy");
+        oInput.className = 'oInput';
+        oInput.style.display='none';
+        parent.layer.msg("链接已成功复制！");
+    }
+</script>
+</body>
+</html>

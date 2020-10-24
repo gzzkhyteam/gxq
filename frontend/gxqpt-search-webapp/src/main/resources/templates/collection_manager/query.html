@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+
+<head>
+    <base href="<%=basePath%>">
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" href="${_static}/js/lib/jsonview/jquery.jsonview.min.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jsonview/jquery.jsonview.min.js"></script>
+    <style type="text/css">
+        #right-box {
+            width: 100%;
+            height: calc(100% - 65px);
+            border: 0;
+        }
+    </style>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        搜索管理系统 &gt; 数据管理 &gt; <span class="page-title-scend">数据查询</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="list-section">
+                <form id="createCollFrom" action="" class="form-inline search-form">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <span class="text-danger"></span>
+                            <span>查询关键字：</span>
+                        </label>
+                        <div class="form-control-wrap">
+                            <input id="collectionName" type="text" name="keyWords"
+                                   class="form-control search-name" style="width: 300px"/>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>选择集合：</span>
+                            </label>
+                            <select id="app-source" name="collections"
+                                    class="form-control chosen-select selWid-form-search"></select>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <div class="form-control-wrap text-right">
+                                <button type="button" class="btn btn-primary search-button" onclick="queryPage1()">
+                                    <span class="glyphicon glyphicon-search"></span> 查询数据
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page" class="form-field">
+                        <div class="form-group">
+                            共：<span id="totalNum" style="color: red;font-weight: bold"></span>&nbsp;记录，共<span
+                                id="totalpage"
+                                style="color: red"></span>&nbsp;页,当前第:<span
+                                id="pageNow" style="color: red"></span>&nbsp;页,每页<span style="color: red"
+                                                                                      id="pageSize"></span>&nbsp;条
+                            &nbsp;&nbsp;&nbsp;
+                            <a href="javascript:void(0)"
+                               onclick="queryPrte()">上一页</a> &nbsp;&nbsp;&nbsp; <a href="javascript:void(0)"
+                                                                                   onclick="queryNext()">下一页</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--显示结果集-->
+            <div id="right-box" class="list-section">
+                <div id="searchRes" class="grid-section"
+                     style="width: 99%;height: 90%;background: #A3BAD9;overflow-y: auto">
+
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    var height = $("#right-box").height() - 80;
+    getMyCollection();
+
+    function getMyCollection() {
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/search/adminModule/showMyCollection',
+            // url:'http://192.168.1.124:9770/api/admin/system/getBySource',
+            success: function (res) {
+                if (res || res.data.optCollList) {
+                    $.each(res.data.optCollList, function (index, item) {
+                        var option = '<option value = ' + item.collectionCode + '>' + item.collectionName + '</option>';
+                        $('#app-source').append(option);
+                    });
+                }
+            }
+        })
+    }
+
+    var thisPage = 1;
+    var totalpage = 0;
+
+    function queryPrte() {
+        if (thisPage > 1) {
+            thisPage -= 1;
+        }
+        query();
+    }
+
+    function queryNext() {
+        if (thisPage < totalpage) {
+            thisPage += 1;
+        }
+        query();
+    }
+
+    function queryPage1() {
+        thisPage = 1;
+        query();
+    }
+
+    //显示用户的集合列表
+    function query() {
+        $('#searchRes').html('');
+        var gxqptDutiesDTO = $("#createCollFrom").serializeJSON();
+        gxqptDutiesDTO.pageNo = thisPage;
+        gxqptDutiesDTO.pageSize = 10;
+        gxqptDutiesDTO.isHighlighter = true;
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/search/searchModule/searchNoVerify',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(gxqptDutiesDTO),
+            success: function (res) {
+                if (res.data) {
+                    totalpage = res.data.totalNum % res.data.pageSize == 0 ? (res.data.totalNum / res.data.pageSize) : (Math.floor(res.data.totalNum / res.data.pageSize) + 1);
+
+                    $("#totalNum").html(res.data.totalNum);
+                    $("#totalpage").html(totalpage);
+                    $("#pageNow").html(res.data.pageNo);
+                    $("#pageSize").html(res.data.pageSize);
+
+                    // $("#searchRes").JSONView(res.data.datas);
+                    $.each(res.data.datas, function (index, item) {
+                        var option = '<a href ="http://' + item.url + '"target="_blank"><p style="font-size: 20px">' + item.highlightTitle + '</p><p style="font-size: 16px">' + item.highlightContent + '</p></a><br/>';
+                        $('#searchRes').append(option);
+                    });
+                }
+            }
+        })
+
+    }
+</script>
+</body>
+
+</html>

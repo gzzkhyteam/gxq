@@ -1,0 +1,28 @@
+gxqpt:
+  hostname:
+    mysql: 192.168.30.165
+    rabbitmq: 192.168.30.165
+    eureka: 192.168.30.80
+    zipkin: 192.168.30.90
+
+spring:
+  profiles:
+    active: demo
+  rabbitmq:
+    port: 5672               # 根据环境更改
+    password: gxqpt          # 根据环境更改
+    username: gxqpt          # 根据环境更改
+  datasource:
+    schema[0]: classpath:/zipkin.sql #数据库脚本创建地址，当有多个是可使用[x]表示集合第几个元素
+    #spring boot数据源配置
+    url: jdbc:mysql://${gxqpt.hostname.mysql}:3218/gxqpt_zipkin_demo_new?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: root
+    password: r!o@o#t$>?.123
+#    password: Zkhy@8888gxqpt
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+

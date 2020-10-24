@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>数据集管理</span> &gt; <span>新建数据集</span> &gt; <span class="page-title-scend">返回数据字段选择</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div class="layerDataApply minHeight360 clearfix">
+								<h3>选择要返回的数据字段
+									<a href="javascript:void(0);" class="selAll">全选</a>
+									<a href="javascript:void(0);" class="noselAll">取消全选</a>
+								</h3>
+								<ul id="fieldList" class="elementData  clearfix">
+								</ul>
+								<!--<h3>预览样例数据</h3>
+								<table class="default-table tab-title-top">
+									<thead>
+										<tr>
+											<th>字段1</th>
+											<th>字段2</th>
+											<th>字段3</th>
+											<th>字段4</th>
+											<th>字段5</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>1</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td>2</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td>3</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+										</tr>
+									</tbody>
+								</table>-->
+							</div>
+							<div class="text-center">
+								<button type="button" class="btn btn-primary" onclick="history.back()">上一步</button>
+								<button type="button" class="btn btn-primary" onclick="save()">下一步</button>
+								<!--<a href="${_cp}/module/dataSetCreateRelation" class="btn btn-primary">下一步</a>-->
+								<button type="button" class="btn btn-primary" onclick="history.go(-2)">取消</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(".selAll").click(function(){
+				var elementArray = $(".elementData li");
+				if(elementArray.length>0){
+					elementArray.each(function(index,value){
+						$(value).find("input").prop("checked",true);
+						$(value).find(".selectno").addClass("checked");
+					});
+				}
+			});
+			$(".noselAll").click(function(){
+				var elementArray = $(".elementData li");
+				if(elementArray.length>0){
+					elementArray.each(function(index,value){
+						$(value).find("input").removeAttr("checked");
+						$(value).find(".selectno").removeClass("checked");
+					});
+				}
+			});
+			$("body").on("click",".selectno",function(){
+				if($(this).hasClass("checked")){
+					$(this).removeClass("checked");
+					var ipt = $(this).parent().find("input");
+					$(ipt).removeAttr("checked");
+				}else{
+					$(this).addClass("checked");
+					var ipt = $(this).parent().find("input");
+					$(ipt).prop("checked",true);
+				}
+			});
+            getFieldInfo();
+			function getFieldInfo(){//获取字段信息
+                ajaxHengyun({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "${_gate_url}/api/exchange/set/getBaseInfo",
+                    data: {setId:"${id}"},
+                    success: function (rows) {
+                        if (rows.data) {
+                            var html="";
+                            var fields=rows.data.fieldList;
+                            for(var i in fields){
+                                html+='<li class="pull-left clearfix">';
+                                html+='<input type="checkbox" name="unitIdsBox" class="hidden" value="'+fields[i].fieldCode+'" autocomplete="off"/>';
+                                html+='<span class="selectno"></span>';
+                                html+='<label class="pull-left">'+fields[i].fieldName+'</label>';
+                                html+='</li>';
+                            }
+                            $("#fieldList").append(html);
+                            updateIformHeight();
+                        }
+                    }
+                });
+			};
+            /*提交*/
+            function save(){
+                var fieldLists=[];
+                var inputCheckbox=$("input[name=unitIdsBox]:checked");
+                inputCheckbox.each(function(index,value){
+                    fieldLists.push($(value).val());
+                });
+                if(fieldLists.length<1){
+                    parent.layer.msg("请选择字段！",{time:1000});
+                    return false;
+				};
+				var dataDTO={
+				    id:"${id}",
+                    editType:1,
+                    fieldList:fieldLists
+				}
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/set/createApiDataSetScond',
+                    data:JSON.stringify(dataDTO),
+                    success:function(rows){
+                        if (rows.data){
+                            window.location.href="${_cp}/module/dataSetCreateRelation?id="+rows.data.id;
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    }
+                });
+            };
+		</script>
+	</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Expires" content="0"/>
+	<meta name="renderer" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/core/module.css">
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12 marginTop">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                    	<form autocomplete="off" id="dataForm" action="" method="post">
+                            <table class="table default-table table-title-left">
+                            	<tbody>
+                            		<tr>
+                                        <th><sub class="required">*</sub>所属部门</th>
+                                        <td>
+                                            <input id="mainorgid" class="form-control inp-form" name="orgId" type="hidden"/>
+                                            <input id="mainorgname" class="form-control inp-form" name="orgName" type="hidden"/>
+                                            <input id="maindeptid" class="form-control inp-form" name="deptId" type="hidden"/>
+                                            <input id="maindeptname" class="form-control inp-form" name="deptName" type="hidden"/>
+                                            <input id="maindeptIdName" class="form-control inp-form" name="deptName" dataType="*" nullmsg="部门不能为空！"/>
+                                        </td>
+                            			<th><sub class="required">*</sub>所属岗位</th>
+                            			<td>
+											<input type="hidden" id="mainpostname" name="postName">
+                            				<select id="mainpost" name="postId" class="form-control  set-form" onchange="mainpostnameVal(this)">
+			                                </select>
+                            			</td>
+                            		</tr>
+                            		<tr>
+                                        <th><sub class="required">*</sub>所属职务</th>
+                                        <td>
+                                            <input type="hidden" id="id" name="id">
+                                            <input type="hidden" id="userId" name="userId" value="${id}">
+                                            <select id="mainduty" name="dutyId" class="form-control  set-form" onchange="maindutynameVal(this)">
+                                            </select>
+                                        </td>
+
+                                        <th>启用标记</th>
+                                        <td>
+                                            <select id="isenable" name="isenable" class="form-control  set-form">
+                                                <option value="1">是</option>
+                                                <option value="0">否</option>
+                                            </select>
+                                        </td>
+                            		</tr>
+									<tr>
+										<th>是否单位一把手</th>
+										<td>
+											<select id="isheader" name="isheader" class="form-control  set-form">
+												<option value="1">是</option>
+                                                <option value="0">否</option>
+                                            </select>
+										</td>
+										<th>是否单位领导</th>
+										<td>
+											<select id="isleader" name="isleader" class="form-control  set-form">
+												<option value="1">是</option>
+                                                <option value="0">否</option>
+                                            </select>
+										</td>
+									</tr>
+                            		<tr>
+                            			<th>说明</th>
+                            			<td colspan="3"><textarea rows="3" dataType="*0-200" nullmsg="只能输入200个字符！" id="description" class="form-control textarea-form" name="description"></textarea></td>
+                            		</tr>
+                            		<tr>
+                            			<th>人员职责</th>
+                            			<td colspan="3"><textarea rows="3"  dataType="*0-200" nullmsg="只能输入200个字符！" id="userduty" class="form-control textarea-form" name="userduty"></textarea></td>
+                            		</tr>
+                            	</tbody>
+							</table>
+							<button type="button" class="btn-submit hidden"></button>
+                    	</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+	var mainorgid="${mainorgid}";
+	var systemCode="${systemCode}";
+    var selectOrgId=mainorgid;
+    getDuties();//查询职务
+    getPost();//查询岗位
+	/* 获取职务 */
+
+    function getDuties(){
+        var postData={
+            pageNo:1,pageSize:2000,
+            data: {
+                systemCode:systemCode,orgid:selectOrgId
+            }
+        };
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/admin/duties/findDutiesList',
+            data:JSON.stringify(postData),
+            datatype: "json",
+            async:false,
+            contentType : 'application/json',
+            success: function (rows) {
+                if (rows.data) {
+                    var items = rows.data.list;
+                    var html="";
+                    items.forEach(function (value, index) {
+                        if(index==0){
+                            $("#maindutyname").val(value.name);
+                        }
+                        html+='<option value="'+value.id+'" data-name="'+value.name+'">'+value.name+'</option>';
+                    });
+                    $("#mainduty").html(html);
+                };
+            }
+        })
+    }
+
+	/* 职务选择事件 */
+	function maindutynameVal(index){
+	    var maindutyname = $(index).find("option:selected").text();
+	    $("#maindutyname").val(maindutyname);
+	}
+
+	/* 获取岗位 */
+    
+    function getPost() {
+        var  postData={pageNo:1,pageSize:2000,data:{
+                systemCode:systemCode,orgid:selectOrgId
+            }};
+        ajaxHengyun({
+            type: 'POST',
+            async:false,
+            url: '${_gate_url}/api/admin/post/findPostList',
+            data:JSON.stringify(postData),
+            datatype: "json",
+            contentType : 'application/json',
+            success: function (rows) {
+                if (rows.data) {
+                    var items = rows.data.list;
+                    var html="";
+                    items.forEach(function (value, index) {
+                        if(index==0){
+                            $("#mainpostname").val(value.name);
+                        }
+                        html+='<option value="'+value.id+'" data-name="'+value.name+'">'+value.name+'</option>';
+                    });
+                    $("#mainpost").html(html);
+                };
+            }
+        })
+
+    }
+
+
+    /* 岗位选择事件 */
+    function mainpostnameVal(index){
+        var mainpostname = $(index).find("option:selected").text();
+        $("#mainpostname").val(mainpostname);
+    }
+
+    ajaxHengyun({
+        type:"GET",
+        url: "${_gate_url}/api/admin/empIdentity/getById",
+        data:{id:'${id}'},
+        datatype:'json',
+        success:function(rows){
+            var result = rows.data;
+            if (result){
+                $("#userId").val(result.userId);
+                $("#id").val(result.id);
+
+                $("#dutyId").val(result.dutyId);
+                $("#mainduty").val(result.dutyId);
+                $("#mainpost").val(result.postId);
+                $("#mainpostname").val(result.postName);
+                $("#mainorgid").val(result.orgId);
+                $("#mainorgname").val(result.orgName);
+                $("#maindeptid").val(result.deptId);
+                $("#maindeptname").val(result.deptName);
+                $("#maindeptIdName").val(result.orgName+"—"+result.deptName);
+
+                $("#isheader").val(result.isheader);
+                $("#isleader").val(result.isleader);
+                $("#isenable").val(result.isenable);
+                $("#description").val(result.description);
+                $("#userduty").val(result.userduty);
+            }
+        }
+    });
+	/* 弹出单位部门树 */
+	$("#maindeptIdName").click(function(){
+        layer.open({
+            id: 'setUnitDep',
+            type: 2,
+            anim:6,
+            title: '选择单位部门',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '80%'],
+            content: "${_cp}/power/setUnitDep?systemCode="+systemCode,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确认','<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.save(index);
+            }
+        });
+	});
+	/* 选中部门 */
+	function getUnitDep(index,unitDept){
+        selectOrgId = unitDept.mainorgid;
+		$("#mainorgid").val(unitDept.mainorgid);
+		$("#mainorgname").val(unitDept.mainorgname);
+		$("#maindeptid").val(unitDept.maindeptid);
+		$("#maindeptname").val(unitDept.maindeptname);
+		$("#maindeptIdName").val(unitDept.mainorgname+"—"+unitDept.maindeptname);
+        $("#maindeptIdName").blur();
+        getDuties();//查询职务
+        getPost();//查询岗位
+        layer.close(index);
+    };
+
+    var index;
+    function save(num){
+        index=num;
+        $('.btn-submit').click();
+    }
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            saveObj(index);
+        }
+    });
+    /*提交*/
+    function saveObj(index){
+        var gxqptDutiesDTO =$("#dataForm").serializeJSON();
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url: "${_gate_url}/api/admin/empIdentity/updateById",
+            data:JSON.stringify(gxqptDutiesDTO),
+            success:function(rows){
+                if (rows.data){
+                    parent.reloadJqgrid();
+                    parent.layer.msg("修改身份成功！",{icon:6,time:1000});
+                    parent.layer.close(index);
+                }else{
+                    parent.layer.msg("修改身份出错，请重试！",{time:1000});
+                }
+            }
+        });
+    };
+
+</script>
+</body>
+</html>

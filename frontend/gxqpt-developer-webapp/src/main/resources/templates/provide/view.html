@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+    <script>
+        var pageType="provideList";
+    </script>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                功能管理 > <span class="active">详情</span>
+            </div>
+            <a href="javascript:" class="button-icon pull-right" onclick="history.back()">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="block" style="background-color: #fff;">
+                <div class="text-title">功能信息</div>
+                <div class="content">
+                    <table class="tab">
+                        <tbody>
+                        <tr>
+                            <th>功能名称：</th>
+                            <td>{{rows.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>功能编码：</th>
+                            <td>{{rows.code}}</td>
+                        </tr>
+                        <tr>
+                            <th>功能类型：</th>
+                            <td>{{rows.moduleType | moduleTypeInitialize:dictionaryList}}</td>
+                        </tr>
+                        <tr>
+                            <th>功能状态：</th>
+                            <td>{{rows.status | statusInitialize}}</td>
+                        </tr>
+                        <tr>
+                            <th>建议模块：</th>
+                            <td>{{rows.adviceModuleName || '无'}}</td>
+                        </tr>
+                        <tr>
+                            <th>联系人邮箱：</th>
+                            <td>{{rows.email}}</td>
+                        </tr>
+                        <tr>
+                            <th>swagger  url：</th>
+                            <td>{{rows.apiSyncUrl}}</td>
+                        </tr>
+                        <tr>
+                            <th>是否公开可见：</th>
+                            <td>{{rows.publicLook | publicLookInitialize}}</td>
+                        </tr>
+                        <tr>
+                            <th>是否公开使用：</th>
+                            <td>{{rows.publicIs | publicIsInitialize}}</td>
+                        </tr>
+                        <tr>
+                            <th>源于应用：</th>
+                            <td>{{rows.appId | appListInitialize:appList}}</td>
+                        </tr>
+                        <tr>
+                            <th>申请备注：</th>
+                            <td>{{rows.applyDesc}}</td>
+                        </tr>
+                        <tr>
+                            <th>功能描述：</th>
+                            <td>{{rows.desc}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复建设开发周期：</th>
+                            <td>{{rows.reduceTime}}</td>
+                        </tr>
+                        <tr>
+                            <th>避免重复建设开发成本：</th>
+                            <td>{{rows.reduceCost}}</td>
+                        </tr>
+                        <tr>
+                            <th>使用图标：</th>
+                            <td>
+                                <img ng-src="{{rows.logo}}" style="width: 50px;height: 50px;"></img>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>创建时间：</th>
+                            <td>{{rows.createTime}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script>
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope,$http,token) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        var typeId = 15;
+        $http.get(urlPrev + '/application/find',{
+            headers:getHeaders(),
+        }).success(function (res) {
+            $scope.appList = res.data;
+        });
+        $http.get(urlPrev + '/dictionary/getList?typeId='+typeId,{
+            headers:getHeaders(),
+        }).success(function (res) {
+            $scope.dictionaryList = res.data;
+        });
+        $http.get(urlPrev + '/serviceModuleApply/detail',{
+            params:{
+                id:"${id}"
+            },
+            headers:getHeaders(),
+        }).success(function (res) {
+            $scope.rows=res.data;
+        });
+    }).service('token',function () {
+        this.getToken = function () {
+            return getToken();
+        }
+    }).filter('moduleTypeInitialize', function() {//功能类型初始化
+        return function(text,array) {
+            var name="";
+            if(array && array.length>0){
+                array.forEach(function(value,index){
+                    if(text==value.code){
+                       name = value.name;
+                    }
+                });
+            };
+            return name;
+        }
+    }).filter('statusInitialize', function() {//功能状态初始化
+        return function(text) {
+           if(text=="1"){
+                return "正常运行";
+           }else if(text=="10"){
+               return "已过时";
+           }else if(text=="20"){
+               return "已停用";
+           }
+        }
+    }).filter('publicLookInitialize', function() {//是否公开可见初始化
+        return function(text) {
+            if(text==true){
+                return "是";
+            }else if(text==false){
+                return "否";
+            };
+        }
+    }).filter('publicIsInitialize', function() {//是否公开使用初始化
+        return function(text) {
+            if(text==true){
+                return "是";
+            }else if(text==false){
+                return "否";
+            };
+        }
+    }).filter('appListInitialize', function() {//源于应用初始化
+        return function(text,array) {
+            var name="";
+            if(array && array.length>0){
+                array.forEach(function(value,index){
+                    if(text==value.appId){
+                        name = value.name;
+
+                    }
+                });
+            };
+            return name;
+        }
+    }).filter('dateInitialize', function() {//源于应用初始化
+        	return function(text) {
+                if(text){
+                	return new Date(text);
+                };
+            }
+    });
+</script>
+</body>
+</html>

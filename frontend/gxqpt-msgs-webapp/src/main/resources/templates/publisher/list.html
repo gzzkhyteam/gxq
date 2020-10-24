@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>已发布</title>
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/common.css"/>
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/drafts.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/viewCss/module/publisher.css">
+</head>
+<body style="background: #ffffff;padding: 2%;height: 98%;">
+<div class="draftsWrap">
+    <ul class="form-wrap">
+        <li>
+            <label>发布商名称：</label>
+            <input class="easyui-combobox" id="publisher">
+        </li>
+        <li>
+            <label>渠道类型：</label>
+            <input class="easyui-combobox" id="way_type">
+        </li>
+        <li>
+            <label>渠道：</label>
+            <input type="text" class="dr-ipt" >
+        </li>
+        <li>
+            <label>发送时间：</label>
+            <input id="createTimeStart" name="createTimeStart" class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'#F{$dp.$D(\'createTimeEnd\')}'})" />
+            <span>至</span>
+            <input id="createTimeEnd" name="createTimeEnd" class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'createTimeStart\')}',startDate:'#F{$dp.$D(\'createTimeStart\',{d:+1})}'})" />
+        </li>
+        <li style="float: right; margin-right: 0">
+            <input type="button" class="btn-query" value="查询" onclick="search()">
+        </li>
+        <div class="clearfix"></div>
+    </ul>
+    <div id="right-box" class="list-section">
+        <div class="grid-section">
+            <table id="list">
+            </table>
+            <div id="pager"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${_static}/js/jquery-1.8.0.js"></script>
+<script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/jquery.combobox.js"></script>
+<script>
+    var tableObj = null;//jqgrid表对象
+    $(function(){
+        $('.title_first',parent.document).text("发布商消息记录");
+        $(".title_second",parent.document).text("列表");
+        ajaxHengyun({
+            type: 'post',
+            url: "${_gate_url}/api/msgs/channeltype/querySelect",
+            dataType: "json",
+            contentType: "application/json",
+            cache: false,
+            success: function(res) {
+                res.data.list.unshift({
+                    name: '全部',
+                    id: ''
+                })
+                $("#way_type").combobox({
+                    disabled: false,
+                    editable: false, // 可编辑
+                    panelHeight: 'auto',
+                    valueField: 'id',
+                    textField: 'name',
+                    height: 32,
+                    multiple: false, // 单选复选
+                    data: res.data.list,
+                    onSelect: function(data) {
+                        $("#way_type").attr("id_find",$(this).combobox('getValues')[0])
+                    },
+                    onLoadSuccess: function(data) {
+                        //下拉框热区范围改为整个输入框
+                        $(".combo").click(function(){
+                            $(this).prev().combobox("showPanel");
+                        });
+                    }
+                });
+                $("#publisher").combobox({
+                    disabled: false,
+                    editable: false, // 可编辑
+                    panelHeight: 'auto',
+                    valueField: 'id',
+                    textField: 'name',
+                    height: 32,
+                    multiple: false, // 单选复选
+                    data: res.data.list,
+                    onSelect: function(data) {
+                        $("#publisher").attr("id_find",$(this).combobox('getValues')[0])
+                    },
+                    onLoadSuccess: function(data) {
+                        //下拉框热区范围改为整个输入框
+                        $(".combo").click(function(){
+                            $(this).prev().combobox("showPanel");
+                        });
+                    }
+                });
+            },
+        });
+    });
+    //获取文档列表
+    window.onload=function(){
+        getdocumentList();
+    }
+    function getdocumentList() {
+        var seachData = {
+            appId:"",
+            channelType:"",
+            name:"",
+            createTimeStart:"",
+            createTimeEnd:"",
+        };
+        tableObj = $("#list").jqGrid({
+            type: 'post',
+            datatype: "json",
+            postData: {
+                pageNo: 1,
+                pageSize: 10,
+                data: seachData
+            },
+            contentType: 'application/json',
+            serializeGridData:function(postData){
+                return JSON.stringify(postData);
+            },
+            url: '${_gate_url}/api/msgs/publisher/msg/page',
+            rowList : [10,15,20],
+            rowNum:10,
+            sortname: 'id', //初始化的时候排序的字段
+            colNames: ['发布商名称','渠道', '消息标题',"发送时间","操作"],
+            colModel: [{
+                name: 'appName',
+                index: 'appName'
+            }, {
+                name: 'channelName',
+                index: 'channelName'
+            }, {
+                name: 'title',
+                index: 'title'
+            }, {
+                name: 'sendTime',
+                index: 'sendTime'
+            }, {
+                name: 'act',
+                index: 'act',
+                title: false,
+                width: '80',
+                align: 'center',
+                formatter: formatterAct
+            }],
+            jsonReader: {
+                root:"data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            onPaging: function(pgButton) {
+                var pageNo = $(".ui-pg-input").val();
+                pageNo = parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total = parseInt(total);
+                if(pgButton == "next") {
+                    if(pageNo >= total) {
+                        return false;
+                    } else {
+                        pageNo += 1;
+                    }
+                } else if(pgButton == "prev") {
+                    if(pageNo > 1) {
+                        pageNo -= 1;
+                    } else {
+                        return false;
+                    }
+                } else if(pgButton == "last") {
+                    pageNo = total;
+                } else if(pgButton == "first") {
+                    pageNo = 1;
+                }
+                var pageSize = $(".ui-pg-selbox").val();
+                if(pageNo != 0) {
+                    $("#list").setGridParam({
+                        postData: {
+                            pageNo: pageNo,
+                            pageSize: pageSize
+                        }
+                    }).trigger("reloadGrid");
+                    return false;
+                }
+            },
+            pager: '#pager',
+            height: 'auto'
+        });
+
+    }
+    //上传时间
+    function formatterCreateTime(cellvalue, options, rawObject) {
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+        return new Date(cellvalue).Format("yyyy-MM-dd hh:mm:ss");
+    }
+    //操作列
+    var id;
+    function formatterAct(cellvalue, options, rawObject) {
+        var returnValue = "";
+        id = rawObject.id;
+        returnValue += '<a class="ui-button" href="${_cp}/msgs/publisherView?id='+id+'">';
+        returnValue += '详情</a>';
+        return returnValue;
+    }
+    //查询按钮
+    function search() {
+        var name = $('.dr-ipt').val();
+        var channetype_id=$("#way_type").attr("id_find");//渠道类型id
+        var createTimeStart = $("#createTimeStart").val();
+        if(createTimeStart != "") {
+            createTimeStart = createTimeStart + " 00:00:00";
+        }
+        var createTimeEnd = $("#createTimeEnd").val();
+        if(createTimeEnd != "" ) {
+            createTimeEnd = createTimeEnd + " 23:59:59";
+        };
+        var seachData={
+            appId:"",
+            channelType:channetype_id?channetype_id:"",
+            name:name,
+            createTimeStart:createTimeStart,
+            createTimeEnd:createTimeEnd,
+        };
+        var isEnable = $("#isEnable").val();
+        tableObj.setGridParam({
+            postData: {
+                pageNo: 1,
+                pageSize: 10,
+                data: seachData
+            },
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function(postData) {
+                return JSON.stringify(postData);
+            }
+
+        }, true).trigger('reloadGrid');
+    }
+</script>
+</html>
+
+
+

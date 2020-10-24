@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+    <style>
+        .file {
+            filter: alpha(opacity:0);
+            opacity: 0;
+            width: 0px;
+        }
+       .list-section .selWid-form-search{
+           width:170px!important;
+           max-width: none;
+       }
+    </style>
+</head>
+<body>
+<div class="workspace-body" style="padding-top: 30px;">
+    <div class="col-md-12 col-lg-12">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <form id="dataForm" action="" method="post">
+                            <table class="table default-table table-title-left" id="table">
+                                <tbody>
+                                <tr id="tr1">
+                                    <th><sub class="required">*</sub>告警名称</th>
+                                    <td><input class="form-control inp-form" id="name" name="name" readonly="true"/>
+                                    </td>
+                                    <th><sub class="required">*</sub>应用系统</th>
+                                    <td>
+                                        <select id="appId" name="appId"  disabled="true" class="form-control chosen-select selWid-form-search" style="width: 100%">
+
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><sub class="required">*</sub>告警级别</th>
+                                    <td >
+                                        <select id="warnLevel" name="warnLevel" disabled="true" class="form-control chosen-select selWid-form-search" style="width: 100%" dataType="*" nullmsg="告警级别不能为空！">
+                                            <option value=""></option>
+                                            <option value="1">一级</option>
+                                            <option value="2">二级</option>
+                                            <option value="3">三级</option>
+                                        </select>
+                                    </td>
+                                    <th><sub class="required">*</sub>日志类型</th>
+                                    <td >
+                                        <select id="logType" name="logType"  disabled="true" onchange="onChange()" class="form-control chosen-select selWid-form-search" style="width: 100%" >
+                                            <option value=""></option>
+                                            <option value="APP">应用系统</option>
+                                            <option value="APACHE">APACHE</option>
+                                            <option value="TOMCAT">TOMCAT</option>
+                                            <option value="NGINX">NGINX</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><sub class="required">*</sub>是否启用</th>
+                                    <td>
+                                        <input class="form-control inp-form" type="text" id="isEnable" name="isEnable" readonly="true"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><sub class="required">*</sub>告警描述</th>
+                                    <td colspan="4">
+                                        <textarea rows="6" class="form-control textarea-form"
+                                                  id="warnDescription" name="warnDescription" readonly="true"></textarea>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn-submit hidden"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+      var id = "${id}";
+    //获取应用系统
+    getSystemList();
+      /* 获取应用系统*/
+      function getSystemList() {
+          ajaxHengyun({
+              type: "GET",
+              async: false,
+              dataType: 'json',
+              url: "${_gate_url}/api/admin/application/findList",
+              data:{type:1},
+              success: function (rows) {
+                  if (rows.data) {
+                      $('#appId').append('<option value=""></option>');
+                      var arr = rows.data;
+                      for(var i=0;i<arr.length;i++){
+                          var appId = arr[i].appId;
+                          var name = arr[i].name;
+                          $('#appId').append('<option value='+appId+'>'+name+'</option>');
+
+                      }
+                  }
+              }
+          });
+      }
+      ajaxHengyun({
+          type: "GET",
+          async: false,
+          url: "${_gate_url}/api/logs/warn/get",
+          datatype: 'json',
+          data: {id: id},
+          success: function (rows) {
+              
+              if (rows.data) {
+                  $("#name").val(rows.data.name);//告警名称
+                  $("#appId").val(rows.data.appId);//应用系统
+                  $("#warnLevel").val(rows.data.warnLevel);//告警级别
+                  $("#logType").val(rows.data.logType);//日志类型
+                  onChange(rows.data.logType,rows.data.warnType);//告警类型，日志类型
+                  if(rows.data.isEnable=='0'){
+                      $("#isEnable").val("否");//是否启用
+                  }else if(rows.data.isEnable=='1'){
+                      $("#isEnable").val("是");//是否启用
+                  }
+                  $("#warnDescription").val(rows.data.warnDescription);//告警描述
+                  $("#quantityTimeInterval").val(rows.data.quantityTimeInterval);//分钟间隔
+                  $("#quantityLogLevel").val(rows.data.quantityLogLevel);//日志级别
+                  $("#quantityUpperLimit").val(rows.data.quantityUpperLimit);//最大多少条
+                  $("#keyContent").val(rows.data.keyContent);//关键词
+                  $("#responseDuration").val(rows.data.responseDuration);//响应时长
+              }
+          }
+      });
+
+    function onChange(logType,warnType){
+        if(logType==''){
+
+        }else if(logType=='APP'){
+            var str=''
+            if(warnType=="QUANTITY"){
+                var str = '<tr name="test"><td colspan="4">数量告警:'+
+                    '在<input type="text" id="quantityTimeInterval" name="quantityTimeInterval" style="width: 40px;" readonly="true"/>分钟内'+
+                    '<select id="quantityLogLevel" name="quantityLogLevel"   style="width:80px;" disabled="true">'+
+                    '<option value=""></option><option value="DEBUG">DEBUG</option><option value="INFO">INFO</option> '+
+                    '<option value="WARN">WARN</option> <option value="ERROR">ERROR</option><option value="FATAL">FATAL</option>'+
+                    '</select>日志数大于或等于'+
+                    '<input type="text" id="quantityUpperLimit" name="quantityUpperLimit" style="width: 40px;" readonly="true"/>'+
+                    '条时，触发告警'+
+                    '</td></tr>';
+            }else if(warnType=="KEY"){
+                str = '<tr name="test"><td colspan="4">'+
+                    '关键词告警:'+
+                    '当日志中出现关键词'+
+                    '<input type="text" id="keyContent" name="keyContent" style="width: 130px;" readonly="true"/>'+
+                    '（多个关键词用“，”号隔开）时，触发告警'+
+                    '</td></tr>';
+            }
+            $("#table tbody").append(str);
+        }else{
+            var str='';
+            if(warnType=="QUANTITY"){
+                var str='<tr name="test"><td colspan="4">数量告警:'+
+                    '在<input type="text" id="quantityTimeInterval" name="quantityTimeInterval" style="width: 40px;" readonly="true"/>分钟内'+
+                    '同一IP大于或等于'+
+                    '<input type="text" id="quantityUpperLimit" name="quantityUpperLimit" style="width: 40px;" readonly="true"/>'+
+                    '条时，触发告警'+
+                    '</td></tr>';
+            }else if(warnType=="RESPONSE"){
+                var str='<tr name="test">'+
+                    '<td colspan="4">'+
+                    '响应时长告警:'+
+                    '响应时长超过'+
+                    '<input type="text" id="responseDuration" name="responseDuration" style="width: 40px;"   readonly="true"/>'+
+                    '秒时，触发告警'+
+                    '</td></tr>';
+            }
+            $("#table tbody").append(str);
+        }
+     }
+
+     function getRadio(evt){
+         var evt=evt || window.event;
+         var e =evt.srcElement || evt.target;
+         if(e.value=='KEY'){
+             $('#keyContent').attr("dataType","*");
+             $('#quantityTimeInterval').removeAttr("dataType");
+             $('#quantityUpperLimit').removeAttr("dataType");
+             $('#quantityLogLevel').removeAttr("dataType");
+         }else if(e.value=='QUANTITY'){
+             $('#keyContent').removeAttr("dataType");
+             $('#responseDuration').removeAttr("dataType");
+             $('#quantityTimeInterval').attr("dataType","n");
+             $('#quantityUpperLimit').attr("dataType","n");
+             $('#quantityLogLevel').attr("dataType","*");
+         }else if(e.value=='RESPONSE'){
+             $('#responseDuration').attr("dataType","n");
+             $('#quantityTimeInterval').removeAttr("dataType");
+             $('#quantityUpperLimit').removeAttr("dataType");
+         }
+     }
+</script>
+</body>
+</html>

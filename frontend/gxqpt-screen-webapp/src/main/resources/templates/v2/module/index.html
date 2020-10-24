@@ -1,0 +1,627 @@
+<!DOCTYPE>
+<html>
+
+<head>
+        <meta http-equiv="Pragma" content="cache">
+	<meta http-equiv="Cache-Control" content="public">
+	<meta http-equiv="Expires" content="50000">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>大屏展示</title>
+    <link rel="stylesheet" href="${_static}/v2/platform_bg/nui/css/nui.css"/>
+    <link rel="stylesheet" href="${_static}/v2/platform_bg/css/index.css"/>
+    <link rel="stylesheet" href="${_static}/v2/css_base/base.css"/>
+    <link rel="stylesheet" href="${_static}/v2/css_base/index.css"/>
+    <script src="${_static}/v2/js/jquery-1.11.1.min.js"></script>
+    <!--<script src="${_static}/v2/platform_bg/js/banner.js"></script>-->
+    <script src="${_static}/v2/js/index.js"></script>
+    <!--<script src="${_static}/v2/js/echarts.js"></script>-->
+    <script src="${_static}/v2/js/base.js"></script>
+    <!--<script src="${_static}/v2/js/api.js"></script>-->
+    <!--<script src="${_static}/v2/js/bmap.min.js"></script>-->
+    <script src="${_static}/v2/js/hengyun/hengyun_ajax.js"></script>
+    <script src="${_static}/v2/js/hengyun/jquery.cookie.js"></script>
+    <!--<script src="${_static}/v2/js/unity3D/Build/UnityLoader.js"></script>-->
+    <style type="text/css">
+        html{
+            width: 100%;
+            min-width: 640px;
+            background: #fff;
+        }
+        body {
+            min-height: 1080px;
+            width: 640px;
+            min-width: 640px;
+            margin: auto;
+            position: relative;
+            background: #0d276c;
+        }
+
+        .anchorBL {
+            display: none;
+        }
+
+        .ec-extension-bmap {
+            background: none !important;
+        }
+
+        .num-group {
+            position: relative;
+            margin-top: 0;
+            left: 0;
+            transform: none;
+        }
+        .fs-14{
+            line-height: 40px;
+            margin: 0 3px 0;
+            //float: left;
+        }
+        .py_big_m{
+            width: 640px;
+            margin: auto;
+        }
+        .py_big_con {
+            padding: 0;
+        }
+        .py_big_content {
+            width: 100%;
+            height: 518px;
+        }
+        .py_big_top{
+            width: 100%;
+            height: 365px;
+        }
+        .py_big_top .logo{
+            text-align: center;
+            padding: 24px 0 30px;
+        }
+        .item{
+            width: 309px;
+            height: 46px;
+            color: #02bef9;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .item.text-right{
+            line-height: 44px;
+        }
+        .item.frOne{
+            background: url(${_static}/v2/img/index_icon01.png) no-repeat;
+            -webkit-background-size: 100% 100%;
+            background-size: 100% 100%;
+            float: left;
+            margin-left: 22px;
+        }
+        .item.frOne.frTwo{
+            background: url(${_static}/v2/img/index_icon02.png) no-repeat;
+            -webkit-background-size: 100% 100%;
+            background-size: 100% 100%;
+        }
+        .item.flOne{
+            background: url(${_static}/v2/img/index_icon03.png) no-repeat;
+            -webkit-background-size: 100% 100%;
+            background-size: 100% 100%;
+            float: right;
+            margin-right: 22px;
+            margin-top: -20px;
+        }
+        .item.flOne.flTwo{
+            background: url(${_static}/v2/img/index_icon04.png) no-repeat;
+            -webkit-background-size: 100% 100%;
+            background-size: 100% 100%;
+        }
+        .item.flOne.flThree{
+            background: url(${_static}/v2/img/index_icon05.png) no-repeat;
+            -webkit-background-size: 100% 100%;
+            background-size: 100% 100%;
+        }
+        .item span.tle{
+            display: inline-block;
+            margin: 8px 0 0 29px;
+            width: 108px;
+        }
+        .item span.tle.fr{
+            display: inline-block;
+            float: right;
+            margin: 0px 29px 0 21px;
+            text-align: right;
+        }
+        .py_big_bottom{
+            width: 100%;
+            padding-top: 40px;
+        }
+        .py_big_bottom .item{
+            float: left;
+            width: 25%;
+            height: 75px;
+            color: #fff;
+            position: relative;
+            cursor: pointer;
+        }
+        .py_big_bottom .item.active{
+            color: #2dc4fc;
+        }
+        .py_big_bottom .item span{
+            position: absolute;
+            top: 29px;
+            left: 95px;
+            transform: rotate(20deg);
+        }
+        .item01{
+            background: url(${_static}/v2/img/liu01_1.png) no-repeat 10px;
+        }
+        .item02{
+            background: url(${_static}/v2/img/liu02_1.png) no-repeat 10px;
+        }
+        .item03{
+            background: url(${_static}/v2/img/liu03_1.png) no-repeat 10px;
+        }
+        .item04{
+            background: url(${_static}/v2/img/liu04_1.png) no-repeat 10px;
+        }
+        .item01.active{
+            background: url(${_static}/v2/img/liu01_2.png) no-repeat 10px;
+        }
+        .item02.active{
+            background: url(${_static}/v2/img/liu02_2.png) no-repeat 10px;
+        }
+        .item03.active{
+            background: url(${_static}/v2/img/liu03_2.png) no-repeat 10px;
+        }
+        .item04.active{
+            background: url(${_static}/v2/img/liu04_2.png) no-repeat 10px;
+        }
+        .icon_number_bg{
+            background: none;
+            margin-top: -10px;
+        }
+        .icon_number_bg:first-child{
+            margin-left: 41px;
+
+        }
+        .icon_number_bg {
+            width: 25px;
+        }
+    </style>
+</head>
+
+<body>
+<!--<div class="content">
+    <div id="index" class="section platform_bg" style="overflow: hidden;">
+        <div class="banner-img"></div>
+        <canvas id="canvas"></canvas>
+    </div>
+</div>-->
+<!-- 内容区-->
+<div class="py_big_con clearfix">
+    <!--<div class="big_head">
+        &lt;!&ndash;<div class="date_">
+            <div class="date"></div>
+        </div>&ndash;&gt;
+        <div class="nav">
+            <ul class="py_ul_l clearfix">
+                <li>
+                    <a href="${_cp}/module/v2/index">
+                        整体概览
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v2/share">
+                        共享交换
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v2/appIntegrate">
+                        应用集成
+                    </a>
+                </li>
+                <li>
+                    <a href="${_cp}/module/v2/operate">
+                        运维监控
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v2/jbtz">
+                        降本提质
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v2/supervision">
+                        统一监管
+                    </a>
+                </li>
+            </ul>
+
+            <a href="${_cp}/module/v2/main" class="py_big_head clearfix"></a>
+        </div>
+        <div class="location clearfix">
+            <div class="location_l">
+                <span>部门接入率</span>
+                <div class="jd clearfix">
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                </div>
+                <span class="jd_value"></span>
+
+            </div>
+            <div class="location_r">
+                <ul class="num-group">
+                    <li>
+                        <span class="fs-14" id="org_num">部门</span>
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                        &lt;!&ndash;<div class="contain"><span class="original">2</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                        &lt;!&ndash;<div class="contain"><span class="original">5</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        <span class="fs-14">个</span>
+                    </li>
+                    <li>
+                        <span class="fs-14" id="app_num">应用</span>
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                        &lt;!&ndash;<div class="contain"><span class="original">1</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                        &lt;!&ndash;<div class="contain"><span class="original">5</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        <span class="fs-14">个</span>
+                    </li>
+                    <li>
+                        <span class="fs-14" id="common_num">组件</span>
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                            &lt;!&ndash;<div class="contain"><span class="original">3</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                            &lt;!&ndash;<div class="contain"><span class="original">5</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                            &lt;!&ndash;<div class="contain"><span class="original">1</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        <span class="fs-14">个</span>
+                    </li>
+                    <li>
+                        <span class="fs-14" id="dir_num">数据目录</span>
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                        &lt;!&ndash;<div class="contain"><span class="original">3</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                        &lt;!&ndash;<div class="contain"><span class="original">5</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        &lt;!&ndash;<span class="fs-14">个</span>&ndash;&gt;
+                    </li>
+                    <li>
+                        <span class="fs-14" id="data_num">数据</span>
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                        &lt;!&ndash;<div class="contain"><span class="original">3</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                        &lt;!&ndash;<div class="contain"><span class="original">5</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                        &lt;!&ndash;<div class="contain"><span class="original">1</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        <span class="fs-14">条</span>
+                    </li>
+                    <li>
+                        <span class="fs-14" id="cost_sub">累计降本估值</span>
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                        &lt;!&ndash;<div class="contain"><span class="original">1</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                        &lt;!&ndash;<div class="contain"><span class="original">6</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                            &lt;!&ndash;<div class="contain"><span class="original">8</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        &lt;!&ndash;<i class="icon_number_bg">&ndash;&gt;
+                            &lt;!&ndash;<div class="contain"><span class="original">1</span></div>&ndash;&gt;
+                        &lt;!&ndash;</i>&ndash;&gt;
+                        <span class="fs-14">万</span>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>-->
+
+    <div class="py_bug_con">
+        <div class="py_big_content">
+            <div class="py_big_top clearfix">
+                <div class="logo">
+                    <img src="${_static}/v2/img/slogo.png"/>
+                </div>
+                <div class="item frOne">
+                    <span class="tle">部门</span>
+                    <span id="org_num" class="number"></span>
+                    <span class="unit">个</span>
+                </div>
+                <div class="item text-right flOne">
+                    <span class="tle fr">数据目录</span>
+                    <span id="dir_num" class="number"></span>
+                    <span class="unit">个</span>
+                </div>
+                <div class="item frOne frTwo">
+                    <span class="tle">应用</span>
+                    <span id="app_num" class="number"></span>
+                    <span class="unit">个</span>
+                </div>
+                <div class="item text-right flOne flThree">
+                    <span class="tle fr">数据</span>
+                    <span id="data_num" class="number"></span>
+                    <span class="unit">万条</span>
+                </div>
+                <div class="item frOne">
+                    <span class="tle">组件</span>
+                    <span id="common_num" class="number"></span>
+                    <span class="unit">个</span>
+                </div>
+                <div class="item text-right flOne flTwo">
+                    <span class="tle fr">累计降本估值</span>
+                    <span id="cost_sub" class="number"></span>
+                    <span class="unit">万</span>
+                </div>
+            </div>
+            <div class="py_big_m">
+                <div id="gameContainer" style="width: 100%; height: 100%;">
+                    <iframe name="home" src="${_static}/v2/js/unity3D/index.html" width="100%"  height="100%" frameborder="0" scrolling="no"></iframe>
+                </div>
+            </div>
+            <div class="py_big_bottom clearfix">
+                <ul>
+                    <li class="item active item01"><span>全部</span></li>
+                    <li class="item item02"><span>数据流</span></li>
+                    <li class="item item03"><span>调用流</span></li>
+                    <li class="item item04"><span>页面流</span></li>
+                </ul>
+            </div>
+            <!--<div class="py_big_r">
+
+                <div class="qyrctj">
+                    <div class="plot_title ml_27">
+                        <span>统一监管</span>
+                    </div>
+                    <a href="javascript:void(0);">
+                        <div class="py_big_r_pub" id="dataPlatform_tyjg"></div>
+                    </a>
+                </div>
+                <div class="hdyw">
+                    <div class="plot_title ml_27">
+                        <span>部门统计</span>
+                    </div>
+                    <a href="javascript:void(0);">
+                        <div class="py_big_r_pub" style="margin-top: 10px;margin-left: 15px;">
+                            <div id="dataPlatform_bmtj" style="width: 100%;height: 100%;"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>-->
+        </div>
+        <!--<div class="py_big_footer ssjh">
+            &lt;!&ndash;<h2>实时调用情况</h2>&ndash;&gt;
+            <div class="py_big_footer_con" id="dataPlatform_ssdy">
+
+            </div>
+        </div>-->
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    // var gameInstance = UnityLoader.instantiate("gameContainer", "${_static}/v2/js/unity3D/Build/v3.json");
+    // var gameInstance = UnityLoader.instantiate("gameContainer", "${_static}/v2/js/unity3D/Build/v6.json");
+    var gateUrl = "${_gate_url}";
+    $(function () {
+        /*部门接入情况*/
+        ajaxHengyun({
+            url: gateUrl + "/api/developer/org/findTitle",
+            success: function (r) {
+                if (r.data) {
+                    if (r.data.appNum != null) {
+                        buildIndex('#app_num', r.data.appNum);
+                    }
+                    if (r.data.orgNum != null) {
+                        buildIndex("#org_num", r.data.orgNum);
+                        if (r.data.access != null) {
+                            initAccessRate(parseInt(r.data.access * 100 / r.data.orgNum));
+                        }
+                    }
+                }
+            },
+            error: function (r) {
+
+            }
+        });
+        /*实时调用情况*/
+        /*ajaxHengyun({
+            url: gateUrl + "/api/developer/moduleUse/findDayData",
+            success: function (r) {
+                var data = [];
+                var value = [];
+                if (r.data) {
+                    for (var i = 0; i < r.data.length; i++) {
+                        value = [];
+                        value.push(r.data[i]['nowDayHour']);
+                        value.push(r.data[i]['sumTotalNum']);
+                        data.push(value);
+                    }
+                    dataPlatform_ssdy(data);
+                }
+            },
+            error: function (r) {
+
+            }
+        });*/
+        /*预计降本率*/
+        // ajaxHengyun({
+        //     url: gateUrl + "/api/developer/app/getReduced",
+        //     success: function (r) {
+        //         buildI("#cost_sub", r.data);
+        //     },
+        //     error: function (r) {
+        //
+        //     }
+        // });
+        /*统一监管*/
+        /*ajaxHengyun({
+            // url: gateUrl + "/api/developer/moduleUse/findDayData",
+            url: gateUrl+ "/api/admin/hostRuning/getHostLoadTop",
+            success: function (r) {
+                if (r.data) {
+                    dataPlatform_tyjg(r.data);
+                }
+            },
+            error: function (r) {
+            }
+        });*/
+        /*目录和数据*/
+        ajaxHengyun({
+            url: gateUrl + "/api/exchange/screen/getDirDataCount",
+            success: function (r) {
+                if (r.data) {
+                    buildIndex("#dir_num", r.data.dirCount*111);
+                    buildIndex("#data_num", r.data.dataCount);
+                }
+            },
+            error: function (r) {
+            }
+        });
+        /*累计降本估值*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/developer/reducedCost/componentEstimatedValue",
+            success: function (r) {
+                if (r.data) {
+                    buildIndex("#cost_sub", r.data.reduceCostTotal);
+                }
+            },
+            error: function (r) {
+
+            }
+        });
+        /*组件个数*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/admin/screen/common/getDiscretenessCount",
+            success: function (r) {
+                if (r.data) {
+                    buildIndex("#common_num", r.data);
+                }
+            },
+            error: function (r) {
+
+            }
+        });
+        /*部门统计中的目录数量及api数量*/
+        ajaxHengyun({
+            url: gateUrl + "/api/exchange/screen/getOrgDataCount",
+            success: function (r) {
+                if (r.data) {
+                	getOrgDataCount = r.data;
+                	deptStatic();
+                }
+            },
+            error: function (r) {
+
+            }
+        });
+        /*部门统计中的部门应用数量及部门名称*/
+        ajaxHengyun({
+            url: gateUrl + "/api/admin/application/countOrgApplication",
+            success: function (r) {
+                if (r.data) {
+                	countOrgApplication = r.data;
+                	deptStatic();
+                }
+            },
+            error: function (r) {
+
+            }
+        });
+        
+        
+    })
+    
+    var deptStaticInvokeCount = 0;
+    var countOrgApplication = null;
+    var getOrgDataCount = null;
+    //由于部门统计需要两个接口的数据，故第一次调用仅仅计算器加一
+    function deptStatic(){
+    	
+    	deptStaticInvokeCount++;
+    	if(deptStaticInvokeCount == 1){
+    		return ;
+    	}
+    	var deptStaticOption = {dept:[],app:[],dir:[],api:[]};
+    	var org2DirApi = formatterOrgDataCount();
+    	for(var i in countOrgApplication){
+    		if(!countOrgApplication[i]["orgName"]){
+    			continue;
+    		}
+    		deptStaticOption.dept.push(countOrgApplication[i]["orgName"]);
+    		deptStaticOption.app.push(countOrgApplication[i]["appNum"]);
+    		
+    		if(org2DirApi && org2DirApi[countOrgApplication[i].orgId]){
+    			deptStaticOption.dir.push(org2DirApi[countOrgApplication[i].orgId][0]);
+    			var DirApi = org2DirApi[countOrgApplication[i].orgId];
+    			
+    			if(DirApi.length == 2){
+    				deptStaticOption.api.push(DirApi[1]);
+    			} else {
+    				deptStaticOption.api.push(0);
+    			}
+    		} else {
+    			deptStaticOption.api.push(0);
+    			deptStaticOption.dir.push(0);
+    		}
+    	}
+    	
+    	// dataPlatform_flpm(deptStaticOption);
+    }
+    
+    function formatterOrgDataCount(){
+    	
+    	//数组中   第0个位置是目录数量    1是api数量   key是id
+    	var org2DirApi = {};
+    	
+    	for(var key in getOrgDataCount.dirList){
+    		
+    		org2DirApi[getOrgDataCount.dirList[key].unitId] = [getOrgDataCount.dirList[key].dataCount];
+    	}
+    	for(var key in getOrgDataCount.apiList){
+    		
+    		if(org2DirApi[getOrgDataCount.apiList[key].unitId]){
+    			
+    			org2DirApi[getOrgDataCount.apiList[key].unitId].push(getOrgDataCount.apiList[key].dataCount);
+    		}
+    			
+    	}
+    	return org2DirApi;
+    	
+    }
+    $(".py_big_bottom  ul li").click(function(){
+        $(this).addClass("active").siblings().removeClass("active");
+        if($(this).hasClass("item01")){
+           home.onclick_qb();
+        };
+        if($(this).hasClass("item02")){
+           home.onclick_sjl();
+        };
+        if($(this).hasClass("item03")){
+            home.onclick_dyl();
+        };
+        if($(this).hasClass("item04")){
+            home.onclick_yml();
+        };
+    })
+</script>
+</html>

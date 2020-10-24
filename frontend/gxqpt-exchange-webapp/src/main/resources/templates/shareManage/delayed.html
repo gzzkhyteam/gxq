@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+	</head>
+	<body class="bgNone">
+		<div class="workspace-body">
+			<div id="console-container" class="clearfix">
+				<div class="col-sm-12">
+					<div class="layerDataApply clearfix">
+						<div class="view_item">
+							<form id="dataForm" autocomplete="off">
+								<table class="table default-table tab-border-no-layer">
+									<tbody>
+										<tr>
+											<th width="130">API名称：</th>
+											<td>
+												<input type="text" name="apiName" id="apiName" value="" class="form-control" readonly/>
+											</td>
+										</tr>
+										<tr>
+											<th>API编号：</th>
+											<td>
+												<input type="text" name="apiCode" id="apiCode" value="" class="form-control" readonly/>
+											</td>
+										</tr>
+										<tr>
+											<th>支持格式：</th>
+											<td>
+												<input type="text" name="dataFmat" id="dataFmat" value="" class="form-control" readonly/>
+											</td>
+										</tr>
+										<tr>
+											<th>对应目录：</th>
+											<td>
+											<input type="text" name="dirName" id="dirName" value="" class="form-control" readonly/>
+										</td>
+										</tr>
+										<tr>
+											<th>授权有效期限：</th>
+											<td>
+												<input type="text" name="" id="limitTime" name="limitTime" value="" class="form-control" readonly/>
+											</td>
+										</tr>
+										<tr>
+											<th>申请授权期限(天)：</th>
+											<td>
+												<input type="text" name="dateTerm" id="dateTerm"  class="form-control" datatype="integeNum" errormsg="请填写正整数"/>
+											</td>
+										</tr>
+										<tr>
+											<th>申请理由：</th>
+											<td>
+												<textarea id="rewalReason" name="rewalReason" rows="5" cols="" class="form-control"></textarea>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<button class="btn-submit hidden" >提交</button>
+							</form>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<script type="text/javascript">
+
+
+			var apiId = "";
+			getInfo("${id}");
+            function getInfo(id){//获取详情
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/api/apirenewalinfo',
+                    data:{id:id},
+                    success:function(rows){
+                        if (rows.data){
+                            $("#apiName").val(rows.data.apiName);
+                            $("#apiCode").val(rows.data.apiCode);
+                            $("#limitTime").val(rows.data.limitTime);
+                            $("#dirName").val(rows.data.dirName);
+                            if(rows.data.dataFmat==1){
+                                $("#dataFmat").val("json");
+                            }else if(rows.data.dbType==2){
+                                $("#dataFmat").val("xml");
+                            };
+                            apiId = rows.data.apiId;
+                        };
+                    }
+                });
+            };
+            /*提交方法*/
+            var pageIndex = 0;
+			function save(num){
+                pageIndex = num;
+                $('.btn-submit').click();
+			};
+            $('.btn-submit').valid({
+                form: '#dataForm',
+                showAllError: true,
+                ignoreHidden: true,
+                checkpassed: function () {
+                    saveFun(pageIndex);
+                }
+            });
+            function saveFun(num){
+                var apiIRenewal={};
+                apiIRenewal.apiId=apiId;
+                apiIRenewal.id="${id}";
+                apiIRenewal.dateTerm=$("#dateTerm").val();
+                apiIRenewal.rewalReason=$("#rewalReason").val();
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/apply/renewal',
+                    data:JSON.stringify(apiIRenewal),
+                    success:function(rows){
+                        if (rows.data){
+                            parent.layer.msg("续期成功！",{time:1000});
+                            parent.layer.close(num);
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    }
+                });
+            }
+		</script>
+	</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>数据申请</span> &gt; <span class="page-title-scend">基本信息录入</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+            </div>
+        </div>
+        <div class="view_container view_container_first row">
+            <div class="main_right pull-right">
+                <div id="secondPage" class="secondPage">
+                    <form id="dataForm" autocomplete="off">
+                        <input type="hidden" id="apiId" name="apiId" value="${dataId}">
+                        <input type="hidden" id="dirId" name="dirId" value="${catalogId}">
+                        <input type="hidden" id="applyType" name="applyType" value="2">
+                        <input type="hidden" id="id" name="id" value="${applyId}">
+                        <table class="table default-table tab-border-no-layer">
+                            <tbody>
+                            <col width="100"/>
+                            <col />
+                            <col width="150"/>
+                            <col />
+                            <tr>
+                                <th><span class="requiredSpan">*</span>API名称：</th>
+                                <td>
+                                    <input type="text" name="apiName" id="apiName" class="form-control" dataType="*1-50" nullmsg="请填写API名称！" errormsg="API名称长度限制50字符以内！"/>
+                                </td>
+                            <!--</tr>
+                            <tr>
+                                <th>支持格式：</th>
+                                <td>
+                                    <select id="dataFmat" name="dataFmat" class="form-control">
+                                        <option value="1">json</option>
+                                        <option value="2">xml</option>
+                                    </select>
+                                </td>-->
+                                <th><span class="requiredSpan">*</span>申请授权截止日期：</th>
+                                <td>
+                                    <input type="text" name="limtTime" id="limtTime" class="form-control Wdate" dataType="*" nullmsg="请填写授权截止日期！"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span class="requiredSpan">*</span>申请理由：</th>
+                                <td colspan="3">
+                                    <textarea id="reason" name="reason" rows="5" cols="" class="form-control" dataType="*1-1000" nullmsg="请填写API描述！" errormsg="API描述长度限制1000字符以内！"></textarea>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary" onclick="history.back()">上一步</button>
+                            <button type="button" class="btn btn-primary btn-nextPage">提交申请</button>
+                            <button type="button" class="btn btn-primary" onclick="cancel()">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $('.btn-nextPage').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            save();
+        }
+    });
+    function save(){
+        var dto =$("#dataForm").serializeJSON();
+        dto.dataFmat=1;
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/exchange/apply/saveshareapply',
+            data: JSON.stringify(dto),
+            success: function (rows) {
+                if (rows.data) {
+                    parent.layer.msg("申请成功！",{time:1500});
+                    window.location.href="${_cp}/module/shareMagApplyList";
+                }else{
+                    parent.layer.msg(rows.errmsg,{time:1500});
+                }
+            }
+        });
+    }
+
+    function cancel() {
+        window.location.href="${_cp}/module/shareMagApplyList";
+    }
+</script>
+</body>
+</html>

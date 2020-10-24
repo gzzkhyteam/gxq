@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0" />
+		<meta name="renderer" content="webkit" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/skin/layer.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/css/message/common.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/css/message/channel.css" />
+		<link rel="stylesheet" href="${_static}/css/core/module.css">
+		<script type="text/javascript" src="${_static}/js/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/jquery.combobox.js"></script>
+	</head>
+	<style type="text/css">
+		.channel_checkContent {
+			    width: 68% !important;
+			    margin: 0 auto;
+			    padding: 0 !important;
+			    margin-left: 17% !important;
+			}
+			@media screen and (max-device-width:1440px ) {
+				.channel_checkContent {
+					width: 82% !important;
+					margin: 0 auto !important;
+					margin-left: 10% !important;
+					padding-bottom: 40px !important;
+				}
+				.channel_checkContent>div{
+				width: 100% !important;
+				}
+			}
+			.channel_checkContent>div{
+				width: 88%;
+			}
+	</style>
+	<body>
+		<!-- 渠道详情 -->
+		<div id="channel_check" class="panel-body panel-tabContent channel_check" style="display: block;position: relative;padding-top: 3%;">
+			<form id="channel_checkContent" class="form-inline form-inline-two channel_checkContent">
+				<div class="form-group" style="margin-top: 15px !important;">
+				<label for="recipient-name" class="control-label text-right" style="float: left;">&nbsp;渠道类型   :   </label>
+				<input type="text" class="form-control" id="channel_checkType" style="width: 450px;float: right;" disabled="disabled">
+			</div>
+				<div class="form-group" style="margin-top: 15px !important;">
+					<label for="recipient-name" class="control-label text-right" style="float: left;">&nbsp;<i style="color: red">*</i>渠道名称   :   </label>
+					<input type="text" class="form-control" id="channel_checkName" style="width: 450px;float: right;" disabled="disabled">
+				</div>
+				<div class="form-group" style="margin-top: 15px !important;">
+					<label for="recipient-name" class="control-label text-right" style="float: left;"><i style="color: red">*</i>appId  :   </label>
+					<input type="text" class="form-control form_app" id="check_appId" style="width: 450px;float: right;" disabled="disabled">
+				</div>
+				<div class="form-group" style="margin-top: 15px !important;">
+					<label for="recipient-name" class="control-label text-right" style="float: left;"><i style="color: red">*</i>appSecret   :   </label>
+					<input type="text" class="form-control form_app" id="check_appSecret" style="width: 450px;float: right;" disabled="disabled">
+				</div>
+				<div  id="accessTokenDiv" class="form-group" style="margin-top: 15px !important;display: none">
+					<label for="recipient-name" class="control-label text-right" style="float: left;"><i style="color: red">*</i>accessToken   :   </label>
+					<input type="text" class="form-control form_app" id="accessToken" style="width: 450px;float: right;" disabled="disabled">
+				</div>
+				<div class="form-group" style="margin-top: 15px !important;">
+					<label for="recipient-name" class="control-label text-right">描述:   </label>
+					<textarea class="form-control" id="check_description" style="width: 450px;height:150px;float: right;" maxlength="300" disabled="disabled"></textarea>
+
+				</div>
+			</form>
+		</div>
+		<!-- 渠道详情 -->
+		<div class="layer_bottom">
+			<a href="###" id="channel_cancel" style="background: #fff;color: #4898d5;">关闭</a>
+			<!--<a href="###" id="channel_add">确认</a>-->
+			
+		  </div>
+	<script type="text/javascript">
+        $("#channel_cancel").click(function(){
+            layer.closeAll()
+            var index = parent.layer.getFrameIndex(window.name)
+            parent.layer.close(index)
+        })
+			ajaxHengyun({
+					type: "get",
+					url: "${_gate_url}/api/msgs/channel/get",
+                	data:{id:"${id}"},
+					success: function(rows) {
+						$("#check_appId").val(rows.data.appId)
+						$("#check_appSecret").val(rows.data.appSecret)
+						$("#check_description").val(rows.data.description)//描述
+						$("#channel_checkName").val(rows.data.name)//渠道名称
+						if(rows.data.channelType == "1"){
+							rows.data.channelType = "微信"
+						}if(rows.data.channelType == "2"){
+                            $("#accessToken").val(rows.data.accessToken)
+                            $("#accessTokenDiv").show();
+							rows.data.channelType = "微博"
+						}if(rows.data.channelType == "4"){
+							rows.data.channelType = "公示系统"
+						}if(rows.data.channelType == "5"){
+							rows.data.channelType = "移动终端"
+						}
+						$("#channel_checkType").val(rows.data.channelType)//渠道类型
+						}
+					});
+	</script>
+
+	</body>
+</html>
+

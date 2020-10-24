@@ -1,0 +1,78 @@
+<!-- 人员预警处理对比分析图 -->
+<template>
+	<div id="contrastAnalyze"></div>
+</template>
+
+<script>
+	export default {
+		data () {
+			return {
+				echartData: [],
+				contrastAnalyze: ''
+			}
+		},
+		methods: {
+			initLineBar() {
+				// 基于准备好的dom，初始化echarts实例
+				if (!this.contrastAnalyze) {
+					this.contrastAnalyze = this.$echarts.init(document.getElementById('contrastAnalyze'))
+				}
+				const option = {
+					title: {
+						text: '对比分析',
+					},
+					tooltip: {
+						trigger: 'axis',
+						axisPointer: {
+							type: 'shadow'
+						}
+					},
+					legend: {
+						data: this.echartData.legendData
+					},
+					grid: {
+						left: '3%',
+						right: '4%',
+						bottom: '3%',
+						containLabel: true
+					},
+					xAxis: {
+						inverse: true,
+						type: 'value',
+						boundaryGap: [0, 0.01]
+					},
+					yAxis: {
+						position: 'right',
+						type: 'category',
+						data: this.echartData.typeName
+					},
+					series: [{
+							name: this.echartData.legendData[0],
+							type: 'bar',
+							data: this.echartData.avg
+						},
+						{
+							name: this.echartData.legendData[1],
+							type: 'bar',
+							data: this.echartData.num
+						}
+					]
+				}
+
+				// 使用刚指定的配置项和数据显示图表。
+				this.contrastAnalyze.setOption(option);
+			},
+			refresh (data) {
+				this.echartData = data
+				this.initLineBar()
+			}
+		}
+	}
+</script>
+
+<style lang="less" scoped>
+	#contrastAnalyze {
+		width: 100%;
+		height: 100%;
+	}
+</style>

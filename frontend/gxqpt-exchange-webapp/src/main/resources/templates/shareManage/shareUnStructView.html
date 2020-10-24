@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>共享管理</span> &gt; <span class="page-title-scend">详情</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+            </div>
+        </div>
+        <div class="view_container view_container_first row">
+            <div class="main_right pull-right">
+                <div id="secondPage" class="secondPage">
+                    <div id="unit" class="view_item">
+                        <h3 class="tle">API接口信息</h3>
+                        <table class="table default-table tab-border-no">
+                            <tbody>
+                            <tr>
+                                <th width="120">API名称：</th>
+                                <td id="apiName"></td>
+                            </tr>
+                            <tr>
+                                <th>API编号：</th>
+                                <td id="apiCode"></td>
+                            </tr>
+                            <tr>
+                                <th>创建人：</th>
+                                <td id="createUserName"></td>
+                            </tr>
+                            <tr>
+                                <th>创建时间：</th>
+                                <td id="createTime"></td>
+                            </tr>
+                            <tr>
+                                <th>API描述：</th>
+                                <td id="apiDesc"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <h3 id="fileListContent" class="tle">相关文件列表
+                            <div class="pull-right">
+                                <button id="downloadBtn" type="button" class="btn btn-primary"
+                                        onclick="downloadPackage()">批量下载
+                                </button>
+                            </div>
+                        </h3>
+                        <table id="fileList" class="default-table tab-title-top">
+                            <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>文件名称</th>
+                                <th width="200">文件编号</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <h3 class="tle">申请信息</h3>
+                        <table class="table default-table tab-border-no">
+                            <tbody>
+                            <tr>
+                                <th width="120">申请时间：</th>
+                                <td id="applyTime"></td>
+                            </tr>
+                            <tr>
+                                <th width="120">申请原因：</th>
+                                <td id="reason"></td>
+                            </tr>
+                            <tr>
+                                <th width="120">授权有效时间：</th>
+                                <td id="limitTime"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var id = "${id}";
+    var apiId = "${apiId}";
+    var ids = [];
+    var authStatus = "${authStatus}";
+    if (authStatus == 3) {
+        $("#downloadBtn").css('display', 'block');
+    } else {
+        $("#downloadBtn").css('display', 'none');
+    }
+
+    function getApplyInfo() {//获取申请信息
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/exchange/apply/detail',
+            data: {id: id},
+            datatype: "json",
+            success: function (rows) {
+                if (rows.data) {
+                    rows.data = dealElement(rows.data);
+                    $("#reason").text(rows.data.reason);
+                    $("#applyTime").text(fmtDateTime(rows.data.createTime));
+                    $("#limitTime").text(fmtDate(rows.data.limitTime));
+                }
+            }
+        });
+    }
+
+    getInfo(apiId);
+
+    function getInfo(apiId) {//获取详情
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: '${_gate_url}/api/exchange/dataapi/api/detail',
+            data: {id: apiId},
+            success: function (rows) {
+                if (rows.data) {
+                    rows.data = dealElement(rows.data);
+                    $("#apiName").text(rows.data.apiName);
+                    $("#apiCode").text(rows.data.apiCode);
+                    $("#createUserName").text(rows.data.createUserName);
+                    $("#createTime").text(fmtDate(rows.data.createTime));
+                    $("#apiDesc").text(rows.data.apiDesc);
+                    var height = document.getElementById("container").scrollHeight;
+                    $("#home", window.parent.document).height(height);
+                    getDataSetView(rows.data.setId);
+                    getApplyInfo();
+                }
+                ;
+            }
+        });
+    };
+
+    function getDataSetView(setId) {//获取详情
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/getBaseInfo",
+            data: {setId: setId},
+            success: function (rows) {
+                if (rows.data) {
+                    directorysList = rows.data.directorys;
+                    var filesList = rows.data.files;
+                    var html = "";
+                    var file = {};
+                    var status = rows.data.status;
+                    if (status != 3) {
+                        $("#downloadBtn").css('display', 'none');
+                    }
+                    for (var i in filesList) {
+                        file.filePath = filesList[i].filePath;
+                        file.oldName = filesList[i].oldName;
+                        file.busId = filesList[i].busId;
+                        html += '<tr>';
+                        html += '<td class="xh">' + i + '</td>';
+                        html += '<td>' + filesList[i].oldName + '</td>';
+                        html += '<td>' + filesList[i].busId + '</td>';
+                        if (authStatus == 3 && status == 3) {
+                            html += '<td>';
+                            html += '<a href="javascript:void(0);" onclick="downLoadFolder(\'' + filesList[i].filePath + '\',\'' + filesList[i].oldName + '\')">下载</a>';
+                            html += '</td>';
+                            ids.push(filesList[i].busId);
+                        } else {
+                            html += '<td></td>';
+                        }
+                        html += '</tr>';
+                    }
+                    ;
+
+                }
+                $("#fileList tbody").append(html);
+                reloadxh();
+                updateIformHeight();
+            }
+        });
+    };
+
+    function reloadxh() {//表格序号加载
+        var trList = $("#fileList tbody tr");
+        if (trList.length > 0) {
+            trList.each(function (index, value) {
+                $(value).find(".xh").text(index + 1);
+            });
+        }
+    };
+    var canDown = true;
+
+    //单个文件下载
+    function downLoadFolder(url, filename) {
+        canDownload();
+        if (canDown == false) {
+            parent.layer.msg("您申请的API已经过期,不能下载！");
+        } else {
+            var urlDownload = "${_gate_url}/api/file/file/download?url=" + url + "&filename=" + filename;
+            window.open(urlDownload);
+        }
+    }
+
+    /* 批量下载文件 */
+    function downloadPackage() {
+        canDownload();
+        if (canDown == false) {
+            parent.layer.msg("您申请的API已经过期,不能下载！");
+        } else {
+            var urlDownload = "${_gate_url}/api/file/file/downloadpackage?ids[]=" + ids;
+            window.open(urlDownload);
+        }
+    };
+
+    function canDownload() {
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/apply/isValid",
+            async: false,
+            data: {apiId: apiId},
+            success: function (rows) {
+                canDown = rows.data;
+            }
+        });
+    }
+
+
+</script>
+</body>
+</html>

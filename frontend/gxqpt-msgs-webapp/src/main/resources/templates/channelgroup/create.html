@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/message/common.css" />
+	<link rel="stylesheet" type="text/css" href="${_static}/css/message/channel.css" />
+	<link rel="stylesheet" href="${_static}/css/core/module.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/message/drafts.css">
+		<style>
+			#right-box {
+				height: calc(100% - 45px);
+				border: 0;
+			}
+			
+			.channel_checkContent {
+				width: 80% !important;
+				margin: 0 auto !important;
+				margin-left: 17% !important;
+				overflow: hidden;
+			}
+			.channel_checkContent>div{
+				width: 100%;
+			}
+			.btn-group{
+				width: 80% !important;
+			}
+			@media screen and (max-device-width:1440px) {
+				.channel_checkContent {
+					width: 90% !important;
+					margin: 0 auto !important;
+					margin-left: 10% !important;
+					padding-bottom: 40px;
+					overflow: hidden;
+				}
+				.btn-group {
+				    width: 100% !important;
+				}
+			}
+			@media screen and (max-device-width:1920px) {
+				#description{
+					margin-left: 5% !important;
+				}
+			}
+			a:hover{
+				text-decoration: none;
+			}
+		</style>
+	</head>
+	
+	<body>		
+		<!--  新增渠道群组-->
+		<div id="addEditModal" class="panel-body panel-tabContent channel_check" style="display: block;position: relative;padding-bottom: 20px;padding-top: 4%;">
+			<form id="addEditForm" class="form-inline form-inline-two channel_checkContent" ng-app="dict" ng-controller="controller" style="width: 70%;">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label text-right" style="float: left;">群组名称   :   </label>
+					<input type="text" class="form-control " id="add_groupName" ng-model="group.name" style="width: 450px!important;margin-left: 13px;float: left;">
+				</div>
+				<div class="qudaoBox" >
+					<label for="recipient-name" class="control-label text-right fl" style="margin-right: 5px;float: left;">包含渠道  :   </label>
+					<div id="qudaoBox1" style="float: left;width: 85%;margin-left: 1.5%;">
+						<div class="qudao-wrap fr" style="float: left;">
+						<input type="text" class="form-control channel_addType" style="width: 450px;">
+						<a class="ui-button ml5 btn-delete" href="javascript:void(0);">删除</a>
+						<div class="qudao-checkBox">
+							<div style="display: inline-block;margin: 8px 10px 0 0;" class="fl">
+								<input type="checkbox" class="selectAll">全选
+							</div>
+							<div class="qudao-checkBox1 fl">
+								<ul class="checkbox-ul">
+									<!--<li><input type="checkbox" class="qd-checkbox1">公众号1</li>
+                            <li><input type="checkbox" class="qd-checkbox1">公众号2</li>
+                            <li><input type="checkbox" class="qd-checkbox1">公众号3</li>
+                            <li><input type="checkbox" class="qd-checkbox1">公众号4</li>
+                            <li><input type="checkbox" class="qd-checkbox1">公众号5</li>-->
+									<div class="clearfix"></div>
+								</ul>
+							</div>
+							<div class="next_prevBox fl">
+								<span class="btn-prev"></span><span class="btn-next"></span>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					</div>
+					</div>
+					
+				</div>
+				<div class="btn-group">
+					<span class="btn-add">添加</span>
+				</div>
+				<div class="form-group" style="margin-bottom: 40px;height:auto!important;" id="description">
+					<label for="recipient-name" class="control-label text-right fl" >说明:</label>
+					<textarea name="" id="add_groupDescript" ng-model="group.channelExplain" cols="30" rows="10" style="width:450px;height:100px;margin-left: 17px;resize:none"></textarea>
+				</div>
+			</form>
+		</div>
+		<div class="layer_bottom">
+			<a href="###" id="group_cancel" style="background: #fff;color: #4898d5;">取消</a>
+			<a href="###" id="group_add">新增</a>
+			
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="${_static}/js/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/jquery.combobox.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript" src="${_static}/js/com_base.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+<script type="text/javascript">
+
+    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/msgs/channelgroup/save",
+        },"#addEditForm",{
+            attrName:"ng-model",
+            prefix:"group.",
+            suffix:"",
+        });
+    })
+
+    var index;
+    var dict = angular.module('dict', []);
+    dict.controller('controller', function ($scope,$http,token) {
+        var urlPrev ='${_gate_url}';
+        $scope.submit = function () {
+            $('.btn-submit').click();
+        };
+        $scope.save = function () {
+            saveObj();
+        }
+    }).service('token',function () {
+        this.token = function () {
+            return getToken();
+        }
+    });
+var arry = [];
+function unique1(array) {
+	var n = []; //一个新的临时数组
+	//遍历当前数组
+	for(var i = 0; i < array.length; i++) {
+		//如果当前数组的第i已经保存进了临时数组，那么跳过，
+		//否则把当前项push到临时数组里面
+		if(n.indexOf(array[i]) == -1) n.push(array[i]);
+	}
+	return n;
+}
+			
+window.onload = function() {		
+		$(".btn-add").live('click', function() {
+			var addLength = $(".qudao-wrap").length + 1;
+			if(addLength < 5) {
+				$("#qudaoBox1").append(`<div class="qudao-wrap fr"  style="float: left;">
+               <input type="text" class="form-control channel_addType"  style="width: 450px;">
+               <a class="ui-button ml5 btn-delete" href="javascript:void(0);" >删除</a>
+               <div class="qudao-checkBox">
+                   <div style="display: inline-block;margin: 8px 10px 0 0;" class="fl">
+                       <input type="checkbox" class="selectAll">全选
+                   </div>
+                   <div class="qudao-checkBox1 fl">
+                       <ul class="checkbox-ul">
+                          
+                           <div class="clearfix"></div>
+                       </ul>
+                   </div>
+                   <div class="next_prevBox fl">
+                       <span class="btn-prev"></span><span class="btn-next"></span>
+                   </div>
+                   <div class="clearfix"></div>
+               </div>
+           </div> `);
+				$(".btn-group").show();
+				ad1();
+			} else {
+				$("#qudaoBox1").append(`<div class="qudao-wrap fr"  style="float: left;">
+               <input type="text" class="form-control channel_addType"  style="width: 450px;">
+               <a class="ui-button ml5 btn-delete" href="javascript:void(0);" >删除</a>
+               <div class="qudao-checkBox">
+                   <div style="display: inline-block;margin: 8px 10px 0 0;" class="fl">
+                       <input type="checkbox" class="selectAll">全选
+                   </div>
+                   <div class="qudao-checkBox1 fl">
+                       <ul class="checkbox-ul">
+                           
+                           <div class="clearfix"></div>
+                       </ul>
+                   </div>
+                   <div class="next_prevBox fl">
+                       <span class="btn-prev"></span><span class="btn-next"></span>
+                   </div>
+                   <div class="clearfix"></div>
+               </div>
+           </div> `);
+				ad1();
+				$(".btn-group").hide();
+			}
+		});
+		$(".selectAll").live('click', function() {
+			var isChecked = !$(this).attr('checked');
+			$(this).parent().siblings(".qudao-checkBox1").find(".qd-checkbox1").attr('checked', !isChecked);
+		});
+		$("#qudaoBox1").on("click", " .btn-delete", function() {
+			var deleteLength = $(this).parents("#qudaoBox1").find('.qudao-wrap').length;
+			var index = $(".qudao-wrap").index();
+			if(deleteLength <= 5) {
+				$(".btn-group").show();
+			}
+			if(deleteLength <= 1) {
+				layer.alert("包含渠道不得为零个")
+				return false;
+			}
+			$(this).parents(".qudao-wrap").remove();
+		});
+				
+		var i = 0;
+		var step = 50;
+		$(".btn-next").live('click', function() {
+			var size = $(this).parent().siblings(".qudao-checkBox1").find(".checkbox-ul").find('li').length;
+			var lef2=$(this).parent().siblings(".qudao-checkBox1").find(".checkbox-ul").css('left');
+               //debugger;
+			var lef= lef2.substring(0,lef2.length-2);
+			var leng=$(this).parent().siblings(".qudao-checkBox1").find(".checkbox-ul").find('li').eq(i).width()+20;
+			var leftval=Number(lef)-Number(leng);
+			if(i < size-1) {
+				i++;
+				$(this).parent().siblings(".qudao-checkBox1").find(".checkbox-ul").stop(true,true).animate({
+					left: leftval
+				});
+			} else {
+				i = 0;
+				$(this).parent().siblings(".qudao-checkBox1").find(".checkbox-ul").stop(true,true).animate({
+					left: -i * step
+				});
+			}
+		});
+		
+		$(".btn-prev").live('click', function() {
+			var size = $(".checkbox-ul li").length;
+			if(i > 0) {
+				i--;
+				$(this).parent().siblings(".qudao-checkBox1").find(".checkbox-ul").stop(false,true).animate({
+					left: -i * step
+				});
+			} else {
+				i = 0;
+				$(this).parent().siblings(".qudao-checkBox1").find(".checkbox-ul").stop(false,true).animate({
+					left: -i * step
+				});
+			}
+		});			
+		ad1();
+	};
+		
+				
+$("#group_add").click(function(){
+	if($("#add_groupName").val()==''){
+		layer.alert("群组名称不得为空")
+	}else if($("#add_groupName").val().length>32){
+		layer.alert("群组名称不得超过32个字符")
+	}else if($("#add_groupDescript").val().length>100){
+		layer.alert("说明不得超过100个字符")
+	}else{
+		sendfun();
+	}		
+});
+	
+	
+$("#group_cancel").click(function(){
+	layer.closeAll()
+	var index = parent.layer.getFrameIndex(window.name)
+	parent.layer.close(index)
+});
+	
+	
+/* 弹出新增页面 */
+function sendfun() {
+	var channel1, channel2, channel3, channel4, channel5,
+		channeltype1, channeltype2, channeltype3, channeltype4, channeltype5,
+		type1, type2, type3, type4, type5,channel1Id,channel2Id,channel3Id,channel4Id,channel5Id
+	var n = $(".qudaoBox .qudao-wrap").length;
+	var _this = $(".qudaoBox .qudao-wrap");
+	switch(n) {
+		case 1:
+			type1 = _this.eq(0).find(".channel_addType").val();
+                  channeltype1 = typenum(type1);
+			var arr = "";
+			var arrId="";
+			var length = _this.eq(0).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channel = _this.eq(0).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == (length - 1)) {
+					arr = arr + val.value;
+					arrId=arrId+val.getAttribute("nid");
+				} else {
+					arr = arr + val.value + ";";
+					arrId=arrId+val.getAttribute("nid")+";";
+				}
+			});
+			channel1 = arr;
+			channel1Id=arrId;
+			if(channel1 == ""){
+				layer.alert("请勾选至少一个渠道名称");
+				return false;
+			}
+			break;
+		case 2:
+			type1 = _this.eq(0).find(".channel_addType").val();
+			type2 = _this.eq(1).find(".channel_addType").val();
+            channeltype1 = typenum(type1);
+            channeltype2 = typenum(type2);
+			var arr = "";
+			var arrId = "";
+			var length = _this.eq(0).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channela = _this.eq(0).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == (length - 1)) {
+					arr = arr + val.value;
+					arrId=arrId+val.getAttribute("nid");
+				} else {
+					arr = arr + val.value + ";";
+					arrId=arrId+val.getAttribute("nid")+";";
+				}				
+			});
+			channel1 = arr;
+			channel1Id = arrId;
+			var arr1 = "";
+			var arr1Id="";
+			var length1 = _this.eq(1).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channelb = _this.eq(1).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == (length1-1)) {
+					arr1 = arr1 + val.value;
+					arr1Id = arr1Id+val.getAttribute("nid");
+				} else {
+					arr1 = arr1 + val.value + ";";
+					arr1Id = arr1Id+val.getAttribute("nid")+";";
+				}
+			});
+			channel2 = arr1;
+			channel2Id = arr1Id;
+			if(channel1 == ""){
+				layer.alert("请勾选第一个渠道的至少一个渠道名称");
+				return false;
+			}if(channel2 == ""){
+				layer.alert("请勾选第二个渠道的至少一个渠道名称");
+				return false;
+			}
+			break;
+		case 3:
+			type1 = _this.eq(0).find(".channel_addType").val();
+			type2 = _this.eq(1).find(".channel_addType").val();
+			type3 = _this.eq(2).find(".channel_addType").val();
+                  channeltype1 = typenum(type1);
+                  channeltype2 = typenum(type2);
+                  channeltype3 = typenum(type3);
+			var arr = "";
+			var arrId="";
+			var length = _this.eq(0).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channela = _this.eq(0).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length - 1) {
+					arr = arr + val.value;
+					arrId=arrId+val.getAttribute("nid");
+				} else {
+					arr = arr + val.value + ";";
+					arrId=arrId+val.getAttribute("nid")+";";
+				}
+			});
+			channel1 = arr;
+			channel1Id=arrId;
+			var arr1 = "";
+			var arr1Id="";
+			var length1 = _this.eq(1).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channelb = _this.eq(1).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length1 - 1) {
+					arr1 = arr1 + val.value;
+					arr1Id=arr1Id+val.getAttribute("nid");
+				} else {
+					arr1 = arr1 + val.value + ";";
+					arr1Id=arr1Id+val.getAttribute("nid")+";";
+				}
+			});
+			channel2 = arr1;
+			channel2Id=arr1Id;
+			//第三个channel
+			var arr2 = "";
+			var arr2Id="";
+			var length2 = _this.eq(2).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length
+			channelb = _this.eq(2).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length2 - 1) {
+					arr2 = arr2 + val.value;
+					arr2Id=arr2Id+val.getAttribute("nid");
+				} else {
+					arr2 = arr2 + val.value + ";";
+					arr2Id=arr2Id+val.getAttribute("nid")+";";
+				}
+			});
+			channel3 = arr2;
+			channel3Id=arr2Id;
+			if(channel1 == ""){
+				layer.alert("请勾选第一个渠道的至少一个渠道名称")
+				return false;
+			}if(channel2 == ""){
+				layer.alert("请勾选第二个渠道的至少一个渠道名称")
+				return false;
+			}if(channel3 == ""){
+				layer.alert("请勾选第三个渠道的至少一个渠道名称")
+				return false;
+			}
+			break;
+		  case 4:
+                  type1 = _this.eq(0).find(".channel_addType").val();
+                  type2 = _this.eq(1).find(".channel_addType").val();
+                  type3 = _this.eq(2).find(".channel_addType").val();
+                  type4 = _this.eq(3).find(".channel_addType").val();
+                  channeltype1 = typenum(type1);
+                  channeltype2 = typenum(type2);
+                  channeltype3 = typenum(type3);
+                  channeltype4 = typenum(type4);
+			var arr = "";
+			var arrId="";
+			var length = _this.eq(0).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channela = _this.eq(0).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length - 1) {
+					arr = arr + val.value;
+					arrId=arrId+val.getAttribute("nid");
+				} else {
+					arr = arr + val.value + ";";
+					arrId=arrId+val.getAttribute("nid")+";";
+				}
+			});
+			channel1 = arr;
+			channel1Id = arrId;
+			var arr1 = "";
+			var arr1Id = "";
+			var length1 = _this.eq(1).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channelb = _this.eq(1).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length1 - 1) {
+					arr1 = arr1 + val.value;
+					arr1Id=arr1Id+val.getAttribute("nid");
+				} else {
+					arr1 = arr1 + val.value + ";";
+					arr1Id=arr1Id+val.getAttribute("nid")+";";
+				}
+			});
+			channel2 = arr1;
+			channel2Id=arr1Id;
+			//第三个channel
+			var arr2 = "";
+			var arr2Id="";
+			var length2 = _this.eq(2).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channelb = _this.eq(2).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length2 - 1) {
+					arr2 = arr2 + val.value;
+					arr2Id=arr2Id+val.getAttribute("nid");
+				} else {
+					arr2 = arr2 + val.value + ";";
+					arr2Id=arr2Id+val.getAttribute("nid")+";";
+				}
+			});
+			channel3 = arr2;
+			channel3Id=arr2Id;
+			//第四个channel
+			var arr3 = "";
+			var arr3Id="";
+			var length3 = _this.eq(3).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length
+			channelb = _this.eq(3).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length3 - 1) {
+					arr3 = arr3 + val.value;
+					arr3Id=arr3Id+val.getAttribute("nid");
+				} else {
+					arr3 = arr3 + val.value + ";";
+					arr3Id=arr3Id+val.getAttribute("nid")+";";
+				}
+			});
+			channel4 = arr3;
+			channel4Id=arr3Id;
+			if(channel1 == ""){
+				layer.alert("请勾选第一个渠道的至少一个渠道名称");
+				return false;
+			}if(channel2 == ""){
+				layer.alert("请勾选第二个渠道的至少一个渠道名称");
+				return false;
+			}if(channel3 == ""){
+				layer.alert("请勾选第三个渠道的至少一个渠道名称");
+				return false;
+			}if(channel4 == ""){
+				layer.alert("请勾选第四个渠道的至少一个渠道名称");
+				return false;
+			}
+			break;
+			default:
+                  type1 = _this.eq(0).find(".channel_addType").val();
+                  type2 = _this.eq(1).find(".channel_addType").val();
+                  type3 = _this.eq(2).find(".channel_addType").val();
+                  type4 = _this.eq(3).find(".channel_addType").val();
+                  type5 = _this.eq(4).find(".channel_addType").val();
+                  channeltype1 = typenum(type1);
+                  channeltype2 = typenum(type2);
+                  channeltype3 = typenum(type3);
+                  channeltype4 = typenum(type4);
+                  channeltype5 = typenum(type5);
+			var arr = "";
+			var arrId = "";
+			var length = _this.eq(0).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channela = _this.eq(0).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length - 1) {
+					arr = arr + val.value;
+					arrId = arrId+val.getAttribute("nid");
+				} else {
+					arr = arr + val.value + ";";
+					arrId = arrId+val.getAttribute("nid")+";";
+				}
+			});
+			channel1 = arr;
+			channel1Id = arrId;
+			var arr1 = "";
+			var arr1Id = "";
+			var length1 = _this.eq(1).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length
+			channelb = _this.eq(1).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length1 - 1) {
+					arr1 = arr1 + val.value;
+					arr1Id = arr1Id+val.getAttribute("nid");
+				} else {
+					arr1 = arr1 + val.value + ";";
+					arr1Id = arr1Id+val.getAttribute("nid")+";";
+				}
+			});			
+			channel2 = arr1;
+			channel2Id = arr1Id;			
+			//第三个channel
+			var arr2 = "";
+			var arr2Id = "";
+			var length2 = _this.eq(2).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channelb = _this.eq(2).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length2 - 1) {
+					arr2 = arr2 + val.value;
+					arr2Id=arr2Id+val.getAttribute("nid");
+				} else {
+					arr2 = arr2 + val.value + ";";
+					arr2Id = arr2Id+val.getAttribute("nid")+";";
+				}
+			});
+			channel3 = arr2;
+			channel3Id = arr2Id;
+			//第四个channel
+			var arr3 = "";
+			var arr3Id="";
+			var length3 = _this.eq(3).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channelb = _this.eq(3).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length3 - 1) {
+					arr3 = arr3 + val.value;
+					arr3Id=arr3Id+val.getAttribute("nid");
+				} else {
+					arr3 = arr3 + val.value + ";";
+					arr3Id=arr3Id+val.getAttribute("nid")+";";
+				}
+			});
+			channel4 = arr3;
+			channel4Id = arr3Id;
+			//第五个channel
+			var arr4 = "";
+			var arr4Id="";
+			var length4 = _this.eq(4).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").length;
+			channelb = _this.eq(4).find(".qd-checkbox1:checkbox[name='qdCheck']:checked").each(function(i, val) {
+				if(i == length4 - 1) {
+					arr4 = arr4 + val.value;
+					arr4Id=arr4Id+val.getAttribute("nid");
+				} else {
+					arr4 = arr4 + val.value + ";";
+					arr4Id=arr4Id+val.getAttribute("nid")+";";
+				}
+			});
+			channel5 = arr4;
+			channel5Id = arr4Id;
+			if(channel1 == ""){
+				layer.alert("请勾选第一个渠道的至少一个渠道名称");
+				return false;
+			}if(channel2 == ""){
+				layer.alert("请勾选第二个渠道的至少一个渠道名称");
+				return false;
+			}if(channel3 == ""){
+				layer.alert("请勾选第三个渠道的至少一个渠道名称");
+				return false;
+			}if(channel4 == ""){
+				layer.alert("请勾选第四个渠道的至少一个渠道名称");
+				return false;
+			}if(channel5 == ""){
+				layer.alert("请勾选第五个渠道的至少一个渠道名称");
+				return false;
+			}
+			
+	}
+	/*确定渠道类型*/
+	function typenum(channel) {
+		switch(channel) {
+			case "微信":
+				return 1;
+				break;
+			case "微博":
+				return 2;
+				break;
+			case "公示系统":
+				return 4;
+				break;
+            case "移动终端":
+                return 5;
+                break;
+			default:
+                return 5;
+		}
+	}
+	var channelids = new Array();
+	if(channel1Id){	
+		var channelid = channel1Id.split(";");
+		for(var m=0;m<channelid.length;m++){
+			channelids.push(channelid[m]);
+		}
+	}
+	if(channel2Id){
+		var channelid = channel2Id.split(";");
+		for(var m=0;m<channelid.length;m++){
+			channelids.push(channelid[m]);
+		}
+	}
+	if(channel3Id){
+		var channelid = channel3Id.split(";");
+		for(var m=0;m<channelid.length;m++){
+			channelids.push(channelid[m]);
+		}
+	}
+	if(channel4Id){
+		var channelid = channel4Id.split(";");
+		for(var m=0;m<channelid.length;m++){
+			channelids.push(channelid[m]);
+		}
+	}
+	if(channel5Id){
+		var channelid = channel5Id.split(";");
+		for(var m=0;m<channelid.length;m++){
+			channelids.push(channelid[m]);
+		}
+	}
+    var appElement = document.querySelector('[ng-controller=controller]');
+    var $scope = angular.element(appElement).scope();
+	ajaxHengyun({
+		type: "post",
+              url: "${_gate_url}/api/msgs/channelgroup/save",
+              contentType: "application/json", //注意传参格式
+              dataType: "json",
+		data: JSON.stringify({
+			"name": $("#add_groupName").val(),
+			"explain": $("#add_groupDescript").val(),
+			"channelIds":channelids					
+		}),
+		success: function(res) {
+			if(res.data) {
+				parent.layer.msg("添加成功！", {
+					icon: 6,
+					time: 1000
+				});
+				parent.home.reloadJqgrid();
+				var index = parent.layer.getFrameIndex(window.name)
+				parent.layer.close(index)
+
+				layer.closeAll()
+			} else {
+				parent.layer.msg(res.errmsg, {
+					time: 1000
+				});
+			}
+		}
+	});
+
+}	
+		
+		
+//新增渠道渠道类型
+function ad1() {
+	ajaxHengyun({
+		type: "GET",
+		url: "${_gate_url}/api/msgs/channeltype/list",
+		contentType: "application/json",
+		cache: false,
+		success: function(res) {
+			$(".channel_addType").last().combobox({
+				disabled: false,
+				editable: false, // 可编辑
+				panelHeight: 'auto',
+				valueField: 'id',
+				textField: 'name',
+				height: 34,
+				width: 450,
+				multiple: false, // 单选复选
+				data: res.data,
+				onSelect: function(data) {
+					$(this).siblings(".qudao-checkBox").find(".checkbox-ul>li").remove();
+					var type = data.name;
+					var typeId = data.id;
+					var _this = $(this);
+					_this.attr("value", data.name);
+					var _that = $(this).siblings(".qudao-checkBox").find(".checkbox-ul>.clearfix");
+					var div_num = $(this).parents("#qudaoBox1").find(".qudao-wrap").length;
+					var now_type = $(this).attr("value");
+                          var arry=[];
+					var arry1=[];
+					for(var i = 0; i < div_num-1; i++) {
+						var all_type=$(this).parents("#qudaoBox1").find(".qudao-wrap").eq(i).find(".channel_addType ").val()
+						arry1.push(all_type);
+						if(now_type==arry1[i]){
+							_this.next(".combo").find(".combo-text").val("");
+							layer.alert("包含渠道不能相同")
+							return false;
+						}else{
+                            arry.push(all_type);
+						}
+					}
+					_this.next(".combo").find(".combo-text").attr("disabled", "disabled");
+					_this.next(".combo").find(".combo-arrow").hide();
+
+					ajaxHengyun({
+						type: "GET",
+						url: "${_gate_url}/api/msgs/channel/type",
+						contentType: "application/x-www-form-urlencoded",
+						data: {
+							"type": typeId
+						},
+						success: function(data) {
+							for(var i = 0; i < data.data.length; i++) {
+								_that.before(
+									'<li><input type="checkbox" class="qd-checkbox1" name="qdCheck" value=' + data.data[i].name + ' nid='+data.data[i].id+'>' + data.data[i].name + '</li>'
+								);
+							}
+						}
+					});
+				},
+				onLoadSuccess: function(data) {
+                     //下拉框热区范围改为整个输入框
+                     $(".combo").click(function(){
+                         $(this).prev().combobox("showPanel");
+                     });
+				}
+			});
+		}
+	});
+}
+</script>
+

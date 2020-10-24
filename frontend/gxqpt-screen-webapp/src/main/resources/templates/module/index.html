@@ -1,0 +1,526 @@
+<!DOCTYPE>
+<html>
+
+<head>
+        <meta http-equiv="Pragma" content="cache">
+	<meta http-equiv="Cache-Control" content="public">
+	<meta http-equiv="Expires" content="50000">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>大屏展示</title>
+    <link rel="stylesheet" href="${_static}/platform_bg/nui/css/nui.css"/>
+    <link rel="stylesheet" href="${_static}/platform_bg/css/index.css"/>
+    <link rel="stylesheet" href="${_static}/css_base/base.css"/>
+    <link rel="stylesheet" href="${_static}/css_base/index.css"/>
+    <script src="${_static}/js/jquery-1.11.1.min.js"></script>
+    <script src="${_static}/platform_bg/js/banner.js"></script>
+    <script src="${_static}/js/index.js"></script>
+    <script src="${_static}/js/echarts.js"></script>
+    <script src="${_static}/js/base.js"></script>
+    <script src="${_static}/js/api.js"></script>
+    <script src="${_static}/js/bmap.min.js"></script>
+    <script src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script src="${_static}/js/hengyun/jquery.cookie.js"></script>
+    <!--<script src="${_static}/js/unity3D/Build/UnityLoader.js"></script>-->
+    <style type="text/css">
+        .anchorBL {
+            display: none;
+        }
+
+        .ec-extension-bmap {
+            background: none !important;
+        }
+
+        .num-group {
+            position: relative;
+            margin-top: 0;
+            left: 0;
+            transform: none;
+        }
+        .fs-14{
+            line-height: 40px;
+            margin: 0 3px 0;
+            //float: left;
+        }
+        .py_big_bottom{
+            width: 227px;
+            padding-top: 40px;
+        }
+        .py_big_bottom .item{
+            float: left;
+            width: 100%;
+            height: 75px;
+            color: #fff;
+            position: relative;
+            cursor: pointer;
+            margin: 27px 0;
+        }
+        .py_big_bottom .item.active{
+            color: #2dc4fc;
+        }
+        .py_big_bottom .item span{
+            position: absolute;
+            top: 49px;
+            left: 95px;
+            transform: rotate(24deg);
+        }
+        .py_big_bottom .item02 span{
+            transform: rotate(10deg);
+            top: 34px;
+        }
+        .py_big_bottom .item03 span{
+            transform: rotate(-10deg);
+            top: 18px;
+        }
+        .py_big_bottom .item04 span{
+            transform: rotate(-20deg);
+            top: 6px;
+        }
+        .py_big_bottom .item01{
+            background: url(${_static}/v2/img/liu01_1.png) no-repeat 10px;
+            margin-left: 16px;
+        }
+        .py_big_bottom .item02{
+            background: url(${_static}/v2/img/liu02_1.png) no-repeat 10px;
+            margin-left: -10px;
+
+        }
+        .py_big_bottom .item03{
+            background: url(${_static}/v2/img/liu03_1.png) no-repeat 10px;
+            margin-left: -10px;
+
+        }
+        .py_big_bottom .item04{
+            background: url(${_static}/v2/img/liu04_1.png) no-repeat 10px;
+            margin-left: 10px;
+
+        }
+        .py_big_bottom .item01.active{
+            background: url(${_static}/v2/img/liu01_2.png) no-repeat 10px;
+        }
+        .py_big_bottom .item02.active{
+            background: url(${_static}/v2/img/liu02_2.png) no-repeat 10px;
+        }
+        .py_big_bottom .item03.active{
+            background: url(${_static}/v2/img/liu03_2.png) no-repeat 10px;
+        }
+        .py_big_bottom .item04.active{
+            background: url(${_static}/v2/img/liu04_2.png) no-repeat 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="content">
+    <div id="index" class="section platform_bg" style="overflow: hidden;">
+        <div class="banner-img"></div>
+        <canvas id="canvas"></canvas>
+    </div>
+</div>
+<!-- 内容区-->
+<div class="py_big_con clearfix">
+    <div class="big_head">
+        <div class="date_">
+            <div class="date"></div>
+        </div>
+        <div class="nav">
+            <ul class="py_ul_l clearfix">
+                <li>
+                    <a href="${_cp}/module/index">
+                        整体概览
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/share">
+                        共享交换
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/appIntegrate">
+                        应用集成
+                    </a>
+                </li>
+                <li>
+                    <a href="${_cp}/module/operate">
+                        运维监控
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/jbtz">
+                        降本提质
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/supervision">
+                        预警监管
+                    </a>
+                </li>
+            </ul>
+
+            <a href="${_cp}/module/main" class="py_big_head clearfix"></a>
+        </div>
+        <div class="location clearfix">
+            <div class="location_l">
+                <span>部门接入率</span>
+                <div class="jd clearfix">
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                    <i class="icon_pic"></i>
+                </div>
+                <span class="jd_value"></span>
+
+            </div>
+            <div class="location_r">
+                <ul class="num-group">
+                    <li>
+                        <span class="fs-14" id="org_num">部门</span>
+                        <i class="icon_number_bg">
+                            <div class="contain"><span class="original">0</span></div>
+                        </i>
+                        <span class="fs-14">个</span>
+                    </li>
+                    <li>
+                        <span class="fs-14" id="app_num">应用</span>
+                        <i class="icon_number_bg">
+                            <div class="contain"><span class="original">0</span></div>
+                        </i>
+                        <span class="fs-14">个</span>
+                    </li>
+                    <li>
+                        <span class="fs-14" id="common_num">组件</span>
+                        <i class="icon_number_bg">
+                            <div class="contain"><span class="original">0</span></div>
+                        </i>
+                        <span class="fs-14">个</span>
+                    </li>
+                    <li>
+                        <span class="fs-14" id="dir_num">数据目录</span>
+                        <i class="icon_number_bg">
+                            <div class="contain"><span class="original">0</span></div>
+                        </i>
+                        <span class="fs-14">个</span>
+                    </li>
+                    <li>
+                        <span class="fs-14" id="data_num">数据</span>
+                        <i class="icon_number_bg">
+                            <div class="contain"><span class="original">0</span></div>
+                        </i>
+                        <span class="fs-14">万条</span>
+                    </li>
+                    <li>
+                        <span class="fs-14" id="cost_sub">累计降本估值</span>
+                        <i class="icon_number_bg">
+                        <div class="contain"><span class="original">0</span></div>
+                        </i>
+                        <span class="fs-14">万</span>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="py_bug_con">
+        <div class="py_big_content">
+            <div class="py_big_bottom clearfix">
+                <ul>
+                    <li class="item active item01"><span>全部</span></li>
+                    <li class="item item02"><span>数据流</span></li>
+                    <li class="item item03"><span>调用流</span></li>
+                    <li class="item item04"><span>页面流</span></li>
+                </ul>
+            </div>
+            <div class="py_big_m" style="margin-left: 40px;">
+                <div id="gameContainer" style="width: 100%; height: 100%;">
+                    <iframe name="home" src="${_static}/js/unity3D/index.html" width="100%"  height="100%" frameborder="0" scrolling="no"></iframe>
+                </div>
+            </div>
+
+            <div class="py_big_r">
+
+                <div class="qyrctj">
+                    <div class="plot_title ml_27">
+                        <span>统一监管</span>
+                    </div>
+                    <a href="javascript:void(0);">
+                        <div class="py_big_r_pub" id="dataPlatform_tyjg"></div>
+                    </a>
+                </div>
+                <div class="hdyw">
+                    <div class="plot_title ml_27">
+                        <span>部门统计</span>
+                    </div>
+                    <a href="javascript:void(0);">
+                        <div class="py_big_r_pub" style="margin-top: 10px;margin-left: 15px;">
+                            <div id="dataPlatform_bmtj" style="width: 100%;height: 100%;"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="py_big_footer ssjh">
+            <!--<h2>实时调用情况</h2>-->
+            <div class="py_big_footer_con" id="dataPlatform_ssdy">
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    // var gameInstance = UnityLoader.instantiate("gameContainer", "${_static}/js/unity3D/Build/v3.json");
+    // var gameInstance = UnityLoader.instantiate("gameContainer", "${_static}/js/unity3D/Build/v6.json");
+    var gateUrl = "${_gate_url}";
+
+    var deptNum = null;
+    var deptIn = null;
+    function showDeptInRate(deptNu , deptI){
+
+         if(deptNu || deptNu == 0){
+             deptNum = deptNu;
+         }
+
+        if(deptI || deptI == 0){
+            deptIn = deptI;
+        }
+
+        if(deptNum != null && deptIn != null){
+        }
+    }
+    $(function () {
+        /*部门接入情况*/
+        ajaxHengyun({
+            url: gateUrl + "/api/developer/org/findTitle",
+            success: function (r) {
+                var orgAll = 0;
+                if (r.data) {
+                    if (r.data.appNum != null) {
+                        buildIndex('#app_num', r.data.appNum);
+                    }
+                    if (r.data.orgNum != null) {
+                        orgAll = r.data.orgNum;
+                        buildIndex("#org_num", r.data.orgNum);
+                        getAccessRate(orgAll);
+                        showDeptInRate(r.data.orgNum,null);
+                    }
+                }
+            },
+            error: function (r) {
+
+            },
+        });
+        function getAccessRate(orgAll){
+            /*目录和数据*/
+            ajaxHengyun({
+                url: gateUrl + "/api/exchange/screen/getDirDataCount",
+                success: function (r) {
+                    if (r.data) {
+                        buildIndex("#dir_num", r.data.dirCount*111);
+                        buildIndex("#data_num", r.data.dataCount);
+                        if (r.data.orgCount != null) {
+                            var orgNow = r.data.orgCount;
+                            initAccessRate(parseInt(orgNow*100 / orgAll));
+                        }
+                        showDeptInRate(null,r.data.orgCount);
+                    }
+                },
+                error: function (r) {
+                }
+            });
+        }
+        /*实时调用情况*/
+        ajaxHengyun({
+            url: gateUrl + "/api/developer/moduleUse/findDayData",
+            success: function (r) {
+                var data = [];
+                var value = [];
+                if (r.data) {
+                    for (var i = 0; i < r.data.length; i++) {
+                        value = [];
+                        value.push(r.data[i]['nowDayHour']);
+                        value.push(r.data[i]['sumTotalNum']);
+                        data.push(value);
+                    }
+                    dataPlatform_ssdy(data);
+                }
+            },
+            error: function (r) {
+
+            }
+        });
+        /*预计降本率*/
+        // ajaxHengyun({
+        //     url: gateUrl + "/api/developer/app/getReduced",
+        //     success: function (r) {
+        //         buildI("#cost_sub", r.data);
+        //     },
+        //     error: function (r) {
+        //
+        //     }
+        // });
+        /*统一监管*/
+        ajaxHengyun({
+            // url: gateUrl + "/api/developer/moduleUse/findDayData",
+            url: gateUrl+ "/api/admin/hostRuning/getHostLoadTop",
+            success: function (r) {
+                if (r.data) {
+                    dataPlatform_tyjg(r.data);
+                }
+            },
+            error: function (r) {
+            }
+        });
+        /*累计降本估值*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/developer/reducedCost/componentEstimatedValue",
+            success: function (r) {
+                if (r.data) {
+                    buildIndex("#cost_sub", r.data.reduceCostTotal);
+                }
+            },
+            error: function (r) {
+
+            }
+        });
+        /*组件个数*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/admin/screen/common/getDiscretenessCount",
+            success: function (r) {
+                if (r.data) {
+                    buildIndex("#common_num", r.data);
+                }
+            },
+            error: function (r) {
+
+            }
+        });
+       /* /!*部门统计中的目录数量及api数量*!/
+        ajaxHengyun({
+            url: gateUrl + "/api/exchange/screen/getOrgDataCount",
+            success: function (r) {
+                if (r.data) {
+                	getOrgDataCount = r.data;
+                	deptStatic();
+                }
+            },
+            error: function (r) {
+
+            }
+        });
+        /!*部门统计中的部门应用数量及部门名称*!/
+        ajaxHengyun({
+            url: gateUrl + "/api/admin/application/countOrgApplication",
+            success: function (r) {
+                if (r.data) {
+                	countOrgApplication = r.data;
+                	deptStatic();
+                }
+            },
+            error: function (r) {
+
+            }
+        });*/
+        ajaxHengyun({
+            url: gateUrl + "/api/exchange/screen/getOrgDataCount",
+            success: function (r) {
+                if (r.data) {
+                    var deptStaticOption = {dept:[],app:[],dir:[],api:[]};
+                    deptStaticOption.api = r.data.apiList;
+                    deptStaticOption.dir = r.data.dirList;
+                    deptStaticOption.dept = r.data.orgList;
+                    dataPlatform_bmtj(deptStaticOption);
+                }
+            },
+            error: function (r) {
+
+            }
+        });
+        
+    })
+    
+    var deptStaticInvokeCount = 0;
+    var countOrgApplication = null;
+    var getOrgDataCount = null;
+    //由于部门统计需要两个接口的数据，故第一次调用仅仅计算器加一
+    function deptStatic(){
+    	
+    	deptStaticInvokeCount++;
+    	if(deptStaticInvokeCount == 1){
+    		return ;
+    	}
+    	var deptStaticOption = {dept:[],app:[],dir:[],api:[]};
+    	var org2DirApi = formatterOrgDataCount();
+    	for(var i in countOrgApplication){
+    		if(!countOrgApplication[i]["orgName"]){
+    			continue;
+    		}
+    		deptStaticOption.dept.push(countOrgApplication[i]["orgName"]);
+    		deptStaticOption.app.push(countOrgApplication[i]["appNum"]);
+    		
+    		if(org2DirApi && org2DirApi[countOrgApplication[i].orgId]){
+    			deptStaticOption.dir.push(org2DirApi[countOrgApplication[i].orgId][0]);
+    			var DirApi = org2DirApi[countOrgApplication[i].orgId];
+    			
+    			if(DirApi.length == 2){
+    				deptStaticOption.api.push(DirApi[1]);
+    			} else {
+    				deptStaticOption.api.push(0);
+    			}
+    		} else {
+    			deptStaticOption.api.push(0);
+    			deptStaticOption.dir.push(0);
+    		}
+    	}
+    	
+    	dataPlatform_bmtj(deptStaticOption);
+    }
+    
+    function formatterOrgDataCount(){
+    	
+    	//数组中   第0个位置是目录数量    1是api数量   key是id
+    	var org2DirApi = {};
+    	
+    	for(var key in getOrgDataCount.dirList){
+    		
+    		org2DirApi[getOrgDataCount.dirList[key].unitId] = [getOrgDataCount.dirList[key].dataCount];
+    	}
+    	for(var key in getOrgDataCount.apiList){
+    		
+    		if(org2DirApi[getOrgDataCount.apiList[key].unitId]){
+    			
+    			org2DirApi[getOrgDataCount.apiList[key].unitId].push(getOrgDataCount.apiList[key].dataCount);
+    		}
+    			
+    	}
+    	return org2DirApi;
+    	
+    }
+    $(".py_big_bottom  ul li").click(function(){
+        $(this).addClass("active").siblings().removeClass("active");
+        if($(this).hasClass("item01")){
+            home.onclick_qb();
+        };
+        if($(this).hasClass("item02")){
+            home.onclick_sjl();
+        };
+        if($(this).hasClass("item03")){
+            home.onclick_dyl();
+        };
+        if($(this).hasClass("item04")){
+            home.onclick_yml();
+        };
+    })
+</script>
+</html>

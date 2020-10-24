@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+	<meta http-equiv="Expires" content="0"/>
+	<meta name="renderer" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+	<link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+	<link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/core/module.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/sys_com/com.css"/>
+</head>
+
+<body>
+<div class="workspace-body">
+	<div class="col-md-12 col-lg-12">
+		<div class="row">
+			<!--内容-->
+			<div class="list-section">
+				<div class="list-content">
+					<div class="form-inline">
+						<form autocomplete="off" id="dataForm" method="post">
+							<input id="id" type="hidden" name="id" value="${id}"/>
+							<input id="parentId" type="hidden" name="parentId"/>
+							<table class="table default-table tab-border-no marginTop">
+								<tbody>
+								<tr>
+									<th width="100">地区名称：</th>
+                                    <input id="hisName" type="hidden"/>
+									<td><input id="name" type="text" class="form-control inp-form" name="name" dataType="*1-200" nullmsg="地区名称不能为空！" errormsg="请输入长度为1-200的字符" oninput="setFullName(this)"/></td>
+								</tr>
+								<tr>
+									<th>地区编码：</th>
+									<td><input  id="code" readonly class="form-control inp-form" name="code"/></td>
+								</tr>
+								<tr>
+									<th>地区全称：</th>
+									<td><input id="fullName" class="form-control inp-form" name="fullName" readonly/></td>
+								</tr>
+								<tr>
+									<th>经度：</th>
+									<td><input id="longitude"  dataType="*0-200" errormsg="请输入长度为1-200的字符" class="form-control inp-form" name="longitude"/></td>
+								</tr>
+								<tr>
+									<th>纬度：</th>
+									<td><input id="latitude"  dataType="*0-200" errormsg="请输入长度为1-200的字符" class="form-control inp-form" name="latitude" /></td>
+								</tr>
+								</tbody>
+							</table>
+							<div class="text-center">
+								<button type="button" class="btn btn-info btn-submit">提交</button>
+								<button type="button" class="btn btn-default" onclick="history.back()">取消</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    getAreaTreeById("${id}")
+    function getAreaTreeById(id){
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            url: "${_gate_url}/api/admin/area/get",
+            datatype: 'json',
+            data:{id:id},
+            success: function (rows) {
+                if(rows.errmsg=="ok" && rows.data){
+                    if(rows.data.parentId){
+                        $("#parentId").val(rows.data.parentId);
+                    }
+                    if(rows.data.name){
+                        $("#name").val(rows.data.name);
+                        $("#hisName").val(rows.data.name);
+                    }
+                    if(rows.data.fullName) {
+                        $("#fullName").val(rows.data.fullName);
+                    }
+                    if(rows.data.code) {
+                        $("#code").val(rows.data.code);
+                    }
+                    if(rows.data.longitude) {
+                        $("#longitude").val(rows.data.longitude);
+                    }
+                    if(rows.data.latitude) {
+                        $("#latitude").val(rows.data.latitude);
+                    }
+                }
+            }
+        })
+    }
+    function setFullName(ele){
+        var value = $(ele).val();
+        if(value){
+            if($("#parentId").val() && $("#parentId").val() !="-1"){
+                var historyName = '${fullNameString}';
+                var rname = $("#hisName").val();
+                historyName = historyName.replace(rname,'');
+            	$("#fullName").val(historyName+value);
+			}else{
+                $("#fullName").val(value);
+			}
+        }else{
+            $("#fullName").val("");
+        }
+    }
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            saveObj();
+        }
+    });
+    /*提交*/
+    function saveObj(){
+        var gxqptDutiesDTO =$("#dataForm").serializeJSON();
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url: "${_gate_url}/api/admin/area/update",
+            data:JSON.stringify(gxqptDutiesDTO),
+            success:function(rows){
+                if(rows.errmsg=="ok"){
+                    parent.savePage("${id}");
+                    top.layer.msg("编辑地区信息成功！",{icon:6,time:1000});
+                }else{
+                    top.layer.msg(rows.errmsg,{time:1000});
+                }
+            }
+        });
+    };
+</script>
+</body>
+
+</html>

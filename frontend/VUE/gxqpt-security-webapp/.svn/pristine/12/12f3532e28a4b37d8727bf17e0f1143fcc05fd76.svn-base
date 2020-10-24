@@ -1,0 +1,195 @@
+<template>
+  <Layout>
+    <Content>
+      <Breadcrumb>
+        <BreadcrumbItem>运维分析</BreadcrumbItem>
+        <BreadcrumbItem>网站监控</BreadcrumbItem>
+      </Breadcrumb>
+      <Card>
+        <Card>
+          <Row type="flex" justify="space-between">
+            <Col style="width:33%; text-align: center;">
+              <p>今日接口调用数</p>
+              <h3>{{todayNum}}</h3>
+              <p>较昨天同时段：<span>arrow</span>{{num}}%</p>
+              <p>较上周同时段：<span>arrow</span>{{num}}%</p>
+            </Col>
+            <Col style="width:33%; text-align: center;">
+              <p>今日活跃应用数</p>
+              <h3>{{todayNum}}</h3>
+              <p>较昨天同时段：<span>arrow</span>{{num}}%</p>
+              <p>较上周同时段：<span>arrow</span>{{num}}%</p>
+            </Col>
+            <Col style="width:33%; text-align: center;">
+              <p>今日活跃用户数</p>
+              <h3>{{todayNum}}</h3>
+              <p>较昨天同时段：<span>arrow</span>{{num}}%</p>
+              <p>较上周同时段：<span>arrow</span>{{num}}%</p>
+            </Col>
+          </Row>
+        </Card>
+        <Row type="flex" justify="space-between">
+          <Col style="width: 49%">
+            <chart-card title="访问量">
+              <chartLine ref="websiteChart1" el="websiteChart1" :lineOption="websiteChart1Option">
+                <div id="websiteChart1" style="height: 400px;"></div>
+              </chartLine>
+            </chart-card>
+          </Col>
+          <Col style="width: 49%">
+            <chart-card title="故障平均处理时长">
+              <chartLine ref="websiteChart2" el="websiteChart2" :lineOption="websiteChart2Option">
+                <div id="websiteChart2" style="height: 400px;"></div>
+              </chartLine>
+            </chart-card>
+          </Col>
+        </Row>
+        <Row type="flex" justify="space-between">
+          <Col style="width: 49%">
+            <chart-card title="本月接口调用top5">
+              <chartBar ref="websiteChart3" el="websiteChart3" :barOption="websiteChart3Option">
+                <div id="websiteChart3" style="height: 400px;"></div>
+              </chartBar>
+            </chart-card>
+          </Col>
+          <Col style="width: 49%">
+            <chart-card title="本月活跃应用top5">
+              <chartBar ref="websiteChart4" el="websiteChart4" :barOption="websiteChart4Option">
+                <div id="websiteChart4" style="height: 400px;"></div>
+              </chartBar>
+            </chart-card>
+          </Col>
+        </Row>
+      </Card>
+    </Content>
+  </Layout>
+</template>
+
+<script>
+import {mapState} from 'vuex'
+import api from '@/api/axiosApi'
+import operationApiList from '@/api/operationApiList'
+// echart图外层容器，包括卡片样式
+import chartCard from '@/view/home/chartCard.vue'
+import chartLine from './../echarts/ChartLine.vue'
+import chartBar from './../echarts/bar.vue'
+// echart图的一些共用的配置
+import {areaLine, horizontalBar} from '@/assets/js/echartOption'
+
+const label = {
+  show: true,
+  color: '#fff',
+  position: [10, '50%'],
+  distance: 0,
+  align: 'left',
+  verticalAlign: 'middle',
+  rotate: 0,
+  formatter: '{b}',
+  fontSize: 12
+}
+const markPoint = {
+  symbol: 'rect',
+  label: {
+    color: '#000',
+    formatter: '{a}{b}{c}'
+  }
+}
+export default {
+  components: {
+    chartCard,
+    chartBar,
+    chartLine
+  },
+  data () {
+    return {
+      websiteChart1Option: areaLine(),
+      websiteChart2Option: areaLine(),
+      websiteChart3Option: horizontalBar(),
+      websiteChart4Option: horizontalBar()
+    }
+  },
+  computed: {
+    ...mapState(['userInfo'])
+  },
+  mounted() {
+    this.drawWebsiteChart1()
+    this.drawWebsiteChart2()
+    this.drawWebsiteChart3()
+    this.drawWebsiteChart4()
+  },
+  methods: {
+    // 服务使用数量分析
+    drawWebsiteChart1 () {
+      this.websiteChart1Option.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      this.websiteChart1Option.series[0].data = [10, 380, 100, 560, 1290, 1330, 1320, 380, 100, 560, 1290, 1330, 1320, 380, 100, 560, 1290, 1330, 1320, 380, 100, 560, 1290, 1330, 1320, 380, 100, 560, 1290, 1330, 1320, 380, 100, 560, 1290, 1330, 1320, 380, 100, 560, 1290, 1330, 1320, 380, 100, 560, 1290, 1330, 1320]
+      this.$refs.websiteChart1.refresh()
+    },
+    // 服务故障处理分析
+    drawWebsiteChart2 () {
+      this.websiteChart2Option.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      this.websiteChart2Option.series[0].data = [10, 50, 22, 36, 89, 100, 43]
+      this.$refs.websiteChart2.refresh()
+    },
+    // 本月接口调用top5
+    drawWebsiteChart3 () {
+      const max = Math.max(...[18203, 23489, 29034, 104970, 131744, 630230])
+      this.websiteChart3Option.tooltip = {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        },
+        formatter: '接口：{b0}<br>调用次数：{c0}'
+      }
+      this.websiteChart3Option.markPoint = markPoint
+      this.websiteChart3Option.yAxis.data = ['巴西','印尼','美国','印度','中国','世界人口(万)']
+      this.websiteChart3Option.yAxis.show = false
+      this.websiteChart3Option.xAxis.max = max
+      this.websiteChart3Option.xAxis.splitLine = {
+        show: false
+      }
+      this.websiteChart3Option.xAxis.axisTick = {
+        show: false
+      }
+      this.websiteChart3Option.series[0].label = label
+      this.websiteChart3Option.series[0].data = [18203, 23489, 29034, 104970, 131744, 630230]
+      this.websiteChart3Option.series.unshift({
+        type: 'bar',
+        barGap: '-100%',
+        color: '#F2F2F2',
+        data: new Array(this.websiteChart3Option.series[0].data.length).fill(max)
+      })
+      this.$refs.websiteChart3.refresh()
+    },
+    // 本月活跃应用top5
+    drawWebsiteChart4 () {
+      const max = Math.max(...[18203, 23489, 29034, 104970, 131744, 630230])
+      this.websiteChart4Option.tooltip = {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        },
+        formatter: '接口：{b0}<br>调用次数：{c0}'
+      }
+      this.websiteChart4Option.markPoint = markPoint
+      this.websiteChart4Option.yAxis.data = ['巴西','印尼','美国','印度','中国','世界人口(万)']
+      this.websiteChart4Option.yAxis.show = false
+      this.websiteChart4Option.xAxis.max = max
+      this.websiteChart4Option.xAxis.splitLine = {
+        show: false
+      }
+      this.websiteChart4Option.xAxis.axisTick = {
+        show: false
+      }
+      this.websiteChart4Option.series[0].label = label
+      this.websiteChart4Option.series[0].data = [18203, 23489, 29034, 104970, 131744, 630230]
+      this.websiteChart4Option.series.unshift({
+        type: 'bar',
+        barGap: '-100%',
+        color: '#F2F2F2',
+        data: new Array(this.websiteChart3Option.series[0].data.length).fill(max)
+      })
+      this.$refs.websiteChart4.refresh()
+    },
+  }
+}
+</script>

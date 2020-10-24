@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>共享管理</span> &gt; <span>新增</span> &gt; <span class="page-title-scend">定义查询参数</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+            </div>
+        </div>
+        <div class="view_container view_container_first row">
+            <div class="main_right pull-right">
+                <div id="secondPage" class="secondPage">
+                    <table class="table default-table tab-border-no-layer">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">参数样例：</td>
+                        </tr>
+                        <tr>
+                            <td id="tableSqlVal" class=" viewTd">&nbsp;
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <form id="dateForm">
+                        <table id="fieldList" class="table default-table tab-title-top">
+                            <thead>
+                            <tr>
+                                <th width="60">选择</th>
+                                <th width="210">字段名称</th>
+                                <th width="100">字段类型</th>
+                                <th>字段描述</th>
+                                <th width="160">规则</th>
+                                <th width="160">默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary" onclick="history.back()">上一步</button>
+                            <button type="button" class="btn btn-primary btn-nextPage">下一步</button>
+                            <button type="button" class="btn btn-primary" onclick="cancel()">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var FieldType = [];
+    var apiId="${dataId}";
+    var pageType = "${pageType}";
+    getFieldType();
+    function getFieldType(){//获取字段类型
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/dataapi/api/findByDictCode',
+            data:{pId: "date_type"},
+            datatype: "json",
+            success: function (rows) {
+                if(rows.data){
+                    FieldType= rows.data;
+                }
+            }
+        });
+    }
+
+    function getApiFieldList() {
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/exchange/dataapi/api/getFilterByApiId',
+            data:{apiId: apiId},
+            async:false,
+            datatype: "json",
+            success: function (rows) {
+                if (rows.data) {
+                    filterList=rows.data;
+                }
+            }
+        });
+    }
+    var setValueList=[{
+        id:"1", name:'大于'
+    },{
+        id:"2", name:'小于'
+    },{
+        id:"3", name:'等于'
+    },{
+        id:"4", name:'模糊'
+    }];
+    getFieldList();
+    function getFieldList(){//根据目录id获取字段列表
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/exchange/element/getList',
+            data:{dirId: "${catalogId}"},
+            datatype: "json",
+            success: function (rows) {
+                if (rows.data) {
+                    if(apiId){
+                        getApiFieldList();
+                    }
+                    var html="";
+                    var fields=rows.data;
+                    for(var i in fields){
+                        fields[i]=dealElement(fields[i]);
+                        var checkedType=false;
+                        var filedProperty = {};
+                        if(filterList){
+                            filterList.forEach(function(value,index){
+                                if(value.fieldId==rows.data[i].id){
+                                    checkedType=true;
+                                    filedProperty = value;
+                                }
+                            });
+                        }
+                        if(checkedType){
+                            html+='<tr>';
+                            html+='<td class="fieldId" data-Id="'+fields[i].id+'" data-fieldCode="'+fields[i].fieldCode+'">';
+                            html+='<input type="checkbox" checked onchange="setValidate(this)" autocomplete="off"/>';
+                            html+='</td>';
+                            html+='<td class="fieldName">'+fields[i].fieldName+'</td>';
+                            html += '<td>';
+                            html += fields[i].fieldType;
+                            html += '</td>';
+                            html+='<td class="desc">'+fields[i].desc+'</td>';
+                            html+='<td>';
+                            html+='<select class="form-control scrRule"  onchange="getTableSql(this)">';
+                            html+='<option value="">请选择</option>';
+                            setValueList.forEach(function(value,index){
+                                if(filedProperty.scrRule==parseInt(value.id)){
+                                    html+='<option value="'+value.id+'" selected>'+value.name+'</option>';
+                                }else{
+                                    html+='<option value="'+value.id+'">'+value.name+'</option>';
+                                }
+                            });
+                            html+='</select>';
+                            html+='</td>';
+                            html+='<td>';
+                            html+='<input type="text" value="'+filedProperty.scrValue+'" class="form-control scrValue" autocomplete="off"  oninput="getTableSql(this)"/>';
+                            html+='</td>';
+                            html+='</tr>';
+                        }else {
+                            html+='<tr>';
+                            html+='<td class="fieldId" data-Id="'+fields[i].id+'" data-fieldCode="'+fields[i].fieldCode+'">';
+                            html+='<input type="checkbox" onchange="setValidate(this)" autocomplete="off"/>';
+                            html+='</td>';
+                            html+='<td class="fieldName">'+fields[i].fieldName+'</td>';
+                            html += '<td>';
+                            html += fields[i].fieldType;
+                            html += '</td>';
+                            html+='<td class="desc">'+fields[i].desc+'</td>';
+                            html+='<td>';
+                            html+='<select class="form-control scrRule" disabled onchange="getTableSql(this)">';
+                            html+='<option value="">请选择</option>';
+                            /*html+='<option value="1">大于</option>';
+                            html+='<option value="2">小于</option>';
+                            html+='<option value="3">等于</option>';
+                            html+='<option value="4">模糊</option>';*/
+                            setValueList.forEach(function(value,index){
+                                html+='<option value="'+value.id+'">'+value.name+'</option>';
+                            });
+                            html+='</select>';
+                            html+='</td>';
+                            html+='<td>';
+                            html+='<input type="text" class="form-control scrValue" autocomplete="off" disabled oninput="getTableSql(this)"/>';
+                            html+='</td>';
+                            html+='</tr>';
+                        }
+
+                    }
+                    $("#fieldList tbody").append(html);
+                    updateIformHeight();
+                }
+            }
+        });
+    };
+    function setValidate(ele){//设置必填校验
+        var checkedVal = $(ele).prop("checked");
+        var trEle = $(ele).parent().parent();
+        var seltEle = $(trEle).find(".scrRule");
+        var inputEle = $(trEle).find(".scrValue");
+        if(checkedVal){
+            $(seltEle).attr("dataType","*");
+            $(seltEle).attr("nullmsg","请设置字段规则！");
+            $(seltEle).removeProp("disabled");
+            $(inputEle).attr("dataType","*");
+            $(inputEle).attr("nullmsg","请填写默认值！");
+            $(inputEle).removeProp("disabled");
+        }else{
+            $(seltEle).removeAttr("dataType");
+            $(seltEle).removeAttr("nullmsg");
+            $(seltEle).prop("disabled",true);
+            $(seltEle).val("");
+            $(inputEle).removeAttr("dataType");
+            $(inputEle).removeAttr("nullmsg");
+            $(inputEle).prop("disabled",true);
+            $(inputEle).val("");
+            var validform_info = $(trEle).find(".Validform_info");
+            if(validform_info){
+                $(validform_info).remove();
+            }
+        }
+    };
+    function getTableSql(ele) {//设置参数样例
+        var tableSql="";
+        var trEle = $("#fieldList tbody tr");
+        if(trEle.length>0){
+            trEle.each(function (index,value) {
+                var fieldCodeVal = $(value).find(".fieldId").attr("data-fieldCode");
+                var setVal = $(value).find(".scrRule").val();
+                var iptVal = $(value).find(".scrValue").val();
+                if(setVal && iptVal){
+                    if(tableSql!="") {
+                        tableSql += " AND ";
+                    }
+                    tableSql+=fieldCodeVal;
+                    switch (setVal){
+                        case "1":
+                            tableSql+=" > "+iptVal;
+                            break;
+                        case "2":
+                            tableSql+=" < "+iptVal;
+                            break;
+                        case "3":
+                            tableSql+=" = "+iptVal;
+                            break;
+                        case "4":
+                            tableSql+=" like \'%"+iptVal+"%\'";
+                            break;
+                    };
+                }
+            });
+            if(tableSql){
+                $("#tableSqlVal").html(tableSql);
+            }
+        }
+    };
+    $('.btn-nextPage').valid({
+        form: '#dateForm',
+        ignoreHidden: true,
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        checkpassed: function () {
+            nextPage();
+        }
+    });
+    function nextPage(){
+        var dataDTO={};
+        dataDTO.apiId="${dataId}";
+        dataDTO.fieldPropertys=[];
+        var trEle = $("#fieldList tbody tr");
+        var num=0;
+        if(trEle){
+            trEle.each(function(no,ele){
+                var paramFiledsItem={};
+                var scrRule = $(ele).find(".scrRule").val();
+                paramFiledsItem.scrRule = scrRule;
+                var scrValue = $(ele).find(".scrValue").val();
+                paramFiledsItem.scrValue = scrValue;
+                var fieldId  = $(ele).find(".fieldId ").attr("data-Id");
+                paramFiledsItem.fieldId  = fieldId ;
+                if(scrRule && scrValue){
+                    dataDTO.fieldPropertys.push(paramFiledsItem);
+                }
+            });
+        };
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url:  '${_gate_url}/api/exchange/dataapi/api/saveapifilterchosen',
+            data:JSON.stringify(dataDTO),
+            success:function(rows){
+                if (rows.data){
+                    if("${pageType}"=='apiApply'){
+                        window.location.href="${_cp}/module/shareMagApplyThree";
+                    }else if("${pageType}"=='api'){
+                        window.location.href="${_cp}/module/shareMagApiApplyThree?pageType=${pageType}"+"&dataId=${dataId}";
+                    }else if("${pageType}"=='demand'){
+                        window.location.href="${_cp}/module/dataDemandApplyThree?pageType=${pageType}"+"&dataId=${dataId}";
+                    }
+                }else{
+                    parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                }
+            }
+        });
+    }
+    function cancel() {
+        if(pageType == "api"){
+            window.location.href="${_cp}/module/shareMagApiList";
+        }else {
+            window.location.href="${_cp}/module/shareMagApplyList";
+        }
+    }
+</script>
+</body>
+</html>

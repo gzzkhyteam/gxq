@@ -1,0 +1,333 @@
+<!doctype html>
+<html>
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <style type="text/css">
+        #right-box {
+            width: 100%;
+            height: calc(100% - 65px);
+            border: 0;
+        }
+        .cbox {
+            display: inline;
+        }
+        .main {
+            padding: 18px;
+            height: calc(100% - 65px);
+            background: #f2f2f2;
+            float: left;
+            width: 100%;
+            margin: 0px;
+            padding-top: 5px;
+        }
+        .maincontent{
+            margin-top: 10px;
+            height: calc(100% - 38px);
+        }
+        .maincontent>div{
+            height: 100%;
+        }
+
+        .main-center{
+            width: calc(100% - 40px);
+            margin-left: 20px;
+            margin-right: 10px;
+            background-color: #f2f2f2;
+
+            box-sizing:border-box;
+            -moz-box-sizing:border-box; /* Firefox */
+            -webkit-box-sizing:border-box; /* Safari */
+        }
+
+        .imgspan{
+            display: block;
+            width: 80px;
+            height: 80px;
+            border: solid 1px #e0e0e0;
+            background-color: #f2f2f2;
+
+        }
+        .imgspan img{
+            width: 100%;
+            height: 100%;
+        }
+        .main-center{
+            overflow: auto;
+        }
+        .main-center ul li{
+            padding: 10px;
+            background-color: #fff;
+            border: solid 1px #e0e0e0;
+            margin-bottom: 12px;
+
+        }
+        .textdiv{
+            width: calc(100% - 130px);
+        }
+        .text-littlediv{
+            width: 100px;
+        }
+        .text-littlediv a{
+            display: block;
+            color: #2d9eca;
+            line-height: 26px;
+        }
+        .text-p{
+            width: calc(100% - 100px);
+        }
+        #tabs li{
+            float: left;
+            list-style: none;
+        }
+        #content{
+            clear: both;
+            background-color: white;
+            border:1px solid #e0e0e0;
+            height: 110px;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title" id="title"></h5>
+                </div>
+                <div class="pull-right"></div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="clearfix maincontent">
+                <div class="main-center pull-left">
+                    <ul>
+                        <li class="clearfix">
+                            <span class="imgspan pull-left"><img src="${_static}/images/sys_com/u42.png" alt=""></span>
+                            <div class="pull-right textdiv">
+                                <div class="clearfix">
+                                    <div class="pull-left text-littlediv" style="width:100%;">
+                                        <span id="mName"></span>&gt;<span id="version"></span>
+                                    </div>
+                                    <textarea id="description" rows="2" cols="" class="pull-right text-p" name="description" readonly="readonly"
+                                              style="width: 100%;border:1px solid #e0e0e0;"></textarea>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <table class="table default-table table-title-left">
+                        <tbody>
+                            <tr>
+                                <th width="170">存储库</th>
+                                <td style="text-align: center;" id="repName"></td>
+                            </tr>
+                            <tr>
+                                <th>groupId</th>
+                                <td style="text-align: center;" id="groupId"></td>
+                            </tr>
+                            <tr>
+                                <th>artifactId</th>
+                                <td style="text-align: center;" id="artifactId"></td>
+                            </tr>
+                            <tr>
+                                <th>文件</th>
+                                <td style="text-align: center;" id="file"></td>
+                            </tr>
+                            <tr>
+                                <th>下载次数</th>
+                                <td style="text-align: center;" id="download"></td>
+                            </tr>
+                            <tr>
+                                <th>发布时间</th>
+                                <td style="text-align: center;" id="createTime"></td>
+                            </tr>
+                            <tr>
+                                <th>发布人</th>
+                                <td style="text-align: center;" id="createUserName"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div >
+                        <ul id="tabs">
+                            <li><a href="#" title="tab1">Maven</a></li>
+                            <li><a href="#" title="tab2">Gradle</a></li>
+                            <li><a href="#" title="tab3">SBT</a></li>
+                            <li><a href="#" title="tab4">Ivy</a></li>
+                            <li><a href="#" title="tab5">Grape</a></li>
+                            <li><a href="#" title="tab6">Leiningen</a></li>
+                            <li><a href="#" title="tab7">Buildr</a></li>
+                        </ul>
+                        <div id="content">
+                            <div id="tab1"></div>
+                            <div id="tab2"></div>
+                            <div id="tab3"></div>
+                            <div id="tab4"></div>
+                            <div id="tab5"></div>
+                            <div id="tab6"></div>
+                            <div id="tab7"></div>
+                        </div>
+                    </div>
+                    <div style="height: 20px;"></div>
+                    <table class="table default-table table-title-left">
+                        <h5>发布人</h5>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center;">名称</td>
+                                <td style="text-align: center;">公司名称</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;" id="userName"></td>
+                                <td style="text-align: center;" id="companyName"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    $("#content div").hide(); // Initially hide all content
+    $("#tabs li:first").attr("id","current"); // Activate first tab
+    $("#content div:first").fadeIn(); // Show first tab content
+    $('#tabs a').click(function(e) {
+        e.preventDefault();
+        $("#content div").hide(); //Hide all content
+        $("#tabs li").attr("id",""); //Reset id's
+        $(this).parent().attr("id","current"); // Activate this
+        $('#' + $(this).attr('title')).fadeIn(); // Show content for current tab
+    });
+
+    var id = "${id!}";//模块版本id
+    var modularName = "";
+    var description = "";
+    var modularId = "${modularId!}";
+
+    //根据模块id查询模块信息
+    ajaxHengyun({
+        type: "GET",
+        async: false,
+        url: "${_gate_url}/api/modular/modular/get",
+        datatype: 'json',
+        data: {id: modularId},
+        success: function (rows) {
+            if (rows.data) {
+                modularName = rows.data.modularName;
+                description = rows.data.description;
+            }
+        }
+    });
+
+    //根据模块版本id获取模块版本基本信息
+    ajaxHengyun({
+        type: "GET",
+        async: false,
+        url: "${_gate_url}/api/modular/version/get",
+        datatype: 'json',
+        data: {id: id},
+        success: function (rows) {
+            if (rows.data) {
+                var html = $("#title").html();
+                html += "模块监控系统 &gt;<span>模块管理</span>&gt;<span>"+rows.data.groupId+"</span>&gt;<span>"+rows.data.artifactId+"</span>&gt;<span>"+modularName+"</span>&gt;<span class=\"page-title-scend\">"+rows.data.version+"</span>";
+                $("#title").html(html);
+                html = $("#mName").html();
+                html += "<a style='display: inline;' href='${_cp}/modular/jumpSearchModularDetails?id="+modularId+"'>" + modularName + "</a>";
+                $("#mName").html(html);//模块名称
+                $("#version").text(rows.data.version);//模块版本
+                $("#description").val(description);//模块描述
+                html = $("#repName").html();
+                html += "<a href='${_cp}/modular/mdJumpListSearch?repName="+rows.data.repName+"'>" + rows.data.repName + "</a>";
+                $("#repName").html(html);//仓库名称
+                html = $("#groupId").html();
+                html += "<a href='${_cp}/modular/mdJumpListSearch?groupId="+rows.data.groupId+"'>" + rows.data.groupId + "</a>";
+                $("#groupId").html(html);//groupId
+                html = $("#artifactId").html();
+                html += "<a href='${_cp}/modular/mdJumpListSearch?artifactId="+rows.data.artifactId+"'>" + rows.data.artifactId + "</a>";
+                $("#artifactId").html(html);//artifactId
+                html = $("#file").html();
+                html += "<a href='"+rows.data.downloadUrl+"' class='btn btn-primary search-button' >文件下载</a>&nbsp;&nbsp;&nbsp;"
+                $("#file").html(html);
+                $("#download").text(rows.data.downloadCount);//下载次数
+                var time = rows.data.createTime;
+                $("#createTime").text(formatterTime(time));//发布人
+                $("#createUserName").text(rows.data.createUserName);//发布时间
+                html = $("#tab1").html();
+                html += "<p>&lt;dependency&gt;</p><p>&nbsp;&nbsp;&nbsp;&lt;groupId&gt;"+rows.data.groupId+"&lt;/groupId&gt;</p><p>&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;" +
+                        rows.data.artifactId+"&lt;/artifactId&gt;</p><p>&nbsp;&nbsp;&nbsp;&lt;version&gt;"+rows.data.version+"&lt;/version&gt;</p><p>&lt;/dependency&gt;</p>";
+                $("#tab1").html(html);
+                html = $("#tab2").html();
+                html += "<p>compile&nbsp;&nbsp;group:&nbsp;&nbsp;'"+rows.data.groupId+"',&nbsp;&nbsp;name:&nbsp;&nbsp;'"+
+                    rows.data.artifactId+"',&nbsp;&nbsp;version:&nbsp;&nbsp;'"+rows.data.version+"'</p>";
+                $("#tab2").html(html);
+                html = $("#tab3").html();
+                html += "<p>libraryDependencies&nbsp;&nbsp;+=&nbsp;&nbsp;\""+rows.data.groupId+"\"&nbsp;&nbsp;%&nbsp;&nbsp;\""+
+                    rows.data.artifactId+"\"&nbsp;&nbsp;%&nbsp;&nbsp;\""+rows.data.version+"\"</p>";
+                $("#tab3").html(html);
+                html = $("#tab4").html();
+                html += "<p>&lt;dependency&nbsp;&nbsp;org=\""+rows.data.groupId+"\"&nbsp;&nbsp;name=\""+
+                    rows.data.artifactId+"\"&nbsp;&nbsp;rev=\""+rows.data.version+"\"/&gt;</p>";
+                $("#tab4").html(html);
+                html = $("#tab5").html();
+                html += "<p>@Grapes(</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Grab(group='"+rows.data.groupId+"',&nbsp;&nbsp;&nbsp;module='" +
+                    rows.data.artifactId+"',&nbsp;&nbsp;&nbsp;version='"+rows.data.version+"')</p><p>)</p>";
+                $("#tab5").html(html);
+                html = $("#tab6").html();
+                html += "<p>["+rows.data.groupId+"/"+rows.data.artifactId+"&nbsp;&nbsp;\""+rows.data.version+"\"]</p>";
+                $("#tab6").html(html);
+                html = $("#tab7").html();
+                html += "<p>'"+rows.data.groupId+"&nbsp;:&nbsp;"+rows.data.artifactId+"&nbsp;:&nbsp;jar&nbsp;:&nbsp;"+rows.data.version+"'</p>";
+                $("#tab7").html(html);
+                $("#userName").text(rows.data.createUserName);
+                $("#companyName").text(rows.data.createCompanyName);
+            }
+        }
+    });
+
+    //上传时间格式化
+    function formatterTime(time) {
+        if(!time) return "";
+        time=time.replace(/-/g, "/");
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        };
+        return new Date(time).Format("yyyy-MM-dd hh:mm:ss");
+    }
+</script>
+</body>
+</html>

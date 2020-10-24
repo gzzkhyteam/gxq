@@ -1,0 +1,36 @@
+/**
+ * 为My97DatePicker注册焦点事件
+ */
+$('.Wdate').off('focus').on('focus',function(){
+	WdatePicker({skin:'twoer', lang:'zh-cn', dateFmt:'yyyy-MM-dd'});
+});
+
+/**
+ * 初始化页面中的chosen select
+ */
+$("select.chosen-select").each(function() {//无搜索
+	$(this).chosen({
+		disable_search:true,
+		no_results_text:'没有查询到符合条件的记录'
+	});
+});
+
+$("select.chosen-select-deselect").each(function() {
+	$(this).chosen({
+		disable_search:true,
+		no_results_text:'没有查询到符合条件的记录',
+		allow_single_deselect:true
+	});
+});
+
+$("select.chosen-select-no-single").each(function() {
+	$(this).chosen({
+		disable_search:true,
+		no_results_text:'没有查询到符合条件的记录',
+		disable_search_threshold:10
+	});
+});
+//关闭所有弹窗
+function closeLayer(){
+	top.layer.closeAll();
+}

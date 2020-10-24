@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="main_container row" style="padding: 20px;">
+            <form  id="searchDataForm" action="" class="search-form">
+                <ul class="clearfix">
+                    <li class="pull-left">
+                        <label class="control-label">数据集名称：</label>
+                        <input name="setName" class="" placeholder="" autocomplete="off"/>
+                    </li>
+                    <li class="pull-left">
+                        <!--  //数据集类型:1,非结构化文件；2，结构化文件；3，API调用；4，数据库读取-->
+                        <label class="control-label">数据集创建类型：</label>
+                        <select name="setType" class="chosen-select">
+                            <option value="">全部</option>
+                            <option value="1">非结构化文件</option>
+                            <option value="2">结构化文件</option>
+                            <option value="3">API调用</option>
+                            <option value="4">数据库读取</option>
+                        </select>
+                    </li>
+                    <li class="pull-left">
+                        <button type="button" class="btn btn-primary search-button" onclick="searchBtn()">
+                            <span class="glyphicon glyphicon-search"></span> 查询
+                        </button>
+                    </li>
+                </ul>
+            </form>
+            <table id="dataSetList" class="default-table tab-title-top">
+                <thead>
+                <tr>
+                    <th width="60">选择</th>
+                    <th width="60">序号</th>
+                    <th>数据集名称 </th>
+                    <th>数据集标识</th>
+                    <th width="130">数据集创建类型</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <ul class="pagination" id="pagination" ></ul>
+                <p class="pull-right currentPage">共<i id="totalNum" class="colorBlue"></i>条数据，当前第<i id="pageNum" class="colorBlue"></i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript">
+
+    var parm={
+        data:{},
+        pageNo:"${pageNo}",
+        pageSize:10
+    };
+    var dataSetId="";
+    var dataSetName="";
+    var dataType="";
+    searchBtn();
+    function searchBtn(){//查询
+        var dataDTO =$("#searchDataForm").serializeJSON();
+        parm.data=dataDTO;
+        parm.pageNo = 1;
+        getList(parm);
+    }
+    getList(parm);
+    /*获取数据源列表*/
+    function  getList(parm) {
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url:  '${_gate_url}/api/exchange/set/find ',
+            data:JSON.stringify(parm),
+            success:function(rows){
+                var html=""
+                if (rows.data){
+                    rows.data.list.forEach(function(value,index){
+                        var value=dealElement(value);
+                        //数据集类型:1,非结构化文件；2，结构化文件；3，API调用；4，数据库读取
+                        var setTypeName = "";
+                        if(value.setType ==1 ){
+                            setTypeName = "非结构化文件";
+                        }else if(value.setType ==2){
+                            setTypeName = "结构化文件";
+                        }else if(value.setType ==3){
+                            setTypeName = "API调用";
+                        }else if(value.setType ==4){
+                            setTypeName = "数据库读取";
+                        }
+                        var num = index+1;
+                        html+='<tr onclick="setDataSourceTr(this,\''+value.id+'\',\''+value.setName+'\','+value.setType+')" >';
+                        html+='<td>';
+                        html+='<input class="radioChecked" type="radio" name="dataSource" value="'+value.id+'" onchange="setDataSource(this,\''+value.id+'\',\''+value.setName+'\','+value.setType+')" />';
+                        html+='</td>';
+                        html+='<td>'+num+'</td>';
+                        html+='<td title="'+value.setName+'">'+value.setName+'</td>';
+                        html+='<td title="'+value.setCode+'">'+value.setCode+'</td>';
+                        html+='<td>'+setTypeName+'</td>';
+                        html+='</tr>';
+                    });
+                    $("#dataSetList tbody").html(html);
+                    $('#totalPages').text(rows.data.pages);
+                    $('#totalNum').text(rows.data.total);
+                    jqPaginator(rows.data);
+                }
+                updateIformHeight();
+            }
+        });
+    }
+    function setDataSource(ele,id,name,setType){
+        event.stopPropagation();
+        var checkedVal= $(ele).prop("checked");
+        if(checkedVal){
+            dataSetId=id;
+            dataSetName=name;
+            dataType=setType;
+        }
+    }
+    function setDataSourceTr(ele,id,name,setType){
+        var checkedVal= $(ele).find(".radioChecked").prop("checked");
+        if(!checkedVal){
+            dataSetId=id;
+            dataSetName=name;
+            dataType=setType;
+            $(ele).find(".radioChecked").prop("checked",true);
+        }
+    }
+    /*提交*/
+    function save(index){
+        if(dataSetId==""){
+            top.layer.msg("请选择数据集！",{time:1000});
+        }else {
+            parent.setDataSet(dataSetId, dataSetName,dataType);
+            parent.layer.close(index);
+        }
+    };
+</script>
+</body>
+</html>

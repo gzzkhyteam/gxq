@@ -1,0 +1,244 @@
+<template>
+  <Layout>
+    <Content>
+      <Breadcrumb>
+        <BreadcrumbItem>接入管理</BreadcrumbItem>
+        <BreadcrumbItem>应用升级</BreadcrumbItem>
+      </Breadcrumb>
+      <Card>
+        <Form
+          ref="formValidate"
+          inline
+          :label-width="100"
+          :model="searchCondition">
+          <FormItem label="部署内容：">
+            <Input
+              type="text"
+              v-model="searchCondition.content">
+            </Input>
+          </FormItem>
+          <FormItem label="使用主机：">
+            <Select v-model="searchCondition.name" style="width:200px">
+              <Option v-for="item in serverList" :value="item.value" :key="item.value">{{item.label}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem>
+            <Button type="primary" @click="search">查询</Button>
+            <router-link to="/accessList">
+              <Button type="default">返回</Button>
+            </router-link>
+          </FormItem>
+        </Form>
+        <hy-table
+          highlight-row
+          :columns="tableList.columns"
+          :data="tableList.data"
+          :total="40"
+          pageType="small"
+          show-elevator
+          show-sizer
+          class="access-upgrade"
+          @on-page-change="refreshTable" />
+        <Modal
+          v-model="showDetail"
+          title="版本查看"
+          @on-ok="saveInfo">
+          <Form
+          :label-width="100"
+          :model="modalForm">
+            <FormItem label="系统名称：">
+              <Input
+                type="text"
+                v-model="modalForm.content">
+              </Input>
+            </FormItem>
+            <FormItem label="版本号：">
+              <Input
+                type="text"
+                v-model="modalForm.content">
+              </Input>
+            </FormItem>
+            <FormItem label="版本名称：">
+              <Input
+                type="text"
+                v-model="modalForm.content">
+              </Input>
+            </FormItem>
+            <FormItem label="发布服务器：">
+              <Input
+                type="text"
+                v-model="modalForm.content">
+              </Input>
+            </FormItem>
+            <FormItem label="是否启用：">
+              <RadioGroup v-model="modalForm.open">
+                <Radio label="1">启用</Radio>
+                <Radio label="2">不启用</Radio>
+              </RadioGroup>
+            </FormItem>
+            <FormItem label="发布文件：">
+              <Input
+                type="text"
+                v-model="modalForm.content">
+              </Input>
+            </FormItem>
+            <FormItem label="升级内容：">
+              <Input
+                type="text"
+                v-model="modalForm.content">
+              </Input>
+            </FormItem>
+            <FormItem label="备注：">
+              <Input
+                type="text"
+                v-model="modalForm.content">
+              </Input>
+            </FormItem>
+          </Form>
+        </Modal>
+      </Card>
+    </Content>
+  </Layout>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      searchCondition: {
+        // 部署内容
+        content: '',
+        // 使用主机
+        name: ''
+      },
+      modalForm: {
+        open: '1',
+        content: ''
+      },
+      tableList: {
+        columns: [{
+          type: 'index',
+          title: '序号',
+          width: 60,
+          align: 'center'
+        },
+        {
+          title: '系统名称',
+          key: 'name'
+        },
+        {
+          title: '发布日期',
+          key: 'age'
+        },
+        {
+          title: '版本名称',
+          key: 'address'
+        },
+        {
+          title: '发布版本号',
+          key: 'age'
+        },
+        {
+          title: '升级内容',
+          key: 'age'
+        },
+        {
+          title: '发布服务器',
+          key: 'age'
+        },
+        {
+          title: '状态',
+          key: 'age'
+        },
+        {
+          title: '操作',
+          key: 'address',
+          render: (h, params) => {
+            const vm = this
+            const id = params.row.age
+            const detail = h('span', {
+              class: 'handle',
+              domProps: {
+                innerHTML: '详情'
+              },
+              on: {
+                click () {
+                  vm.showDetails(id)
+                }
+              }
+            })
+            const open = h('span', {
+              class: 'handle',
+              domProps: {
+                innerHTML: '启用'
+              },
+              on: {
+                click () {
+                  vm.showDetails(id)
+                }
+              }
+            })
+            const close = h('span', {
+              class: 'handle',
+              domProps: {
+                innerHTML: '禁用'
+              },
+              on: {
+                click () {
+                  vm.showDetails(id)
+                }
+              }
+            })
+            return h('span', [detail, open, close])
+          }
+        }],
+        data: [
+          {
+            name: 'John Brown',
+            age: 1,
+            address: 'New York No. 1 Lake Park',
+            date: '2016-10-03'
+          },
+          {
+            name: 'Jim Green',
+            age: 2,
+            address: 'London No. 1 Lake Park',
+            date: '2016-10-01'
+          }
+        ]
+      },
+      serverList: [{
+        value: 1,
+        label: '主机1'
+      }],
+      showDetail: false
+    }
+  },
+  methods: {
+    search () {
+      alert()
+    },
+    // 页码改变时触发
+    refreshTable (pageNo, pageSize) {
+      console.log(pageNo)
+      console.log(pageSize)
+    },
+    showDetails (id) {
+      console.log(id)
+      this.showDetail = true
+    },
+    saveInfo () {
+      alert()
+    }
+  }
+}
+</script>
+
+<style lang='less'>
+.access-upgrade{
+  span.handle{
+    margin: 0 5px;
+    display: inline-block;
+  }
+}
+</style>

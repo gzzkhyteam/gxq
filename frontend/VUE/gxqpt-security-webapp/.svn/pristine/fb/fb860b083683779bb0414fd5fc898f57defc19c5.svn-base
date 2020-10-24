@@ -1,0 +1,196 @@
+@charset 'utf-8';
+@default: #e9eaec;
+@primary: #0099CC;
+@light-primary: #5cadff;
+@dark-primary: #2b85e4;
+@info: #0099CC;
+@success: #19be6b;
+@warning: #ff9900;
+@error: #ed3f14;
+@white: #ffffff;
+@black: #000000;
+html {
+    font-size: 12px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.hidden {
+    display: none;
+}
+
+.clearfix {
+    width: 100%;
+    display: table;
+}
+
+html,
+body,
+#app,
+.ivu-layout {
+    height: 100%;
+    .ivu-layout-header {
+        padding: 0 30px;
+        background: @primary;
+        .layout-logo {
+            img {
+                margin-top: 10px;
+                width: 160px;
+            }
+        }
+        .right-icon-box {
+            margin-top: 10px;
+            .icon-box {
+                float: left;
+                padding: 0 20px;
+                color: @white;
+                i {
+                    text-align: center;
+                    line-height: 30px;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 25px;
+                    font-size: 1.8rem;
+                    border: 2px solid @white;
+                    display: block;
+                    overflow: hidden;
+                }
+                i.icon-ren {
+                    line-height: 35px;
+                }
+                i.icon-index {
+                    line-height: 35px;
+                }
+                i.icon-xiaoxi {
+                    color: @primary;
+                    background: @white;
+                }
+                i.icon-tuichu {
+                    color: @primary;
+                    font-size: 1.5rem;
+                    background: @white;
+                }
+                .text {
+                    float: left;
+                    width: 100%;
+                    text-align: center;
+                    line-height: 25px;
+                }
+            }
+        }
+    }
+    .ivu-layout-sider {
+        a {
+            color: inherit;
+        }
+        a.router-link-active {
+            color: @primary;
+            li {
+                border-right: 3px solid @primary;
+            }
+        }
+        background: @white;
+        .menu-icon {
+            transition: all .3s;
+        }
+        .rotate-icon {
+            transform: rotate(-180deg) !important;
+        }
+        .menu-item span {
+            display: inline-block;
+            overflow: hidden;
+            width: calc(100% - 50px);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: bottom;
+            transition: width .2s ease .2s;
+        }
+        .menu-item i {
+            transform: translateX(0px);
+            transition: font-size .2s ease, transform .2s ease;
+            vertical-align: middle;
+            font-size: 16px;
+        }
+        .collapsed-menu span {
+            width: 0px;
+            transition: width .2s ease;
+        }
+        .collapsed-menu i {
+            transform: translateX(5px);
+            transition: font-size .2s ease .2s, transform .2s ease .2s;
+            vertical-align: middle;
+            font-size: 22px;
+        }
+    }
+    .ivu-layout-content {
+        padding: 0 16px 16px;
+        .ivu-breadcrumb {
+            margin: 16px 0;
+            text-align: left;
+        }
+        .bottom-bar {
+            text-align: right;
+            margin-top: 30px;
+            user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-user-select: none;
+        }
+    }
+}
+
+
+/*对话框样式定义*/
+
+.ivu-modal {
+    .ivu-modal-header {
+        background: @light-primary;
+        .ivu-modal-header-inner {
+            color: @white;
+        }
+    }
+    .ivu-modal-close {
+        i {
+            color: @white;
+        }
+    }
+}
+
+.vertical-center-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .ivu-modal {
+        top: 0;
+    }
+}
+
+.ivu-form-item-content {
+    height: 32px;
+}
+
+.ivu-btn.ivu-btn-loading {
+    //  pointer-events: auto;
+}
+
+.ivu-form-item /deep/ .ivu-form-item-content { //解决验证信息错误显示问题
+    height: auto;
+}

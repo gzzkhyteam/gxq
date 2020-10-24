@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/common.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/zstyle.css"/>
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+    <link href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css"/>
+    <link href="${_static}/js/lib/addressee/css/reset.css" rel="stylesheet" type="text/css">
+    <link href="${_static}/js/lib/addressee/css/styles.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        .qudaoContainer{
+            width: 100%;
+            border:1px solid #d6d6d6;
+            min-height: 32px;
+            background: #fff;
+            text-align: left;
+        }
+        .qudaoItem{
+            margin: 9px;
+            display: inline-block;
+        }
+        .qudaoItem i{
+            color:#FF4400;
+            cursor: pointer;
+        }
+        .rlease-left ul li .qudao {
+            height: auto;
+        }
+        img{
+            max-width: 200px;
+        }
+        .searchMain {
+            display: block;
+            width: calc(100% - 40px);
+            margin-left: auto;
+            margin-right: auto;
+            height: 38px;
+            border: solid 1px #cccccc;
+            padding-right: 32px;
+        }
+        .searchMain{
+            padding-right: 0;
+        }
+        .searchInput{
+            width:calc(100% - 40px);
+            height: 36px;
+            padding: 0 8px;
+        }
+        .searchBtn{
+            display: inline-block;
+            width:40px;
+            height: 38px;
+            background: url('${_static}/images/searchicon.png') no-repeat center;
+            cursor: pointer;
+        }
+        .remove{
+            color:red;
+            margin-left: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<div class="col-lg-9 col-md-9 col-sm-9 hidden">
+    <div>
+        <form class="form-horizontal" id="dataForm">
+
+            <div class="form-group">
+                <div >
+                    <div id="filePicker2" class="filePicker photoFilePicker"></div>
+                    <div id="uploader2" class="uploader photoUploader">
+                        <div class="queueList">
+                            <ul id="file_html" class="filelist">
+                            </ul>
+                            <div id="dndArea2" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                <p></p>
+                            </div>
+                        </div>
+                        <div class="statusBar" style="display:none;">
+                            <div class="progress">
+                                <span class="text">0%</span> <span class="percentage"></span>
+                            </div>
+                            <div class="info"></div>
+                            <div class="btns">
+                                <div id="jxButton2" class="jxButton"></div>
+                                <div class="uploadBtn">开始上传</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="filePicker1" class="filePicker photoFilePicker"></div>
+                    <div id="uploader1" class="uploader photoUploader">
+                        <div class="queueList">
+                            <ul id="file_html1" class="filelist">
+                            </ul>
+                            <div id="dndArea1" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                <p></p>
+                            </div>
+                        </div>
+                        <div class="statusBar" style="display:none;">
+                            <div class="progress">
+                                <span class="text">0%</span> <span class="percentage"></span>
+                            </div>
+                            <div class="info"></div>
+                            <div class="btns">
+                                <div id="jxButton1" class="jxButton"></div>
+                                <div class="uploadBtn">开始上传</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-10">
+                <script id="editor" type="text/plain"></script>
+                <code id="testcon" style="display:none;"></code>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="zworkspace-body">
+    <div class="clear rleasebox">
+        <div class="rlease-left fl">
+            <ul>
+                <li>
+                    <span class="pull-left lineh">渠道：</span>
+                    <span class="qudao">
+                        <div class="qudaoContainer" id="qudaoContainerInput"></div>
+                    </span>
+                </li>
+                <li>
+                    <span class="pull-left lineh">标题：</span>
+                    <span class="qudao">
+                        <input id="qudaoTitle" class="qudaoinput" type="text">
+                    </span>
+                </li>
+            </ul>
+            <textarea class="myEditor" name="news_content"  id="myEditor"></textarea>
+            <textarea class="myTextArea hidden form-control" name="news_content"  id="myTextArea" rows="12"></textarea>
+            <div id="ueHtml" class="hidden"></div>
+            <div id="upFileBtn" style="margin-top: 10px;">
+                <!--<button type="button" class="btn btn-primary btn-upload">
+                    <span class="fa fa-upload"></span> 上传
+                </button>-->
+                <div id="filePicker3" class="filePicker photoFilePicker"></div>
+                <div id="uploader3" class="uploader photoUploader hidden">
+                    <div class="queueList">
+                        <ul id="file_html3" class="filelist">
+                        </ul>
+                        <div id="dndArea3" class="placeholder dndArea" style="padding-top: 85px;">
+
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="statusBar" style="display:none;">
+                        <div class="progress">
+                            <span class="text">0%</span> <span class="percentage"></span>
+                        </div>
+                        <div class="info"></div>
+                        <div class="btns">
+                            <div id="jxButton3" class="jxButton"></div>
+                            <div class="uploadBtn">开始上传</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="showFile"></div><!--上传展示-->
+        </div>
+        <div class="rlease-right fr">
+            <div class="rlease-search">
+                <span>渠道</span>
+                <div>
+                        <span class="searchMain">
+                           <input type="" id="contactEdit" class="searchInput pull-left" placeholder="查找渠道" >
+                            <span class="searchBtn pull-left" onclick="channelLike()"></span>
+                        </span>
+                    <div class="idulbox">
+                        <ul class="ztree" id="treeDemo">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="rlease-search">
+                <span>渠道群组</span>
+                <div>
+                    <span class="searchMain">
+                        <input type="" id="groupName" class="searchInput pull-left" placeholder="查找群组" >
+                        <span class="searchBtn pull-left" onclick="channelgroupQuery()"></span>
+                    </span>
+                    <div class="idulbox">
+                        <ul class="idul" id="channelgroup"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btnbox">
+            <span class="spancurrent"  id="sendbtn" onclick="getFormData('0','')">发送</span>
+            <span id="sendtime" onclick="setTimeSave()">定时发送</span>
+            <span id="caogao" onclick="getFormData('1','')">存草稿</span>
+
+        </div>
+    </div>
+
+    <!--文本编辑器上传图片 end-->
+
+</div>
+
+
+
+
+<script>
+    var urlPost ="${_gate_url}";//跳转后台
+    var _cp = "${_cp}";//跳转前台
+    var type = 1;//1发布0修改
+    var id = null;//新增id空，由于js与修改公用，要进行区分
+    //初始化渠道
+    var addList=new Array();
+    ///文本编辑器的赋值
+    var pageType="msgs";
+    var _GATE_URL = "${_gate_url}";
+    window.UEDITOR_HOME_URL = "${_static}/js/lib/ueditor/";
+</script>
+<script type="text/javascript" src="${_static}/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="${_static}/js/jquery.combobox.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreFile.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreImg.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="${_static}/js/create.js"></script>
+</body>
+
+
+
+</html>

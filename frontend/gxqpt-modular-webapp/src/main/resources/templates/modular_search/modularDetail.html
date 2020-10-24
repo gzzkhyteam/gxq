@@ -1,0 +1,448 @@
+<!doctype html>
+<html>
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <style type="text/css">
+        #right-box {
+            width: 100%;
+            height: calc(100% - 353px);
+            border: 0;
+        }
+
+        .cbox {
+            display: inline;
+        }
+
+        .main {
+            padding: 18px;
+            height: calc(100% - 65px);
+            background: #f2f2f2;
+            float: left;
+            width: 100%;
+            margin: 0px;
+            padding-top: 5px;
+        }
+
+        .maincontent {
+            margin-top: 10px;
+            height: calc(100% - 38px);
+        }
+
+        .maincontent > div {
+            height: 100%;
+        }
+
+        .main-center {
+            width: calc(100% - 40px);
+            margin-left: 20px;
+            margin-right: 20px;
+            background-color: #f2f2f2;
+
+            box-sizing: border-box;
+            -moz-box-sizing: border-box; /* Firefox */
+            -webkit-box-sizing: border-box; /* Safari */
+        }
+
+        .imgspan {
+            display: block;
+            width: 100px;
+            height: 100px;
+            border: solid 1px #e0e0e0;
+            background-color: #f2f2f2;
+
+        }
+
+        .imgspan img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .main-center {
+            overflow: auto;
+        }
+
+        .main-center ul li {
+            padding: 10px;
+            background-color: #fff;
+            border: solid 1px #e0e0e0;
+            margin-bottom: 12px;
+
+        }
+
+        .textdiv {
+            width: calc(100% - 130px);
+        }
+
+        .text-littlediv {
+            width: 100px;
+        }
+
+        .text-littlediv a {
+            display: block;
+            color: #2d9eca;
+            line-height: 26px;
+        }
+
+        .text-p {
+            width: calc(100% - 100px);
+        }
+
+        #gview_list {
+            height: calc(100% - 100px);
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title" id="title"></h5>
+                </div>
+                <div class="pull-right"></div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="clearfix maincontent">
+                <div class="main-center pull-left">
+                    <ul>
+                        <li class="clearfix">
+                            <span class="imgspan pull-left"><img src="${_static}/images/sys_com/u42.png" alt=""></span>
+                            <div class="pull-right textdiv">
+                                <div class="clearfix">
+                                    <div class="pull-left text-littlediv" style="width: 100%;">
+                                        <span id="mName"></span>
+                                    </div>
+                                    <textarea id="description" rows="3" cols="" class="pull-right text-p"
+                                              name="description" readonly="readonly" style="width: 100%;"></textarea>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <table class="table default-table table-title-left">
+                        <tbody>
+                            <tr>
+                                <th width="170">groupId</th>
+                                <td style="text-align: center;" id="groupId"></td>
+                            </tr>
+                            <tr>
+                                <th>artifactId</th>
+                                <td style="text-align: center;" id="artifactId"></td>
+                            </tr>
+                            <tr>
+                                <th>Categories</th>
+                                <td style="text-align: center;" id="Categories"></td>
+                            </tr>
+                            <tr>
+                                <th>Tags</th>
+                                <td style="text-align: center;" id="Tags"></td>
+                            </tr>
+                            <tr>
+                                <th>下载次数</th>
+                                <td style="text-align: center;" id="download"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <input id="gId" type="hidden"/>
+                            <input id="aId" type="hidden"/>
+                        </div>
+                    </div>
+                    <div id="right-box" class="list-section">
+                        <div class="grid-section">
+                            <table id="list"></table>
+                            <div id="pager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    var tableObj = null;//jqgrid表对象
+    var fileListArray = [];//版本列表
+    var checkName = [];
+    var id = "${id}";//模块id
+    //根据模块id获取模块基本信息
+    ajaxHengyun({
+        type: "GET",
+        async: false,
+        url: "${_gate_url}/api/modular/modular/get",
+        datatype: 'json',
+        data: {id: id},
+        success: function (rows) {
+            if (rows.data) {
+                var html = $("#title").html();
+                html += "模块监控系统 &gt;<span>模块管理</span>&gt;<span>" + rows.data.groupId + "</span>&gt;<span>" + rows.data.artifactId + "</span>&gt;<span class=\"page-title-scend\">" + rows.data.modularName + "</span>";
+                $("#title").html(html);
+                $("#mName").text(rows.data.modularName);//模块名称
+                $("#description").val(rows.data.description);//模块版本描述
+                html = $("#groupId").html();
+                html += "<a href='${_cp}/modular/mdJumpListSearch?groupId=" + rows.data.groupId + "'>" + rows.data.groupId + "</a>";
+                $("#groupId").html(html);//groupId
+                html = $("#artifactId").html();
+                html += "<a href='${_cp}/modular/mdJumpListSearch?artifactId=" + rows.data.artifactId + "'>" + rows.data.artifactId + "</a>";
+                $("#artifactId").html(html);//artifactId
+                $("#gId").val(rows.data.groupId);
+                $("#aId").val(rows.data.artifactId);
+                html = $("#Categories").html();//模块分类
+                rows.data.mclist.forEach(function (value, index) {
+                    html += "<a href='${_cp}/modular/mdJumpListSearch?modularType=" + value.id + "' >" + value.name + "</a>&nbsp;&nbsp;&nbsp;";
+                });
+                $("#Categories").html(html);
+                html = $("#Tags").html();//模块标签
+                rows.data.mtlist.forEach(function (value, index) {
+                    html += "<a href='${_cp}/modular/mdJumpListSearch?modularTag=" + value.id + "' >" + value.name + "</a>&nbsp;&nbsp;&nbsp;";
+                });
+                $("#Tags").html(html);
+                $("#download").text(rows.data.downloadCount);//下载次数
+                var height = $("#right-box").height() - 80;
+                var groupId = rows.data.groupId;
+                var artifactId = rows.data.artifactId;
+                var repName = rows.data.repName;
+                tableObj = $("#list").jqGrid({
+                    mtype: 'POST',
+                    postData: {
+                        "pageNo": 1, "pageSize": 20, data: {
+                            groupId: groupId, artifactId: artifactId, repName:repName
+                        }
+                    },
+                    datatype: "json",
+                    contentType: 'application/json',
+                    serializeGridData: function (postData) {
+                        return JSON.stringify(postData);
+                    },
+                    url: '${_gate_url}/api/modular/version/pageModularJar',
+                    colNames: ['版本', '存储仓库', 'Classifier', '下载次数', '发布时间', '发布人', '操作'],
+                    colModel: [{
+                        name: 'version',
+                        index: 'version',
+                        sortable: false,
+                        formatter: formatterVersion
+                    }, {
+                        name: 'repName',
+                        index: 'repName',
+                        sortable: false,
+                        formatter: formatterRepName
+                    }, {
+                        name: 'classifier',
+                        index: 'classifier',
+                        sortable: false,
+                        formatter: formatterClassifier
+                    }, {
+                        name: 'downloadCount',
+                        index: 'downloadCount',
+                        sortable: false
+                    }, {
+                        name: 'createTime',
+                        index: 'createTime',
+                        sortable: false,
+                        formatter: formatterCreateTime
+                    }, {
+                        name: 'createUserName',
+                        index: 'createUserName',
+                        sortable: false
+                    }, {
+                        name: 'act',
+                        index: 'act',
+                        title: false,
+                        width: '50',
+                        align: 'center',
+                        sortable: false,
+                        formatter: formatterAct
+                    }],
+                    jsonReader: {
+                        root: "data.list",
+                        page: "data.pageNum",
+                        total: "data.pages",
+                        records: "data.total"
+                    },
+                    pager: '#pager',
+                    height: height,
+                    sortable: true,
+                    loadComplete: function () {
+                        var rowIds = $("#list").jqGrid('getDataIDs');
+                        if (fileListArray.length > 0) {
+                            for (var k = 0; k < rowIds.length; k++) {
+                                var curRowData = $("#list").jqGrid('getRowData', rowIds[k]);
+                                var curChk = $("#list tr[id=" + rowIds[k] + "]").find(":checkbox");
+                                $.each(fileListArray, function (i, data) {
+                                    if (rowIds[k] == data) {
+                                        curChk.attr('checked', 'true');
+                                        $("#list").jqGrid('setSelection', data);
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    beforeSelectRow: function (rowid, e) {//多选
+                        if (e.type == 'click') {
+                            i = $.jgrid.getCellIndex($(e.target).closest('td')[0])
+                                cm = $("#list").jqGrid('getGridParam', 'colModel');
+                            return (cm[i].name == 'cb'); //当点击的单元格的名字为cb时，才触发选择行事件
+                        }
+                        return false;
+                    },
+                    onSelectAll: function (aRowids, status) {
+                        if (status) {
+                            for (var i = 0; i < aRowids.length; i++) {
+                                var curRowData = $("#list").jqGrid('getRowData', aRowids[i]);
+                                fileListArray.push(aRowids[i]);
+                                fileListArray = removeDuplicatedItem(fileListArray);
+                            }
+                        } else {
+                            for (var i = 0; i < aRowids.length; i++) {
+                                var ret = jQuery.inArray(aRowids, fileListArray);
+                                fileListArray.splice(ret, 1);
+                                checkName.splice(ret, 1);
+                            }
+                        }
+                    },
+                    onSelectRow: function (id, check) {
+                        if (check) {
+                            var curRowData = $("#list").jqGrid('getRowData', id);
+                            fileListArray.push(id);
+                            fileListArray = removeDuplicatedItem(fileListArray);
+                        } else {
+                            var ret = $.inArray(id, fileListArray);
+                            fileListArray.splice(ret, 1);
+                            checkName.splice(ret, 1);
+                        }
+                    },
+                    onPaging: function (pgButton) {
+                        var pageNo = $(".ui-pg-input").val();
+                        pageNo = parseInt(pageNo);
+                        var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                        total = parseInt(total);
+                        if (pgButton == "next") {
+                            if (pageNo >= total) {
+                                return false;
+                            } else {
+                                pageNo += 1;
+                            }
+                        } else if (pgButton == "prev") {
+                            if (pageNo > 1) {
+                                pageNo -= 1;
+                            } else {
+                                return false;
+                            }
+                        } else if (pgButton == "last") {
+                            pageNo = total;
+                        } else if (pgButton == "first") {
+                            pageNo = 1;
+                        }
+                        var pageSize = $(".ui-pg-selbox").val();
+                        if (pageNo != 0) {
+                            $("#list").setGridParam({
+                                postData: {
+                                    pageNo: pageNo,
+                                    pageSize: pageSize
+                                }
+                            }).trigger("reloadGrid");
+                            return false;
+                        }
+                    }
+                });
+            }
+        }
+    });
+
+    //版本号格式化
+    function formatterVersion(cellvalue, options, rowObj) {
+        var modularId = id;
+        return '<a class="mark_data" style="display:block; width:100%; cursor:pointer;text-decoration: none;" href="${_cp}/modular/searchVersionDetails?id=' + rowObj.id + '&modularId=' + modularId + '">' + cellvalue + '</a>';
+    }
+
+    //存储库格式化
+    function formatterRepName(cellvalue, options, rowObj) {
+        return '<a class="mark_data" style="display:block; width:100%; cursor:pointer;text-decoration: none;" href="${_cp}/modular/mdJumpListSearch?repName=' + rowObj.repName + '">' + cellvalue + '</a>';
+    }
+
+    //格式化Classifier
+    function formatterClassifier(cellvalue, options, rowObj) {
+        if (cellvalue == "" || cellvalue == null) {
+            return "class";
+        } else if (cellvalue == "sources") {
+            return "源码";
+        } else if (cellvalue == "doc") {
+            return "API文档";
+        } else if (cellvalue == "help") {
+            return "帮助文档";
+        } else {
+            return "";
+        }
+    }
+
+    //发布时间格式化
+    function formatterCreateTime(cellvalue, options, rawObject) {
+        if(!cellvalue) return "";
+        cellvalue=cellvalue.replace(/-/g, "/");
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        };
+        return new Date(cellvalue).Format("yyyy-MM-dd hh:mm:ss");
+    }
+
+    //操作列
+    function formatterAct(cellvalue, options, rawObject) {
+        var returnValue = "";
+        id = rawObject.id;
+        var downloadUrl = "";
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            url: "${_gate_url}/api/modular/version/get",
+            datatype: 'json',
+            data: {id: id},
+            success: function (rows) {
+                if (rows.data) {
+                    downloadUrl = rows.data.downloadUrl;
+                }
+            }
+        });
+        returnValue += '<a class="ui-button" href="'+downloadUrl+'" >';
+        returnValue += '下载</a>';
+        return returnValue;
+    }
+</script>
+</body>
+</html>

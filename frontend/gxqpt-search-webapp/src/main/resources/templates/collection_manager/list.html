@@ -1,0 +1,416 @@
+<!doctype html>
+<html>
+
+<head>
+    <base href="<%=basePath%>">
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+    <style type="text/css">
+        #right-box {
+            width: 100%;
+            height: calc(100% - 65px);
+            border: 0;
+        }
+    </style>
+    <script type="text/javascript">
+        //select值改变事件
+        function optAppChange() {
+            alert($(this).val());
+            alert($('#optselect').val());
+            var appId = $(this).val();
+            // $('#optselect').val(1);
+            ajaxHengyun({
+                type: 'GET',
+                url: '${_gate_url}/api/search/adminModule/getColleAppIpOpt',
+                datatype: "json",
+                contentType: 'application/json',
+                data: {'collectionId': collectionId, 'appId': appId},
+                success: function (res) {
+                    if (res || res.data) {
+                        $('#optselect').val(res.data);
+                    }
+                }
+            })
+        }
+    </script>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        搜索管理系统 &gt; 集合管理 &gt; <span class="page-title-scend">我的集合</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="list-section">
+                <form id="createCollFrom" action="" class="form-inline search-form">
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>集合名称：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input id="collectionName" type="text" name="collectionName"
+                                       class="form-control search-name"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>集合编码：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input id="collectionCode" type="text" id="collectionCode" name="collectionCode"
+                                       class="form-control search-name"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>选择app：</span>
+                            </label>
+                            <select id="app-source" name="appId"
+                                    class="form-control chosen-select selWid-form-search"></select>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <div class="form-control-wrap text-right">
+                                <button type="button" class="btn btn-primary search-button" onclick="createColls()">
+                                    <span class="glyphicon glyphicon-search"></span> 创建集合
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div id="right-box" class="list-section">
+                <div class="grid-section">
+                    <table id="collelist">
+                    </table>
+                    <div id="pager"></div>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<!--集合权限列表-->
+<div id="right-box2" class="list-section" style="display: none;position:fixed;text-align: center">
+    <span style="font-size: 12px">有权限的APP列表</span>
+    &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+    <input type="button" onclick="optColles()" value="增加可操作app" style="width: 130px;height: 30px;font-size: 15px">
+    <br/>
+    <div class="grid-section" style="text-align:center;">
+        <table id="optlist">
+        </table>
+    </div>
+</div>
+<!--修改app集合权限-->
+<div id="showOptDiv" style="display: none">
+    <div style="position:fixed;left:20%;top:30%;">
+        <span>选择app：</span>
+        <select id="opt-app-source" name="appId" style="width: 100px" onchange="optAppChange()"></select>
+        <br/><br/>
+        <span>权 &nbsp; &nbsp;&nbsp;限：</span>
+        <select id="optselect" name="opt" style="width: 100px">
+            <option value=0>取消权限</option>
+            <option value=1>读</option>
+            <option value=2>写</option>
+            <option value=3>读/写</option>
+        </select>
+        <input type="hidden" id="collectionId">
+        <br/><br/>
+        <input type="button" onclick="optSubmit()" value="确 &nbsp;&nbsp;定" style="width: 130px;height: 30px">
+    </div>
+</div>
+<script type="text/javascript">
+    var height = $("#right-box").height() - 80;
+    $('#optselect').val('');
+
+    //提交新增或者修改的权限
+    function optSubmit() {
+        var optCollection2AppDTO = new Object();
+        // optCollection2AppDTO.collectionId = $('#collectionId').val();
+        optCollection2AppDTO.collectionId = lastCollectionId;
+        optCollection2AppDTO.appId = $('#opt-app-source').val();
+        optCollection2AppDTO.opt = $('#optselect').val();
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/search/adminModule/appointCollection2App',
+            dataType: 'json',
+            contentType: 'application/json',
+            //data: {appid: appid, collectionName: collectionName, collectionCode: collectionCode},
+            data: JSON.stringify(optCollection2AppDTO),
+            success: function (res) {
+                if (res.data) {
+                    parent.layer.msg("修改成功", {icon: 6, time: 3000});
+                } else {
+                    parent.layer.msg("创建集合失败，请重试！", {time: 1000});
+                }
+                layer.close(layer.index);
+                //$('#optlist').trigger('reloadGrid');
+                $("#optlist").jqGrid('setGridParam', {
+                    datatype: 'json',
+                    postData: {
+                        collectionId: lastCollectionId,
+                    },
+                    page: 1
+                }).trigger("reloadGrid"); //重新载入
+            }
+        })
+    }
+
+    getMyApp();
+
+    function getMyApp() {
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/developer/application/find',
+            // url:'http://192.168.1.124:9770/api/admin/system/getBySource',
+            success: function (res) {
+                if (res || res.data) {
+                    $.each(res.data, function (index, item) {
+                        var option = '<option value = ' + item.appId + '>' + item.name + '</option>';
+                        $('#app-source').append(option);
+                    });
+                    $('#app-source').val("");
+                }
+                if (res || res.data) {
+                    $.each(res.data, function (index, item) {
+                        var option = '<option value = ' + item.appId + '>' + item.name + '</option>';
+                        $('#opt-app-source').append(option);
+                    });
+                    $('#opt-app-source').val("");
+                }
+            }
+        })
+    }
+
+    //获取体系列表
+
+    //显示拥有该集合权限的列表
+    var lastCollectionId = -1;
+
+    function reloadCollOpt(collectionId) {
+        $("#optlist").jqGrid('setGridParam', {
+            datatype: 'json',
+            postData: {collectionId: collectionId},
+            page: 1
+        }).trigger("reloadGrid"); //重新载入
+    }
+
+    showCollOpt(lastCollectionId);
+
+    function showCollOpt(collectionId) {
+        lastCollectionId = collectionId;
+
+        $("#optlist").jqGrid({
+            mtype: 'POST',
+            //postData:{pageNo:1,pageSize:20, data: {}},
+            url: '${_gate_url}/api/search/adminModule/showCollectionApp',
+            datatype: "json",
+            /* contentType: 'application/json',*/
+            postData: {
+                collectionId: collectionId,
+            },
+            /* serializeGridData: function (postData) {
+                 return JSON.stringify(postData);
+             },*/
+            colNames: ['appID', 'app名称', '拥有权限', '操作'],
+            colModel: [{
+                name: 'appId',
+                index: 'appId',
+                hidden: true
+            }, {
+                name: 'appName',
+                index: 'appName',
+            }, {
+                name: 'opt',
+                index: 'opt',
+                formatter: function (cellvalue, options, rowObject) {
+                    if (cellvalue == 1) {
+                        return "读";
+                    } else if (cellvalue == 2) {
+                        return "写";
+                    } else if (cellvalue == 3) {
+                        return "读/写"
+                    } else {
+                        return "";
+                    }
+                }
+            }, {
+                name: 'optCo',
+                index: 'optCo',
+                formatter: function (cellvalue, options, rowObject) {
+                    return "<a href='javascript:void(0);' onclick=\"optColles('" + rowObject.appId + "','" + rowObject.opt + "','" + collectionId + "')\">修改权限</a>"
+                }
+            }],
+            jsonReader: {
+                root: "data.optCollList",
+                // page: "data.pageNum",
+                //total: "data.pages",
+                //records: "data.total"
+            },
+            height: height,
+
+        });
+    }
+
+    //显示修改权限界面
+    function optColles(appId, opt) {
+        $('#collectionId').val(lastCollectionId);
+        layer.open({
+            type: 1,
+            title: "权限操作：",
+            closeBtn: 0,
+            area: ['300px', '300px'],
+            shadeClose: true,
+            skin: 'yourclass',
+            content: $("#showOptDiv")
+        });
+        if (appId && opt) {//修改新增
+            $('#opt-app-source').val(appId);
+            $('#optselect').val(opt);
+            $("#opt-app-source").prop("disabled", true);
+        } else {//新增
+            $('#opt-app-source').val('');
+            $("#opt-app-source").prop("disabled", false);
+        }
+    }
+
+    showClollection();
+
+    //显示用户的集合列表
+    function showClollection() {
+        $("#collelist").jqGrid({
+            type: 'POST',
+            //postData:{pageNo:1,pageSize:20, data: {}},
+            url: '${_gate_url}/api/search/adminModule/showMyCollection',
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                return JSON.stringify(postData);
+            },
+            colNames: ['集合id', '集合名称', '集合编码', '创建该集合的appid', '创建该集合的应用名称', '操作'],
+            colModel: [{
+                name: 'collectionId',
+                index: 'collectionId',
+                hidden: true
+            }, {
+                name: 'collectionName',
+                index: 'collectionName',
+            }, {
+                name: 'collectionCode',
+                index: 'collectionCode',
+            }, {
+                name: 'createAppId',
+                index: 'createAppId',
+                hidden: true
+            }, {
+                name: 'createAppName',
+                index: 'createAppName',
+            }, {
+                name: 'optCo',
+                index: 'optCo',
+                formatter: function (cellvalue, options, rowObject) {
+                    //return '<a href="javascript:void(0)" onclick="showOptColles(' + rowObject.collectionId + ')">查看权限</a> ';
+                    return "<a href='javascript:void(0);' onclick=\"showOptColles('" + rowObject.collectionId + "','" + rowObject.collectionName + "')\">>查看权限</a>"
+                }
+            }],
+            jsonReader: {
+                root: "data.optCollList",
+                //page: "data.pageNum",
+                //total: "data.pages",
+                //records: "data.total"
+            },
+            // pager: '#pager',
+            height: height,
+
+        });
+    }
+
+    function showOptColles(collectionId, collectionName) {
+        lastCollectionId = collectionId;
+        reloadCollOpt(collectionId);
+        //parent
+        layer.open({
+            type: 1,
+            title: ['集合名称：' + collectionName, ['font-size:18px;width:540px;']],
+            closeBtn: 0,
+            area: ['540px', '730px'],
+            shadeClose: true,
+            skin: 'yourclass',
+            content: $("#right-box2")
+        });
+    }
+
+    //刷新集合列表
+    function refusList() {
+        $('#collelist').trigger('reloadGrid');
+    }
+
+
+    //创建集合
+    function createColls() {
+        //var appid = $('#app-source').val();
+        // var collectionName = $('#collectionName').val();
+        //var collectionCode = $('#collectionCode').val();
+
+        var gxqptDutiesDTO = $("#createCollFrom").serializeJSON();
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/search/searchModule/createCollection',
+            dataType: 'json',
+            contentType: 'application/json',
+            //data: {appid: appid, collectionName: collectionName, collectionCode: collectionCode},
+            data: JSON.stringify(gxqptDutiesDTO),
+            success: function (res) {
+                if (res.data) {
+                    parent.layer.msg("创建集合成功", {icon: 6, time: 3000});
+                    refusList();
+                    $('#app-source').val("");
+                    $('#collectionName').val("");
+                    $('#collectionCode').val("");
+                } else {
+                    parent.layer.msg("创建集合失败，请重试！", {time: 1000});
+                }
+            }
+        })
+    }
+</script>
+</body>
+
+</html>

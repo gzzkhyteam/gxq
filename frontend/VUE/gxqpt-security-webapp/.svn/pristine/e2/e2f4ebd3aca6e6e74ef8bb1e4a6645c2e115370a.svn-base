@@ -1,0 +1,364 @@
+<template>
+	<Layout>
+		<Content>
+			<Breadcrumb>
+				<BreadcrumbItem>统一监控平台</BreadcrumbItem>
+				<BreadcrumbItem>服务申请</BreadcrumbItem>
+			</Breadcrumb>
+			<Card>
+				<Form :model="serviceData" ref="searchformData" inline :label-width="80">
+                    <FormItem label="服务类别" prop="type">
+                        <Select v-model="serviceData.type">
+							<Option value="类别1">类别1</Option>
+							<Option value="类别2">类别2</Option>
+						</Select>
+                    </FormItem>
+                    <FormItem label="服务时间" prop="serviceDate">
+						<DatePicker type="daterange" v-model="serviceData.serviceDate" show-week-numbers placement="bottom-end" placeholder="请选择服务时间" style="width: 200px"></DatePicker>
+					</FormItem>
+                    <FormItem label="评分" prop="point">
+                        <Input v-model="serviceData.point" placeholder="请输入评分"></Input>
+					</FormItem>
+					<FormItem label="状态" prop="state">
+						<Select v-model="serviceData.state">
+							<Option value="已提交">已提交</Option>
+							<Option value="未提交">未提交</Option>
+							<Option value="已申请">已申请</Option>
+							<Option value="申请中">申请中</Option>
+						</Select>
+					</FormItem>
+					<FormItem>
+						<Button type="info" @click="addService">新建申请</Button>
+					</FormItem>
+				</Form>
+				<Table border ref="safetyEvalTable" :columns="safetyEvalCol" :data="safetyEvalData"></Table>
+				<div class="bottom-bar">
+					<Page :total="100" show-sizer show-elevator></Page>
+				</div>
+			</Card>
+		</Content>
+        <serviceDocModal :evalModal='serviceDoc' :closeModal='closeServiceDoc'></serviceDocModal>
+        <pointModal :evalModal='point' :closeModal='closePointModal'></pointModal>
+        <serviceApplyModal :evalModal='serviceApply' :closeModal='closeServiceApply'></serviceApplyModal>
+	</Layout>
+</template>
+<script>
+import serviceDocModal from "./serviceApplyModal/serviceDocModal.vue";
+import pointModal from "./serviceApplyModal/pointModal.vue";
+import serviceApplyModal from "./serviceApplyModal/serviceApplyModal.vue";
+export default {
+    components: {
+        serviceDocModal,
+        pointModal,
+        serviceApplyModal
+    },
+    created(){
+        console.log(document.querySelector('.ivu-modal-footer'));
+    },
+    data() {
+        return {
+            serviceDoc:false,
+            point:false,
+            serviceApply:false,
+            serviceData:{},
+            safetyEvalCol: [{
+                title: '序号',
+                type: 'index',
+                width: 80,
+                align: 'center'
+            }, {
+                title: '服务类别',
+                key: 'serviceType'
+            }, {
+                title: '服务对象',
+                key: 'serviceObj'
+            }, {
+                title: '服务分类',
+                key: 'serviceClassify'
+            }, {
+                title: '服务名称',
+                key: 'serviceName'
+            }, {
+                title: '服务简介',
+                key: 'serviceDes'
+            }, {
+                title: '涉及系统',
+                key: 'involveSystem'
+            }, {
+                title: '服务时间',
+                key: 'serviceDate'
+            }, {
+                title: '处理人',
+                key: 'manager'
+            }, {
+                title: '结束时间',
+                key: 'endDate'
+            }, {
+                title: '状态',
+                key: 'state'
+            }, {
+                title: '评分',
+                key: 'point'
+            }, {
+                title: '服务建议',
+                key: 'serviceAdvice'
+            }, {
+                title: '操作',
+                type: 'act',
+                width: 200,
+                align: 'center',
+                render: (h, params) => {
+                    return h('div', [
+                        h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small'
+                            },
+                            style: {
+                                marginRight: '5px'
+                            },
+                            on: {
+                                click: () => {
+                                    this.$router.push({
+                                        name:'serviceDetail',
+                                        params:{
+                                            serviceDetails:JSON.stringify({dis:false,show:true}),
+                                            dealDetails:JSON.stringify({dis:false,show:true})
+                                        }
+                                    });
+                                }
+                            }
+                        }, '详情'),
+                        h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small'
+                            },
+                            style: {
+                                marginRight: '5px'
+                            },
+                            on: {
+                                click: () => {
+                                    this.serviceDoc = true;
+                                }
+                            }
+                        }, '服务报告'),
+                        h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small'
+                            },
+                            style: {
+                                marginRight: '5px',
+                                marginTop: '5px'
+                            },
+                            on: {
+                                click: () => {
+                                    this.point = true;
+                                }
+                            }
+                        }, '评分'),
+                        h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small'
+                            },
+                            style: {
+                                marginTop: '5px'
+                            },
+                            on: {
+                                click: () => {
+                                    this.serviceApply = true;
+                                }
+                            }
+                        }, '修改')
+                    ]);
+                }
+            }],
+            safetyEvalData: [{
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            }, {
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            },{
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            },{
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            },{
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            },{
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            },{
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            },{
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            },{
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            },{
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            },{
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            },{
+                serviceType: '硬件运维服务',
+                serviceObj:'网络运维服务',
+                serviceClassify: '例行操作',
+                serviceName: '网络设备巡检服务',
+                serviceDes: '对设备运行状态进行检查和分析，完成巡检报告',
+                involveSystem: '日志管理系统；统一监管系统',
+                serviceDate: '2018/8/9-2018/8/10',
+                manager:'张三',
+                endDate: '2018/8/9',
+                state: '已完结',
+                point: '5分',
+                serviceAdvice: '',
+            }],
+        }
+    },
+    methods: {
+        closeServiceDoc(){//关闭服务报告modal
+            console.log("关闭2");
+            this.serviceDoc = false;
+        },
+        closePointModal(){//关闭评分modal
+            console.log("关闭3");
+            this.point = false;
+        },
+        closeServiceApply(){//关闭服务申请modal
+            this.serviceApply = false;
+        },
+        addService(){//新建服务申请
+            this.serviceApply = true;
+        },
+    }
+}
+</script>
+<style lang="less" scoped="scoped">
+	.act-btn-group{
+		button{
+			margin: 0 12px;
+		}
+    }
+    .ivu-modal-footer{
+        display: none;
+    }
+</style>

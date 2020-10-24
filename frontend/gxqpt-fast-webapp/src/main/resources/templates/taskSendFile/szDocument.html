@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Expires" content="0" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <!-- begin 外部CSS引入 -->
+    <link type="text/css" rel="stylesheet" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_lib}/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib}/jquery-step/jquery.step.css">
+    <link rel="stylesheet" href="${_cp}/static/themes/blue/css/ui.css">
+
+    <link rel="stylesheet" href="${_cp}/static/css/app.css">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_js}/hengyun/hengyun_ajax.js"></script>
+    <!-- end 外部CSS引入 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+        }
+
+        .list-section {
+            padding: 5px 10px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        .grid-section {
+        }
+
+        .ui-jqgrid .ui-jqgrid-btable tbody tr.jqgrow td, .ui-jqgrid {
+            background: #fff;
+        }
+
+        .ui-th-ltr, .ui-jqgrid .ui-jqgrid-htable th.ui-th-ltr, .ui-jqgrid .ui-jqgrid-btable
+        {
+            text-align: center;
+        }
+        .form-inline .w120{
+            width:153px;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>
+                            收文设置管理
+                        </h5>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary btn-submits" type="button" onclick="addRecvFileTypeInfo();">
+                            <span class="glyphicon glyphicon-add"></span> 新增收文设置
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <!-- begin 表格 -->
+                                <div class="grid-section">
+                                    <table id="list">
+                                    </table>
+                                    <div id="pager"></div>
+                                </div>
+                                <!-- end 表格  -->
+                            </fieldset>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end 页面内容主体 -->
+            </div>
+        </div>
+    </div>
+</div>
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib}/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib}/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib}/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib}/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript"
+        src="${_lib}/jquery-step/jquery.step.js"></script>
+<script type="text/javascript" src="${_cp}/static/themes/blue/js/ui.js"></script>
+
+<script type="text/javascript" src="${_cp}/static/js/app.js"></script>
+<!--end 外部JS引入 -->
+<!--begin 自定义JS -->
+<script type="text/javascript">
+    $(function() {
+        $("#list").jqGrid({
+            datatype : "json",
+            url : 'listRecvType.do',
+            colNames : [ '名字', '是否有二级标题', '领导名称', '综合处交办的任务','完成时限', '操作'],
+            colModel : [ {
+                name : 'name',
+                index : 'name',
+                width : '60'
+            },{
+                name : 'haveSecondNo',
+                index : 'haveSecondNo',
+                width : '60',
+                formatter : function (cellvalue, options, rawObject){
+                    switch (cellvalue)
+                    {
+                        case 0:
+                            return "无";
+                        case 1:
+                            return "有";
+                    }
+                }
+            },{
+                name : 'leaderName',
+                index : 'leaderName',
+                width : '90'
+            },{
+                name : 'comOfficeTask',
+                index : 'comOfficeTask',
+                width : '60',
+                formatter : function (cellvalue, options, rawObject){
+                    switch (cellvalue)
+                    {
+                        case 0:
+                            return "否";
+                        case 1:
+                            return "是";
+                    }
+                }
+            },{
+                name : 'timeLimitDay',
+                index : 'timeLimitDay',
+                width : '60',
+                formatter : function (cellvalue, options, rawObject){
+                    return cellvalue == null ? "-":cellvalue;
+                }
+            },{
+                name : 'id',
+                index : 'id',
+                title : false,
+                width : '120',
+                align : 'center',
+                formatter : formatterAct
+            } ],
+            pager : '#pager',
+            height : 'auto',
+            jsonReader : {
+                root : 'rows',
+                page : 'page',
+                total : 'total',
+                records : 'records'
+            },
+            prmNames : {
+                page : "page", // 表示请求页码的参数名称
+                rows : "rows" // 表示请求行数的参数名称
+            },
+            onSelectRow: function(id){
+                var rowData = $('#list').jqGrid('getRowData',id);
+                $("#addMyStep").find("#myStep").remove();
+                $("#addMyStep").html(myStep());
+                var status =0;
+                if(rowData.flowStatus=='新增收文'){
+                    status=1;
+                }else if(rowData.flowStatus=='处室领导审批'){
+                    status=2;
+                }else if(rowData.flowStatus=='分管领导审批'){
+                    status=3;
+                }else if(rowData.flowStatus=='主要领导审批'){
+                    status=4;
+                }else if(rowData.flowStatus=='收文办结'){
+                    status=6;
+                }else{
+                    status=5;
+                }
+                addStep(status);
+            },
+        });
+    });
+
+
+
+    function formatterAct(cellvalue, options, rawObject) {
+        var sysstA = '';
+        return "<a class='ui-button' onclick=\"recvTypeUpdate(\'" + rawObject.id + "\')\"><i class='fa fa-edit fa-fw'></i>修改</a>" +
+            sysstA +
+            "<span class='oper-separator'><a class='ui-button' onclick=\"del(\'" + rawObject.id + "\')\"><i class='fa fa-sun-o fa-fw'></i>删除</a>";
+    }
+
+    function addRecvFileTypeInfo() {
+        window.location.href = 'addRecvFileType';
+    }
+
+    /**
+     * 删除单条信息*/
+    function del(id) {
+        parent.layer.confirm('确定删除吗？', {
+            shadeClose: true,
+            shade: 0.1,
+            btn: ['确定', '取消'] //按钮
+
+        }, function (value, index, elem) {
+            var param = {
+                id: id
+            };
+            $.ajax({
+                url: 'deleteRecvTypeById.do',
+                data: param,
+                success: function (res) {
+                    parent.layer.alert("删除成功！", {icon: 6}, function () {
+                        parent.layer.closeAll();
+                        $("#list").jqGrid('setGridParam', {
+                            url: 'listRecvType.do',
+                            page: 1
+                        }).trigger("reloadGrid"); //重新载入
+
+                    });
+
+                }, error: function (msg) {
+                    parent.layer.alert("删除失败！" + JSON.stringify(msg));
+                }
+            });
+
+        }, function () {
+
+        });
+        return false;
+    }
+    /** 信息修改
+     * */
+    function recvTypeUpdate(id) {
+        if (!id) {
+            return;
+        } else {
+            window.location.href = 'editRecvFileType.do?id=' + id;
+        }
+    }
+
+
+
+
+    /*
+     自动获取页面控件值
+     */
+    function GetWebControls(element) {
+        var reVal = "";
+        $(element).find('input,select,textarea').each(function (r) {
+            var id = $(this).prop('name');
+            var value = $(this).val();
+            var type = $(this).prop('type');
+            if(id){
+                switch (type) {
+                    case "checkbox":
+                        if ($(this).prop("checked")) {
+                            reVal += '"' + id + '"' + ':' + '"1",';
+                        } else {
+                            reVal += '"' + id + '"' + ':' + '"0",';
+                        }
+                        break;
+                    case "radio":
+                        if ($(this).prop("checked")) {
+                            reVal += '"' + id + '":' + '"' + $.trim(value) + '",';
+                        }
+                        break;
+                    default:
+                        if (value != "") { //如果值为空就传空，不需要传空格 -wgj
+                            reVal += '"' + id + '"' + ':' + '"' + $.trim(value) + '",';
+                        }else{
+                            reVal += '"' + id + '"' + ':' + '"",';
+                        }
+                        break;
+                }
+            }
+        });
+        reVal = reVal.substr(0, reVal.length - 1);
+        reVal = reVal.replace(/\\/g, '\\\\');
+        reVal = reVal.replace(/\n/g, '\\n');
+        return jQuery.parseJSON('{' + reVal + '}');
+    }
+</script>
+<!--end 自定义JS -->
+</body>
+</html>

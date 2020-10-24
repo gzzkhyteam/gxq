@@ -1,0 +1,426 @@
+<!doctype html>
+<html>
+
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        权限管理系统 &gt; 权限管理 &gt; <span class="page-title-scend">平台角色管理</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="list-section">
+                <form autocomplete="off" action="" class="form-inline search-form">
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>角色名称：</span>
+                            </label>
+                            <input id="roleName" name="roleName" class="form-control" placeholder=""/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>角色编码：</span>
+                            </label>
+                            <input id="roleCode" name="roleCode" class="form-control" placeholder=""/>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="setAppIdVal()">查询</button>
+                    </div>
+                    <div class="pull-right">
+                        <!--<button type="button" class="btn btn-primary" onclick="createPage()">新增</button>-->
+                        <!--
+                             id="authority_role_add" 和 resource_code : "authority_role_add" 填写的值一定要跟
+                             在【权限系统】-【资源编码】一致！！！
+                         -->
+                        <script type="text/javascript" id="authority_role_add">
+                            resourceJs.init("${_gate_url!''}", "${_app_id!''}", "${l_u_i_s.id!''}").containButton({
+                                resource_code: "authority_role_add",
+                                btnHtml: "<button type=\"button\" class=\"btn btn-primary\" onclick=\"createPage()\">新增</button>",
+                                htmlInsert: true
+                            });
+                        </script>
+                    </div>
+                </form>
+            </div>
+            <div id="right-box" class="list-section" style="margin-top: 3em">
+                <div class="grid-section">
+                    <table id="list">
+                    </table>
+                    <div id="pager"></div>
+                    <!--</div>-->
+                </div>
+            </div>
+            <!-- end 页面内容主体 -->
+        </div>
+    </div>
+    <script type="text/javascript">
+        var appId = null;
+
+        /* 设置appId的值 */
+        function setAppIdVal() {
+            // appId=$("#system").val();
+            appId = $("#system option:selected").val();
+            var roleName = $("#roleName").val();
+            var roleCode = $("#roleCode").val();
+            $("#list").setGridParam({
+                postData: {
+                    pageNo: 1,
+                    pageSize: 20,
+                    data: {code: roleCode, name: roleName}
+                }
+            }).trigger("reloadGrid");
+        };
+
+        $("#list").jqGrid({
+            mtype: 'POST',
+            url: "${_gate_url}/api/admin/role/ptRolePage",
+            postData: {data: appId, pageNo: 1, pageSize: 20},
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                return JSON.stringify(postData);
+            },
+            colNames: ['角色编码', '角色名称', '功能描述', '平台角色', '只读', '状态', '创建时间', '更新时间', '操作'],
+            colModel: [{
+                name: 'code',
+                index: 'code'
+            }, {
+                name: 'name',
+                index: 'name',
+            }, {
+                name: 'desc',
+                index: 'desc',
+            }, {
+                name: 'ptRole',
+                index: 'ptRole',
+                formatter: formatterptRole
+            }, {
+                name: 'readonly',
+                index: 'readonly',
+                formatter: formatterReadonly
+            }, {
+                name: 'status',
+                index: 'status',
+                formatter: formatterStatus
+            }, {
+                name: 'createTime',
+                index: 'createTime',
+                formatter: formatterCreateTime
+            }, {
+                name: 'updateTime',
+                index: 'updateTime',
+                formatter: formatterUpdateTime
+            }, {
+                name: 'act',
+                index: 'act',
+                title: false,
+                width: '240',
+                align: 'center',
+                formatter: formatterAct
+            }],
+            jsonReader: {
+                root: "data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            onPaging: function (pgButton) {
+
+                var pageNo = $(".ui-pg-input").val();
+                pageNo = parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total = parseInt(total);
+                if (pgButton == "next") {
+                    if (pageNo >= total) {
+                        return false;
+                    } else {
+                        pageNo += 1;
+                    }
+                } else if (pgButton == "prev") {
+                    if (pageNo > 1) {
+                        pageNo -= 1;
+                    } else {
+                        return false;
+                    }
+                } else if (pgButton == "last") {
+                    pageNo = total;
+                } else if (pgButton == "first") {
+                    pageNo = 1;
+                }
+                var pageSize = $(".ui-pg-selbox").val();
+                if (pageNo != 0) {
+                    $("#list").setGridParam({postData: {pageNo: pageNo, pageSize: pageSize}}).trigger("reloadGrid");
+                    return false;
+                }
+            },
+            pager: '#pager',
+            height: 500
+        });
+
+        function formatterReadonly(cellvalue, options, rawObject) {//初始化只读
+            if (cellvalue == true) {
+                return "是";
+            } else {
+                return "否";
+            }
+
+        };
+
+        function formatterptRole(cellvalue, options, rawObject) {//初始化平台角色
+            if (cellvalue == true) {
+                return "是";
+            } else {
+                return "否";
+            }
+
+        };
+
+        function formatterStatus(cellvalue, options, rawObject) {//初始化状态
+            if (cellvalue == 1) {
+                return "启用";
+            } else {
+                return "禁用";
+            }
+
+        };
+
+        function formatterCreateTime(cellvalue, options, rawObject) {//初始化创建时间
+            if (cellvalue) {
+                var date = new Date(cellvalue);
+                var time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+                return time;
+            }
+
+        };
+
+        function formatterUpdateTime(cellvalue, options, rawObject) {//初始化更新时间
+            if (cellvalue) {
+                var date = new Date(cellvalue);
+                var time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+                return time;
+            }
+
+        };
+
+        function formatterAct(cellvalue, options, rawObject) {
+            var returnValue = "";
+            returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick="powerPage(\'' + rawObject.id + '\')">';
+            returnValue += '权限配置</a><span class="oper-separator"></span>';
+            if (!rawObject.readonly) {
+                if (rawObject.status == 1) {
+
+                    returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="disable(\'' + rawObject.id + '\')">';
+                    returnValue += '禁用</a>';
+                    returnValue += '<span class="oper-separator"></span>';
+                }
+                if (rawObject.status == 2) {
+
+                    returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="enabled(\'' + rawObject.id + '\')">';
+                    returnValue += '启用</a>';
+                    returnValue += '<span class="oper-separator"></span>';
+                }
+            }
+
+            //做权限控制  方式1
+            // var displayStyle = resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+            //     resource_code : "authority_user_left_list",
+            //     display:true
+            // });
+            if (rawObject.code != 'org_admin') {
+                var displayStyle = '';
+                returnValue += '<a class="ui-button marginLeft" style="' + displayStyle + '" href="javascript:void(0);" onclick="userPage(\'' + rawObject.id + '\')">';
+                returnValue += '用户列表</a>';
+            }
+
+            //做权限控制  方式2
+            //注意 rawObject.id 别被当成字符串了！！！
+            // resource_code : "authority_role_update", 的值必须和权限体统中的编码一致
+            if (!rawObject.readonly) {
+                returnValue += '<span class="oper-separator"></span>';
+                returnValue += resourceJs.init("${_gate_url!''}", "${_app_id!''}", "${l_u_i_s.id!''}").containButton({
+                    resource_code: "authority_role_update",
+                    btnHtml: "<a class=\"ui-button\" href=\"javascript:void(0);\" onclick=\"editPage('" + rawObject.id + "')\">修改</a>",
+                    htmlInsert: false
+                });
+            }
+            //没做权限控制时
+            // returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="editPage('+rawObject.id+')">修改</a>';
+
+            return returnValue;
+        }
+
+        /* 删除 */
+        function delect() {
+            parent.layer.confirm("您确定要删除吗？", {
+                title: '温馨提示',
+                shade: [0.4, '#000'],
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                closeLayer();
+            }, function () {
+                closeLayer();
+            });
+        }
+
+        /* 弹出新增页面 */
+        function createPage() {
+            parent.layer.open({
+                id: 'create',
+                type: 2,
+                anim: 6,
+                title: '新增角色',
+                maxmin: false, //开启最大化最小化按钮
+                area: ['50%', '60%'],
+                content: "${_cp}/power/ptRoleCreate?appId=" + appId,
+                btn: ['<span class="glyphicon glyphicon-ok"></span> 提交', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+                yes: function (index, layero) {
+                    var html = layero.context;
+                    var Id = html.getElementById("create");
+                    var iframe = $(Id).find("iframe").attr("name");
+                    var rowData = parent[iframe].save(index);
+                }
+            });
+        }
+
+        /* 弹出修改页面 */
+        function editPage(id) {
+            parent.layer.open({
+                id: 'edit',
+                type: 2,
+                anim: 6,
+                title: '修改角色',
+                maxmin: false, //开启最大化最小化按钮
+                area: ['50%', '60%'],
+                content: "${_cp}/power/ptRoleEdit?id=" + id,
+                btn: ['<span class="glyphicon glyphicon-ok"></span> 提交', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+                yes: function (index, layero) {
+                    var html = layero.context;
+                    var Id = html.getElementById("edit");
+                    var iframe = $(Id).find("iframe").attr("name");
+                    var rowData = parent[iframe].save(index);
+                }
+            });
+        }
+
+        /* 弹出权限配置页面 */
+        function powerPage(id) {
+            parent.layer.open({
+                id: 'powerPage',
+                type: 2,
+                anim: 6,
+                title: '权限配置',
+                maxmin: false, //开启最大化最小化按钮
+                area: ['50%', '80%'],
+                content: "${_cp}/power/ptPowerAllocation?id=" + id,
+                btn: ['<span class="glyphicon glyphicon-ok"></span> 提交', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+                yes: function (index, layero) {
+                    var html = layero.context;
+                    var Id = html.getElementById("powerPage");
+                    var iframe = $(Id).find("iframe").attr("name");
+                    var rowData = parent[iframe].save(index);
+                }
+            });
+        }
+
+        /* 弹出用户列表页面 */
+        function userPage(id) {
+            parent.layer.open({
+                id: 'userPage',
+                type: 2,
+                anim: 6,
+                title: '用户列表',
+                maxmin: false, //开启最大化最小化按钮
+                area: ['80%', '80%'],
+                content: "${_cp}/power/userList?appId=${appId}" + "&id=" + id,
+                btn: ['<span class="glyphicon glyphicon-ok"></span> 提交', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+                yes: function (index, layero) {
+                    var html = layero.context;
+                    var Id = html.getElementById("userPage");
+                    var iframe = $(Id).find("iframe").attr("name");
+                    var rowData = parent[iframe].save(index);
+                }
+            });
+        }
+
+        /* 角色禁用 */
+        function disable(id) {
+            ajaxHengyun({
+                type: "POST",
+                dataType: 'json',
+                url: "${_gate_url}/api/admin/role/disable",
+                data: {id: id},
+                success: function (rows) {
+                    if (rows.data) {
+                        setAppIdVal();
+                        parent.layer.msg("角色禁用成功！", {icon: 6, time: 1000});
+                    } else {
+                        if (rows.errcode == 52008) {
+                            parent.layer.msg(rows.errmsg, {time: 1000});
+                        } else {
+                            parent.layer.msg("角色禁用出错，请重试！", {time: 1000});
+                        }
+                    }
+                }
+            });
+        }
+
+        /* 角色启用 */
+        function enabled(id) {
+            ajaxHengyun({
+                type: "POST",
+                dataType: 'json',
+                url: "${_gate_url}/api/admin/role/enabled",
+                data: {id: id},
+                success: function (rows) {
+                    if (rows.data) {
+                        setAppIdVal();
+                        parent.layer.msg("角色启用成功！", {icon: 6, time: 1000});
+                    } else {
+                        if (rows.errcode == 52008) {
+                            parent.layer.msg(rows.errmsg, {time: 1000});
+                        } else {
+                            parent.layer.msg("角色启用出错，请重试！", {time: 1000});
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

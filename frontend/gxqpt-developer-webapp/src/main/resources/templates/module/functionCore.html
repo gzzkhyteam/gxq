@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/spy_scroll/css/style.css">
+    <link rel="stylesheet" href="${_static}/css/index.css?v=3"/>
+    <style type="text/css">
+        body{
+            padding: 0;
+        }
+        .main{
+            margin-left: 310px;
+        }
+        .search {
+            height: 107px;
+        }
+
+        .search_content .input-group {
+            margin-top: 30px;
+        }
+
+        .toc {
+            top: 180px;
+            overflow: hidden;
+            width: 280px;
+        }
+
+        .toc li.visible > a {
+            color: #0187EA;
+        }
+        .vistyle{
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" ng-app="app" ng-controller="controller" ng-cloak>
+    <div class="search">
+        <div class="search_content">
+            <#include "/module/search.html">
+        </div>
+    </div>
+    <nav class="toc">
+        <ul>
+            <li ng-repeat="f in functionTypeList | orderBy:id"><a href="{{'#'+f.code}}">{{f.name}}</a></li>
+        </ul>
+        <svg class="toc-marker" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+            <path stroke="#0187EA" stroke-width="3" fill="transparent" stroke-dasharray="0, 0, 0, 1000"
+                  stroke-linecap="round" stroke-linejoin="round" transform="translate(-0.5, -0.5)"/>
+        </svg>
+    </nav>
+    <div class="main contents">
+        <div id={{ft.code}} class="main_item clearfix" ng-repeat="ft in functionList | orderBy:id">
+            <h3 class="clearfix">
+                <span class="left main_item_title">{{ft.name}}</span>
+            </h3>
+            <a href="${_cp}/module/helpDoc?moduleId={{f.id}}" class="main_item_conter clearfix" ng-repeat="f in ft.children" ng-class="{expire: f.status == 10, stopped: f.status == 20}">
+                <div class="left">
+                    <img ng-src="{{f.logo || '${_static}/images/default.png'}}" onError="f.logo='${_static}/images/default.png'"/>
+                </div>
+                <div class="right">
+                    <h3>{{f && f.name}}<span class="tips">{{f.status == 10 ? '(已过时)' : ''}}</span></h3>
+                    <p class="vistyle" title="{{f && f.desc}}">{{f && f.desc}}</p>
+                </div>
+            </a>
+        </div>
+    </div >
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/spy_scroll/js/script.js"></script>
+</body>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.functionList = [];
+        //获取功能类型
+        $scope.getFunctionType = function () {
+            $http.get(urlPrev + 'dictionary/getCodeList',{
+                params:{code:'module.type'},
+                headers:getHeaders(),
+            }).success(function (res) {
+                if(res.data && res.data.length){
+                    $scope.functionTypeList = res.data;
+                    $scope.getFunction();
+                }
+            });
+        }
+        $scope.getFunctionType();
+
+        //获取功能列表
+        $scope.getFunction = function () {
+            var n = 0;
+            $.each($scope.functionTypeList, function (index, value) {
+                (function (index, value) {
+                    $http.get(urlPrev + 'assignModule/findAllMoudlesNoPage', {
+                        params:{moduleType:value.code},
+                        headers: getHeaders(),
+                    }).success(function (res) {
+                        n++;
+                        var obj = {};
+                        obj.code = value.code;
+                        obj.name = value.name;
+                        obj.children = res.data;
+                        $scope.functionList.splice(index,0,obj);
+                        if($scope.functionTypeList.length == n){
+                            setTimeout(function () {
+                                $(window).trigger("load");
+                            },100)
+                        }
+                    })
+                })(index, value);
+            })
+        }
+    })
+    /*angularJS*/
+</script>
+</html>

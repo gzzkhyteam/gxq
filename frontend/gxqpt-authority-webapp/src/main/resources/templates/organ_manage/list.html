@@ -1,0 +1,978 @@
+<!doctype html>
+<html>
+
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <style type="text/css">
+        .ztree li span.button.ico_docu {
+            background-position: -110px 0;
+            margin-right: 2px;
+            vertical-align: top;
+        }
+        .fontEllipsis{
+            display: inline-block;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        权限管理系统 &gt; 用户中心 &gt; <span class="page-title-scend">单位管理</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main clearfix">
+            <div class="top-bar">
+                <lable class="change-system_tle">体系：</lable><select id="system" class="form-control change-system" onchange="changeSystem(this)"></select>
+            </div>
+            <div class="content clearfix">
+                <div class="organ-list-tree pull-left">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">组织机构</div>
+                        <div class="panel-body">
+                            <div class="zTreeDemoBackground left">
+                                <ul id="ztree" class="ztree"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="right-box" class="right-box pull-left">
+                    <div class="">
+                        <div class="list-section">
+                            <form autocomplete="off" id="myForm" action="" class="form-inline search-form">
+                                <div class="form-field">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            <span class="text-danger"></span>
+                                            <span>单位全称：</span>
+                                        </label>
+                                        <div class="form-control-wrap">
+                                            <input name="name" class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            <span class="text-danger"></span>
+                                            <span>所属类型：</span>
+                                        </label>
+                                        <select name="forType" class="form-control chosen-select selWid-form-search">
+                                            <option value="">全部</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            <span class="text-danger"></span>
+                                            <span>所属级别：</span>
+                                        </label>
+                                        <select name="forClass" class="form-control chosen-select selWid-form-search">
+                                            <option value="">全部</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            <span class="text-danger"></span>
+                                            <span>启用标记：</span>
+                                        </label>
+                                        <div class="form-control-wrap">
+                                            <select name="isenable"
+                                                    class="form-control chosen-select selWid-form-search">
+                                                <option value="">全部</option>
+                                                <option value="1">启用</option>
+                                                <option value="0">禁用</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <div class="form-group">
+                                        <div class="form-control-wrap text-right">
+                                            <button type="button" class="btn btn-primary search-button" onclick="reloadOrgan()">
+                                                <span class="glyphicon glyphicon-search"></span> 查询
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <div class="btn-group" role="group" aria-label="...">
+                                       <!-- <button type="button" class="btn btn-default" onclick="createPage()">新增</button>
+                                        &lt;!&ndash;<button type="button" class="btn btn-default">导入</button>&ndash;&gt;
+                                        <button type="button" class="btn btn-default btnIn">导入</button>
+                                        <button type="button" class="btn btn-default" onclick="exportOrgan()">导出</button>
+                                        <button type="button" class="btn btn-default" onclick="downloadTemplet()">导入模板下载</button>
+                                        &lt;!&ndash;<button type="button" class="btn btn-default">打印</button>&ndash;&gt;
+                                        <button type="button" class="btn btn-default" onclick="unableToggle(0)">禁用</button>
+                                        <button type="button" class="btn btn-default" onclick="unableToggle(1)">启用</button>-->
+                                        <!-- /*按钮权限开始*/-->
+                                        <script type="text/javascript" id="authority_org_add">
+                                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                resource_code : "authority_org_add",
+                                                //btnHtml :"<button type=\"button\" class=\"btn btn-default\" onclick=\"createPage()\">新增</button>",
+                                                btnHtml :'<button type="button" class="btn btn-default" onclick="createPage()">{{name}}</button>',
+                                                htmlInsert: true
+                                            });
+                                        </script>
+                                        <script type="text/javascript" id="authority_org_import">
+                                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                resource_code : "authority_org_import",
+                                                //btnHtml :"<button type=\"button\" class=\"btn btn-default btnIn\">导入</button>",
+                                                btnHtml :'<button type="button" class="btn btn-default btnIn" >{{name}}</button>',
+                                                htmlInsert: true
+                                            });
+                                        </script>
+                                        <script type="text/javascript" id="authority_org_export">
+                                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                resource_code : "authority_org_export",
+                                                //btnHtml :"<button type=\"button\" class=\"btn btn-default\" onclick=\"exportOrgan()\">导出</button>",
+                                                btnHtml :'<button type="button" class="btn btn-default" onclick="exportOrgan()" >{{name}}</button>',
+                                                htmlInsert: true
+                                            });
+                                        </script>
+                                        <script type="text/javascript" id="authority_org_downloadtemplet">
+                                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                resource_code : "authority_org_downloadtemplet",
+                                                //btnHtml :"<button type=\"button\" class=\"btn btn-default\" onclick=\"downloadTemplet()\">模板下载</button>",
+                                                btnHtml :'<button type="button" class="btn btn-default" onclick="downloadTemplet()" >{{name}}</button>',
+                                                htmlInsert: true
+                                            });
+                                        </script>
+                                        <script type="text/javascript" id="authority_org_disenable">
+                                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                resource_code : "authority_org_disenable",
+                                                //btnHtml :"<button type=\"button\" class=\"btn btn-default\" onclick=\"unableToggle(0)\">禁用</button>",
+                                                btnHtml :'<button type="button" class="btn btn-default" onclick="unableToggle(0)" >{{name}}</button>',
+                                                htmlInsert: true
+                                            });
+                                        </script>
+                                        <script type="text/javascript" id="authority_org_ennable">
+                                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                resource_code : "authority_org_ennable",
+                                                //btnHtml :"<button type=\"button\" class=\"btn btn-default\" onclick=\"unableToggle(1)\">启用</button>",
+                                                btnHtml :'<button type="button" class="btn btn-default" onclick="unableToggle(1)" >{{name}}</button>',
+                                                htmlInsert: true
+                                            });
+                                        </script>
+                                        <!-- /*按钮权限end*/-->
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!--导入start-->
+                        <div class="list-section">
+                            <div class="list-content">
+                                <div class="form-inline">
+                                    <fieldset>
+                                        <div class="grid-section">
+                                            <table id="list">
+                                            </table>
+                                            <div id="pager"></div>
+                                        </div>
+                                        <table class="table dealInfoTab" style="display:none;">
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="w90 form-control-wrap" style="width:100%;">
+                                                        <div id="container" style="margin: 0;padding: 0; width:98%;">
+                                                            <div id="uploader1" class="uploader">
+                                                                <div class="queueList">
+                                                                    <ul id="file_html" class="filelist">
+                                                                    </ul>
+                                                                    <div id="dndArea1" class="placeholder dndArea"
+                                                                         style="padding-top: 85px;">
+                                                                        <div id="filePicker1" class="filePicker"></div>
+                                                                        <p></p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="statusBar" style="display:none;">
+                                                                    <div class="progress">
+                                                                        <span class="text">0%</span> <span
+                                                                            class="percentage"></span>
+                                                                    </div>
+                                                                    <div class="info"></div>
+
+                                                                    <div class="btns">
+                                                                        <div id="jxButton1" class="jxButton"></div>
+                                                                        <div class="uploadBtn">开始上传</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <!--导入end-->
+                        <div class="list-section">
+                            <div class="list-content">
+                                <div class="form-inline">
+                                    <fieldset>
+                                        <div class="grid-section">
+                                            <table id="list1">
+                                            </table>
+                                            <div id="pager1"></div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-section">
+                            <div class="list-content">
+                                <div class="form-inline">
+                                    <fieldset>
+                                        <div class="grid-section">
+                                            <table id="list">
+                                            </table>
+                                            <div id="pager"></div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+    // var _GATE_URL = "http://192.168.1.124:9770";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCore3.js"></script>
+<script type="text/javascript">
+    var allOrgMappings = {};
+    var systemCode = null;//当前体系的code
+    var systemName = null;//当前体系的name
+    var height = $("#right-box").height() - 160;//表的高度
+    var treeObj = null;//单位树对象
+    var node = null;//当前单位树的节点
+    var tableObj = null;//jqgrid表对象
+    var organIdArray = [];//单位列表id集合
+    var organListArray = [];//单位列表集合
+    var orgId = null;//当前单位id
+    var shareIds = [];//分享应用id的集合
+    function initData() {
+        allOrgMappings = {};
+        systemCode = null;//当前体系的code
+        treeObj = null;//单位树对象
+        node = null;//当前单位树的节点
+        organIdArray = [];//单位列表id集合
+        organListArray = [];//单位列表集合
+        orgId = null;//当前单位id
+        shareIds = [];//分享应用id的集合
+    }
+    //获取字典
+    getType();
+    function getType() {
+        //字典,  "根据typeCode查找字典,node.type：节点类型;org.ascription：单位归口;" +
+        //       "app_type：所属系统;level：所属级别;org.type：所属类型", notes = "根据typeCode查找字典"
+        var arr = ['level','org.type'];
+        ajaxHengyun({
+            type:'GET',
+            dataType:"json",
+            // url:'http://192.168.1.124:9770/api/admin/gxqpt/org/findDictionary',
+            url:'${_gate_url}/api/admin/dictionary/findDictionary',
+            data:{"typeCode":arr},
+            success:function (res) {
+                if (res.data.hasOwnProperty!=null&&res.data.hasOwnProperty('level')) {
+                    $.each(res.data['level'], function (key, value) {
+                        var option = document.createElement('option');
+                        option.value = key;
+                        option.innerText = value;
+                        $('[name="forClass"]').append(option);
+                    })
+                }
+                if (res.data.hasOwnProperty('org.type')) {
+                    $.each(res.data['org.type'], function (key, value) {
+                        var option = document.createElement('option');
+                        option.value = key;
+                        option.innerText = value;
+                        $('[name="forType"]').append(option);
+                    })
+                }
+            }
+        })
+    }
+    //获取体系
+    getSystem();
+
+    function getSystem() {
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/admin/system/findSystemList',
+            data: JSON.stringify({data:{}}),
+            datatype: "json",
+            contentType : 'application/json',
+            success: function (data) {
+                if (data.data.list && data.data.list.length) {
+                    systemCode = data.data.list[0].code;
+                    systemName = data.data.list[0].name;
+                    $.each(data.data.list, function (index, item) {
+                        var option = ''
+                        if(item.code === 'gxqpt'){
+                            option = '<option value = ' + item.code + ' selected>' + item.name + '</option>';
+                            systemCode = item.code;
+                            systemName = item.name;
+                            $('.btn-group button').attr('disabled',false);
+                        }else{
+                            option = '<option value = ' + item.code + '>' + item.name + '</option>';
+                        }
+                        $('#system').append(option);
+                    })
+                    getOrgan();
+                }
+            }
+        });
+    }
+    /*体系切换*/
+    function changeSystem(obj) {
+        if($(obj).find('option:selected').val() == 'sdzzww'){
+            $('.btn-group button').attr('disabled',true);
+        }else{
+            $('.btn-group button').attr('disabled',false);
+        }
+        initData();
+        systemCode = $(obj).val();
+        systemName = $(obj).find('option:selected').text();
+        getOrgan();
+    }
+    //获取所有单位
+    function getOrgan() {
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/admin/gxqpt/org/find',
+            // url: 'http://192.168.1.124:9770/api/admin/gxqpt/org/find',
+            data: {systemCode: systemCode},
+            success: function (data) {
+                if(data.data && data.data.length != 0){
+                    data = builderTree(data.data);
+                }else{
+                    data = [];
+                }
+                allOrgMappings = {};
+                var setting = {
+                    data: {
+                        key: {
+                            name: 'name'
+                        },
+                        simpleData: {
+                            idKey: 'id',
+                        }
+                    },
+                    callback: {
+                        onClick: onClick,
+                    }
+                };
+                var topNode = {name:systemName,id:'***3*23*4*45234234%$',open:true};
+                topNode.children = data;
+                if(data.length!=0) {
+                    allOrgMappings['***3*23*4*45234234%$'] = getChridles(topNode.children);
+                }else{
+                    allOrgMappings['***3*23*4*45234234%$'] = [];
+                }
+                treeObj = $.fn.zTree.init($("#ztree"), setting, topNode);
+                var nodes = treeObj.getNodes();
+                node = nodes[0];
+                treeObj.selectNode(node);
+                getChildOrgan();
+                if(systemCode == 'sdzzww'){
+                    $('.btn-group button').attr('disabled',true);
+                }else{
+                    $('.btn-group button').attr('disabled',false);
+                }
+                loadFile();
+                reloadOrgan();
+            }
+        })
+    }
+
+    /*创建树*/
+    function builderTree(r) {
+
+        if (!r || r.length == 0) {
+            return;
+        }
+        r.forEach(function (value, index) {
+            if (value.children && value.children.length != 0) {
+                builderTree(value.children);
+            }
+            value.icon = '${_static}/images/sys_com/icn_01.png';
+            return;
+        });
+        return r;
+    }
+
+    function getChirldsId(id){
+        return allOrgMappings[id];
+    }
+
+
+    function insertChirldId(pId,id){
+        $.each(allOrgMappings,function (key,value) {
+            if(pId == key){
+                if(!allOrgMappings[key]){
+                    allOrgMappings[key] = [];
+                }
+                allOrgMappings[key].push(id);
+                allOrgMappings[id]=null;
+            }
+        })
+    }
+    function getChridles(r){
+        var chirlds = [];
+        if(!r || r.length == 0){
+            return ;
+        }
+        r.forEach(function (value, index) {
+            chirlds.push(value.id);
+            allOrgMappings[value.id] = getChridles(value.children);
+            return ;
+        });
+        return chirlds;
+
+    }
+    //判断节点是否存在子节点
+    function hasChildren(id) {
+        var node = treeObj.getNodesByParam('id',id,null)[0];
+        if(node.children && node.children.length == 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    //插入子单位
+    function insertNode(obj) {
+        treeObj.addNodes(node,-1,obj);
+    }
+    //删除子单位
+    function deleteNode(id) {
+        var node = treeObj.getNodesByParam('id',id,null);
+        $.each(allOrgMappings,function (key,value) {
+            if(key == node[0].parentId){
+                allOrgMappings[key].splice(allOrgMappings[key].indexOf(id.toString()),1);
+            }
+        })
+        treeObj.removeNode(node[0]);
+        if (id == orgId){
+            debugger
+            getOrgan();
+        }
+    }
+    //修改子单位
+    function editNode(obj) {
+        var node = treeObj.getNodesByParam('id',obj.id,null);
+        node[0].name = obj.name;
+        treeObj.updateNode(node[0]);
+    }
+    //获取子单位
+    function getChildOrgan() {
+        var data = $('#myForm').serializeJSON();
+        if(getChirldsId(node.id).length>0){
+            data.ids = getChirldsId(node.id);
+        }else{
+            data.ids = [];
+        }
+        data.ids.unshift(node.id)
+        data.systemCode = systemCode;
+        tableObj = $("#list").jqGrid({
+            Mtype: 'POST',
+            url:'${_gate_url}/api/admin/gxqpt/org/pageByIds',
+            // url: 'http://192.168.1.124:9770/api/admin/gxqpt/org/pageByIds',
+            postData: {pageNo:1,pageSize:20,data:data},
+            dataType: 'json',
+            contentType: 'application/json',
+            serializeGridData: function(postData){
+                return JSON.stringify(postData);
+            },
+            colNames: ['单位全称', '所属类型', '所属级别', '状态', '启用标记', '操作'],
+            colModel: [{
+                name: 'name',
+                index: 'name',
+                formatter:formatterName
+            }, {
+                name: 'forType',
+                index: 'forType',
+            }, {
+                name: 'forClass',
+                index: 'forClass',
+            }, {
+                name: 'status',
+                index: 'status',
+                formatter:formatterStatus
+            }, {
+                name: 'isenable',
+                index: 'isenable',
+                formatter:formatterEnable
+            }, {
+                name: 'act',
+                index: 'act',
+                title: false,
+                width: '350',
+                align: 'center',
+                formatter: formatterAct
+            }],
+            jsonReader : {
+                root:"data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            pager: '#pager',
+            height: height,
+            multiselect: true,
+            loadComplete: function(res) {
+                organListArray = [];
+                if(res.data.list!=null && res.data.list.length){
+                    $.each(res.data.list,function (index,value){
+                        organListArray.push(value);
+                    })
+                }
+                var rowIds = jQuery("#list").jqGrid('getDataIDs');
+                if(organIdArray.length >0 ){
+                    for(var k=0; k<rowIds.length; k++) {
+                        var curRowData = jQuery("#list").jqGrid('getRowData', rowIds[k]);
+                        var curChk = $("#list tr[id="+rowIds[k]+"]").find(":checkbox");
+                        $.each(organIdArray,function(i,data){
+                            if(rowIds[k] == data){
+                                curChk.attr('checked', 'true');
+                                $("#list").jqGrid('setSelection',data);
+                            }
+                        });
+                    }
+                }
+                // reloadOrgan();
+            },
+            beforeSelectRow:function(rowid, e){//多选
+                if(e.type == 'click'){
+                    i = $.jgrid.getCellIndex($(e.target).closest('td')[0]),
+                        cm = jQuery("#list").jqGrid('getGridParam', 'colModel');
+                    return (cm[i].name == 'cb'); //当点击的单元格的名字为cb时，才触发选择行事件
+                }
+                return false;
+            },
+            onSelectAll: function(aRowids,status){
+                if(status){
+                    for(var i=0; i<aRowids.length; i++){
+                        var curRowData = jQuery("#list").jqGrid('getRowData', aRowids[i]);
+                        organIdArray.push(aRowids[i]);
+                        organIdArray=removeDuplicatedItem(organIdArray);
+                    }
+                }else{
+                    for(var i=0; i<aRowids.length; i++){
+                        var ret = jQuery.inArray(aRowids,organIdArray);
+                        organIdArray.splice(ret,1);
+                    }
+                }
+            },
+            onSelectRow: function(id,check){
+                if(check){
+                    var curRowData = jQuery("#list").jqGrid('getRowData', id);
+                    organIdArray.push(id);
+                    organIdArray=removeDuplicatedItem(organIdArray);
+                }else{
+                    var ret = jQuery.inArray(id,organIdArray);
+                    organIdArray.splice(ret,1);
+                }
+            },
+            onPaging:function(pgButton){
+                var pageNo=$(".ui-pg-input").val();
+                pageNo=parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total=parseInt(total);
+                if(pgButton=="next"){
+                    if(pageNo>=total){
+                        return false;
+                    }else{
+                        pageNo+=1;
+                    }
+                }else if(pgButton=="prev"){
+                    if(pageNo>1){
+                        pageNo-=1;
+                    }else{
+                        return false;
+                    }
+                }else if(pgButton=="last"){
+                    pageNo=total;
+                }else if(pgButton=="first"){
+                    pageNo=1;
+                }
+                var pageSize=$(".ui-pg-selbox").val();
+                if(pageNo!=0){
+                    data.ids = [];
+                    data.systemCode = systemCode;
+                    $("#list").setGridParam({postData:{pageNo:pageNo,pageSize:pageSize,data:data}}).trigger("reloadGrid");
+                    return false;
+                }
+            }
+        });
+    }
+
+    //刷新子单位
+    function reloadOrgan(obj) {
+        organIdArray = [];
+        if(obj){
+            if(obj.length){
+                loadFile();
+                $.each(obj,function (index,value) {
+                    value.icon = '${_static}/images/sys_com/icn_01.png';
+                    insertNode(value);
+                    insertChirldId(value.parentId,value.id);
+                })
+            }else{
+                obj.icon = '${_static}/images/sys_com/icn_01.png';
+                insertNode(obj);
+                insertChirldId(obj.parentId,obj.id);
+            }
+        }
+        var data = $('#myForm').serializeJSON();
+        if(node){
+            var ids = getChirldsId(node.id);
+            if(ids){
+                data.ids = ids;
+            }else{
+                data.ids = [""];
+            }
+        }else {
+            data.ids = [];
+        }
+        data.ids.unshift(node.id)
+        data.systemCode = systemCode;
+        // jQuery.jgrid.GridDestroy('list');
+        tableObj.setGridParam({
+            postData: {pageNo:1,pageSize:Number($('.ui-pg-selbox').val()),data:data}
+        },true).trigger("reloadGrid");
+    }
+
+    function formatterAct(cellvalue, options, rawObject) {
+        var returnValue = "";
+        /*returnValue += '<a class="ui-button marginLeft" href="javascript:" onclick="viewPage('+rawObject.id+')">';
+        returnValue += '详请</a>';*/
+        returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+            resource_code : "authority_org_detail",
+            btnHtml :"<a class=\"ui-button marginLeft\" href=\"javascript:\" onclick=\"viewPage('"+rawObject.id+"')\">详请</a>",
+            htmlInsert: false
+        });
+        if(systemCode != 'sdzzww') {
+            // returnValue += '<span class="oper-separator"></span>';
+            // returnValue += '<a class="ui-button" href="javascript:" onclick="editPage(' + rawObject.id + ')">';
+            // returnValue += '修改</a>';
+            returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                resource_code : "authority_org_update",
+                btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button\" href=\"javascript:\" onclick=\"editPage('"+rawObject.id+"')\">修改</a>",
+                htmlInsert: false
+            });
+           /* returnValue += '<span class="oper-separator"></span>';
+            returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick="delect(' + rawObject.id + ')">';
+            returnValue += '删除</a>'*/
+            returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                resource_code : "authority_org_delete",
+                btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button marginLeft \" href=\"javascript:\" onclick=\"delect('"+rawObject.id+"')\">删除</a>",
+                htmlInsert: false
+            });
+           /* returnValue += '<span class="oper-separator"></span>';
+            returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick="shareApps(' + rawObject.id + ')">';
+            returnValue += '应用分享</a>';*/
+            returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                resource_code : "authority_org_app_share",
+                btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button marginLeft \" href=\"javascript:\" onclick=\"shareApps('"+rawObject.id+"')\">应用分享</a>",
+                htmlInsert: false
+            });
+            /* 单位管理员绑定*/
+            returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                resource_code : "authority_org_delete",
+                btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button marginLeft \" href=\"javascript:\" onclick=\"orgManagerIds('"+rawObject.id+"')\">数据管理员维护</a>",
+                htmlInsert: false
+            });
+        }
+        return returnValue;
+    }
+    function formatterEnable(cellvalue, options, rawObject) {
+        var returnValue = "";
+        if(cellvalue == '1'){
+            returnValue += '<span>启用</span>'
+        }else{
+            returnValue += '<span class="text-danger">禁用</span>'
+        }
+        return returnValue;
+    }
+    function formatterStatus(cellvalue, options, rawObject) {
+        var returnValue = "";
+        if(cellvalue == '1'){
+            returnValue += '<span>正常</span>'
+        }else if(cellvalue == '2'){
+            returnValue += '<span>待撤销</span>'
+        }else if(cellvalue == '3'){
+            returnValue += '<span>已撤销</span>'
+        }
+        return returnValue;
+    }
+    function formatterName(cellvalue, options, rawObject) {
+        return '<span class="fontEllipsis">'+cellvalue+'</span>';
+    }
+    /*点击资源节点查看资源详情*/
+    function onClick(event, treeId, treeNode) {
+        node = treeNode;
+        loadFile();
+        reloadOrgan();
+    };
+    /* 弹出新增页面 */
+    function createPage() {
+        parent.layer.open({
+            id: 'create',
+            type: 2,
+            anim: 6,
+            title: '新增单位',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '75%'],
+            content: "${_cp}/power/organCreate",
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 新增', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("create");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    }
+
+    /* 弹出详情页面 */
+    function viewPage(id) {
+        parent.layer.open({
+            id: 'view',
+            type: 2,
+            anim: 6,
+            title: '单位详情',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '75%'],
+            content: "${_cp}/power/organView?id="+id,
+            btn: ['<span class="glyphicon glyphicon-remove"></span> 关闭'],
+        });
+    }
+
+    /* 弹出修改页面 */
+    function editPage(id) {
+        parent.layer.open({
+            id: 'create',
+            type: 2,
+            anim: 6,
+            title: '修改单位',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '75%'],
+            content: "${_cp}/power/organEdit?id="+id,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 更新', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("create");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    }
+
+    /* 删除 */
+    function delect(id) {
+        // if(hasChildren(id)){
+        //     parent.layer.msg('该单位下面存在子单位，不允许直接删除');
+        //     return false;
+        // }
+        parent.layer.confirm("您确定要删除吗？", {
+            title: '温馨提示',
+            shade: [0.4, '#000'],
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            ajaxHengyun({
+                type:'POST',
+                url:'${_gate_url}/api/admin/gxqpt/org/remove',
+                // url:'http://192.168.1.124:9770/api/admin/gxqpt/org/remove',
+                data:{ids:[id]},
+                success:function (res) {
+                    if(res.data){
+                        deleteNode(id);
+                        reloadOrgan();
+                        parent.layer.msg("删除单位成功！", {icon: 6, time: 1000});
+                    }else{
+                        parent.layer.msg(res.errmsg, {time: 2000});
+                    }
+                }
+            })
+            closeLayer();
+        });
+    }
+    /*导出*/
+    function exportOrgan() {
+        if(organIdArray.length){
+            var urlStr = '${_gate_url}/api/admin/gxqpt/org/export?token='+getCurToken()+'&';
+            $.each(organIdArray,function (index,value) {
+                urlStr += 'ids[]='+value+'&';
+            })
+            window.location.href = urlStr;
+        }else{
+            parent.layer.msg('请选择要导出的单位',{icon: 7});
+        }
+    }
+    /*导入模板下载*/
+    function downloadTemplet(){
+        var urlStr = '${_gate_url}/api/admin/gxqpt/org/downLoadTemplet';
+        window.location.href = urlStr;
+    }
+    /*导入*/
+    $(".btnIn").click(function () {
+        $("#filePicker1 div > label").click();
+    });
+    //启用或禁用
+    function unableToggle(type) {
+        if (organIdArray.length == 0){
+            parent.layer.msg("请选择单位！", {icon: 5, time: 1000});
+            return ;
+        }
+        ajaxHengyun({
+            type:'POST',
+            url:'${_gate_url}/api/admin/gxqpt/org/updateEnable',
+            // url:'http://192.168.1.124:9770/api/admin/gxqpt/org/updateEnable',
+            data:{ids:organIdArray,isenble:type},
+            success:function (res) {
+                if(res.data){
+                    reloadOrgan();
+                    parent.layer.msg("操作成功！", {icon: 6, time: 1000});
+                }else{
+                    parent.layer.msg("操作失败！", {icon: 5, time: 1000});
+                }
+            }
+        })
+    }
+    /* 附件上传 begin */
+    function loadFile() {
+        orgId = node.id;
+        fileUpload1 = new FileUpload({
+            "filePicker": "filePicker1",
+            "fileType":"xls",
+            "dndArea": "dndArea1",
+            "uploader": "uploader1",
+            "jxButton": "jxButton1",
+            "busType": "b_lxmb_pjzb",
+            "tipMsg": "只能上传.xls后缀的目标文件",
+            "orgid": orgId,
+        });
+    }
+    //上传成功的回调函数
+    function successUpload(json) {
+        reloadOrgan(json.data);
+        if (json.errmsg == "ok") {
+            parent.layer.msg("导入成功" + json.data.length + "条！", {icon: 6, time: 1000});
+        } else {
+            parent.layer.msg(json.errmsg, {icon: 6, time: 3000});
+        }
+        fileUpload1 = new FileUpload({
+            "filePicker": "filePicker1",
+            "fileType":"xls",
+            "dndArea": "dndArea1",
+            "uploader": "uploader1",
+            "jxButton": "jxButton1",
+            "busType": "b_lxmb_pjzb",
+            "tipMsg": "只能上传.xls后缀的目标文件",
+            "orgid": orgId,
+        });
+    }
+    /*应用分享*/
+    function shareApps(id) {
+        shareIds = [];
+        $.each(organListArray,function (index,value) {
+            if(value.id == id && value.shareApps){
+                $.each(value.shareApps,function (index1,value1) {
+                    shareIds.push(value1.appId);
+                })
+            }
+        })
+        parent.layer.open({
+            id: 'share',
+            type: 2,
+            anim:6,
+            title: '选择业务系统',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['70%', '80%'],
+            content: "${_cp}/power/shareIds?id="+id,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确认','<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("share");
+                var iframe = $(Id).find("iframe").attr("name");
+                var data = parent[iframe].save(index);
+            }
+        });
+    }
+    /*数据管理员维护*/
+    function orgManagerIds(id) {
+        parent.layer.open({
+            id: 'orgManager',
+            type: 2,
+            anim:6,
+            title: '数据管理员维护',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['70%', '80%'],
+            content: "${_cp}/power/orgManagerIds?orgId="+id,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 关闭'],
+            yes: function (index, layero) {
+                parent.layer.closeAll();
+               /* var html = layero.context;
+                var Id = html.getElementById("orgManager");
+                var iframe = $(Id).find("iframe").attr("name");
+                var data = parent[iframe].save(index);*/
+            }
+        });
+    }
+    //获取选择的分享应用的id
+    function getIds(ids,names) {
+        shareIds = ids;
+    }
+
+</script>
+</body>
+
+</html>

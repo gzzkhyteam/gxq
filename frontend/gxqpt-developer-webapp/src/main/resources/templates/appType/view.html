@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                类型维护 > 应用类型维护 > <span class="active">详情</span>
+            </div>
+            <a href="${_cp}/module/appTypeList" class="button-icon pull-right">
+                返回
+            </a>
+        </div>
+        <div class="main"  ng-app="app" ng-controller="controller">
+            <div class="block">
+                <div class="text-title">应用类型信息</div>
+                <div class="content">
+                    <table class="tab">
+                        <tbody>
+                        <tr>
+                            <th>应用类型名称：</th>
+                            <td>{{rows.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>应用类型编码：</th>
+                            <td>{{rows.code}}</td>
+                        </tr>
+                        <tr>
+                            <th>创建人：</th>
+                            <td>{{rows.createUser}}</td>
+                        </tr>
+                        <tr>
+                            <th>创建时间：</th>
+                            <td>{{rows.createTime}}</td>
+                        </tr>
+                        <tr>
+                            <th>应用类型描述：</th>
+                            <td>{{rows.description}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script>
+    var pageType={open:['typeManage'],act:['appTypeList']};
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope,$http,token) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.submit = function () {
+            $('.btn-submit').click();
+        };
+        $http.get(urlPrev + '/maintenance/get',{
+            params:{
+                id:"${id}"
+            },
+            headers:{token:token.getToken(),isAdmin:true}
+        }).success(function (res) {
+            $scope.rows=res.data;
+        });
+    }).service('token',function () {
+        this.getToken = function () {
+            return getToken();
+        }
+    });
+</script>
+</body>
+</html>

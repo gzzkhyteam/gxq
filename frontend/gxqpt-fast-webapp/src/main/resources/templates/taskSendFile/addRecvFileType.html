@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta http-equiv="Expires" content="0" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+<!-- begin 外部CSS引入 -->
+<link rel="stylesheet" type="text/css"
+	href="${_css}/reset.css">
+<link rel="stylesheet" type="text/css"
+	href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" type="text/css"
+	href="${_lib}/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css"
+	href="${_lib}/font-awesome/css/font-awesome.min.css">
+<!--
+    <link rel="stylesheet" type="text/css"
+        href="${_lib}/chosen/chosen.min.css">
+    -->
+<link rel="stylesheet" type="text/css"
+	href="${_lib}/chosen/bootstrap-chosen.css">
+<link rel="stylesheet" type="text/css"
+	href="${_lib}/webuploader/webuploader.css">
+<link rel="stylesheet" type="text/css"
+	href="${_lib}/jquery-step/jquery.step.css">
+
+<link type="text/css" rel="stylesheet"
+	href="${_lib}/ValidateForm/Validform.css"/>
+
+<link rel="stylesheet"
+	href="${_static}/themes/blue/css/ui.css">
+
+<link rel="stylesheet" href="${_css}/app.css">
+<!-- end 外部CSS引入 -->
+
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+	<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+	<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+
+<!-- begin 自定义样式 -->
+<style type="text/css">
+.row {
+	margin: 0 0;
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+}
+
+.console-title {
+	min-height: 20px;
+	text-align: center;
+	font-size: 18px;
+	color: #000000;
+	border-bottom: none;
+}
+
+.list-section {
+	padding-bottom: 24px;
+	background: #fff;
+}
+
+.list-content {
+	width: 95%;
+	margin: 0 auto;
+}
+
+.list-content h5 {
+	margin: 0 0;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #0099cc;
+}
+
+.list-content h4 {
+	font-size: 12px;
+	line-height: 12px;
+	font-family: "微软雅黑";
+	vertical-align: middle;
+}
+
+label.control-label {
+	text-align: right;
+}
+
+table.infoList tr th {
+	border: 1px solid #e1e6eb;
+	padding: 10px 12px;
+	vertical-align: middle;
+	width: 180px;
+	font-weight: normal;
+}
+
+table.infoListTab tr th {
+	width: auto;
+}
+
+.upuserhead {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.uploader {
+	width: 100%;
+}
+
+table.infoList tbody tr td input.form-control {
+	width: 100%;
+}
+
+table.infoList tbody tr td select.form-control {
+	width: 100%;
+}
+</style>
+<!-- end 自定义样式 -->
+
+</head>
+
+<body>
+
+	<div class="workspace-body">
+		<div class="console-container">
+			<div class="row">
+				<div class="col-sm-12">
+					<!-- begin 标题 -->
+					<div class="console-title console-title-border clearfix">
+						<div class="pull-left">
+							<h5>
+								收文设置管理 > <font color="#0099cc">增加收文设置</font>
+							</h5>
+						</div>
+						<div class="pull-right">
+							<button class="btn btn-default go-back">
+								<span class="glyphicon glyphicon-backward"></span>
+								返回
+							</button>
+						</div>
+					</div>
+					<!-- begin 页面内容主体 -->
+					<div class="list-section">
+						<div class="list-content">
+							<div class="form-inline view-info" id="taskRecvFileInfo">
+								<fieldset>
+								<form onsubmit="return false;" onclick="return false;" id="taskRecvFileType">
+									
+									<div class="col-sm-12">
+
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w153"> <span
+													class="text-danger">*</span> <span>收文设置名称</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<div class="form-control-wrap">
+														<input class="form-control" name="name" id="name" datatype="*" nullmsg="名称不允许为空">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w153"> <span
+														class="text-danger">*</span> <span>是否有二级编号</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<select class="form-control w153" name="haveSecondNo" id="haveSecondNo">
+														<option value="0">无</option>
+														<option value="1">有</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w153"> <span
+														class="text-danger">*</span> <span>领导名称</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<div class="form-control-wrap">
+														<input class="form-control" name="leaderName" id="leaderName" datatype="*" nullmsg="领导名称不允许为空">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w153"> <span
+														class="text-danger">*</span> <span>综合处交办的任务</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<select class="form-control w153" name="comOfficeTask" id="comOfficeTask">
+														<option value="0">无</option>
+														<option value="1">有</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w153"> <span>完成时限(天)</span> <span>：</span>
+												</label>
+												<div class="form-control-wrap">
+													<input class="form-control" type="number" name="timeLimitDay" id="timeLimitDay">
+												</div>
+											</div>
+										</div>
+
+									
+										<div class="text-center">
+											<button class="btn btn-primary" id="btnReset">返回</button>
+											<button class="btn btn-primary" id="btnSubmitFileType">提交</button>
+										</div>
+									</div>
+									</form>
+								</fieldset>
+							</div>
+						</div>
+					</div>
+					<!-- end 页面内容主体 -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="display: none;">
+	<!--	<c:forEach items="${files}" var="obj">
+			<div class="key_${obj.fileType }">
+				<input class="id" value="${obj.id }"> <input class="name"
+					value="${obj.name }">
+			</div>
+		</c:forEach>-->
+	</div>
+
+	<!--begin 外部JS引入 -->
+	<script type="text/javascript"
+		src="${_lib}/jqgrid/js/jquery.jqGrid.js"></script>
+	<script type="text/javascript"
+		src="${_lib}/jqgrid/i18n/grid.locale-cn.js"></script>
+	<script type="text/javascript"
+		src="${_lib}/chosen/chosen.jquery.min.js"></script>
+	<script type="text/javascript"
+		src="${_lib}/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript"
+		src="${_lib}/webuploader/webuploader.min.js"></script>
+	<script type="text/javascript"
+		src="${_lib}/jquery-step/jquery.step.js"></script>
+	<script type="text/javascript"
+		src="${_lib}/layer/layer.js"></script>
+	<script type="text/javascript"
+		src="${_static}/themes/blue/js/ui.js"></script>
+
+
+	<script type="text/javascript" src="${_lib}/ValidateForm/Validform_v5.3.2_min.js"></script>
+	<script type="text/javascript" src="${_lib}/ValidateForm/Valid.js"></script>
+	<script type="text/javascript" src="${_lib}/jqueryform/jquery.form.js"></script>
+
+	<script type="text/javascript"
+		src="${_js}/app.js"></script>
+	<!--end 外部JS引入 -->
+	<script type="text/javascript"
+		src="${_js}/uploadfile.js"></script>
+	<script type="text/javascript" src="${_js}/lj.js"></script>
+	<!--begin 自定义JS -->
+	<script type="text/javascript">
+		$('#btnReset').click(function () {
+            $('#name').val('');
+            $('#leaderName').val('');
+            $('#haveSecondNo').val(0);
+            $('#comOfficeTask').val(0);
+        });
+        $('#btnSubmitFileType').valid({
+            form: '#taskRecvFileType',
+            showAllError: true,
+            checkpassed: function () {
+				//parent.layer.confirm("您确定保存吗？",{icon: 3, title:'确认'},submitFrom());
+
+				parent.layer.confirm("您确定提交吗？",{btn: ['提交','取消'],shade: false },function(index) {
+					ajaxHengyun({
+						url: "${_baseUrl }/doAddRecvFileType.do",
+						type: "post",
+						dataType: 'json',
+						data: GetWebControls("#taskRecvFileType"),
+						success: function(data){
+							console.log(JSON.stringify(data));
+							if(data.success){
+								parent.layer.alert("添加成功", function(){
+									parent.layer.closeAll();
+									window.location.href = '${_baseUrl}/szDocument.do';
+								});
+							}
+						}
+					});
+
+
+				});
+            }
+        });
+        var index = parent.layer.getFrameIndex(window.name);
+		/*function submitFrom(){
+
+		}*/
+		
+		/*
+		 自动获取页面控件值
+		 */
+	    function GetWebControls(element) {
+	        var reVal = "";
+	        $(element).find('input,select,textarea').each(function (r) {
+	            var id = $(this).prop('name');
+	            var value = $(this).val();
+	            var type = $(this).prop('type');
+	            if(id){
+	                switch (type) {
+	                    case "checkbox":
+	                        if ($(this).prop("checked")) {
+	                            reVal += '"' + id + '"' + ':' + '"1",';
+	                        } else {
+	                            reVal += '"' + id + '"' + ':' + '"0",';
+	                        }
+	                        break;
+	                    case "radio":
+	                        if ($(this).prop("checked")) {
+	                            reVal += '"' + id + '":' + '"' + $.trim(value) + '",';
+	                        }
+	                        break;
+	                    default:
+	                        if (value != "") { //如果值为空就传空，不需要传空格 -wgj
+	                            reVal += '"' + id + '"' + ':' + '"' + $.trim(value) + '",';
+	                        }else{
+	                        	reVal += '"' + id + '"' + ':' + '"",';
+	                        }
+	                        break;
+	                }
+	            }
+	        });
+	        reVal = reVal.substr(0, reVal.length - 1);
+	        reVal = reVal.replace(/\\/g, '\\\\');
+	        reVal = reVal.replace(/\n/g, '\\n');
+	        return jQuery.parseJSON('{' + reVal + '}');
+	    }
+	</script>
+	<!--end 自定义JS -->
+</body>
+</html>

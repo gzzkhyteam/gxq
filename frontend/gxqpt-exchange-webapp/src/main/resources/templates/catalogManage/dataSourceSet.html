@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix" style="padding: 20px;">
+        <div class="row">
+            <form id="searchDataForm" action="" class="search-form">
+                <ul class="clearfix">
+                    <li class="pull-left">
+                        <label class="control-label">数据源名称：</label>
+                        <input name="sourceName" class="" placeholder="" autocomplete="off"/>
+                    </li>
+                    <li class="pull-left">
+                        <label class="control-label">数据库类型：</label>
+                        <select name="dbType" class="chosen-select">
+                            <option value="0">所有</option>
+                            <option value="2">MySQL</option>
+                            <option value="3">SqlServer</option>
+                            <option value="1">oracle</option>
+                        </select>
+                    </li>
+                    <li class="pull-left">
+                        <button type="button" class="btn btn-primary search-button" onclick="searchBtn()">
+                            <span class="glyphicon glyphicon-search"></span> 查询
+                        </button>
+                    </li>
+                </ul>
+            </form>
+            <table id="dataSourceList" class="default-table tab-title-top">
+                <thead>
+                <tr>
+                    <th width="60">选择</th>
+                    <th>数据源名称</th>
+                    <th>数据库类型</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div class="text-center">
+                <ul class="pagination" id="pagination" ></ul>
+                <p class="pull-right currentPage">共<i id="totalNum" class="colorBlue"></i>条数据，当前第<i id="pageNum" class="colorBlue"></i>页/共<i id="totalPages"  class="colorBlue">10</i>页</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var dataSourceId="";
+    var dataSourceName="";
+    var parm={
+        data:{},
+        pageNo:"${pageNo}",
+        pageSize:10
+    };
+    searchBtn();
+    function searchBtn(){//查询
+        var dataDTO =$("#searchDataForm").serializeJSON();
+        if(dataDTO){
+            dataDTO.dbType=parseInt(dataDTO.dbType);
+        }
+        parm.data=dataDTO;
+        parm.pageNo = 1;
+        getList(parm);
+    }
+    getList(parm);
+    /*获取数据源列表*/
+    function  getList(parm) {
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url:  '${_gate_url}/api/exchange/dataapi/dbSource/find ',
+            data:JSON.stringify(parm),
+            success:function(rows){
+                var html=""
+                if (rows.data){
+                    rows.data.list.forEach(function(value,index){
+                        var value=dealElement(value);
+                        var dbName="",unitName="";
+                        if(value.dbType==2){
+                            dbName="Mysql";
+                        };
+                        if(value.dbType==1){
+                            dbName="Oracle";
+                        };
+                        if(value.dbType==3){
+                            dbName="SQL Server";
+                        };
+                        html+='<tr onclick="setDataSourceTr(this,\''+value.id+'\',\''+value.sourceName+'\')">';
+                        html+='<td>';
+                        if(value.id==dataSourceId){
+                            html+='<input type="radio" name="dataSource" class="radioChecked" value="'+value.id+'" onchange="setDataSource(this,\''+value.id+'\',\''+value.sourceName+'\')" checked/>';
+                        }else{
+                            html+='<input type="radio" name="dataSource" class="radioChecked" value="'+value.id+'" onchange="setDataSource(this,\''+value.id+'\',\''+value.sourceName+'\')"/>';
+                        }
+                        html+='</td>';
+                        html+='<td>'+value.sourceName+'</td>';
+                        html+='<td>'+dbName+'</td>';
+                        html+='</tr>';
+                    });
+                    $("#dataSourceList tbody").html(html);
+                    $('#totalPages').text(rows.data.pages);
+                    $('#totalNum').text(rows.data.total);
+                    jqPaginator(rows.data);
+                }
+                updateIformHeight();
+            }
+        });
+    }
+    function setDataSourceTr(ele,id,name){
+        var checkedVal= $(ele).find(".radioChecked").prop("checked");
+        if(!checkedVal){
+            dataSourceId=id;
+            dataSourceName=name;
+            $(ele).find(".radioChecked").prop("checked",true);
+        }
+    }
+    function setDataSource(ele,id,name){
+        var checkedVal= $(ele).prop("checked");
+        if(checkedVal){
+            dataSourceId=id;
+            dataSourceName=name;
+        }
+    }
+    /*提交*/
+    function save(index){
+       if(dataSourceId==""){
+           top.layer.msg("请选择数据源！",{time:1000});
+       }else {
+           parent.setDataSource(dataSourceId, dataSourceName);
+           parent.layer.close(index);
+       }
+    };
+</script>
+</body>
+</html>

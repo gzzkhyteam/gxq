@@ -1,0 +1,131 @@
+<!--
+  服务器配置项，根据hidecode来判断隐藏哪些项
+  itemCode = [
+    'CPU',
+    '内存',
+    '操作系统',
+    '所属网络',
+    '网络带宽',
+    '网关描述',
+    '数据盘',
+    '申请数量'
+  ]
+-->
+<template>
+  <Form
+    :label-width="100"
+    :model="configInfo">
+    <FormItem label="CPU：" v-if="!hidecode.includes('CPU')">
+      <RadioGroup v-model="configInfo.name">
+        <Radio label="4核"></Radio>
+        <Radio label="8核"></Radio>
+        <Radio label="16核"></Radio>
+      </RadioGroup>
+    </FormItem>
+    <FormItem label="内存：" v-if="!hidecode.includes('内存')">
+      <RadioGroup v-model="configInfo.name">
+        <Radio label="4GB"></Radio>
+        <Radio label="8GB"></Radio>
+        <Radio label="16GB"></Radio>
+      </RadioGroup>
+    </FormItem>
+    <FormItem label="操作系统：" v-if="!hidecode.includes('操作系统')">
+      <Select v-model="configInfo.type" style="width:140px">
+        <Option v-for="item in categoryList" :value="item.value" :key="item.value">{{item.label}}</Option>
+      </Select>
+    </FormItem>
+    <FormItem label="所属网络：" v-if="!hidecode.includes('所属网络')">
+      <Select v-model="configInfo.type" style="width:140px">
+        <Option v-for="item in categoryList" :value="item.value" :key="item.value">{{item.label}}</Option>
+      </Select>
+    </FormItem>
+    <FormItem label="网络带宽：" v-if="!hidecode.includes('网络带宽')">
+      <Select v-model="configInfo.type" style="width:140px">
+        <Option v-for="item in categoryList" :value="item.value" :key="item.value">{{item.label}}</Option>
+      </Select>
+    </FormItem>
+    <FormItem label="网关描述：" v-if="!hidecode.includes('网关描述')">
+      <Input
+        type="textarea"
+        v-model="configInfo.content"
+        :rows="5">
+      </Input>
+    </FormItem>
+    <FormItem label="数据盘：" v-if="!hidecode.includes('数据盘')">
+      <Button style="float: right;" type="primary" @click="addDisk">+添加</Button>
+      <div class="disk" v-for="(item, idx) in configInfo.diskList">
+        <FormItem :label="`磁盘${idx+1}：`" :label-width="60">
+          <Input
+            type="text"
+            v-model="configInfo.diskList[idx]"
+            style="width: 138px;">
+            <span slot="append">GB</span>
+          </Input>
+        </FormItem>
+      </div>
+    </FormItem>
+    <FormItem label="申请数量：" v-if="!hidecode.includes('申请数量')">
+      <Input v-model="configInfo.count" id="applyCount" style="width: 72px;">
+        <span slot="prepend" @click="changeCount(0)">-</span>
+        <span slot="append" @click="changeCount(1)">+</span>
+      </Input>
+    </FormItem>
+  </Form>
+</template>
+
+<script>
+export default {
+  props: {
+    configInfo: {
+      type: Object,
+      default: () => {
+        return {
+          name: '',
+          content: '',
+          type: '',
+          count: 1,
+          diskList: [0]
+        }
+      }
+    },
+    hidecode: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    }
+  },
+  data () {
+    return {
+      categoryList: [{
+        value: 1,
+        label: '分类1'
+      }]
+    }
+  },
+  methods: {
+    changeCount (type) {
+      if (type === 1) {
+        this.configInfo.count++
+      } else {
+        this.configInfo.count > 0 ? this.configInfo.count-- : ''
+      }
+    },
+    addDisk () {
+      this.configInfo.diskList.push(0)
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.disk{
+  margin: 0 70px 10px 0;
+}
+</style>
+
+<style lang="less">
+#applyCount div{
+  cursor: pointer;
+}
+</style>

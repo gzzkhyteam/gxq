@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | thrDUI</title>
+  <style>
+    html,body{
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+  <script src="Build/UnityLoader.js"></script>
+  <script>
+      var gameInstance = UnityLoader.instantiate("gameContainer", "Build/v10.4.2.json");
+      function onclick_qb()
+      {
+          gameInstance.SendMessage('__InteractObject','DeactiveFlow');
+      };
+      function onclick_sjl()
+      {
+          gameInstance.SendMessage('__InteractObject','ActiveDataFlow');
+      };
+      function onclick_dyl()
+      {
+          gameInstance.SendMessage('__InteractObject','ActiveCallFlow');
+      };
+      function onclick_yml()
+      {
+          gameInstance.SendMessage('__InteractObject','ActivePageFlow');
+      };
+  </script>
+</head>
+<body>
+<div id="gameContainer" style="width: 100%; height: 100%; margin: auto"></div>
+<div id="btn">
+  <input type="button" value="全部" onclick="javascript:onclick_qb()"/>
+  <input type="button" value="数据流" onclick="javascript:onclick_sjl()"/>
+  <input type="button" value="调用流" onclick="javascript:onclick_dyl()"/>
+  <input type="button" value="页面流" onclick="javascript:onclick_yml()"/>
+</div>
+</body>
+</html>

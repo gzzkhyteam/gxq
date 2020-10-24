@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+     <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+     <script src="${_static}/js/echarts.js"></script>
+		<script src="${_static}/js/jquery-3.2.1.js"></script>
+</head>
+<body>
+    <div id="main" style="width:100%;height: 310px;border:none;overflow:auto;"></div>
+</body>
+<script type="text/javascript">
+	
+require.config({
+    paths: {
+        echarts: 'http://echarts.baidu.com/build/dist'
+    }
+});
+
+// 使用
+require(
+    [
+        'echarts',
+        //按需加载 (例如:使用柱状图就加载bar模块)
+        //'echarts/chart/line',             //折线（面积）图
+        //'echarts/chart/bar',             //柱状（条形）图
+        //'echarts/chart/scatter',        //散点（气泡）图
+        //'echarts/chart/k',             //K线图
+        //'echarts/chart/pie',             //饼（圆环）图
+        //'echarts/chart/radar',         //雷达（面积）图
+        //'echarts/chart/chord',         //和弦图
+        //'echarts/chart/force',         //力导向布局图
+        //'echarts/chart/map',             //地图
+        //'echarts/chart/gauge',         //仪表盘
+        //'echarts/chart/funnel',         //漏斗图
+        //'echarts/chart/eventRiver',    //事件河流图
+        //'echarts/chart/venn',         //韦恩图
+        //'echarts/chart/treemap',        //矩形树图
+        //'echarts/chart/tree',         //树图
+        'echarts/chart/wordCloud',    //字符云
+        //'echarts/chart/mix',             //混搭
+        //'echarts/chart/component',    //组件
+        //'echarts/chart/other',         //其他
+        //'echarts/chart/theme',         //主题
+        //'echarts/chart/topic',         //专题
+    ],
+    function (ec) {
+        // 基于准备好的dom，初始化echarts图表
+        var myChart = ec.init(document.getElementById('main')); 
+
+        function createRandomItemStyle() {
+            /*return {
+                normal: {
+                    color: 'rgb(' + [
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160)
+                    ].join(',') + ')'
+                }
+            };*/
+        }
+
+        option = {
+            title: {
+               
+                link: 'http://www.google.com/trends/hottrends'
+            },
+            tooltip: {
+                show: true
+            },
+            series: [{
+                name: '',
+                type: 'wordCloud',
+                size: ['120%', '120%'],
+                textRotation : [0, 45, 90, -45],
+                textPadding: 0,
+                autoSize: {
+                    enable: true,
+                    minSize: 14
+                },
+                data: [
+                    {
+                        name: "部门",
+                        value: 1000,
+                        itemStyle: {
+                            normal: {
+                                color: '#562cd9'
+                            }
+                        }
+                    },
+                    {
+                        name: "单位",
+                        value: 30,
+                        itemStyle: {
+                            normal: {
+                                color: '#698cd9'
+                            }
+                        }
+                    },
+                    {
+                        name: "名称",
+                        value: 50,
+                       itemStyle: {
+                            normal: {
+                                color: '#11d2e9'
+                            }
+                        }
+                    },
+                    {
+                        name: "电话",
+                        value: 60,
+                        itemStyle: {
+                            normal: {
+                                color: '#ff66ff'
+                            }
+                        }
+                    },
+                    {
+                        name: "企业名称",
+                        value: 30,
+                        itemStyle: {
+                            normal: {
+                                color: '#7293fc'
+                            }
+                        }
+                    },
+                    {
+                        name: "情况",
+                        value:60,
+                        itemStyle: {
+                            normal: {
+                                color: '#107dba'
+                            }
+                        }
+                    },
+                    {
+                        name: "机构",
+                        value: 30,
+                        itemStyle: {
+                            normal: {
+                                color: '#8f89dd'
+                            }
+                        }
+                    },
+                    {
+                        name: "区县",
+                        value: 46,
+                        itemStyle: {
+                            normal: {
+                                color: '#ff66ff'
+                            }
+                        }
+                    },
+                    {
+                        name: "事项",
+                        value: 44,
+                        itemStyle: {
+                            normal: {
+                                color: '#ff66ff'
+                            }
+                        }
+                    },
+                    {
+                        name: "名录",
+                        value: 30,
+                        itemStyle: {
+                            normal: {
+                                color: '#11d2e9'
+                            }
+                        }
+                    },
+                    {
+                        name: "服务",
+                        value: 35,
+                        itemStyle: {
+                            normal: {
+                                color: '#107dba'
+                            }
+                        }
+                    },
+                    {
+                        name: "联系人",
+                        value: 32,
+                        itemStyle: {
+                            normal: {
+                                color: '#8f89dd'
+                            }
+                        }
+                    },
+                    {
+                        name: "数据目录",
+                        value: 21,
+                        itemStyle: createRandomItemStyle()
+                    },
+                    {
+                        name: "KXAN",
+                        value: 52,
+                        itemStyle: {
+                            normal: {
+                                color: '#698cd9'
+                            }
+                        }
+                    },
+                    {
+                        name: "地址",
+                        value: 44,
+                        itemStyle: {
+                            normal: {
+                                color: '#562cd9'
+                            }
+                        }
+                    },
+                    {
+                        name: "api",
+                        value: 63,
+                        itemStyle: {
+                            normal: {
+                                color: '#ff66ff'
+                            }
+                        }
+                    },
+                    {
+                        name: "服务",
+                        value: 45,
+                        itemStyle: {
+                            normal: {
+                                color: '#11d2e9'
+                            }
+                        }
+                    },
+                    {
+                        name: "名录",
+                        value: 40,
+                        itemStyle: {
+                            normal: {
+                                color: '#7293fc'
+                            }
+                        }
+                    },
+                    {
+                        name: "机构名称",
+                        value: 30,
+                        itemStyle: {
+                            normal: {
+                                color: '#107dba'
+                            }
+                        }
+                    },
+                    {
+                        name: "单位名称",
+                        value: 40,
+                        itemStyle: {
+                            normal: {
+                                color: '#8f89dd'
+                            }
+                        }
+                    }
+                ]
+            }]
+        };
+
+        // 为echarts对象加载数据 
+        myChart.setOption(option); 
+    }
+);
+
+</script>
+</html>

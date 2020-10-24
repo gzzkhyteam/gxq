@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>系统列表</span> &gt; <span class="page-title-scend">详情</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="window.location.href='${_cp}/module/systemList?pageNo=${pageNo}'">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div id="unit" class="view_item">
+								<table class="table default-table tab-border-no-layer borderCollapse">
+									<tbody>
+										<tr>
+											<th width="220">现有信息化系统名称：</th>
+											<td id="sysName" class="viewTd"></td>
+											<th width="190">系统承建商：</th>
+											<td id="contractor" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>承建商联系人：</th>
+											<td id="contName" class="viewTd"></td>
+											<th>联系电话：</th>
+											<td id="contTel" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>系统使用状态：</th>
+											<td id="status" class="viewTd"></td>
+											<th>访问地址：</th>
+											<td id="url" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>用户体系（省电子政务网/自建）：</th>
+											<td id="userReft" class="viewTd"></td>
+											<th>网络环境：</th>
+											<td id="network" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>是否需要key：</th>
+											<td id="hasKey" class="viewTd"></td>
+											<th>是否需要VPN：</th>
+											<td id="hasVpn" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>系统架构(BS/CS)：</th>
+											<td id="sysArch" class="viewTd"></td>
+											<th>账号密码：</th>
+											<td id="password" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>开发语言及框架：</th>
+											<td id="langeFrwork" class="viewTd"></td>
+											<th>是否有系统说明书：</th>
+											<td id="hasInstruction" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>系统运行环境：</th>
+											<td id="sysRunEnvent" class="viewTd"></td>
+											<th>数据存储地：</th>
+											<td id="dataAddress" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>数据库类型：</th>
+											<td id="dbType" class="viewTd"></td>
+											<th>数据量：</th>
+											<td id="dataCount" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>是否有数据字典，能否提供：</th>
+											<td id="hasDict" class="viewTd"></td>
+											<th>是否对外提供数据共享接口：</th>
+											<td id="shareChain" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>对其他单位的数据需求：</th>
+											<td id="dataDemand" colspan="3" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>系统包含主要数据：</th>
+											<td id="majorData" colspan="3" class="viewTd"></td>
+										</tr>
+										<tr>
+											<th>系统主要用途：</th>
+											<td id="sysPurpose" colspan="3" class="viewTd"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+            getInfo("${id}");
+            function getInfo(id){//获取详情
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/dataapi/system/getById',
+                    data:{id:id},
+                    success:function(rows){
+                        if(rows.data){
+                            rows.data =dealElement(rows.data);
+                            $("#sysName").text(rows.data.sysName);
+                            $("#contractor").text(rows.data.contractor);
+                            $("#contName").text(rows.data.contName);
+                            $("#contTel").text(rows.data.contTel);
+                            var statusName = "";
+                            switch(rows.data.status){
+								case 1:
+                                    statusName = "在用";
+                                    break;
+                                case 2:
+                                    statusName = "停用";
+                                    break;
+                                case 3:
+                                    statusName = "整改中";
+                                    break;
+								default:
+                                    statusName = "";
+							};
+                            $("#status").text(statusName);
+                            $("#url").text(rows.data.url);
+                            var userReftName = "";
+                            switch(rows.data.userReft){
+                                case 1:
+                                    userReftName = "省电子政务网";
+                                    break;
+                                case 2:
+                                    userReftName = "自建";
+                                    break;
+                                default:
+                                    statusName = "";
+                            };
+                            $("#userReft").text(userReftName);
+
+                            var networkName = "";
+                            switch(rows.data.network){
+                                case 1:
+                                    networkName = "互联网";
+                                    break;
+                                case 2:
+                                    networkName = "电子政务外网";
+                                    break;
+								case 3:
+                                    networkName = "电子政务内网";
+                                    break;
+                                case 4:
+                                    networkName = "电子政务专网";
+                                    break;
+                                default:
+                                    statusName = "";
+                            };
+                            $("#network").text(networkName);
+                            var hasKeyName = "";
+                            switch(rows.data.hasKey){
+                                case 1:
+                                    hasKeyName = "是";
+                                    break;
+                                case 2:
+                                    hasKeyName = "否";
+                                    break;
+                                default:
+                                    hasKeyName = "";
+                            };
+                            $("#hasKey").text(hasKeyName);
+                            var hasVpnName = "";
+                            switch(rows.data.hasVpn){
+                                case 1:
+                                    hasVpnName = "是";
+                                    break;
+                                case 2:
+                                    hasVpnName = "否";
+                                    break;
+                                default:
+                                    hasVpnName = "";
+                            };
+                            $("#hasVpn").text(hasVpnName);
+                            var sysArchName = "";
+                            switch(rows.data.sysArch){
+                                case 1:
+                                    sysArchName = "BS";
+                                    break;
+                                case 2:
+                                    sysArchName = "CS";
+                                    break;
+                                default:
+                                    sysArchName = "";
+                            };
+                            $("#sysArch").text(sysArchName);
+                            $("#password").text(rows.data.password);
+                            $("#langeFrwork").text(rows.data.langeFrwork);
+                            var hasInstructionName = "";
+                            switch(rows.data.hasInstruction){
+                                case 1:
+                                    hasInstructionName = "是";
+                                    break;
+                                case 2:
+                                    hasInstructionName = "否";
+                                    break;
+                                default:
+                                    hasInstructionName = "";
+                            };
+                            $("#hasInstruction").text(hasInstructionName);
+                            $("#sysRunEnvent").text(rows.data.sysRunEnvent);
+                            $("#dataAddress").text(rows.data.dataAddress);
+                            var dbTypeName = "";
+                            switch(rows.data.dbType){
+                                case '2':
+                                    dbTypeName = "MySQL";
+                                    break;
+                                case '1':
+                                    dbTypeName = "oracle";
+                                    break;
+                                case '3':
+                                    dbTypeName = "SqlServer";
+                                    break;
+                                default:
+                                    dbTypeName = "";
+                            };
+                            $("#dbType").text(dbTypeName);
+                            $("#dataCount").text(rows.data.dataCount);
+                            var hasDictName = "";
+                            switch(rows.data.hasDict){
+                                case 1:
+                                    hasDictName = "是";
+                                    break;
+                                case 2:
+                                    hasDictName = "否";
+                                    break;
+                                default:
+                                    hasDictName = "";
+                            };
+                            $("#hasDict").text(hasDictName);
+                            var shareChainName = "";
+                            switch(rows.data.shareChain){
+                                case 1:
+                                    shareChainName = "是";
+                                    break;
+                                case 2:
+                                    shareChainName = "否";
+                                    break;
+                                default:
+                                    shareChainName = "";
+                            };
+                            $("#shareChain").text(shareChainName);
+                            $("#dataDemand").text(rows.data.dataDemand);
+                            $("#majorData").text(rows.data.majorData);
+                            $("#sysPurpose").text(rows.data.sysPurpose);
+                        };
+                        updateIformHeight();
+                    }
+                });
+            }
+		</script>
+	</body>
+</html>

@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Expires" content="0" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <!-- begin 外部CSS引入 -->
+ <link rel="stylesheet" type="text/css" href="${_css}/reset.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/webuploader/webuploader.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jquery-step/jquery.step.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_css}/app.css">
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+	<script type="text/javascript" src="${_js}/hengyun/hengyun_ajax.js"></script>
+    <!-- begin 自定义样式 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        label.control-label {
+            text-align: right;
+        }
+
+        table.infoList tr th {
+            border: 1px solid #e1e6eb;
+            padding: 10px 12px;
+            vertical-align: middle;
+            width: 180px;
+            font-weight: normal;
+        }
+
+        table.infoListTab tr th {
+            width: auto;
+        }
+
+        .upuserhead {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .uploader {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td input.form-control {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td select.form-control {
+            width: 100%;
+        }
+        .view-text{
+          	 height:auto!important;
+        	line-height: initial!important;
+    		width: calc(100% - 127px)!important;
+        }
+                .view-lab1{
+        	min-height:48px!important;
+        }
+        .col3,.col2,.col1{
+        	height:auto!important;
+        	min-height:48px;
+        }
+        .show-file{border:none!important;}
+        .show-file li{
+        	float:left;
+        	width:150px!important;
+        	height:150px!important;
+        	margin-right:15px;
+        	margin-bottom:15px;
+        	position: relative;
+    		text-align: center;
+    		border:1px solid #ccc!important;
+        }
+        .show-file .title{
+        	    height: 25px;
+			    line-height: 25px;
+			    text-align: center;
+			    background: rgba(0,0,0,0.5);
+			    color: #f5f5f5;
+			    overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+        }
+        .show-file .file-panel{
+        	    height: 30px;
+			    position: absolute;
+			    bottom: 0;
+			    width: 100%;
+			    background: rgba(0,0,0,0.5);
+        }
+        .show-file a{
+        	color:#f5f5f5!important;
+        	font-size:13px!important;
+        	padding-right:10px;
+        	line-height:30px;
+        }
+        .console-container{
+            height: auto;
+        }
+        #ul-list li{
+            list-style: none;
+        }
+    </style>
+    <!-- end 自定义样式 -->
+
+</head>
+
+<body>
+
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>
+                            收文管理 > <font color="#0099cc">收文详情</font>
+                        </h5>
+                    </div>
+                    <div class="pull-right">
+								<button class="btn btn-default go-back">
+									<span class="glyphicon glyphicon-backward"></span> 返回上一级
+								</button>
+						</div>
+                </div>
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                            	<div class="col-sm-12">
+                            	 	<div class="form-field">
+                            	 	    <ul id="ul-list">
+		                            		<li class="col3">
+		                                        <label class="view-lab1" >来文类型</label><span class="view-text" id ="docType"></span>
+		                                    </li>
+		                            		<li class="col3">
+		                                        <label class="view-lab1" >来文机关</label><span class="view-text" id="docUnit"></span>
+		                                    </li>
+		                            		<li class="col3">
+		                                        <label class="view-lab1" >收文时间</label><span class="view-text" id="docTime"></span>
+		                                    </li>
+		                            		<li class="col3">
+		                                        <label class="view-lab1" >收文编号</label><span class="view-text" id="docNum"></span>
+		                                    </li>
+		                            		<!--<li class="col3">
+		                                        <label class="view-lab1" >密级</label><span class="view-text" id="rank"></span>
+		                                    </li>-->
+		                            		<li class="col3">
+		                                        <label class="view-lab1" >文件标题</label><span class="view-text" id="title"></span>
+		                                    </li>
+		                            		<li class="col1">
+		                                        <label class="view-lab1" >紧急程度</label><span class="view-text" id="urgencyDegree"></span>
+		                                    </li>
+		                            		<li class="col1">
+												<label class="view-lab1" >内容概要</label><span class="view-text" style="word-break:break-all; " id="content"></span>
+		                                    </li>
+		                                    <li class="col1">
+                                                <label class="view-lab1" >附件</label>
+                                                <div class="view-text">
+	                                                <ul class="show-file">
+
+																<li><p class="title"></p>
+																	<p class="imgWrap">
+																		<img width="110px;" height="110px;"
+																			src="" id="attachmentUrl" />
+																	</p>
+																	<!-- <div class="file-panel text-right" style="height: 30px; display: none;">
+																		<a href="javascript:void(0)" class="downFile"
+																			onclick="downFile();">点击下载</a>
+																	</div> -->
+																</li>
+
+                                                	</ul>
+                                                </div>
+	                                         </li>
+	                                         <li class="col1">
+		                                        <label class="view-lab1" >备注</label><span class="view-text" style="word-break:break-all; " id="desc"></span>
+		                                    </li>
+
+												<!--<li class="col3">
+													<label class="view-lab1">环节名称</label><span class="view-text"></span>
+												</li>
+												<li class="col3">
+													<label class="view-lab1">处理人</label><span class="view-text"></span>
+												</li>
+												<li class="col3">
+													<label class="view-lab1">审核结果</label><span class="view-text"></span>
+												</li>
+												<li class="col1">
+													<label class="view-lab1">审核意见</label><span class="view-text"></span>
+												</li>-->
+
+	                                    </ul>
+										</div>
+                                    </div>
+	                               <div class="col-sm-12">
+	                                    <div class="col-sm-12" style="margin-top: 20px">
+	                                        <div class="list-section" style="padding:5px;">
+	                                            <div class="list-content">
+	                                                <div class="form-inline view-info">
+	                                                    <fieldset>
+	                                                        <!-- begin 表格 -->
+	                                                        <div class="grid-section">
+	                                                            <table id="list">
+	                                                            </table>
+	                                                            <div id="pager"></div>
+	                                                        </div>
+	                                                        <!-- end 表格  -->
+	                                                    </fieldset>
+	                                                    <div class="clear"></div>
+	                                                </div>
+	                                            </div>
+	                                        </div>
+	                                </div>
+	                                <div class="clear"></div>
+	                                <!--<div class="col-sm-12">
+									    <div calss="col-md-12">
+									    	<div class="form-field">
+										     	<div class="form-group">
+										     	 	<label class="control-label w120"> <span
+														class="text-danger"></span> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;建议</span> <span>：</span>
+													</label>
+													<div class="form-control-wrap">
+													<p>
+														<span class="pull-left" style="color: #333;">1.</span> 
+														<input readonly="readonly" class="form-control" style="width: 90%" name="adviseInstructions"
+															value=""/>
+													</p>
+													<p>
+													<div class="textIndent" >
+														<span class="pull-left" style="color: #333;">2.</span>
+														<textarea readonly="readonly" name="advisePlease" style="color: #333;width: 90%;" 
+														class="pull-left form-control" rows="5" cols="100"></textarea>
+														<div class="clear"></div>
+													</div>
+													</p>
+													<p>
+													<div class="textIndent">
+														<span class="pull-left" style="color: #333;">3.</span>
+														<textarea readonly="readonly" name="adviseCooperate" style="color: #333;width: 90%;" 
+														class="form-control" rows="5" cols="100"></textarea>
+														<div class="clear"></div>
+													</div>
+													</p>
+													<p>妥 否，请示。</p>
+													</div>
+												</div>
+											</div>
+									    </div>
+									</div>-->
+	                        </div>
+                            <div class="clear"></div>
+                    </fieldset>
+                </div>
+                <!-- end 页面内容主体 -->
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display: none;">
+
+</div>
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script type="text/javascript" src="${_lib}/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib}/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib}/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_lib}/My97DatePicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="${_lib}/jquery-step/jquery.step.js"></script>
+<script type="text/javascript" src="${_lib}/layer/layer.js"></script>
+<script type="text/javascript" src="${_cp}/static/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_js}/app.js"></script>
+<script type="text/javascript" src="${_js}/lib/webuploader/HYCore.js"></script>
+<!--end 外部JS引入 -->
+<script type="text/javascript" src="${_js}/uploadfile.js"></script>
+<script type="text/javascript" src="${_js}/lj.js"></script>
+<!--begin 自定义JS -->
+<script type="text/javascript">
+    Date.prototype.format = function(fmt) { 
+        var o = { 
+            "M+" : this.getMonth()+1,                 //月份 
+            "d+" : this.getDate(),                    //日 
+            "h+" : this.getHours(),                   //小时 
+            "m+" : this.getMinutes(),                 //分 
+            "s+" : this.getSeconds(),                 //秒 
+            "q+" : Math.floor((this.getMonth()+3)/3), //季度 
+            "S"  : this.getMilliseconds()             //毫秒 
+        }; 
+        if(/(y+)/.test(fmt)) {
+            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+        }
+        for(var k in o) {
+            if(new RegExp("("+ k +")").test(fmt)){
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+            }
+        }
+        return fmt;
+    }
+
+	$(function(){
+		$(".show-file li").each(function(){
+			$(this).hover(function(){
+				$(this).find(".file-panel").slideDown();
+			},function(){
+				$(this).find(".file-panel").slideUp();
+			})
+		}) 
+		$(".col1").each(function(){
+			$(this).find(".view-lab1").css({
+				height:$(this).find(".view-text").outerHeight(),
+				lineHeight:$(this).find(".view-text").outerHeight()+'px'
+			})
+		});
+
+        var taskRecvFileId = '${taskRecvFileId}';
+        getDetailById(taskRecvFileId);
+
+        function getDetailById (id) {
+            ajaxHengyun({
+                type: 'GET',
+                url:'${_gate_url}/api/developer/fastapplicationdoc/taskDetail?id='+id,
+                success: function (res) {
+                    var data = res.data;
+                    $('#docType').text(data.docType || '--');
+                    $('#docUnit').text(data.docUnit || '--');
+                    $('#docTime').text(new Date(data.docTime).format('yyy-MM-dd') || '--');
+                    $('#docNum').text(data.docNum || '--');
+                    //$('#rank').text(data.rank || '--');
+                    $('#title').text(data.title || '--');
+                    $('#urgencyDegree').text(data.urgencyDegree || '--');
+                    $('#desc').text(data.desc || '--');
+                    $('#content').text(data.content || '--');
+                    if (data.attachmentUrl) {
+                        $('#attachmentUrl').prop('src', data.attachmentUrl);
+                    }else{
+                        $('#attachmentUrl').hide();
+                    }
+                }
+            });
+        }
+
+        // 返回
+        $('.go-back').on('click', function () {
+            window.location.href = 'taskRecvFile';
+        });
+
+        //var postData = {"taskId":'${taskRecvFileId}'};
+        $("#list").jqGrid({
+            mtype: 'GET',
+            //postData:{pageNo:1,pageSize:10, data: {}},
+            url: '${_gate_url}/api/admin/fastapplicationdoc/taskExtraDetail?taskId='+'${taskRecvFileId}',
+            datatype: "json",
+            contentType : 'application/json',
+            /*serializeGridData:function(postData){
+                return JSON.stringify(postData);
+            },*/
+
+        /*var taskRecvFileId = ;
+        $("#list").jqGrid({
+			    mtype: 'GET',
+				url : '${_gate_url}/api/admin/fastapplicationdoc/taskExtraDetail?taskId='+'${taskRecvFileId}',*/
+				/*colNames : [ '分管领导', '配合领导', '承办处室', '配合处室', '经办人', '完成时限', '任务类型'],
+				colModel : [ { name : 'managerName', index : 'managerName', width : '60' },
+				             { name : 'cooperateManagerNames', index : 'cooperateManagerNames', width : '100'},
+				             { name : 'deptNames', index : 'deptNames' },
+				             { name : 'cooperateDeptNames', index : 'cooperateDeptNames', width : '80', },
+				             { name : 'handlerNames', index : 'handlerNames', width : '80' },
+				             { name : 'preFinishTime', index : 'preFinishTime', width : '100', formatter:'date', formatoptions: {newformat:'Y-m-d'} },
+				             { name : 'typeName', index : 'typeName', width : '100' } ],*/
+            colNames : [ '任务名称', '任务类型','经办人', '完成时限', '任务内容', '紧急程度', '备注'],
+            colModel : [ {name : 'taskName',index : 'taskName',width : '70'},
+                {name : 'taskType',index : 'taskType',width : '60'},
+                {name : 'agent',index : 'agent'},
+                {name : 'finishTimeLimit',index: 'finishTimeLimit',width : '80'},
+                {name : 'content',index : 'content',width : '50'},
+                {name : 'urgencyDegree',index : 'urgencyDegree',width : '50'},
+                {name : 'desc',index : 'desc',width : '50'}],
+            rowNum : 10,
+            jsonReader : {
+                root : 'data',
+                page : 1,
+                total : 10,
+                records : 10
+            },
+            prmNames : {
+                page : "page", // 表示请求页码的参数名称
+                rows : "rows" // 表示请求行数的参数名称
+            },
+            pager : '#pager',
+            height : 'auto',
+			});
+		
+    });
+</script>
+<!--end 自定义JS -->
+</body>
+</html>
+

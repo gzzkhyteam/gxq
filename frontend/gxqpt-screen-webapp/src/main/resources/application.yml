@@ -1,0 +1,153 @@
+##################################################
+# 注意:这个配置文件请勿修改，如有环境差异的配置，
+# 统一在application.yml配置文件中进行修改
+##################################################
+gxqpt:
+  variable:
+    gate-url: http://${gxqpt.hostname.gate}:${gxqpt.port.gate}   # 统一网关的链接前缀
+    logout-url: http://${sso.server-ip}:${sso.server-port}${gxqpt.context-path.center}/admin/index
+  hostname:
+    redis: 127.0.0.1        #
+    rabbitmq: 127.0.0.1     #
+    eureka: 127.0.0.1       #
+    nginx: 127.0.0.1        #
+    center: 127.0.0.1       #
+    gate: 127.0.0.1         #
+    screen: 127.0.0.1    #
+  port:
+    nginx: ${server.port}   #nginx端口
+    eureka: 10030           #
+    gate: 10003             #网关端口
+    center: 10001           #center 端口
+  feign:
+    gate-server: gxqpt-gate-server
+    auth-server: gxqpt-auth-server
+  config:
+    app-id: zkhyvAujtIZd
+    app-secret: 17362038d61044aa954bd7ae3c1393c4
+    index-url: ${server.context-path:}/module/main
+    login-url: ${server.context-path:}/login
+    logout-url: http://${sso.server-ip}:${sso.server-port}${gxqpt.context-path.center}/admin/index
+  context-path:
+    eureka: /gxqpt-eureka
+    center: /gxqpt-center
+    gate: /api
+
+sso:
+  local-ip: ${gxqpt.hostname.screen}
+  local-port: ${server.port}
+  server-ip: ${gxqpt.hostname.center}         #    [统一认证 center-webapp ip]
+  server-port: ${gxqpt.port.center}           #  【统一认证 center-webapp 端口】
+  callback-logout-url: http://${sso.local-ip}:${sso.local-port}${server.context-path}/login/logout
+  service: http://${sso.local-ip}:${sso.local-port}${server.context-path}/login/validate
+  validate-url: http://${sso.server-ip}:${sso.server-port}${gxqpt.context-path.center}/svalidate
+  sso-server-login-url: http://${sso.server-ip}:${sso.server-port}${gxqpt.context-path.center}/slogin
+  sso-server-logout-url: http://${sso.server-ip}:${sso.server-port}${gxqpt.context-path.center}/logout
+
+server:
+  port: 10014
+  context-path: /gxqpt-screen
+  session:
+    timeout: 86400    # seconds 配置成一天，因为演示期间不想多次登录，演示通过后去掉即可
+
+
+spring:
+  application:
+    name: gxqpt-screen-webapp
+  profiles:
+    active: test
+  mvc:
+    static-path-pattern: /static/**
+    view:
+      suffix: .html
+  freemarker:
+    template-loader-path: classpath:/templates
+    cache: false
+    charset: UTF-8
+    suffix: .html
+    settings:
+      number_format: 0.##       #解決freemarker数字输出中的逗号问题
+      classic_compatible: true  #默认情况变量为null则替换为空字符串，如果需要自定义，写上${empty!"EmptyValue of fbysss"}的形式即可
+      whitespace_stripping: true      # 剥离前后空字符串
+      boolean_format: true,false      # 布尔类型格式化
+      datetime_format: yyyy-MM-dd HH:mm:ss  # dateTime 类型格式化， 使用日期类型时， 需要在参数后追加 ?datetime eg: ${date?datetime}
+      date_format: yyyy-MM-dd   # date 类型格式化， 使用日期类型时， 需要在参数后追加 ?date eg: ${date?date}
+      time_format: HH:mm:ss      # time 类型格式化， 使用日期类型时， 需要在参数后追加 ?time eg: ${date?time}
+      template_exception_handler: ignore   # 忽略模版异常
+      default_encoding: UTF-8      # 默认编码
+      url_escaping_charset: UTF-8  # url 转义编码
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq}
+    password: guest
+    port: 5672
+    username: guest
+  redis:
+    host: ${gxqpt.hostname.redis}
+    port: 6379
+    database: 1
+    pool:
+      max-active: 2
+      min-idle: 1
+      max-idle: 2
+      max-wait: 60
+    key-prefix: dev
+    biz-modular: ${spring.application.name:gxqpt-screen-webapp}
+
+
+management:
+  security:
+    enabled: true
+  context-path: ${server.context-path}/mgmt
+security:
+  basic:
+    enabled: true
+    path: ${management.context-path}
+  user:
+    name: admin
+    password: gxqptadmin
+endpoints:
+  health:
+    enabled: true
+    sensitive: true  #actuator的health接口是否需要安全保证
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+  instance:
+    status-page-url-path: ${server.context-path}${management.context-path}/info
+    health-check-url-path: ${server.context-path}${management.context-path}/health
+    status-page-url: http://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path}/module/index
+    preferIpAddress: true
+    ip-address: ${gxqpt.hostname.screen}
+    instance-id: ${gxqpt.hostname.screen}:${server.port}${server.context-path}
+    metadata-map:
+      user.name: admin
+      user.password: gxqptadmin
+      management.context-path: ${management.context-path}
+
+
+feign:
+  hystrix:
+    enabled: true
+  compression:  #支持压缩的mime types
+    request:
+      enabled: true
+      mime-types: text/xml,application/xml,application/json
+      min-request-size: 2048
+    response:
+      enabled: true
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+  propagate:
+    request-attribute:
+      enabled: true
+
+ribbon:
+  eureka:
+    enabled: true

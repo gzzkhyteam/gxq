@@ -1,0 +1,141 @@
+<template>
+  <Layout>
+    <hengyun-header logoClass="logo-operation"></hengyun-header>
+    <Layout class="ivu-layout-has-sider">
+      <hengyun-sidebar :menus="menus" />
+      <router-view></router-view>
+    </Layout>
+  </Layout>
+</template>
+<script>
+// 头部
+import header from '@/components/hengyun/header'
+// 侧边栏
+import siderBar from '@/components/hengyun/sideBar'
+
+const menus = [{
+  name: '运维人员管理',
+  icon: 'icon-quanxian',
+  link: '/operationPplMgr'
+}, {
+  name: '运维文档管理',
+  icon: 'icon-beifen',
+  subMenu: [{
+    name: '运维文档查询',
+    link: '/docQuery/0'
+  }, {
+    name: '运维文档管理',
+    link: '/docQuery/1'
+  }, {
+    name: '文档分类管理',
+    link: '/docClassify'
+  }]
+}, {
+  name: '接入管理',
+  icon: 'icon-fuwujiankong',
+  subMenu: [{
+    name: '我的应用',
+    link: '/accessList'
+  }]
+}, {
+  name: '运维服务管理',
+  icon: 'icon-fuwujiankong',
+  subMenu: [{
+    name: '服务申请',
+    link: '/serviceApply'
+  }, {
+    name: '服务审核',
+    link: '/serviceAudit'
+  }, {
+    name: '服务处理',
+    link: '/serviceDeal'
+  },{
+    name: '服务目录管理',
+    link: '/serviceListMgr'
+  }]
+}, {
+  name: '故障管理',
+  icon: 'icon-fuwujiankong',
+  subMenu: [{
+    name: '故障台账',
+    link: '/ledger'
+  }, {
+    name: '我的任务',
+    link: '/myTask'
+  }, {
+    name: '故障监控',
+    link: '/monitor'
+  }, {
+    name: '知识库',
+    link: '/repository'
+  }]
+}, {
+  name: '运维分析',
+  icon: 'icon-fuwujiankong',
+  link: '/analyzeRate'
+}, {
+  name: '培训管理',
+  icon: 'icon-fuwujiankong',
+  subMenu: [{
+    name: '培训课程目录',
+    link: '/trainCourseList'
+  }, {
+    name: '培训列表',
+    link: '/trainList'
+  }, {
+    name: '培训审核',
+    link: '/trainAudit'
+  }, {
+    name: '培训处理',
+    link: '/trainDeal'
+  }, {
+    name: '培训课程管理',
+    link: '/trainCourseMgr'
+  }]
+}, {
+  name: '咨询管理',
+  icon: 'icon-fuwujiankong',
+  subMenu: [{
+    name: '咨询申请',
+    link: '/referApply'
+  }, {
+    name: '咨询审核',
+    link: '/referCheck'
+  }, {
+    name: '咨询处理',
+    link: '/referHandle'
+  }]
+}]
+
+export default {
+  components: {
+    'hengyun-sidebar': siderBar,
+    'hengyun-header': header
+  },
+  data() {
+    return {
+      isCollapsed: false,
+      menus: menus
+    }
+  },
+  computed: {
+    rotateIcon() {
+      return [
+        'menu-icon',
+        this.isCollapsed ? 'rotate-icon' : ''
+      ];
+    },
+    menuitemClasses() {
+      return [
+        'menu-item',
+        this.isCollapsed ? 'collapsed-menu' : ''
+      ]
+    }
+  },
+  methods: {
+    collapsedSider() {
+      this.$refs.side1.toggleCollapse();
+    }
+  }
+}
+</script>

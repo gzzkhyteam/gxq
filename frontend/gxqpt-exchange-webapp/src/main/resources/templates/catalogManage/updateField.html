@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+		<meta name="renderer" content="webkit"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+	</head>
+	<body class="bgNone">
+		<div class="workspace-body">
+			<div id="console-container" class="clearfix">
+				<div class="col-sm-12">
+					<div class="general_list_main clearfix">
+						<div class="main_bottom col-lg-12 col-sm-12">
+							<div class="view_item">
+								<div class="col-lg-6 col-md-6 col-sm-6">
+                                    <table class="table default-table tab-border-no-layer borderCollapse">
+										<caption>修改后</caption>
+                                        <tbody>
+                                            <tr>
+                                                <th width="120">是否主键：</th>
+                                                <td id="isPrimary" class="viewTd">
+                                                </td>
+                                            </tr>
+											<tr>
+                                                <th width="120">字段名称：</th>
+                                                <td id="fieldName" class="viewTd">
+                                                </td>
+                                            </tr>
+                                           <!-- <tr>
+                                                <th>数据类型：</th>
+                                                <td id="fieldType" class="viewTd">
+                                                </td>
+                                            </tr>-->
+                                            <tr>
+                                                <th>字段标识：</th>
+                                                <td id="fieldCode" class="viewTd">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>字段描述：</th>
+                                                <td id="desc" class="viewTd">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<table class="table default-table tab-border-no-layer borderCollapse">
+										<caption>修改前</caption>
+										<tbody>
+										<tr>
+											<th width="120">是否主键：</th>
+											<td id="isPrimaryPre" class="viewTd">
+											</td>
+										</tr>
+										<tr>
+											<th width="120">字段名称：</th>
+											<td id="fieldNamePre" class="viewTd">
+											</td>
+										</tr>
+									<!--	<tr>
+											<th>数据类型：</th>
+											<td id="fieldTypePre" class="viewTd">
+											</td>
+										</tr>-->
+										<tr>
+											<th>字段标识：</th>
+											<td id="fieldCodePre" class="viewTd">
+											</td>
+										</tr>
+										<tr>
+											<th>字段描述：</th>
+											<td id="descPre" class="viewTd">
+											</td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+		<script type="text/javascript" src="${_static}/js/com.js" charset="utf-8"></script>
+		<script type="text/javascript">
+		/*	var FieldType=[];
+            getFieldType();
+            function getFieldType(){//获取数据类型
+                ajaxHengyun({
+                    type: 'GET',
+                    url: '${_gate_url}/api/exchange/dataapi/api/findByDictCode',
+                    data:{pId: "date_type"},
+                    datatype: "json",
+                    success: function (rows) {
+                        if(rows.data){
+                            FieldType= rows.data;
+                            getDataElement("${id}");
+                            getDataElementPre("${id}");
+                        }
+                    }
+                });
+            }*/
+            getDataElement("${id}");
+            getDataElementPre("${id}");
+            function getDataElement(id){
+                ajaxHengyun({
+                    type:"GET",
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/element/get',
+                    data:{id:id},
+                    success:function(rows){
+                        if(rows.data){
+                            var rowsObject=dealElement(rows.data);
+                         /*   FieldType.forEach(function(value,index){
+                                if(value.id==rowsObject.fieldType){
+                                    $("#fieldType").text(value.fieldType);
+                                }
+                            });*/
+                         	var isPrimaryText=rowsObject.isPrimary==1?"是":"否";
+                            $("#isPrimary").text(isPrimaryText);
+                         //   $("#fieldType").text(rowsObject.fieldType);
+                            $("#fieldName").text(rowsObject.fieldName);
+                            $("#fieldCode").text(rowsObject.fieldCode);
+                            $("#desc").text(rowsObject.desc);
+                        }
+                    }
+                });
+            }
+            function getDataElementPre(id){
+                ajaxHengyun({
+                    type:"GET",
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/element/getElementWare',
+                    data:{id:id},
+                    success:function(rows){
+                        if(rows.data){
+                            var rowsObject=dealElement(rows.data);
+                           /* FieldType.forEach(function(value,index){
+                                if(value.id==rowsObject.fieldType){
+                                    $("#fieldTypePre").text(value.dictName);
+                                }
+                            });*/
+                            var isPrimaryText=rowsObject.isPrimary==1?"是":"否";
+                            $("#isPrimaryPre").text(isPrimaryText);
+                            $("#fieldNamePre").text(rowsObject.fieldName);
+                            $("#fieldCodePre").text(rowsObject.fieldCode);
+                            $("#descPre").text(rowsObject.desc);
+                        }
+                    }
+                });
+            }
+		</script>
+	</body>
+</html>

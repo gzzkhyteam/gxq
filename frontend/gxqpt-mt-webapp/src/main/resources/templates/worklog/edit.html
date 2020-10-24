@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <link rel="stylesheet" href="${_css}/reset.css">
+    <link rel="stylesheet" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_lib}/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="${_lib}/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" href="${_lib}/layer/skin/layer.css">
+    <link rel="stylesheet" href="${_lib }/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=0.1">
+    <link rel="stylesheet" href="${_css}/app.css">
+    <link rel="stylesheet" href="${_static }/js/lib/webuploader/webuploader.css"/>
+    <link rel="stylesheet" href="${_static }/js/lib/webuploader/upload.css"/>
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" href="${_static}/css/viewCss/worklog/create.css">
+    <!-- end 外部CSS引入 -->
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div>
+                    <div class="console-title console-title-border clearfix">
+                        <div class="pull-left">
+                            <h5 class="page-title">
+                                工作日志 &gt; <span class="page-title-scend">日志修改</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <div class="form-inline" ng-app="dict" ng-controller="controller">
+                                    <form id="bzgzData" class="dataForm" method="post">
+                                        <div class="bzgz">
+                                            <!--<fieldset class="form-inline">
+                                                <div class="col-sm-12">
+                                                    <div class=" form-field">
+                                                        <div class="form-group">
+                                                            <div class="form-control-wrap spans">
+                                                                <input type="radio" name="type" id="normalWork"
+                                                                       class="radioInput" value="本职工作" checked>
+                                                                <label class="control-label w0"
+                                                                       for="normalWork">本职工作</label>
+                                                                <input type="radio" name="type" id="nonNomalWork"
+                                                                       class="radioInput" value="非本职工作">
+                                                                <label class="control-label w0 " for="nonNomalWork">非本职工作</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <div class="form-group bzgzType">
+                                                            <div class="form-control-wrap">
+                                                                <select name="workType" class="form-control select-w"
+                                                                        id="workType" onclick="selVal(this)">
+                                                                    <option value="">请选择类型</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-control-wrap">
+                                                        <input id="createTime" class="form-control Wdate"
+                                                               style="width: 205px;"
+                                                               name="createTime"/>
+                                                    </div>
+                                                </div>
+                                            </fieldset>-->
+                                            <div class="marginTop">
+                                                <label class="control-label w84 pull-left">
+                                                    <span class="text-danger">*</span>
+                                                    <span>内容</span>
+                                                    <span>：</span>
+                                                </label>
+                                                <textarea id="description" class="form-control pull-left" style="width:calc(100% - 153px);color: #666;background: none;" name="descript" id="descript" rows="5" cols="" dataType="*" nullmsg="请填写日志内容！"></textarea>
+                                            </div>
+                                            <div class="clear" style="margin-bottom: 15px"></div>
+                                            <div class="clearfix">
+                                                <label class="control-label w84 pull-left">
+                                                    <span class="text-danger">*</span>
+                                                    <span>抄送人</span>
+                                                    <span>：</span>
+                                                </label>
+                                                <div id="addPerson_ptsp" class="form-control-wrap input-group pull-left" style="width:calc(100% - 153px);">
+                                                    <input type="text" class="form-control imgs" readonly
+                                                           id="addPerson_ptspEmpName"
+                                                           name="addPerson_ptspEmpName"
+                                                           style="width:calc(100% - 46px); background: none;"  value="" dataType="*" nullmsg="请选择抄送人！">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-primary" type="button"><span
+                                                                class="glyphicon glyphicon-plus"></span></button>
+                                                 </span>
+                                                </div>
+                                            </div>
+                                            <div class="clear" style="margin-bottom: 15px"></div>
+                                            <div>
+
+                                                <label class="control-label w84 pull-left" style="margin-top: 12px">
+                                                    <span class="text-danger"></span>
+                                                    <span>附件上传</span>
+                                                    <span>：</span>
+                                                </label>
+                                                <div id="wrapper" class="pull-left"
+                                                     style="margin:0;width:calc(100%  - 153px);">
+                                                    <div style="margin: 0;padding: 0;">
+                                                        <div id="filePicker" class="filePicker"></div>
+                                                        <input type="text" name="" id="" class="file-name" value="" />
+                                                        <div id="uploader" class="uploader hidden">
+                                                            <div class="queueList">
+                                                                <ul id="file_html" class="filelist">
+                                                                    <li>还未选择文件</li>
+                                                                </ul>
+                                                                <div id="dndArea" class="placeholder dndArea" style="padding-top: 0px;">
+                                                                    <p> </p>
+                                                                </div>
+                                                            </div>
+                                                            <div id="jxButton" class="jxButton"></div>
+                                                            <div id="uploadBtn" class="uploadBtn"></div>
+                                                            <div class="statusBar" style="display:none;">
+                                                                <div class="progress">
+                                                                    <span class="text">0%</span> <span class="percentage"></span>
+                                                                </div>
+                                                                <div class="info"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix" style="margin-bottom: 15px;"></div>
+                                            <div class="text-center">
+                                                <button id="saveOk"  class="btn btn-primary btn-submit" type="button">
+                                                    提交
+                                                </button>
+                                                <a href="${_cp}/module/myworklog">
+                                                    <button type="button" class="btn btn-default"> 取消 </button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var id = "${id}";
+    var logId = "${logId}";
+    var _cp = "${_cp}";
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script type="text/javascript" src="${_lib }/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_static }/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_js}/lj.js"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+<script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_lib}/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static }/js/Valid.js"></script>
+<script type="text/javascript" src="${_static }/js/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_static }/js/lib/webuploader/HYCore1.js"></script>
+<script type="text/javascript" src="${_static}/js/viewJs/worklog/edit.js?v=1"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript" src="${_static}/js/com_base.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+</body>
+<script type="text/javascript">
+    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/mt/work/updateDetail",
+        },"#bzgzData",{
+            attrName:"name",
+            prefix:"",
+            suffix:"",
+        });
+    })
+</script>
+</html>
+
+
+
+
+

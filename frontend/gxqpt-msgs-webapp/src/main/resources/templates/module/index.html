@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- 外部CSS引入 -->
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=1.0.0">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/sys_com/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/com.css" />
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/metisMenu.css" />
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/message.css" />
+    <link rel="stylesheet" type="text/css" href="${_static}/css/core/sidenav.css">
+    <!-- <link rel="stylesheet" href="${_static}/css/viewCss/module/index.css"> -->
+    <!--<link rel="icon" href="" type="image/x-icon" />-->
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script>
+        var userId = "${l_u_i_s.id}";
+        var gateUrl="${_gate_url}";
+    </script>
+    <script type="text/javascript" src="${_static}/js/com_msg.js"></script>
+    <title>消息管理系统</title>
+    <style>
+        .index-top-shortcut ul li.orgStyle{width: auto;}
+        .orgStyle a{color:#fff;    line-height: 60px;  padding-right: 20px;}
+        #user_photo{border-radius: 50%;}
+        .index-logo{ width: 36%; top: 20px; }
+        .index-logo img{ width: 40px;  margin-top: -8px; margin-right: 5px; }
+        .index-logo .text-title{ font-size: 20px; }
+        .view-framework-workspace{height: 100%;overflow: hidden;}
+    </style>
+</head>
+
+<body>
+<div class="view-framework">
+    <!-- begin 顶部 -->
+    <div class="index-top">
+        <!-- begin logo -->
+        <div class="index-logo">
+            <!--<img class="pull-left" src="${_static}/images/logoImg.png" alt=""/>-->
+            <div class="text-title" style="line-height: 1;">
+                "一体化基础系统共享平台"- 消息管理系统
+               	<br/>
+               	<span style="font-family:'Microsoft YaHei','微软雅黑',STSong,'宋体', '\5B8B\4F53','Times New Roman', Verdana, Arial, Helvetica, sans-serif ;font-size: 14px; display: inline-block; margin-top: 8px;">
+                    Message management system
+				</span>
+            </div>
+        </div>
+        <!-- end logo -->
+        <!-- begin 顶部快捷菜单 -->
+        <div class="index-top-shortcut">
+            <div id="tm"></div>
+            <ul id="navList" class="navList">
+                <li id="org-container" class="orgStyle">
+                    <a id="org" href="javascript:void(0);"></a>
+                </li>
+                <li id="index-top-quit">
+                    <a href="${_logout_url}"> <img alt="" src="${_static}/images/core/index/quit.png"> <span>首页</span>
+                    </a>
+                </li>
+                <li id="index-top-msg">
+                    <a id="conclusionShow" href="javascript:void(0);" data-title="消息列表" data-container="body" data-toggle="popover"  data-placement="bottom" data-trigger="click" data-html=true data-content="">
+                        <img alt="" src="${_static}/images/core/index/msg.png">
+                        <span>消息</span>
+                        <span id="msgElement"></span>
+                    </a>
+                </li>
+                <li id="index-top-userinfo">
+                    <a href="javascript:void(0);">
+                        <img alt="" src="${l_u_i_s.photo!''}" alt="user_photo"
+                             onerror="this.onerror='';src='${_static}/images/core/index/user.png'" , id="user_photo">
+                        <span id="user_name">${l_u_i_s.name!''}</span>
+                    </a>
+                    <div class="navbar-ctrl" style="display:none;">
+                        <div>
+                            <a href="javascript:void(0);" onclick="deptOrUserInfo('');">个人信息</a>
+                        </div>
+                        <div>
+                            <a href="javascript:void(0);" onclick="updatePassWord();">密码修改</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- end 顶部快捷菜单 -->
+    </div>
+    <!-- end 顶部 -->
+    <!-- begin 首页主体 -->
+    <div class="view-framework-body view-framework-sidebar-full">
+        <!-- begin 左边导航 -->
+        <div class="view-framework-sidebar">
+            <div class="sidebar-content">
+                <div class="sidebar-inner">
+                    <div class="sidebar-fold">
+                        <!--<i class="fa fa-navicon fa-lg"></i>-->
+                        <img width="22" height="22" style="margin-top: 9px;"
+                             src="${_static}/images/core/index/sidebar_close.png"/>
+                    </div>
+                    <div class="sidebar-mask"></div>
+                    <div class="sidebar-collapse">
+                        <ul class="nav" id="side-menu"></ul>
+                        <!-- <ul class="nav" id="side-menu">
+                            <li class="active">
+                                <a href="javascript:" class="J_menuItem" target="home">
+                                    <span class="navicon navicon_02"></span>
+                                    <span class="nav-label">消息发布</span>
+                                    <span class="fa arrow"></span>
+                                </a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="${_cp}/msgs/createMessage" class="J_menuItem" target="home">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <span>新建发布</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="${_cp}/msgs/drafts" class="J_menuItem" target="home">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <span>草稿箱</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="${_cp}/msgs/publishSucess" class="J_menuItem" target="home">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <span>已发布</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:" class="J_menuItem" target="home">
+                                    <span class="navicon navicon_02"></span>
+                                    <span class="nav-label">渠道管理</span>
+                                    <span class="fa arrow"></span>
+                                </a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="${_cp}/msgs/channelTypeList" class="J_menuItem" target="home">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <span>渠道类型管理</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="${_cp}/msgs/channelList" class="J_menuItem" target="home">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <span>渠道管理</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="${_cp}/msgs/channelGroupList" class="J_menuItem" target="home">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <span>渠道群组管理</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:" class="J_menuItem" target="home">
+                                    <span class="navicon navicon_02"></span>
+                                    <span class="nav-label">统计分析</span>
+                                    <span class="fa arrow"></span>
+                                </a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="${_cp}/msgs/analysis" class="J_menuItem" target="home">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <span>消息发送情况分析</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul> -->
+                        <script>
+                            $(function () {
+                                // $("#index-top-userinfo").hover(function () {
+                                //     $(".navbar-ctrl").show();
+                                // }, function () {
+                                //     $(".navbar-ctrl").hide();
+                                // });
+                                //菜单栏内容
+                                //查询菜单
+                                var menuList = resourceJs.init("${_gate_url!''}", "${_app_id!''}", "${l_u_i_s.id!''}").findMenu({cache: true});
+                                var menuHtml = "";
+                                if (!menuList) {
+                                    menuList = [];
+                                };
+                                var params = window.location.search;
+                                var paramsUrl = "";
+                                if(params) {
+                                    var paramsUrl = params.split("=");
+                                };
+                                var hasChildrenSet = false;
+                                if (menuList.length > 0) {
+                                    var htm = '';
+                                    for (var i = 0; i < menuList.length; i++) {
+                                        var isChildren = false;
+                                        var obj = menuList[i];
+                                        var menuUrlName = obj.url.split("?")[0];
+                                        if (menuUrlName == paramsUrl[1]) {
+                                            htm += '<li class="active">';
+                                            htm += '<a href="' + obj.url + '" aria-expanded="true" target="home">';
+                                        } else {
+                                            if (menuList[i].children) {
+                                                for (var m = 0; m < menuList[i].children.length; m++) {
+                                                    var childrenUrl = menuList[i].children[m].url.split("?")[0];
+                                                    if (paramsUrl[1] == childrenUrl) {
+                                                        isChildren = true;
+                                                        hasChildrenSet = true;
+                                                    }
+                                                }
+                                            }
+                                            if (isChildren) {
+                                                htm += '<li class="active">';
+                                                htm += '<a href="' + obj.url + '" aria-expanded="true" target="home">';
+                                            } else {
+                                                if (i == 0) {
+                                                    htm += '<li class="active">';
+                                                    htm += '<a href="' + obj.url + '" aria-expanded="true" target="home">';
+                                                } else {
+                                                    htm += '<li>';
+                                                    htm += '<a href="' + obj.url + '" aria-expanded="false" target="home">';
+                                                }
+                                            }
+                                        }
+                                        //htm += 'target="home">';
+                                        if(!obj.icon){
+                                            obj.icon="navicon_default";
+                                        }
+                                        htm += '<span class="navicon ' + obj.icon + '" style="font-size: 24px;margin-right: 16px;"></span>';
+                                        htm += '<span class="sidebar-nav-item">' + obj.name + '</span>';
+                                        if (menuList[i].children && menuList[i].children.length > 0) {
+                                            htm += '<span class="fa arrow"></span>';
+                                        }
+                                        htm += '</a>';
+                                        if (menuList[i].children) {
+                                            if (isChildren) {
+                                                htm += '<ul aria-expanded="true">';
+                                            } else {
+                                                if (i == 0) {
+                                                    htm += '<ul aria-expanded="true">';
+                                                } else {
+                                                    htm += '<ul>';
+                                                }
+                                            }
+
+                                            for (var j = 0; j < menuList[i].children.length; j++) {
+                                                var childUrl = menuList[i].children[j].url.split("?")[0];
+                                                if (paramsUrl[1] == childUrl) {
+                                                    htm += ' <li class="active" style="padding-left: 20%;">';
+                                                    htm += '<a href="' + menuList[i].children[j].url + '" class="tab_nei" target="home" style="color: rgb(99, 181, 219);">';
+                                                } else {
+                                                    htm += ' <li style="padding-left: 20%;">';
+                                                    htm += '<a href="' + menuList[i].children[j].url + '" class="tab_nei" target="home">';
+                                                }
+                                                htm += menuList[i].children[j].name + '</a>';
+                                                if (i == 0 && j == 0) {
+                                                    $("#home").attr("src", menuList[i].children[j].url);
+                                                }
+                                            }
+                                            htm += '</ul>';
+                                        } else {
+                                            if (i == 0) {
+                                                $("#home").attr("src", obj.url);
+                                            }
+                                        }
+                                        htm += '</li>';
+
+                                    }
+                                    $("#side-menu").html(htm);
+                                    if (hasChildrenSet) {
+                                        $($("#side-menu>li")[0]).removeClass("active");
+                                        $("#home").attr('src', paramsUrl);
+                                    }
+                                    // menuHtml = htm;
+                                } else {
+                                    $("#home").attr('src', '');
+                                    // 隐藏面包屑
+                                    $('#view-framework-head').hide();
+                                };
+                                $(".tab_nei").click(function () {
+                                    $(".title_second").html($(this).html())
+                                    var title_first = $(this).parent().parent().siblings("a").find(".sidebar-nav-item").html()
+                                    console.log(title_first)
+                                    $(".title_first").html(title_first +'>')
+                                    $(".tab_nei").css({"color": "#66707a"})
+                                    $(this).css({"color": "#63b5db"})
+                                });
+                                // $(".sidebar-collapse").html(menuHtml);
+                                if(params){
+                                    var paramsUrl = params.split("=");
+                                    if(paramsUrl.length==2){
+                                        $("#home").attr("src", paramsUrl[1]);
+                                    }else if(paramsUrl.length>2){
+                                        paramsUrl.splice(0,1);
+                                        var url = paramsUrl.join("=");
+                                        $("#home").attr("src", url);
+                                    }
+                                };
+                            });
+                        </script>
+                    </div>
+                </div>
+                <!-- end 左边导航 -->
+            </div>
+        </div>
+        <!-- begin 工作区 -->
+        <div class="view-framework-main">
+            <div class="view-framework-head" style="border-bottom: 1px solid #ddd; display: none;" id="view-framework-head">
+                <div class="view-head-content" >
+                    消息管理系统 &gt; <span class="title_first">消息发布</span><i>&gt; </i>
+                    <span class="title_second" style="color: #0e66c8;">新建发布</span>
+                </div>
+            </div>
+            <div id="iframe_container" class="view-framework-workspace">
+                <iframe id="home" name="home" frameborder="0" scrolling="no" width="100%" height="100%"
+                        src="${_cp}/msgs/createMessage"></iframe>
+            </div>
+        </div>
+        <!-- end 工作区 -->
+    </div>
+    <!-- end 首页主体 -->
+</div>
+
+<!-- 外部JS引入 -->
+<script src="${_static}/js/lib/metisMenu/jquery.metisMenu.js"></script>
+<script src="${_static}/js/lib/bootstrap/3.3.6/bootstrap.min.js"></script>
+<script src="${_static}/js/lib/metisMenu/hplus.min.js"></script>
+<script src="${_static}/js/lib/tipsy/jquery.tipsy.js"></script>
+<script src="${_static}/js/lib/layer/layer.js"></script>
+<script src="${_static}/js/index.js"></script>
+
+<!-- 自定义JS -->
+<script type="text/javascript">
+    if (window.top!=window.self){
+        top.location.href="${_cp}/module/index";
+    }
+
+    //信息按钮点解事件
+    function openInfo() {
+        layer.open({
+            type: 2,
+            id: 'addPerson',
+            title: '消息提醒列表',
+            shadeClose: false,
+            scrollbar: false,
+            shade: 0.4,
+            area: ['80%', '88%'],
+            content: "${_cp }/comm/toMyMsg.do",
+            btn: ['关闭'],
+            end: msgNum,
+        });
+    }
+
+    var li_count = $('.index-top-shortcut ul li').length;
+    var othis;
+    $('.index-top-shortcut ul li').each(function (index) {
+        othis = $(this);
+        othis.animate({
+            'right': othis.outerWidth() * (li_count - index - 1),
+            'opacity': 1
+        }, 1000);
+    });
+
+    function deptOrUserInfo(personType) {
+        var contentUrl = '';
+        var title = '';
+        /* if (personType == 1) {
+         contentUrl = "
+         ${_cp }/sysmnt/dept/deptInfo.do";
+         title = '基本信息';
+         } else if (personType == 0) {*/
+        contentUrl = "${_cp }/comm/userDetails.do?id=1";
+        title = '个人信息';
+        //        }
+        layer.open({
+            type: 2,
+            id: 'deptOrUserInfo',
+            title: title,
+            shadeClose: false,
+            scrollbar: false,
+            shade: 0.4,
+            area: ['80%', '78%'],
+            content: contentUrl,
+            btn: ['关闭']
+        });
+    }
+
+    function updatePassWord(id) {
+        layer.open({
+            type: 2,
+            id: 'updatePassWord',
+            title: '密码修改',
+            shadeClose: false,
+            scrollbar: false,
+            shade: 0.4,
+            area: ['40%', '50%'],
+            content: "${_cp }/comm/toUpdatePwd.do",
+            btn: ['<span class="glyphicon glyphicon-ok"></span>确定', '<span class="glyphicon glyphicon-backward"></span>关闭'],
+            yes: function (index, layero) {
+                var html = layero.context
+                var Id = html.getElementById("updatePassWord");
+                var iframe = $(Id).find("iframe").attr("name");
+                parent[iframe].sub()
+            }
+        });
+    }
+
+    $(function () {
+        $("#index-top-userinfo").hover(function () {
+            $(".navbar-ctrl").show();
+        }, function () {
+            $(".navbar-ctrl").hide();
+        });
+        var height=$("#iframe_container").height();
+        $("#home").height(height);
+    });
+    $("body").click(function () {
+        if( typeof home.removeAllRanges === 'function'){
+            home.removeAllRanges();
+        };
+    });
+    $("body").on("click", "#side-menu li", function () {
+        removeAllRanges();
+        var name = $($(this).find("span")).text();
+        if(name=="首页"){
+            $(".view-framework-head",window.parent.document).css("display","none");
+        }else if(name==""){
+            var nameScend = $($(this).parent().parent().find("a")[0]).text();
+            if(nameScend=="统计分析"){
+                $(".view-framework-head",window.parent.document).css("display","none");
+            }else{
+                $(".view-framework-head",window.parent.document).css("display","block");
+            }
+        }
+        event.stopPropagation();
+    });
+
+    function removeAllRanges() {
+        window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+    }
+
+    var allMyOrgList = [];
+    var orgListOptions = [];
+
+    (function orgContral() {
+        $('#org').on('click', function () {
+            // 单位少于两家
+            if (allMyOrgList.length < 2) {
+                return;
+            }
+            var content = '<span class="text-danger">*</span>主单位：' + orgListOptions.join('');
+            layer.confirm(content, {
+                title:'单位切换',
+                shade: [0.4,'#000'],
+                btn: ['确定','取消'] //按钮
+            }, function(index){
+                var unitId = $('#orgid').val();
+                ajaxHengyun({
+                    type:'POST',
+                    data: {
+                        unitId: unitId
+                    },
+                    url: '${_gate_url}/api/mt/userConfi/setNowUnityId',
+                    success:function (res) {
+                        // 刷新整个页面
+                        window.location.reload();
+                    },
+                    error: function(err) {}
+                });
+            }, function(){
+                layer.closeAll();
+            });
+        });
+    })();
+
+    // 获取单位id
+    function getUnitIdFromTopWindow(cb) {
+        var unitId = $('#org').data('unitId');
+        if (unitId) {
+            cb(unitId);
+        } else {
+            var count = 0;
+            var timeint = setInterval(function () {
+                unitId = $('#org').data('unitId');
+                count++;
+                if (count > 20) {
+                    console.log('获取单位id失败');
+                    clearInterval(timeint);
+                    cb(false);
+                }
+                if (unitId) {
+                    clearInterval(timeint);
+                    cb(unitId);
+                }
+            }, 500);
+        }
+    }
+    $("#conclusionShow").popover({
+        html: true,
+        content: '<div id="content"></div>'
+    }).on("mouseenter", function () {
+        var _this = this;   // 这里的this触发的dom,需要存起来 否则在下面 .popover的逻辑中this会变为弹出的dom
+        var isShow=$(".popover");
+        if(isShow.length==0){
+            $(_this).popover("show");
+        };
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide");
+            }
+        }, 300);
+    }).on("mousemove",function(){
+        var isShow=$(".popover");
+        if(isShow.length==0) {
+            $("#conclusionShow").popover("show");
+        }
+    }).on('shown.bs.popover', function () {
+        var ps =  $(".popoverCss li p.ptitle");
+        for (var i = 0; i < ps.length; i++) {
+            if(ps[i].offsetHeight > 40){
+                var html = ps[i].innerText;
+                var temp = "";
+                ps[i].innerText = temp;
+                var j = 0;
+                while(ps[i].offsetHeight <= 40){
+                    temp = html.substring(0, j+1);
+                    j++;
+                    ps[i].innerText = temp;
+                }
+                var leng = temp.length-2;
+                ps[i].innerText=temp.substring(0,leng)+"···";
+            }
+        }
+    });
+    $("body").on("mouseleave",".popover", function () {
+        setTimeout(function () {
+            if (!$("#conclusionShow:hover").length) {
+                $("#conclusionShow").popover("hide");
+            }
+        }, 300);
+    });
+    $("#conclusionShow").click (function(){
+        window.open(gateUrl+'/gxqpt-center/admin/home?type=all');
+    }) ;
+</script>
+
+</body>
+
+</html>

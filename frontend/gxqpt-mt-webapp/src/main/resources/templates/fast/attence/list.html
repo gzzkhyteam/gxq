@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <!--<link rel="stylesheet" type="text/css" href="${_lib}/webuploader/webuploader.css">-->
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=0.1">
+    <link rel="stylesheet" href="${_css}/app.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/layer/skin/layer.css">
+
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <!-- end 外部CSS引入 -->
+
+    <!-- begin 自定义样式 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+        }
+
+        .list-section {
+            padding: 5px 10px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        .grid-section {
+        }
+
+        .ui-jqgrid .ui-jqgrid-btable tbody tr.jqgrow td, .ui-jqgrid {
+            background: #fff;
+        }
+
+        .ui-th-ltr, .ui-jqgrid .ui-jqgrid-htable th.ui-th-ltr, .ui-jqgrid .ui-jqgrid-btable {
+            text-align: center;
+        }
+
+        .task-box {
+            height: 90px;
+            line-height: 90px;
+            text-align: center;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            width: 24%;
+            margin-right: 1%;
+        }
+
+        .task-box img {
+            margin-top: -15px;
+        }
+
+        .task-box span {
+            display: inline-block;
+            width: 120px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-weight: bold;
+            line-height: 30px;
+            position: absolute;
+            transform: rotate(45deg);
+            text-align: center;
+            top: 10px;
+            right: -35px;
+            letter-spacing: 5px;
+
+        }
+
+        .task-box em {
+            font-size: 36px;
+            color: #fff;
+            font-style: normal;
+            padding: 0 20px;
+        }
+        .w80{
+            width: 80px !important;
+        }
+        .w69{
+            width: 69px !important;
+        }
+    </style>
+    <!-- end   自定义样式 -->
+</head>
+<body>
+
+<div class="workspace-body">
+
+    <div class="console-container">
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>
+                            考勤管理 > <font color="#0099cc">考勤统计</font>
+                        </h5>
+                    </div>
+
+
+                </div>
+                <!-- end 标题 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <div class="pull-left margin-top-1">
+                                    <form action="" class="form-inline search-form">
+
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>姓名：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <input class="form-control" name="userName"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>部门：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w153" name="deptName">
+                                                        <option value="">请选择</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>职务：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w153" name="maindutyName">
+                                                        <option value="">请选择</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>时间：</span>
+                                                </label>
+                                                <div class="form-control-wrap ">
+                                                    <input id="startTime" class="form-input Wdate" name="startAttDay"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span style="width:3.5em; display: inline-block; text-align: center;">至</span>
+                                                </label>
+                                                <div class="form-control-wrap ">
+                                                    <input id="endTime" class="form-input Wdate" name="endAttDay"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>加班：</span>
+                                                </label>
+
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w80" name="workHousType" onchange="openInpt('workHous')">
+                                                        <option value="">请选择</option>
+                                                        <option value=">=">&gt;=</option>
+                                                        <option value="<=">&lt;=</option>
+                                                        <option value="<">&lt;</option>
+                                                        <option value="=">=</option>
+                                                        <option value=">">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="workHous" class="form-control w69" readonly/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>请假：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w80" name="leaveHousType" onchange="openInpt('leaveHous')">
+                                                        <option value="">请选择</option>
+                                                        <option value=">=">&gt;=</option>
+                                                        <option value="<=">&lt;=</option>
+                                                        <option value="<">&lt;</option>
+                                                        <option value="=">=</option>
+                                                        <option value=">">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="leaveHous" class="form-control w69" readonly/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>外勤：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w80" name="outHousType" onchange="openInpt('outHous')">
+                                                        <option value="">请选择</option>
+                                                        <option value=">=">&gt;=</option>
+                                                        <option value="<=">&lt;=</option>
+                                                        <option value="<">&lt;</option>
+                                                        <option value="=">=</option>
+                                                        <option value=">">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="outHous" class="form-control w69" readonly/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>旷工：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w80" name="minerCountType" onchange="openInpt('minerCount')">
+                                                        <option value="">请选择</option>
+                                                        <option value=">=">&gt;=</option>
+                                                        <option value="<=">&lt;=</option>
+                                                        <option value="<">&lt;</option>
+                                                        <option value="=">=</option>
+                                                        <option value=">">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="minerCount" class="form-control w69" readonly/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>迟到：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w80" name="lateHourType" onchange="openInpt('lateHour')">
+                                                        <option value="">请选择</option>
+                                                        <option value=">=">&gt;=</option>
+                                                        <option value="<=">&lt;=</option>
+                                                        <option value="<">&lt;</option>
+                                                        <option value="=">=</option>
+                                                        <option value=">">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="lateHour" class="form-control w69" readonly/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>早退：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w80" name="earlyHourType" onchange="openInpt('earlyHour')">
+                                                        <option value="">请选择</option>
+                                                        <option value=">=">&gt;=</option>
+                                                        <option value="<=">&lt;=</option>
+                                                        <option value="<">&lt;</option>
+                                                        <option value="=">=</option>
+                                                        <option value=">">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="earlyHour" class="form-control w69" readonly/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span>外勤：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select class="form-control w153" name="outsideCondition">
+                                                        <option value="">请选择</option>
+                                                        <option value="3">&lt;</option>
+                                                        <option value="2">=</option>
+                                                        <option value="1">&gt;</option>
+                                                    </select>
+                                                    <input type="text" name="outsideHour" class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>-->
+
+
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap text-right">
+                                                    <button type="button" class="btn btn-primary search-button">
+                                                        <span class="glyphicon glyphicon-search"></span>
+                                                        查询
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary reset-button">
+                                                        重置
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="list-section">
+                                        <div class="list-content">
+                                            <div class="form-inline view-info">
+                                                <fieldset>
+                                                    <!-- begin 表格 -->
+                                                    <div class="grid-section">
+                                                        <table id="list">
+                                                        </table>
+                                                    </div>
+                                                    <!-- end 表格  -->
+                                                </fieldset>
+                                                <div class="clear"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<!--<script type="text/javascript" src="${_lib }/webuploader/webuploader.min.js"></script>-->
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js?v=1.0.0"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+<script type="text/javascript" src="${_js}/zkCore.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+
+<!--begin 自定义JS -->
+<script type="text/javascript">
+    $(function() {
+        // 获取默认开始时间
+        function getDefaultStartDate() {
+            var dateTime = new Date();
+            var date = [];
+            var year = dateTime.getFullYear();
+            var month = dateTime.getMonth() + 1;
+            month = month < 10 ? '0' + month : month;
+            var day = '01';
+            date.push(year);
+            date.push(month);
+            date.push(day);
+            return date.join('-');
+        }
+
+        // 获取默认结束时间
+        function getDefaultEndDate() {
+            var dateTime = new Date();
+            var date = [];
+            var year = dateTime.getFullYear();
+            var month = dateTime.getMonth() + 1;
+            month = month < 10 ? '0' + month : month;
+            var day = dateTime.getDate();
+            day = day > 1 ? day - 1 : day;
+            day = day < 10 ? '0' + day : day;
+            date.push(year);
+            date.push(month);
+            date.push(day);
+            return date.join('-');
+        }
+        // 时间日期选择器初始化
+        function initDatetimePicker() {
+            //时间限制，开始时间不能大于结束时间
+            $('#startTime').off('focus').on('focus', function () {
+                WdatePicker({
+                    lang: 'zh-cn',
+                    maxDate: CurentTime("endTime"),
+                    onpicked: onBlur("startTime"),
+                    dateFmt: 'yyyy-MM-dd',
+                    isShowClear: false
+                });
+            }).val(getDefaultStartDate());
+            $('#endTime').off('focus').on('focus', function () {
+                WdatePicker({
+                    lang: 'zh-cn',
+                    minDate: CurentTime("startTime"),
+                    maxDate: getDefaultEndDate(),
+                    onpicked: onBlur("endTime"),
+                    dateFmt: 'yyyy-MM-dd',
+                    isShowClear: false
+                });
+            }).val(getDefaultEndDate());
+
+            function CurentTime(id) {
+                if (id) {
+                    var time = $("#" + id).val();
+                    return time;
+                }
+            };
+
+            function onBlur(id) {
+                if (id) {
+                    $("#" + id).blur();
+                }
+            }
+        }
+
+        initDatetimePicker()
+
+        //考勤统计
+        $("#list").jqGrid(
+            {
+                mtype: 'POST',
+                url : '${_gate_url}/api/mt/punchAttendanceStatics/webQueryStatics',
+                postData:{data:{
+                    startAttDay: $('#startTime').val() + ' 00:00:00',
+                    endAttDay: $('#endTime').val() + ' 23:59:59'
+                },pageNo:1,pageSize:20},
+                datatype:"json",
+                contentType:'application/json',
+                serializeGridData:function(postData){
+                    return JSON.stringify(postData);
+                },
+                // 导出文件的文件名
+                fileName: '考勤统计',
+                colNames : [ '姓名','部门','职务','应出勤(天)','正常出勤(天)','外勤(小时)','加班(小时)','请假(小时)','出差(小时)','迟到(小时)','早退(小时)','旷工(次)'],
+                colModel : [
+                    {name : 'userName',index : 'userName', sortable : false,"width":'210'},
+                    {name : 'deptName',index : 'deptName', sortable : false,"width":'210'},
+                    {name : 'maindutyName',index : 'maindutyName', sortable : false,"width":'210'},
+                    {name : 'needDays',index : 'needDays', sortable : false,"width":'210'},
+                    {name : 'normalDays',index : 'normalDays', sortable : false,"width":'210'},
+                    {name : 'outHous',index : 'outHous', sortable : false,"width":'210'},
+                    {name : 'workHous',index : 'workHous', sortable : false,"width":'210'},
+                    {name : 'leaveHous',index : 'leaveHour', sortable : false,"width":'210'},
+                    {name : 'travelHous',index : 'travelHous', sortable : false,"width":'210'},
+                    {name : 'lateHour',index : 'lateHour', sortable : false,"width":'210'},
+                    {name : 'earlyHour',index : 'earlyHour', sortable : false,"width":'210'},
+                    {name : 'minerCount',index : 'minerCount', sortable : false,"width":'210'}],
+                pager : '#pager',
+                height : 'auto',
+                jsonReader : {
+                    root:"data.list",
+                    page: "data.pageNum",
+                    total: "data.pages",
+                    records: "data.total"
+                },
+                onPaging: function (pgButton) {
+                    var pageNo=$(".ui-pg-input").val();
+                    pageNo=parseInt(pageNo);
+                    var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                    total=parseInt(total);
+                    if(pgButton=="next"){
+                        if(pageNo>=total){
+                            return false;
+                        }else{
+                            pageNo+=1;
+                        }
+                    }else if(pgButton=="prev"){
+                        if(pageNo>1){
+                            pageNo-=1;
+                        }else{
+                            return false;
+                        }
+                    }else if(pgButton=="last"){
+                        pageNo=total;
+                    }else if(pgButton=="first"){
+                        pageNo=1;
+                    }
+                    var pageSize=$(".ui-pg-selbox").val();
+                    if(pageNo!=0){
+                        updateList(pageNo, pageSize);
+                        return false;
+                    }
+                }
+            });
+        // 初始化查询按钮
+        $("button.search-button").click(function () {
+            updateList(1, 20);
+        });
+        // 初始化重置按钮
+        $('button.reset-button').on('click', function () {
+            window.location.reload();
+        });
+        initExport("#list", {
+            exceptCurr: true,
+            exceptSelf: true
+        });
+        /**
+         * 注册返回按钮点击事件
+         */
+        $("button.btn-create").click(function() {
+            window.location.href = 'create.do';
+        });
+
+    });
+    // 更新列表
+    function updateList (pageNo, pageSize) {
+        $("#list").jqGrid("clearGridData");
+        var formObj = $("form.search-form").serializeObject();
+        var seachData={};
+        seachData.userName=formObj.userName;
+        seachData.deptName=formObj.deptName;
+        seachData.maindutyName=formObj.maindutyName;
+        seachData.startAttDay=formObj.startAttDay + ' 00:00:00';
+        seachData.endAttDay=formObj.endAttDay + ' 23:59:59';
+        if(formObj.workHous!=""){
+            seachData.workHous=formObj.workHousType+formObj.workHous;
+        }else{
+            seachData.workHous="";
+        };
+        if(formObj.leaveHous!=""){
+            seachData.leaveHous=formObj.leaveHousType+formObj.leaveHous;
+        }else{
+            seachData.leaveHous="";
+        };
+        if(formObj.outHous!=""){
+            seachData.outHous=formObj.outHousType+formObj.outHous;
+        }else{
+            seachData.outHous="";
+        };
+        if(formObj.minerCount!=""){
+            seachData.minerCount=formObj.minerCountType+formObj.minerCount;
+        }else{
+            seachData.minerCount="";
+        };
+        if(formObj.lateHour!=""){
+            seachData.lateHour=formObj.lateHourType+formObj.lateHour;
+        }else{
+            seachData.lateHour="";
+        };
+        if(formObj.earlyHour!=""){
+            seachData.earlyHour=formObj.earlyHourType+formObj.earlyHour;
+        }else{
+            seachData.earlyHour="";
+        };
+        var postData = {
+            postData:{
+                data:seachData,
+                pageNo: pageNo || $(".ui-pg-input").val() || 1,
+                pageSize: pageSize || $(".ui-pg-selbox").val() || 20
+            }
+        };
+        $("#list").setGridParam(postData).trigger("reloadGrid");
+    }
+    $('.WdateYear').off('focus').on('focus',function(){
+        WdatePicker({lang:'zh-cn',skin:'whyGreen',dateFmt:'yyyy-MM',isShowToday:false});
+    });
+
+    function openInpt(nameVal){//选择条件填写值
+        var val = $("select[name='"+nameVal+"Type']").val();
+        if(val!=""){
+            $("input[name='"+nameVal+"']").removeProp("readonly");
+        }else{
+            $("input[name='"+nameVal+"']").attr("readonly",true).val("");
+        }
+    }
+    getParts();
+    // 初始化部门选项
+    function getParts() {
+        parent.getUnitIdFromTopWindow(function(unitId) {
+            if (!unitId) {
+                console.log('获取单位id失败');
+                return;
+            }
+            ajaxHengyun({
+                url: _GATE_URL + "/api/admin/gxqpt/dpm/findDpmByOrgEnable",
+                type: 'GET',
+                data: {
+                    orgId: unitId
+                },
+                success: function (res) {
+                    var data = res.data;
+                    if (data) {
+                        var options = ['<option value="">全部</option>'];
+                        for (var i = 0; i < data.length; i++) {
+                            options.push('<option value="' + data[i].name + '">' + data[i].name + '</option>');
+                        }
+                        $('select[name=deptName]').html(options.join(''));
+                    }
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
+    }
+    findSimpDutiesGxqpt();
+    // 初始化职务选项
+    function findSimpDutiesGxqpt() {
+        parent.getUnitIdFromTopWindow(function(unitId) {
+            if (!unitId) {
+                console.log('获取单位id失败');
+                return;
+            }
+            ajaxHengyun({
+                url: _GATE_URL + "/api/admin/duties/findSimpDutiesGxqpt",
+                type: 'GET',
+                data: {
+                    orgid: unitId
+                },
+                success: function (res) {
+                    var data = res.data;
+                    if (data) {
+                        var options = ['<option value="">全部</option>'];
+                        for (var i = 0; i < data.length; i++) {
+                            options.push('<option value="' + data[i].name + '">' + data[i].name + '</option>');
+                        }
+                        $('select[name=maindutyName]').html(options.join(''));
+                    }
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
+    }
+</script>
+<!--end 自定义JS -->
+
+</body>
+</html>

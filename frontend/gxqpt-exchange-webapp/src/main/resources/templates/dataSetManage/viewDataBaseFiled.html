@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>数据集管理</span> &gt; <span>数据集编辑</span> &gt; <span class="page-title-scend">定义查询参数</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+            </div>
+        </div>
+        <div class="view_container view_container_first row">
+            <div class="main_right pull-right">
+                <div id="secondPage" class="secondPage minHeight360">
+                    <table class="table default-table tab-border-no-layer">
+                        <tbody>
+                        <tr>
+                            <td class="text-left">参数样例：</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <textarea name="" rows="5" cols="" class="form-control" disabled></textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table id="databaseTab" class="table default-table tab-title-top">
+                        <thead>
+                        <tr>
+                            <th width="200">字段名称</th>
+                            <th width="160">字段类型</th>
+                            <th>字段描述</th>
+                            <th width="160">规则</th>
+                            <th width="160">默认值</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                    </table>
+                </div>
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" onclick="history.back()">上一步</button>
+                    <button type="button" class="btn btn-primary" onclick="save()">下一步</button>
+                    <!--<a href="${_cp}/module/dataSetCreateRelation" class="btn btn-primary">下一步</a>-->
+                    <button type="button" class="btn btn-primary" onclick="loadFirstPage()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    function loadFirstPage(){
+        window.location.href='${_cp}/module/dataSetManageList?pageNo=${pageNo}';
+    };
+    var paramFileds=[];
+    getDataSetView();
+    function getDataSetView(){//获取详情
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/getBaseInfo",
+            data: {setId:"${id}"},
+            success: function (rows) {
+                if(rows.data){
+                }
+                paramFileds=rows.data.paramFileds;
+                getFieldInfo();
+            }
+        });
+    };
+    function getFieldInfo(){//获取字段信息
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/getTableInfo",
+            data: {tableCode:"${tableCode}",dataSourcId:"${dataSourcId}"},
+            success: function (rows) {
+                if (rows.data) {
+                    var html="";
+                    var fields=rows.data.fieldList;
+                    for(var i in fields){
+                        var setFieldRouldVal=false;
+                        var setFieldRouldObj={};
+                        paramFileds.forEach(function(value,index){
+                           if(value.fieldCode==fields[i].fieldCode){
+                               setFieldRouldVal=true;
+                               setFieldRouldObj=value;
+                           }
+                        });
+                        html+='<tr>';
+                        html+='<td class="fieldCode">'+fields[i].fieldCode+'</td>';
+                        html+='<td class="fieldType">'+fields[i].fieldType+'</td>';
+                        html+='<td class="fieldName">'+fields[i].fieldName+'</td>';
+                        html+='<td>';
+                        if(setFieldRouldObj.rule=="1"){
+                            html+='大于';
+                        }else if(setFieldRouldObj.rule=="2"){
+                            html+='小于';
+                        }else if(setFieldRouldObj.rule=="3"){
+                            html+='等于';
+                        }else if(setFieldRouldObj.rule=="4"){
+                            html+='模糊';
+                        }else if(setFieldRouldObj.rule=="5"){
+                            html+='小于等于';
+                        }else if(setFieldRouldObj.rule=="6"){
+                            html+='大于等于';
+                        }
+                        html+='</td>';
+                        html+='<td>';
+                        if(setFieldRouldObj.value){
+                            html+=setFieldRouldObj.value;
+                        }
+                        html+='</td>';
+                        html+='</tr>';
+                    }
+                    $("#databaseTab tbody").append(html);
+                    updateIformHeight();
+                }
+            }
+        });
+    };
+    function save(){
+        window.location.href="${_cp}/module/dataSetViewDbRelation?id=${id}&tableCode=${tableCode}&dataSourcId=${dataSourcId}&pageNo=${pageNo}";
+    }
+</script>
+</body>
+</html>

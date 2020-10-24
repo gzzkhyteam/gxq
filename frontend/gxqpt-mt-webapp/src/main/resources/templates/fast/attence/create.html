@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css" href="${_css}/reset.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jquery-step/jquery.step.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=0.1">
+    <link rel="stylesheet" href="${_css}/app.css">
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css"/>
+    <link href="${_static}/css/viewCss/fast/attence/create.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5> 考勤管理 > <font color="#0099cc">考勤维护</font></h5>
+                    </div>
+                </div>
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <form action="" id="dataForm" method="post">
+                                <input id="signId" class="hidden" type="text" name="id" value="">
+                                <!--  可编辑-->
+                                <div class="form-inline  tab4S">
+                                    <fieldset>
+                                        <div>
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>上班签到时间</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input id="inTime" class="form-control Wdate" name="inTime"
+                                                               onfocus="WdatePicker({lang: 'zh-cn',skin: 'whyGreen',dateFmt: 'HH:mm:ss',isShowToday: false });"
+                                                               value="" style="width: 153px;"
+                                                               datatype="*"
+                                                               errormsg="请填写上班签到时间" nullmsg="请填写上班签到时间"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>下班签退时间</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input id="outTime" class="form-control Wdate"
+                                                               onfocus="WdatePicker({lang: 'zh-cn',skin: 'whyGreen',dateFmt: 'HH:mm:ss',isShowToday: false });"
+                                                               name="outTime"
+                                                               value="" style="width: 153px;"
+                                                               datatype="*"
+                                                               errormsg="请填写下班签退时间" nullmsg="请填写下班签退时间"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div>
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>午休起始时间</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input id="startTime" class="form-control Wdate"
+                                                               onfocus="WdatePicker({lang: 'zh-cn',skin: 'whyGreen',dateFmt: 'HH:mm:ss',isShowToday: false });"
+                                                               name="startTime"
+                                                               value="" style="width: 153px;"
+                                                               datatype="*"
+                                                               errormsg="请填写午休时间" nullmsg="请填写午休时间"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>午休截止时间</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input id="endTime" class="form-control Wdate"
+                                                               onfocus="WdatePicker({lang: 'zh-cn',skin: 'whyGreen',dateFmt: 'HH:mm:ss',isShowToday: false });"
+                                                               name="endTime"
+                                                               value="" style="width: 153px;"
+                                                               datatype="*"
+                                                               errormsg="请填写午休时间" nullmsg="请填写午休时间"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div>
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>签到地点</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input class="form-control" id="location"
+                                                               name="location"
+                                                               style="width: 485px;" value=""
+                                                               datatype="*"
+                                                               nullmsg="请填写签到地点" readonly placeholder="地图定位后自动添加" />
+                                                        <input type="hidden" id="lat" class="form-control"
+                                                               name="lat" value=""/>
+                                                        <input type="hidden" id="lng" class="form-control"
+                                                               name="lng" value=""/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>签到距离范围</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <select class="form-control w153 " data-placeholder="请选择签到距离范围"
+                                                                id="distanceRange" name="distanceRange"
+                                                        >
+                                                            <option value="100">100米
+                                                            </option>
+                                                            <option value="200">200米
+                                                            </option>
+                                                            <option value="500">500米
+                                                            </option>
+                                                            <option value="1000">1000米
+                                                            </option>
+                                                            <option value="1500">1500米
+                                                            </option>
+                                                            <option value="2000">2000米
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <div>
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <!-- <span class="text-danger"></span> -->
+                                                        <span>附件上传</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <div id="wrapper" class="form-control-wrap"
+                                                         style="margin:0;">
+                                                            <div style="margin: 0;padding: 0;">
+                                                                <div id="filePicker" class="filePicker"></div>
+                                                                <div id="uploader" class="uploader hidden">
+                                                                    <div class="queueList">
+                                                                        <ul id="file_html" class="filelist">
+                                                                            <li>还未选择文件</li>
+                                                                        </ul>
+                                                                        <div id="dndArea" class="placeholder dndArea" style="padding-top: 0px;">
+                                                                            <p></p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="jxButton" class="jxButton"></div>
+                                                                    <div id="uploadBtn" class="uploadBtn"></div>
+                                                                    <div class="statusBar" style="display:none;">
+                                                                        <div class="progress">
+                                                                            <span class="text">0%</span> <span class="percentage"></span>
+                                                                        </div>
+                                                                        <div class="info"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clear" style="margin-bottom: 10px"></div>
+                                        <div>
+                                            <label class="control-label w153 pull-left">
+                                                <span class="text-danger">*</span>
+                                                <span>地图定位</span>
+                                                <span>：</span>
+                                            </label>
+                                            <div style="width:calc(100% - 153px);height:350px;border:#ccc solid 1px;"
+                                                 id="dituContent" class="ditu"></div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div>
+                                    <button type="button" class="saveData" style="display: none;"></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn btn-primary btn-submit" type="button">
+                            保存
+                        </button>
+                    </div>
+                </div>
+                <!-- end 页面内容主体 -->
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?ak=XosyPPmQSVWrdIecxRGQzALB"></script>
+<!-- <script type="text/javascript" src="${_static}/js/lib/baidumap/pointConvertor.js"></script> -->
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+<script type="text/javascript" src="${_lib}/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_lib}/webuploader/HYUpload.js"></script>
+<script type="text/javascript" src="${_lib}/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_lib}/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js?v=1.0.0"></script>
+<script type="text/javascript" src="${_js}/viewJs/fast/attence/create.js?v=2"></script>
+<!--end 外部JS引入 -->
+</body>
+</html>

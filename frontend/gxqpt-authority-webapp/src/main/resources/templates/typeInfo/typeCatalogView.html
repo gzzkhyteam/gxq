@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+	<meta http-equiv="Expires" content="0"/>
+	<meta name="renderer" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+	<link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+	<link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/core/module.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/sys_com/com.css"/>
+    <style type="text/css">
+        .table-title-left tbody tr td {
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body>
+<div class="workspace-body">
+	<div class="col-md-12 col-lg-12">
+		<div class="row">
+			<!--内容-->
+			<div class="list-section">
+				<div class="list-content">
+					<div class="form-inline">
+						<form id="myForm" action="" method="post">
+							<table class="table default-table table-title-left">
+								<tbody>
+								<tr>
+									<th width="130">字典条目名称</th>
+									<td name="name"></td>
+								</tr>
+								<tr>
+									<th>数据字典编码</th>
+									<td name="code"></td>
+								</tr>
+								<tr>
+									<th>排序权重</th>
+									<td name="orderNum">
+									</td>
+								</tr>
+								<tr>
+									<th>是否启用</th>
+									<td name="isEnable">
+									</td>
+								</tr>
+								<tr>
+									<th>描述</th>
+									<td name="description">
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    var urlPre = '${_gate_url}/api/admin/';
+    //获取字典类型详情
+	(function getType() {
+        ajaxHengyun({
+            type:'get',
+            url:urlPre + 'dictionary/get',
+            data:{id:'${id}'},
+            success:function (res) {
+                if(res.data){
+                    $('#myForm').find('[name="name"]').text(res.data.name);
+                    $('#myForm').find('[name="code"]').text(res.data.code);
+                    $('#myForm').find('[name="orderNum"]').text(res.data.orderNum);
+                    $('#myForm').find('[name="isEnable"]').text(res.data.isEnable.toString() == 'true'?'是':'否');
+                    $('#myForm').find('[name="description"]').text(res.data.description);
+                }
+            }
+        })
+    })();
+</script>
+</body>
+
+</html>

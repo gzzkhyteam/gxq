@@ -1,0 +1,146 @@
+<template>
+    <Card :bordered="false">
+        <p slot="title">单位申请信息</p>
+        <div style="text-align:center">
+            <Form ref="evalData" :model="evalData" :rules="ruleValidate" :label-width="70" class="clearfix">
+                <Row :gutter="40">
+                    <Col span="11">
+                        <FormItem label="申请单位" prop="unit">
+                            <Input v-model="evalData.unit" disabled></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span="11">
+                        <FormItem label="申请人" prop="applicant">
+                            <Input v-model="evalData.applicant" disabled></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span="11">
+                        <FormItem label="申请人邮箱" prop="email">
+                            <Input v-model="evalData.email" disabled></Input>
+                        </FormItem>
+                    </Col>
+                </Row>
+            </Form>
+            <hy-table
+            highlight-row
+            :columns="tableList.columns"
+            :data="tableList.data"
+            class="server-list"
+            @on-page-change="getList"
+            :needPage="false" />
+            <Row style="margin-top: 20px;">
+                <Form
+                    ref="evalData"
+                    :label-width="100"
+                    :model="evalData">
+                    <FormItem label="申请原因：">
+                        <Input
+                            type="textarea"
+                            v-model="evalData.reason"
+                            disabled>
+                        </Input>
+                    </FormItem>
+                    <FormItem class="download" label="附件说明：" style="margin-top: 40px;">
+                        <Input type="text" style="width: 400px;" v-model="evalData.doc" disabled></Input>
+                        <Button type="primary">下载</Button>
+                    </FormItem>
+                </Form>
+            </Row>
+        </div>
+    </Card>
+</template>
+
+<script>
+export default {
+    data(){
+        return{
+            index:1,
+            evalData:{
+                id:'hloadhoa dpadjop',
+                ip:'192.168.1.11',
+                cpu:4,
+                memory:'4GB',
+                os:'Windows10',
+                network:'政务外网',
+                networkBandwidth:'10M',
+                items: [
+                    {
+                        value: '',
+                        index: 1,
+                        status: 1
+                    }
+                ]
+            },
+            ruleValidate:{},
+            tableList: {
+                columns: [
+                {
+                    type: 'index',
+                    title: '序号',
+                    width: 60,
+                    align: 'center'
+                },
+                {
+                    title: 'CPU核数',
+                    key: 'cpu'
+                },
+                {
+                    title: '内存',
+                    key: 'memory'
+                },
+                {
+                    title: '操作系统',
+                    key: 'os'
+                },
+                {
+                    title: '网络区域',
+                    key: 'network'
+                },
+                {
+                    title: '网络带宽',
+                    key: 'networkBandwidth'
+                },
+                {
+                    title: '申请数量',
+                    key: 'applyNum'
+                },
+                {
+                    title: '磁盘',
+                    key: 'cd'
+                },
+                {
+                    title: '大小',
+                    key: 'size'
+                }],
+                data: [
+                    {
+                        cpu: 'd-go61u5z6ziebqk596dom',
+                        memory: '10GB',
+                        os: 'windows',
+                    },
+                    {
+                        cpu: 'd-go61u5z6ziebqk596dom',
+                        memory: '10GB',
+                        os: 'windows',
+                    }
+                ]
+            },
+        }
+    },
+    created(){},
+    methods:{
+        getList(){
+            console.log("获取数据");
+        }
+    },
+    components: {
+    },
+}
+</script>
+<style>
+.download /deep/ .ivu-form-item-content{
+    position: absolute;
+    left:0;
+}
+</style>
+

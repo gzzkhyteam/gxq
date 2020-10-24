@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/jqueryPagination/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                管理中心 > 我的申请 > <span class="active">新增功能跟踪</span>
+            </div>
+        </div>
+        <div class="main">
+            <div class="block">
+                <form id="formData" class="form-inline searchForm clearfix">
+                    <div class="form-group">
+                        <label class="sr-only"></label>
+                        <input type="text" class="form-control" placeholder="功能名称">
+                    </div>
+                    <div class="form-group">
+                        <div class="">
+                            <select class="form-control">
+                                <option>请选择功能类型</option>
+                                <option>所有</option>
+                                <option>启用</option>
+                                <option>禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="">
+                            <select class="form-control">
+                                <option>请选择源于应用</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="">
+                            <select class="form-control">
+                                <option>请选择审核状态</option>
+                                <option>所有</option>
+                                <option>待审核</option>
+                                <option>审核通过</option>
+                                <option>审核不通过</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-info">查询</button>
+                </form>
+                <div class="main" ng-app="app" ng-controller="controller">
+                    <table class="table table-darck table-hover table-striped table-list">
+                        <thead>
+                        <tr>
+                            <th width="50"></th>
+                            <th>功能名称</th>
+                            <th>功能编码</th>
+                            <th>功能类型</th>
+                            <th>功能描述</th>
+                            <th>源于应用</th>
+                            <th>申请状态</th>
+                            <th>审核反馈信息</th>
+                            <th class="text-center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="host in hostList">
+                            <td class="text-center">{{$index+1}}</td>
+                            <td>{{host.code}}</td>
+                            <td>{{host.memory}}</td>
+                            <td>{{host.disk}}</td>
+                            <td>{{host.system}}</td>
+                            <td>{{host.system}}</td>
+                            <td>{{host.provider}}</td>
+                            <td>{{host.hostPerson}}</td>
+                            <td class="text-center">
+                                <a href="${_cp}/module/functionTrackEdit">再次提交审核</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="bottom-bar alignCenter">
+                        <div id="pagination_9"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqueryPagination/js/pagination.min.js"></script>
+<script>
+    var pageType="myApply";
+    /*删除方法*/
+    function remove() {
+        layer.confirm("您确定要删除吗？", {
+            title: '温馨提示',
+            shade: [0.4, '#000'],
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            layer.msg("删除成功！",{time:1500});
+        });
+    }
+    app = angular.module('app', []);
+    app.controller('controller', function ($scope) {
+        $scope.xxx = "1230";
+        $scope.hostList = [{
+            code: '0010',
+            memory: 16,
+            disk: 1024,
+            system: 'window',
+            provider: '待审核',
+            hostPerson: ''
+        }, {
+            code: '0010',
+            memory: 16,
+            disk: 1024,
+            system: 'window',
+            provider: '审核通过',
+            hostPerson: ''
+        }, {
+            code: '0010',
+            memory: 16,
+            disk: 1024,
+            system: 'window',
+            provider: '审核不通过',
+            hostPerson: '不给予授权'
+        }, {
+            code: '0010',
+            memory: 16,
+            disk: 1024,
+            system: 'window',
+            provider: '待审核',
+            hostPerson: ''
+        }, {
+            code: '0010',
+            memory: 16,
+            disk: 1024,
+            system: 'window',
+            provider: '审核通过',
+            hostPerson: ''
+        }, {
+            code: '0010',
+            memory: 16,
+            disk: 1024,
+            system: 'window',
+            provider: '审核不通过',
+            hostPerson: 'xxx'
+        }, {
+            code: '0010',
+            memory: 16,
+            disk: 1024,
+            system: 'window',
+            provider: '审核不通过',
+            hostPerson: 'xxx'
+        }]
+        /*处理分页*/
+        $("#pagination_9").pagination({
+            totalPage: 18,
+            callBack: function (currPage, pageSize) {
+                console.log('currPage:' + currPage + '     pageSize:' + pageSize);
+            }
+        });
+    })
+</script>
+</body>
+</html>

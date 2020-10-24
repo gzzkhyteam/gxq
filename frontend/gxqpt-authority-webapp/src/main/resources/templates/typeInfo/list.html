@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" href="${_static}/css/core/infoMaintain.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.exedit.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <style type="text/css">
+        #ztree .level0 .ico_docu,
+        #ztree .level1 .ico_docu{
+            background-position: -110px 0;
+            margin-right: 2px;
+            vertical-align: top;
+        }
+        .console-container{
+            min-height: 700px;
+        }
+        .general_list_main .main_left{
+            min-height: 575px;
+        }
+        .general_list_main .main_left .item{
+            border: 0;
+        }
+        .ztree li span{
+            display: inline-block;
+            width: 136px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        权限管理系统 &gt; 信息维护 &gt; <span class="page-title-scend">类型信息维护</span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="pull-left" style="width: 50%;background: #f2f2f2;margin-bottom: 12px;margin-left:15px;">
+            <div class="text-label pull-left" style="width:40px;line-height: 30px">应用:</div>
+            <select class="form-control app-list" style="width: 260px" onchange="changeApp(this)"></select>
+        </div>
+        <div class="col-sm-12">
+            <div class="general_list_main clearfix">
+                <div id="main_left" class="main_left pull-left">
+                    <div class="conter item">
+                        <h3 class="clearfix">
+                            <span class="pull-left item_tle">数据字典目录</span>
+                        </h3>
+                        <ul id="ztree" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="main_right">
+                    <iframe id="secondhome" name="secondhome" frameborder="0" scrolling="no" width="100%" height="auto" style="min-height: 570px;" src="${_cp}/power/typeCatalogList.html?id="+currNode.id></iframe>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    var app = {};
+    var currNode = null;//当前树节点
+    //获取应用
+    (function getApp(){
+        ajaxHengyun({
+            type:"get",
+            url:'${_gate_url}/api/developer/application/findList',
+            data:{type:1},
+            datatype:'json',
+            success:function (res) {
+                if(res.data && res.data.length){
+                    var str = '';
+                    $.each(res.data,function (index,value) {
+                        str += '<option value='+value.appId+'>'+value.name+'</option>'
+                    })
+                    $('.app-list').html(str);
+                    getTypeTree(res.data[0].appId,res.data[0].name);
+                    app.appId = res.data[0].appId;
+                    app.name = res.data[0].name;
+                }
+            }
+        })
+    })();
+    //切换应用
+    function changeApp(event) {
+        var appName = $(event).find('option:selected').text();
+        var appId = $(event).find('option:selected').val();
+        app.appId = appId;
+        app.name = appName;
+        getTypeTree(appId,appName);
+    }
+    /* 生成树 */
+    var setting = {
+        view: {
+            addHoverDom: addHoverDom,
+            removeHoverDom: removeHoverDom,
+            selectedMulti: false,
+        },
+        edit: {
+            enable: true,
+            showRemoveBtn: showRemoveBtn,
+            showRenameBtn: showRenameBtn,
+            removeTitle: "删除",
+            renameTitle: "编辑",
+        },
+        data: {
+            key: {
+                name: 'name'
+            },
+            simpleData: {
+                idKey: 'id',
+                enable: true
+            }
+        },
+        callback: {
+            beforeEditName: beforeEditName,
+            beforeRemove:beforeRemove,
+            onClick: onClick,
+        },
+    };
+    function getTypeTree(appId,appName){
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            // url: "${_gate_url}/dictionary/listType",
+            url: "${_gate_url}/api/admin/dictionary/dictionaryTree",
+            datatype: 'json',
+            data:{appId:appId,parentId:'-1'},
+            success: function (res) {
+                var zNodes ={
+                        id:"-1",
+                        name:appName,
+                        type:"rootNode",
+                        open:true,
+                    };
+                $("#secondhome").attr("src","${_cp}/power/typeCatalogList?id=-1");
+                currNode = zNodes;
+                if(res.data && res.data.length){
+                    zNodes.children = res.data;
+                    $.fn.zTree.init($("#ztree"), setting, [zNodes]);
+                }else {
+                    $.fn.zTree.init($("#ztree"), setting, [zNodes]);
+                }
+            }
+        })
+    }
+    function beforeEditName(treeId, treeNode) {
+        openEditPage (treeNode.id);
+        return false;
+    }
+    function showRemoveBtn(treeId, treeNode) {
+        if(treeNode.type != 'rootNode'){
+            return true;
+        }
+    }
+    function showRenameBtn(treeId, treeNode) {
+        if(treeNode.type != "rootNode"){
+            return true;
+        }
+    }
+
+    function addHoverDom(treeId, treeNode) {
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+            + "' title='新增' onfocus='this.blur();'></span>";
+        sObj.after(addStr);
+        var btn = $("#addBtn_"+treeNode.tId);
+        if (btn) btn.bind("click", function(){
+            openAddPage (treeNode.id);
+            return false;
+        });
+    };
+    function beforeRemove(treeId, treeNode) {
+        parent.layer.confirm('您确定删除该目录么?如果您确认删除，该目录下的信息都将被删除。', {icon: 3, title:'提示'}, function(index){
+            ajaxHengyun({
+                type:'post',
+                url:'${_gate_url}/api/admin/dictionary/deleteType',
+                data:{id:treeNode.id,appId:app.appId},
+                success:function (res) {
+                    if(res.data){
+                        parent.layer.msg('删除成功',{icon:6});
+                        getTypeTree(app.appId,app.name);
+                        parent.layer.close(index);
+                    }
+                }
+            })
+        });
+        return false;
+    }
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+    };
+    //查看节点详情
+    function onClick(e, treeId, treeNode) {
+        currNode = treeNode;
+        $("#secondhome").attr("src","${_cp}/power/typeCatalogList?id="+currNode.id);
+        return false;
+    };
+    /*目录新增*/
+    function openAddPage (id) {
+        parent.layer.open({
+            id: 'edit',
+            type: 2,
+            anim:6,
+            title: '目录编辑',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['560px', '240px'],
+            content: "${_cp}/power/typeAdd",
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 新增','<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("edit");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index,id);
+            }
+        });
+    }
+    /*目录编辑*/
+    function openEditPage (id) {
+        parent.layer.open({
+            id: 'edit',
+            type: 2,
+            anim:6,
+            title: '目录编辑',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['560px', '240px'],
+            content: "${_cp}/power/typeEdit?id="+id,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确定','<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("edit");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    }
+</script>
+</body>
+</html>

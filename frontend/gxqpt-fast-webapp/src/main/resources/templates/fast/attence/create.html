@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css" href="${_css}/reset.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css"  href="${_lib}/jquery-step/jquery.step.css">
+
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+
+    <link rel="stylesheet" href="${_css}/app.css">
+
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css"/>
+
+    <!--<link rel="icon" href="" type="image/x-icon" />-->
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <script type="text/javascript" src="${_lib}/webuploader/webuploader.js"></script>
+    <script type="text/javascript" src="${_lib}/webuploader/HYCore.js"></script>
+
+    <!-- begin 自定义样式 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        label.control-label {
+            text-align: right;
+        }
+
+        table.infoList tr th {
+            border: 1px solid #e1e6eb;
+            padding: 10px 12px;
+            vertical-align: middle;
+            width: 180px;
+            font-weight: normal;
+        }
+
+        table.infoListTab tr th {
+            width: auto;
+        }
+
+        .upuserhead {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .uploader {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td input.form-control {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td select.form-control {
+            width: 100%;
+        }
+
+        .show-file {
+            border: none !important;
+        }
+
+        .show-file li {
+            float: left;
+            width: 150px !important;
+            height: 150px !important;
+            margin-right: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            text-align: center;
+            border: 1px solid #ccc !important;
+        }
+
+        .show-file .title {
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            color: #f5f5f5;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .show-file .file-panel {
+            height: 30px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .show-file a {
+            color: #f5f5f5 !important;
+            font-size: 13px !important;
+            padding-right: 10px;
+            line-height: 30px;
+        }
+    </style>
+    <!-- end   自定义样式 -->
+</head>
+
+<body>
+
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5> 考勤管理 > <font color="#0099cc">考勤维护</font></h5>
+                    </div>
+
+                    <div class="pull-right">
+                        <button class="btn btn-primary btn-submit" type="button" onclick="submitSave()">
+                            <span class="glyphicon glyphicon-ok"></span> 保存
+                        </button>
+                        <button class="btn btn-default go-back">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            取消
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <form action="" id="dataForm" method="post">
+                                <!--  可编辑-->
+                                <div class="form-inline  tab4S">
+                                    <fieldset>
+                                        <div>
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>上班签到时间</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input id="inTime" class="form-control Wdate" name="inTime"
+                                                               onfocus="WdatePicker({lang: 'zh-cn',skin: 'whyGreen',dateFmt: 'HH:mm',isShowToday: false });"
+                                                               value="" style="width: 153px;"
+                                                               datatype="*"
+                                                               errormsg="请填写上班签到时间" nullmsg="请填写上班签到时间"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>下班签到时间</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input id="outTime" class="form-control Wdate"
+                                                               onfocus="WdatePicker({lang: 'zh-cn',skin: 'whyGreen',dateFmt: 'HH:mm',isShowToday: false });"
+                                                               name="outTime"
+                                                               value="" style="width: 153px;"
+                                                               datatype="*"
+                                                               errormsg="请填写下班签到时间" nullmsg="请填写下班签到时间"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div>
+                                            <div class="form-field" style="margin: 0;">
+                                                <div class="form-group" style="margin: 0;">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>午休时间</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input id="lunchStartTime" class="form-control Wdate"
+                                                               onfocus="WdatePicker({lang: 'zh-cn',skin: 'whyGreen',dateFmt: 'HH:mm',isShowToday: false });"
+                                                               name="lunchStartTime"
+                                                               value="" style="width: 153px;"
+                                                               datatype="*"
+                                                               errormsg="请填写午休时间" nullmsg="请填写午休时间"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label labels">
+                                                        <span>至</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input id="lunchEndTime" class="form-control Wdate"
+                                                               onfocus="WdatePicker({lang: 'zh-cn',skin: 'whyGreen',dateFmt: 'HH:mm',isShowToday: false });"
+                                                               name="lunchEndTime"
+                                                               value="" style="width: 153px;"
+                                                               datatype="*"
+                                                               errormsg="请填写午休时间" nullmsg="请填写午休时间"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div>
+
+                                        </div>
+                                        <div>
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>签到地点</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input  class="form-control" id="location"
+                                                               name="location"
+                                                               style="width: 485px;" value=""
+                                                               datatype="*"
+                                                               nullmsg="请填写签到地点"/>
+                                                        <input type="hidden" id="latitude" class="form-control"
+                                                               name="latitude" value=""/>
+                                                        <input type="hidden" id="longtude" class="form-control"
+                                                               name="longtude" value=""/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>签到距离范围</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <select class="form-control w153 " data-placeholder="请选择签到距离范围"
+                                                                id="distanceRange" name="distanceRange"
+                                                                >
+                                                            <option  value="100">100米
+                                                            </option>
+                                                            <option  value="200">200米
+                                                            </option>
+                                                            <option value="500">500米
+                                                            </option>
+                                                            <option  value="1000">1000米
+                                                            </option>
+                                                            <option  value="1500">1500米
+                                                            </option>
+                                                            <option value="2000">2000米
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div>
+
+                                            <div class="form-field">
+      <input id="signId" type="hidden">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span> 加班计算起始时间</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input class="form-control Wdate" id="startTime"
+                                                               onfocus="WdatePicker({lang: 'zh-cn',skin: 'whyGreen',dateFmt: 'HH:mm',isShowToday: false });"
+                                                               name="startTime"
+                                                               value="" style="width: 153px;"
+                                                               datatype="*"
+                                                               errormsg="工作日加班计算起始时间" nullmsg="请填写工作日加班计算起始时间"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153 labels">
+                                                        <span class="text-danger">*</span>
+                                                        <span>节假日加班计算系数</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap">
+                                                        <input id="coefficient" class="form-control" name="coefficient"
+                                                               value="" datatype="*"
+                                                               nullmsg="节假日加班计算系数"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="clear"></div>
+                                        <div>
+                                            <label class="control-label w153 pull-left">
+                                                <span class="text-danger">*</span>
+                                                <span>附件上传</span>
+                                                <span>：</span>
+                                            </label>
+                                            <div id="wrapper" class="pull-left"
+                                                 style="margin:0;width:calc(100%  - 153px);">
+                                                <div id="container" style="margin: 0;padding: 0;">
+                                                    <div id="uploader1" class="uploader">
+                                                        <ul class="show-file">
+
+                                                        </ul>
+                                                        <!--头部，相册选择和格式选择-->
+                                                        <div class="queueList">
+                                                            <div id="dndArea1" class="placeholder dndArea"
+                                                                 style="padding-top: 85px;">
+                                                                <div id="filePicker1" class="filePicker"></div>
+                                                                <p>或将文件拖到这里，单次最多可选300</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="statusBar" style="display:none;">
+                                                            <div class="progress">
+                                                                <span class="text">0%</span> <span
+                                                                    class="percentage"></span>
+                                                            </div>
+                                                            <div class="info"></div>
+
+                                                            <div class="btns">
+                                                                <div id="jxButton1" class="jxButton"></div>
+                                                                <div class="uploadBtn">开始上传</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clear" style="margin-bottom: 10px"></div>
+                                        <div>
+                                            <label class="control-label w153 pull-left">
+                                                <span class="text-danger">*</span>
+                                                <span>地图定位</span>
+                                                <span>：</span>
+                                            </label>
+                                            <div style="width:calc(100% - 153px);height:550px;border:#ccc solid 1px;"
+                                                 id="dituContent" class="ditu"></div>
+                                    </fieldset>
+                                </div>
+                                <div>
+                                    <button type="button" class="saveData" style="display: none;"></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- end 页面内容主体 -->
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?ak=XosyPPmQSVWrdIecxRGQzALB"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+<script type="text/javascript" src="${_lib}/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_lib}/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_js}/lj.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js?v=1.0.0"></script>
+<!--end 外部JS引入 -->
+
+<!--begin 自定义JS -->
+<script type="text/javascript">
+    $(function(){
+        loadFile();
+        $(".show-file li").each(function(){
+            $(this).hover(function(){
+                $(this).find(".file-panel").slideDown();
+            },function(){
+                $(this).find(".file-panel").slideUp();
+            })
+        });
+        ajaxHengyun({
+            url:"${_gate_url}/api/developer/attence/attencemng/find",
+            type:"get",
+            data:{appId: "${appId!''}"},
+            success:function (data) {
+             if(data.errcode == 0 && data.data){
+                 $("#inTime").val(data.data.inTime);
+                 $("#outTime").val(data.data.outTime);
+                $("#lunchStartTime").val(data.data.lunchStartTime);
+                $("#lunchEndTime").val(data.data.lunchEndTime);
+               $("#startTime").val(data.data.startTime);
+               $("#coefficient").val(data.data.coefficient);
+               $("#location").val(data.data.location);
+               $('#latitude').val(data.data.latitude);
+               $('#longtude').val(data.data.longtude);
+               $('#signId').val(data.data.id);
+                 $("#distanceRange option").each(function(){
+                     if($(this).val()==data.data.distanceRange){
+                         $(this).attr("selected","selected")
+                     }
+                 })
+             }
+
+            }
+        })
+    });
+
+    function loadFile() {
+        fileUpload1 = new FileUpload({
+            "filePicker" : "filePicker1",
+            "dndArea" : "dndArea1",
+            "uploader" : "uploader1",
+            "jxButton" : "jxButton1",
+            "busType" : "work_log_addr"
+        });
+    }
+    var fileList = new Array();
+    function successUpload(json) {
+        var fileInfo = json.fileInfo;
+        fileList.push(fileInfo);
+    }
+    var latitude = "";//纬度
+    var longtude = "";//经度
+    var address ="";
+    var tempLatitude = $('#latitude').val();
+    var tempLongtude = $('#longtude').val();
+    if(tempLatitude == "" || tempLatitude == null){
+        tempLatitude = 26.65243;
+    }
+    if(tempLongtude == "" || tempLongtude == null){
+        tempLongtude = 106.63619;
+    }
+    $(function () {
+        var map = new BMap.Map("dituContent");    // 创建Map实例
+        map.centerAndZoom(new BMap.Point(tempLongtude, tempLatitude), 14);  // 初始化地图,设置中心点坐标和地图级别
+        map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+        map.setCurrentCity("贵阳");          // 设置地图显示的城市 此项是必须设置的
+
+        marker = new BMap.Marker(new BMap.Point(tempLongtude,tempLatitude));  // 创建标注
+        map.addOverlay(marker);
+
+        map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
+        map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+
+        var i = 0
+        //点击获取坐标
+
+        map.addEventListener("click", function (e) {
+            var marker;
+            map.clearOverlays();
+            if (i != -1) {
+                //存储经纬度
+                lat = e.point.lat;//纬度
+                lng = e.point.lng;//经度
+
+                //在地图上面描点
+                marker = new BMap.Marker(new BMap.Point(lng, lat));  // 创建标注
+                map.addOverlay(marker);
+                //marker.enableDragging();    //可拖拽
+
+                var gc = new BMap.Geocoder();
+                //获取地址的数据地址
+                var pt = e.point;
+                gc.getLocation(pt, function (rs) {
+                    var addComp = rs.addressComponents;
+                    address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+                        $("#location").val(address);
+
+                    //画图
+                    var label = new BMap.Label(address, {offset: new BMap.Size(20, -10)});
+                    marker.setLabel(label);
+                });
+                i++;
+            }
+            latitude = e.point.lat;
+            longtude = e.point.lng;
+        });
+    });
+    function submitSave() {
+        $('.saveData').click();
+    }
+    $('.saveData').valid({
+        form: '#dataForm',
+        showAllError: true,
+        checkpassed: function () {
+            //parent.layer.confirm("您确定保存吗？",{icon: 3, title:'确认'},save());
+            parent.layer.confirm("您确定保存吗？",{btn: ['提交','取消'],shade: false },function(index) {
+                layer.load(2, {shade: [0.4, '#000']});
+                var rule = {};
+                var id = "";
+                if (id != null) {
+                    rule.id = id;
+                }
+                if (latitude == '') {
+                    rule.latitude = $('#latitude').val();
+                } else {
+                    rule.latitude = latitude;
+                }
+
+                if (longtude == '') {
+                    rule.longtude = $('#longtude').val();
+                } else {
+                    rule.longtude = longtude;
+                }
+                rule.id=$("#signId").val();
+                rule.location = $("#location").val();
+                rule.inTime = $("#inTime").val();
+                rule.outTime = $("#outTime").val();
+                // rule.laterStartTime = $("#laterStartTime").val();
+                // rule.laterEndTime = $("#laterEndTime").val();
+                rule.lunchStartTime = $("#lunchStartTime").val();
+                rule.lunchEndTime = $("#lunchEndTime").val();
+                // rule.absentTimeRange = $("#absentTimeRange").val();
+                // rule.leaveTimeRange = $("#leaveTimeRange").val();
+                rule.distanceRange = $("#distanceRange").val();
+                rule.startTime = $("#startTime").val();
+                rule.coefficient = $("#coefficient").val();
+                rule.attrs = fileList;
+                rule.appId="${appId}";
+                rule = JSON.stringify(rule);
+                ajaxHengyun({
+                    url: "${_gate_url}/api/developer/attence/attencemng/saveOrUpdate",
+                    type: 'post',
+                    contentType: 'application/json;charset=utf-8', //设置请求头信息
+                    data: rule,
+                    success: function (res) {
+                        if (res && res.errcode != 0) {
+                            layer.alert(res.errmsg);
+                            return;
+                        }
+                        parent.layer.msg("保存成功")
+                        layer.closeAll();
+                        window.location.href="list";
+                    }
+                });
+                parent.layer.close(index);
+            });
+        }
+    });
+    /*function save() {
+
+    }*/
+    $('#inTime').off('focus').on('focus', function () {
+        WdatePicker({
+            lang: 'zh-cn',
+            skin: 'whyGreen',
+            dateFmt: 'HH:mm',
+            isShowToday: false,
+            maxDate: getStarTime('outTime')
+        });
+    });
+    $('#outTime').off('focus').on('focus', function () {
+        WdatePicker({
+            lang: 'zh-cn',
+            skin: 'whyGreen',
+            dateFmt: 'HH:mm',
+            isShowToday: false,
+            minDate: getStarTime('inTime')
+        });
+    });
+</script>
+<!--end 自定义JS -->
+
+
+</body>
+</html>

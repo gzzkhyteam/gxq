@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/webuploader.css"/>
+    	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/upload.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+		<style>
+			.fileDownload i{
+				color: #56b4ec;
+				margin-left: 9px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>需求审核</span> &gt; <span class="page-title-scend">处理</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div id="unit" class="view_item">
+								<h3 class="tle">基本信息</h3>
+								<table class="table default-table tab-border-no">
+									<tbody>
+										<tr>
+											<th width="150">单位名称：</th>
+											<td id="unitName"> </td>
+											<th width="150">单位类型：</th>
+											<td id="unitType"> </td>
+										</tr>
+										<tr>
+											<th>联系人姓名：</th>
+											<td id="contName"> </td>
+											<th>联系人电话：</th>
+											<td id="contTel"> </td>
+										</tr>
+										<tr>
+											<th>联系人邮箱：</th>
+											<td id="contEmail"> </td>
+											<th>统一社会信用代码：</th>
+											<td id="creditCode"> </td>
+										</tr>
+										<tr>
+											<th>需求内容：</th>
+											<td colspan="3" id="requireContent"> </td>
+										</tr>
+										<tr>
+											<th>用途：</th>
+											<td colspan="3" id="purpose"> </td>
+										</tr>
+										<tr>
+											<th>附件：</th>
+											<td colspan="3">
+												<span id="fileName" class="pull-left" style="width: 100%; line-height: 38px;"></span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<h3 class="tle">需求申请处理</h3>
+								<table class="table default-table tab-border-no-layer">
+									<tbody>
+										<tr>
+											<th width="150">处理结果：</th>
+											<td> 
+												<select id="status" name="status " class="form-control" onchange="displayEstimate()">
+											        <option value="1">同意</option>
+											        <option value="2">驳回</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<th>处理意见：</th>
+											<td> 
+												<textarea id="content" name="content" rows="5" cols="" class="form-control"></textarea>
+											</td>
+										</tr>
+										<tr id="estimate">
+											<th>API预计封装时间：</th>
+											<td>
+												<input type="text" name="estimateTime" id="estimateTime"  class="Wdate" autocomplete="off"/>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="text-center">
+									<button type="button" class="btn btn-primary" onclick="save()">提交</button>
+									<button type="button" class="btn btn-primary" onclick="history.back()">取消</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript">
+            var demandId = "${demandId}";
+            getInfo(demandId);
+            function displayEstimate() {
+				var status = $("#status").select().val();
+				if(status == 2){
+				    $("#estimate").css("display","none");
+				}
+            }
+            function getInfo(demandId) {//获取详情
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    url: '${_gate_url}/api/exchange/dataapi/demand/hddetail',
+                    data: {id: demandId},
+                    success: function (rows) {
+                        if (rows.data) {
+                        	var rowData=dealElement(rows.data);
+                            rows.data = rowData;
+                            $("#unitName").text(rows.data.unitName);
+                            $("#unitType").text(rows.data.unitType);
+                            $("#contName").text(rows.data.contName);
+                            $("#contTel").text(rows.data.contTel);
+                            $("#contEmail").text(rows.data.contEmail);
+                            $("#creditCode").text(rows.data.creditCode);
+                            $("#requireContent").text(rows.data.content);
+                            $("#purpose").text(rows.data.purpose);
+                            var files = rows.data.fileList;
+                            if(files.length>0){
+                                var filesName=[];
+                                for(var i in files){
+                                    var filesHtml='<a class="fileDownload" href="javascript:" onclick="downLoadFolder(\''+files[i].filePath+'\',\''+files[i].oldName+'\')">'+files[i].oldName+'<i class="fa fa-download"></i></a>'
+                                    filesName.push(filesHtml);
+                                }
+                                $("#fileName").html(filesName.join(","));
+                            }else{
+                                $("#fileName").html("无附件信息");
+                            }
+                        };
+                        updateIformHeight();
+                    }
+                });
+            };
+
+            /*提交方法*/
+            function save(){
+                var dto={};
+                dto.taskId="${id}";
+                dto.content=$("#content").val();
+                dto.estimateTime=$("#estimateTime").val();
+                dto.status=$("#status").val();
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/task/handledemand',
+                    data:JSON.stringify(dto),
+                    success:function(rows){
+                        if (rows.data){
+                            parent.layer.msg("操作成功！",{time:1000});
+                            window.location.href="${_cp}/module/demandExamineList";
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    }
+                });
+            }
+            /* 下载文件 */
+            function downLoadFolder(url,filename){
+                var urlDownload="${_gate_url}/api/file/file/download?url="+url+"&filename="+filename;
+                window.open(urlDownload);
+            }
+		</script>
+	</body>
+</html>

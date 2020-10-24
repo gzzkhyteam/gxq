@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>模板编辑</title>
+    <meta http-equiv="Expires" content="0" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/skin/layer.css" />
+    <link rel="stylesheet" type="text/css" href="${_static}/css/sms/common.css" />
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/smsmessage/channel.css" />
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script type="text/javascript" src="${_static}/js/jquery-1.8.0.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/jquery.combobox.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+
+</head>
+<style type="text/css">
+    .channel_checkContent {
+        width: 82% !important;
+        margin: 0 auto;
+        padding: 0 !important;
+        margin-left: 12% !important;
+    }
+    @media screen and (max-device-width:1440px ) {
+        .channel_checkContent {
+            width: 82% !important;
+            margin: 0 auto !important;
+            margin-left: 10% !important;
+            padding-bottom: 40px !important;
+        }
+        .channel_checkContent>div{
+            width: 100% !important;
+        }
+    }
+    .channel_checkContent>div{
+        width: 86%;
+    }
+    a:hover{
+        text-decoration: none !important;
+    }
+    .clearfix:after {
+        clear: both;
+        content: ".";
+        display: block;
+        height: 0;
+        visibility: hidden;
+    }
+    .channel_checkContent>div label {
+        width: 130px;
+    }
+    input.form-control,textarea.form-control{
+        width: calc(100% - 140px);
+    }
+    #addEditModal{
+        display: block;
+        position: relative;
+        height: calc(100% - 45px);
+        overflow: auto;
+    }
+</style>
+<body>
+<!-- 新增渠道 -->
+<div id="addEditModal" class="panel-body panel-tabContent channel_check" style="display: block;position: relative;padding-top: 3%;">
+    <form id="addEditForm" class="form-inline form-inline-two channel_checkContent">
+        <div class="form-group clearfix" >
+            <label for="recipient-name" class="control-label text-right" style="float: left;">&nbsp;<span style="color: red">*</span><span>模板名称</span>   :   </label>
+            <input type="text" class="form-control" id="channel_addName" style="float: right;" dataType="*1-64" errormsg="只能输入1到64个字符" nullmsg="模板名称不能为空">
+            <i ></i>
+        </div>
+        <div class="form-group clearfix" style="margin-top: 35px !important;">
+            <label for="recipient-name" class="control-label text-right" style="float: left;">&nbsp;<span style="color: red">*</span><span>匹配服务账号</span>   :   </label>
+            <input type="text" class="form-control" id="channel_addType" style="width:261px;float: right;" dataType="*" nullmsg="匹配服务账号不能为空">
+            <i ></i>
+        </div>
+        <div class="form-group clearfix" style="margin-top: 35px !important;">
+            <label for="recipient-name" class="control-label text-right" style="float: left;"><span style="color: red">*</span><span>模板内容</span>  :   </label>
+            <textarea class="form-control" id="addNews_content" style="height:80px;float: right;" dataType="*1-200" errormsg="只能输入1到200个字符" nullmsg="模板内容不能为空"></textarea>
+            <i ></i>
+        </div>
+        <div class="form-group clearfix" style="margin-top: 35px !important;">
+            <label for="recipient-name" class="control-label text-right" style="float: left;"><span style="color: red">*</span><span>模板ID</span>    :   </label>
+            <input type="text" class="form-control" id="addNews_templateId" style="float: right;"  dataType="*1-30" errormsg="只能输入1到30个字符" nullmsg="模板ID不能为空">
+            <i ></i>
+        </div>
+        <div class="form-group clearfix" style="margin-top: 35px !important;">
+            <label for="recipient-name" class="control-label text-right"><span style="color: red">*</span><span>模板说明</span>:   </label>
+            <!--<input type="text" class="form-control" id="addNews_description" style="height:150px;float: right;" maxlength="60">
+            -->
+            <input type="text" class="form-control" id="addNews_intro" style="float: right;" dataType="*1-200" errormsg="只能输入1到200个字符" nullmsg="模板说明不能为空">
+            <i ></i>
+        </div>
+
+        <div class="form-group clearfix" style="margin-top: 35px !important;">
+            <label for="recipient-name" class="control-label text-right"><span style="color: red">*</span><span>模板签名</span>:   </label>
+            <!--<input type="text" class="form-control" id="addNews_description" style="height:150px;float: right;" maxlength="60">
+            -->
+            <input type="text" class="form-control" id="signName" style="float: right;" dataType="*1-100" errormsg="只能输入1到100个字符"  nullmsg="模板签名不能为空" >
+            <i ></i>
+        </div>
+        <div class="form-group clearfix" style="margin-top: 35px !important;">
+            <label for="recipient-name" class="control-label text-right"><span style="color: red">*</span><span>模板参数</span>:   </label>
+            <!--<input type="text" class="form-control" id="addNews_description" style="height:150px;float: right;" maxlength="60">
+            -->
+            <input type="text" class="form-control" id="templateParams" style="float: right;" dataType="*1-200" errormsg="只能输入1到200个字符" nullmsg="模板参数不能为空" >
+            <i ></i>
+
+        </div>
+        <div class="form-group clearfix" style="margin-top: 35px !important;">
+            <label for="recipient-name" class="control-label text-right"><span style="color: red">*</span><span>模板类型</span>:   </label>
+            <!--<input type="text" class="form-control" id="addNews_description" style="height:150px;float: right;" maxlength="60">
+            -->
+            <input type="text" class="form-control" id="type" style="float: right;" dataType="*1-20" errormsg="只能输入1到20个字符" nullmsg="模板类型不能为空">
+            <i ></i>
+
+        </div>
+        <button id="btn-submit" type="submit" style="display: none"></button>
+    </form>
+</div>
+<!-- 新增渠道 -->
+<div class="layer_bottom">
+    <a href="###" id="channel_cancel" style="background: #fff;color: #4898d5;">取消</a>
+    <a href="###" id="channel_add">确认</a>
+</div>
+</body>
+<script type="text/javascript">
+
+    var urlPost ="${_gate_url}";
+    var appId_two,appName,type,createTime,createUser,createUserName;
+    var appId;
+    var moren;
+    $(function(){
+        openValidator({
+            type:"post",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/sms/api/smstemplate/update",
+        },"#addEditForm",{
+            attrName:"id",
+            prefix:"",
+            suffix:"",
+        });
+    })
+    window.onload=function(){
+        //先展示旧的
+
+        ajaxHengyun({
+            type: "get",
+            url: "${_gate_url}/api/sms/api/smstemplate/detail",
+            data:{id:"${id}"},
+            success: function(rows) {
+                appId=rows.data.appId;
+                appName=rows.data.appName;
+                createUser=rows.data.createUser;
+                $("#channel_addName").val(rows.data.name)
+                //$("#channel_addType").val(rows.data.channelId)
+                //$("#channel_addType").attr("id_add",$(this).combobox('getValues')[0])
+                moren=rows.data.channelId;
+                load(moren);
+                $("#addNews_content").val(rows.data.content)//内容
+                $("#addNews_templateId").val(rows.data.templateCode)//
+                $("#addNews_intro").val(rows.data.templateDescribe)//模板描述
+
+                $("#type").val(rows.data.type);
+                createUserName=rows.data.createUserName;
+                createTime=rows.data.createTime;
+                $("#signName").val(rows.data.signName);
+                $("#templateParams").val(rows.data.templateParam)
+            }
+        });
+        function load(moren){
+            ajaxHengyun({
+                type:"get",
+                dataType: 'json',
+                cache: false,
+                url: urlPost+"/api/sms/api/smschannel/list",
+
+                contentType: "application/x-www-form-urlencoded",
+                data:{appId:appId},
+                success: function(result) {
+                    var hasChannelId = false
+                    if(result.data){
+                        result.data.forEach(function(item){
+                            if(item.channelId === moren){
+                                hasChannelId = true
+                            }
+                        })
+                        if(hasChannelId){
+                            $("#channel_addType").val(moren)
+                        }
+                    }
+                    $("#channel_addType").combobox({
+                        disabled: false,
+                        editable: false, // 可编辑
+                        panelHeight: 'auto',
+                        valueField: 'channelId',
+                        textField: 'channelName',
+                        height: 34,
+                        width:283,
+                        multiple: false, // 单选复选
+                        data: result.data,
+                        onSelect: function(data) {
+                            $("#channel_addType").attr("id_add",$(this).combobox('getValues')[0])
+                            $("#channel_addType").attr("name_add",$(this).combobox('getText'))
+
+                        },
+                        onLoadSuccess: function(data) {
+                            $("#channel_addType").attr("id_add",moren)
+                            /*$("#channel_addType").combobox("setValue",moren)*/
+                            //下拉框热区范围改为整个输入框
+                            $(".combo").click(function(){
+                                $(this).prev().combobox("showPanel");
+                            });
+
+                        }
+                    });
+                }
+            });
+        }
+
+        //验证
+        /*$(".form-control").blur(function(){
+            var name = $(this).siblings("label").find("span").html()
+            if($(this).val() == ""){
+                $(this).siblings("i").show().html(name+"不能为空")
+            }else{
+                $(this).siblings("i").html("")
+            }
+        })*/
+        
+        $("#channel_cancel").click(function(){
+            layer.closeAll()
+            var index = parent.layer.getFrameIndex(window.name)
+            parent.layer.close(index)
+        })
+        $("#channel_add").click(function(){
+            //初始化表单验证
+            $(".btn-submit").click();
+        })
+            $('#channel_add').valid({
+                form: '#addEditForm',
+                showAllError: true,
+                ignoreHidden: true,
+                checkpassed: function () {
+                    var channel_addType=$("#channel_addType").attr("id_add")//渠道类型id
+                    var add_name=$("#channel_addType").attr("name_add")//渠道名称
+                    var p = /^[0-9a-zA-Z]{8,30}$/
+                    var s = /^[0-9a-zA-Z]{8,60}$/
+                        var templateParams=$("#templateParams").val();
+                        var signName=$("#signName").val();
+                        var type=$("#type").val();
+                    ajaxHengyun({
+                        type: "post",
+                        url: "${_gate_url}/api/sms/api/smstemplate/update",
+                        contentType:"application/json",    //注意传参格式
+                        dataType:"json",
+                        data:JSON.stringify({
+                            id:"${id}",
+                            channelId:channel_addType,//匹配服务账号
+
+                            appId:appId,
+                            appName:appName,//应用程序名称
+                            name:$("#channel_addName").val(),//应用模板名称
+                            type:type,//应用模板类型
+                            content:$("#addNews_content").val(),//模板内容
+                            templateCode:$("#addNews_templateId").val(),//模板code
+                            signName:signName,//模板签名
+                            templateParam:templateParams,//模板参数
+                            templateDescribe:$("#addNews_intro").val(),//模板描述是否
+                            createUser:createUser,//模板创建人
+                            createUserName:createUserName,
+                            createTime:createTime
+                        }),
+                        success: function(rows) {
+                            console.log(rows)
+                            if(rows.data) {
+                                parent.layer.msg("保存成功！", {
+                                    icon: 6,
+                                    time: 1000
+                                });
+                                parent.home.reloadJqgrid();
+                                layer.closeAll()
+                                var index = parent.layer.getFrameIndex(window.name)
+                                parent.layer.close(index)
+                            } else {
+                                parent.layer.msg("保存失败，请稍后重试！", {
+                                    time: 1000
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+    }
+</script>
+</html>
+

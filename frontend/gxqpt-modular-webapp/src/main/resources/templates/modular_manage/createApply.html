@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/webuploader.css">
+    <style>
+        .file {
+            filter: alpha(opacity:0);
+            opacity: 0;
+            width: 0px;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12" style="margin-top:30px;">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline" ng-app="dict" ng-controller="controller">
+                        <form id="dataForm" action="" method="post" autocomplete="off">
+                            <table class="table default-table table-title-left">
+                                <input type="hidden" id="createCompanyName" name="createCompanyName">
+                                <tbody>
+                                    <tr>
+                                        <th width="130"><sub class="required">*</sub>申请类型</th>
+                                        <td colspan="3">
+                                            <select id="applyType" name="applyType" dataType="*" style="width: 100%; margin: 0px;"
+                                                    nullmsg="申请类型不能为空！" class="form-control chosen-select selWid-form-search" >
+                                                <option value="">请选择</option>
+                                                <option value="CATEGORYAPPLY">Categories</option>
+                                                <option value="TAGAPPLY">Tags</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                    	<th width="130"><sub class="required">*</sub>申请名称</th>
+                                        <td colspan="3"> 
+                                            <input id="name" class="form-control inp-form" name="name" dataType="*,max_number"  dataType="specialChar" nullmsg="请输入1~64个任意字符！"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><sub class="required">*</sub>单位名称</th>
+                                        <td colspan="3">
+                                            <select id="createCompany" name="createCompany" class="form-control chosen-select selWid-form-search"
+                                                    style="width: 100%">
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><sub class="required">*</sub>申请描述</th>
+                                        <td style="padding: 0px;" colspan="3">
+                                            <textarea id="description" rows="4" name="description" class="form-control textarea-form"
+                                                             style="width: 100%;border: none;" dataType="*1-255" nullmsg="申请描述不能为空！"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th width="130"><sub class="required">*</sub>申请理由</th>
+                                        <td style="padding: 0px;" colspan="3">
+                                            <textarea id="reason" rows="4" name="reason" class="form-control textarea-form"
+                                                      style="width: 100%;border: none;" dataType="*1-255" nullmsg="申请理由不能为空！"></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button"  ng-click="submit()" class="btn-submit hidden"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript" src="${_static}/js/com_base.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+<script type="text/javascript">
+
+    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/modular/mdapply/save",
+        },"#dataForm",{
+            attrName:"name",
+            prefix:"",
+            suffix:"",
+        });
+    })
+    var index;
+    var dict = angular.module('dict', []);
+    dict.controller('controller', function ($scope,$http,token) {
+        var urlPrev ='${_gate_url}';
+        $scope.submit = function () {
+            $('.btn-submit').click();
+        };
+        $scope.save = function () {
+            saveObj();
+        }
+    }).service('token',function () {
+        this.token = function () {
+            return getToken();
+        }
+    });
+    function save(num) {
+        index = num;
+        $('.btn-submit').click();
+    }
+
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        ignoreHidden: true,
+        showAllError: true,
+        checkpassed: function () {
+            var appElement = document.querySelector('[ng-controller=controller]');
+            var $scope = angular.element(appElement).scope();
+            $scope.save();
+        }
+    });
+
+    //获取登录人单位信息列表
+    ajaxHengyun({
+        type: "GET",
+        async: false,
+        url: "${_gate_url}/api/modular/version/findPoly",
+        datatype: 'json',
+        success: function (rows) {
+            if (rows.data) {
+                var html = "";
+                rows.data.forEach(function (value, index) {
+                    html += "<option value = "+value.companyId+">" +value.companyName+ "</option>";
+                });
+                $("#createCompany").html(html);
+            }
+        }
+    });
+
+    /*提交*/
+    function saveObj() {
+        $("#createCompanyName").val($("#createCompany").find("option:selected").text());
+        var data = $("#dataForm").serializeJSON();
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json',
+            url: "${_gate_url}/api/modular/mdapply/save",
+            data: JSON.stringify(data),
+            success: function (rows) {
+                if (rows.data) {
+                    parent.home.reloadJqgrid();
+                    parent.layer.msg("新增申请成功！", {icon: 6, time: 2000});
+                    parent.layer.close(index);
+                } else {
+                    parent.layer.msg("新增申请出错，请重试！", {icon: 5, time: 2000});
+                }
+            }
+        });
+    }
+    $.extend($.Datatype, {
+		//stock你定义的验证名称
+		'max_number' : function(gets, obj, curform, regxp) {
+			var length = gets.length;
+			if(length<=64){
+				return true;
+			}else {
+				obj.attr('errormsg', '请输入1-64之间的数且申请名称不能包含特殊字符！');
+				return false;
+			}
+		}
+	})
+</script>
+</body>
+</html>

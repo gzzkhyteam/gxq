@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/home.css"/>
+    <style>
+        .unitNameCss {
+            white-space: nowrap;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #unitList{
+            float: left;
+            height: 360px;
+            overflow-y: auto;
+        }
+        .col-md-2{
+            width: 20% !important;
+        }
+    </style>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="main_top">
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <div class="item">
+                        <p>已接入部门</p>
+                        <p><span id="joinOrgCount">0</span>个</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <div class="item">
+                        <p>数据目录</p>
+                        <p><span id="directoryCount">0</span>个</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <div class="item">
+                        <p>数据集</p>
+                        <p><span id="setCount">0</span>个</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <div class="item">
+                        <p>API</p>
+                        <p><span id="apiCount">0</span>个</p>
+                    </div>
+                </div>
+                <!--<div class="col-lg-2 col-md-2 col-sm-2">
+                    <div class="item">
+                        <p>平台访问量</p>
+                        <p><span id="">0</span>次</p>
+                    </div>
+                </div>-->
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <div class="item">
+                        <p>调用次数</p>
+                        <p><span id="callCount">0</span>次</p>
+                    </div>
+                </div>
+            </div>
+            <div class="main_middle clearfix">
+                <div class="col-lg-9 col-md-9 col-sm-9 main_middle_left">
+                    <div class="main_middle_content unitList">
+                        <h3><span>全部部门</span></h3>
+                        <div id="unitList">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 main_middle_right">
+                    <div class="main_middle_content">
+                        <h3 class="right_h3"><span>热门API</span></h3>
+                        <ul id="hotApi">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main_bottom clearfix">
+                <div class="col-lg-9 col-md-9 col-sm-9 main_bottom_left">
+                    <div class="main_bottom_content">
+                        <h3><span class="active" data-type="basics">基础库</span><span data-type="theme"
+                                                                                    class="theme">主题库</span><span
+                                data-type="major">专题库</span></h3>
+                        <div id="basics" class="libraryItem">
+                            <ul>
+                                <li onclick="forward('base','personData')"><a href="javascript:void(0);"
+                                                                              class="clearfix"><img
+                                        src="${_static}/images/index/jck_1_01.png" data-img="jck_1_01.png"
+                                        data-imgHover="jck_1_02.png"><span>人口库</span></a></li>
+                                <li onclick="forward('base','unitData')"><a href="javascript:void(0);" class="clearfix"><img
+                                        src="${_static}/images/index/jck_2_01.png" data-img="jck_2_01.png"
+                                        data-imgHover="jck_2_02.png"><span>法人单位库</span></a></li>
+                                <li onclick="forward('base','economyData')"><a href="javascript:void(0);"
+                                                                               class="clearfix"><img
+                                        src="${_static}/images/index/jck_3_01.png" data-img="jck_3_01.png"
+                                        data-imgHover="jck_3_02.png"><span>宏观经济库</span></a></li>
+                                <li onclick="forward('base','geographicData')"><a href="javascript:void(0);"
+                                                                                  class="clearfix"><img
+                                        src="${_static}/images/index/jck_4_01.png" data-img="jck_4_01.png"
+                                        data-imgHover="jck_4_02.png"><span>空间地理库</span></a></li>
+                            </ul>
+                        </div>
+                        <div id="theme" class="libraryItem hidden clearfix">
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="综合政务" onclick="forward('theme','1')">
+                                        <img src="${_static}/images/index/zhtk_1_01.png" data-img="zhtk_1_01.png"
+                                             data-imgHover="zhtk_1_02.png">
+                                        <p>综合政务</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="经济管理" onclick="forward('theme','2')">
+                                        <img src="${_static}/images/index/zhtk_2_01.png" data-img="zhtk_2_01.png"
+                                             data-imgHover="zhtk_2_02.png">
+                                        <p>经济管理</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="国土资源能源" onclick="forward('theme','3')">
+                                        <img src="${_static}/images/index/zhtk_3_01.png" data-img="zhtk_3_01.png"
+                                             data-imgHover="zhtk_3_02.png">
+                                        <p>国土资源能源</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="工业交通邮政" onclick="forward('theme','4')">
+                                        <img src="${_static}/images/index/zhtk_4_01.png" data-img="zhtk_4_01.png"
+                                             data-imgHover="zhtk_4_02.png">
+                                        <p>工业交通邮政</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="信息产业" onclick="forward('theme','5')">
+                                        <img src="${_static}/images/index/zhtk_5_01.png" data-img="zhtk_5_01.png"
+                                             data-imgHover="zhtk_5_02.png">
+                                        <p>信息产业</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="城乡建设环境保护" onclick="forward('theme','6')">
+                                        <img src="${_static}/images/index/zhtk_6_01.png" data-img="zhtk_6_01.png"
+                                             data-imgHover="zhtk_6_02.png">
+                                        <p>城乡建设环境保护</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);" onclick="">
+                                    <div class="item" title="农业水利" onclick="forward('theme','7')">
+                                        <img src="${_static}/images/index/zhtk_7_01.png" data-img="zhtk_7_01.png"
+                                             data-imgHover="zhtk_7_02.png">
+                                        <p>农业水利</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="财政" onclick="forward('theme','8')">
+                                        <img src="${_static}/images/index/zhtk_8_01.png" data-img="zhtk_8_01.png"
+                                             data-imgHover="zhtk_8_02.png">
+                                        <p>财政</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="商业贸易" onclick="forward('theme','9')">
+                                        <img src="${_static}/images/index/zhtk_9_01.png" data-img="zhtk_9_01.png"
+                                             data-imgHover="zhtk_9_02.png">
+                                        <p>商业贸易</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="旅游服务业" onclick="forward('theme','10')">
+                                        <img src="${_static}/images/index/zhtk_10_01.png" data-img="zhtk_10_01.png"
+                                             data-imgHover="zhtk_10_02.png">
+                                        <p>旅游服务业</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="气象水文测绘地震" onclick="forward('theme','11')">
+                                        <img src="${_static}/images/index/zhtk_11_01.png" data-img="zhtk_11_01.png"
+                                             data-imgHover="zhtk_11_02.png">
+                                        <p>气象水文测绘地震</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="对外事务" onclick="forward('theme','12')">
+                                        <img src="${_static}/images/index/zhtk_12_01.png" data-img="zhtk_12_01.png"
+                                             data-imgHover="zhtk_12_02.png">
+                                        <p>对外事务</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="政法监察" onclick="forward('theme','13')">
+                                        <img src="${_static}/images/index/zhtk_13_01.png" data-img="zhtk_13_01.png"
+                                             data-imgHover="zhtk_13_02.png">
+                                        <p>政法监察</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="科技教育" onclick="forward('theme','14')">
+                                        <img src="${_static}/images/index/zhtk_14_01.png" data-img="zhtk_14_01.png"
+                                             data-imgHover="zhtk_14_02.png">
+                                        <p>科技教育</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="文化卫生体育" onclick="forward('theme','15')">
+                                        <img src="${_static}/images/index/zhtk_15_01.png" data-img="zhtk_15_01.png"
+                                             data-imgHover="zhtk_15_02.png">
+                                        <p>文化卫生体育</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="军事国防" onclick="forward('theme','16')">
+                                        <img src="${_static}/images/index/zhtk_16_01.png" data-img="zhtk_16_01.png"
+                                             data-imgHover="zhtk_16_02.png">
+                                        <p>军事国防</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="劳动人事" onclick="forward('theme','17')">
+                                        <img src="${_static}/images/index/zhtk_17_01.png" data-img="zhtk_17_01.png"
+                                             data-imgHover="zhtk_17_02.png">
+                                        <p>劳动人事</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="民政社区" onclick="forward('theme','18')">
+                                        <img src="${_static}/images/index/zhtk_18_01.png" data-img="zhtk_18_01.png"
+                                             data-imgHover="zhtk_18_02.png">
+                                        <p>民政社区</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="文秘行政" onclick="forward('theme','19')">
+                                        <img src="${_static}/images/index/zhtk_19_01.png" data-img="zhtk_19_01.png"
+                                             data-imgHover="zhtk_19_02.png">
+                                        <p>文秘行政</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:void(0);">
+                                    <div class="item" title="综合党团" onclick="forward('theme','20')">
+                                        <img src="${_static}/images/index/zhtk_20_01.png" data-img="zhtk_20_01.png"
+                                             data-imgHover="zhtk_20_02.png">
+                                        <p>综合党团</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div id="major" class="libraryItem hidden">
+                            <ul id="specialType">
+                                <!--<li onclick="forward('special_type','special_massage')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_1_01.png" data-img="ztk_1_01.png" data-imgHover="ztk_1_02.png" ><span>短信</span></a></li>-->
+                                <!--<li onclick="forward('special_type','special_email')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_2_01.png" data-img="ztk_2_01.png" data-imgHover="ztk_2_02.png" ><span>邮件</span></a></li>-->
+                                <!--<li onclick="forward('special_type','special_modules')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_3_01.png" data-img="ztk_3_01.png" data-imgHover="ztk_3_02.png" ><span>共性模块</span></a></li>-->
+                                <!--<li onclick="forward('special_type','special_server')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_4_01.png" data-img="ztk_4_01.png" data-imgHover="ztk_4_02.png" ><span>共性服务</span></a></li>-->
+                                <!--<li onclick="forward('special_type','special_standard')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_5_01.png" data-img="ztk_5_01.png" data-imgHover="ztk_5_02.png" ><span>标准</span></a></li>-->
+                                <!--<li onclick="forward('special_type','special_Foundation Modules')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_6_01.png" data-img="ztk_6_01.png" data-imgHover="ztk_6_02.png" ><span>基础模块</span></a></li>-->
+                                <!--<li onclick="forward('special_type','special_news')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_7_01.png" data-img="ztk_7_01.png" data-imgHover="ztk_7_02.png" ><span>消息</span></a></li>-->
+                                <!--<li onclick="forward('special_type','special_log')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_8_01.png" data-img="ztk_8_01.png" data-imgHover="ztk_8_02.png" ><span>日志</span></a></li>-->
+                                <!--<li onclick="forward('special_type','special_openDB')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_9_01.png" data-img="ztk_9_01.png" data-imgHover="ztk_9_02.png" ><span>开放库</span></a></li>-->
+                                <!--<li onclick="forward('special_type','special_Unstructured')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_10_01.png" data-img="ztk_10_01.png" data-imgHover="ztk_10_02.png" ><span>非结构化</span></a></li>-->
+                                <!--<li onclick="forward('special_type','special_warning')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_11_01.png" data-img="ztk_11_01.png" data-imgHover="ztk_11_02.png" ><span>预警</span></a></li>-->
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 main_bottom_right">
+                    <div class="main_bottom_content">
+                        <h3 class="right_h3"><span>标签云</span></h3>
+                        <div id="wordCloud" style=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script src="${_static}/js/lib/echarts/echarts.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+
+    function createRandomItemStyle() {
+        return {
+            normal: {
+                color: 'rgb(' + [
+                    Math.round(Math.random() * 160),
+                    Math.round(Math.random() * 160),
+                    Math.round(Math.random() * 160)
+                ].join(',') + ')'
+            }
+        };
+    }
+
+    require.config({
+        paths: {
+            echarts: 'http://echarts.baidu.com/build/dist'
+        }
+    });
+
+    // 使用
+    require(
+        [
+            'echarts',
+            'echarts/chart/wordCloud',    //字符云
+        ],
+        function (ec) {
+            // 基于准备好的dom，初始化echarts图表
+            var myChart = ec.init(document.getElementById('wordCloud'));
+            option = {
+                title: {},
+                tooltip: {
+                    show: true,
+                    formatter: '{b}: {c}'
+                },
+                series: [{
+                    name: '',
+                    type: 'wordCloud',
+                    size: ['120%', '120%'],
+                    textRotation: [0, 45, 90, -45],
+                    textPadding: 0,
+                    autoSize: {
+                        enable: true,
+                        minSize: 14
+                    },
+                    data: getTagCloud()
+                }]
+            };
+
+            // 为echarts对象加载数据
+            myChart.setOption(option);
+        }
+    );
+
+    $(function () {
+        getBusData();
+        getHotApi();
+        getOrgList();
+        getSpecialType();
+        // getTagCloud();
+    })
+
+    function getTagCloud() {
+        var cloudArray = []
+        ajaxHengyun({
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            url: '${_gate_url}/api/exchange/overview/getTagCloud',
+            success: function (rows) {
+                if (rows.data) {
+
+                    rows.data.forEach(function (value, index) {
+                        var itemCloud = {
+                            name: value.type,
+                            value: value.num,
+                            itemStyle: createRandomItemStyle()
+                        }
+                        cloudArray.push(itemCloud)
+                    });
+                };
+            }
+        });
+        return cloudArray.sort(compare('value'));
+    }
+
+    function compare(property){
+        return function(a,b){
+            var value1 = a[property];
+            var value2 = b[property];
+            return value2 - value1;
+        }
+    }
+
+    //首页统计数量
+    function getBusData() {
+        ajaxHengyun({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/exchange/overview/getShareDataCount',
+            success: function (rows) {
+                if (rows.data) {
+                    var data = rows.data;
+                    $("#callCount").html(data.callCount);
+                    $("#apiCount").html(data.apiCount);
+                    $("#setCount").html(data.setCount);
+                    $("#directoryCount").html(data.directoryCount);
+                    $("#joinOrgCount").html(data.joinOrgCount);
+                }
+            }
+        });
+    }
+
+    function getSpecialType() {
+        var specialTypeVal = "";
+        ajaxHengyun({
+            type: 'GET',
+            dataType: 'json',
+            data: {pId: 'special_type'},
+            url: '${_gate_url}/api/exchange/dataapi/api/findByDictCode',
+            success: function (rows) {
+                if (rows.data) {
+                    rows.data.forEach(function (value, index) {
+                        var indexno = value.indexNo;//把字典表中的describe的值作为图标的值
+                        specialTypeVal += '<li onclick="forward(\'special_type\',\'' + value.dictCode + '\')"><a href="javascript:void(0);" class="clearfix"><img src="${_static}/images/index/ztk_' + indexno + '_01.png" data-img="ztk_' + indexno + '_01.png" data-imgHover="ztk_' + indexno + '_02.png" ><span>' + value.dictName + '</span></a></li>'
+                    });
+                }
+                ;
+                $("#specialType").html(specialTypeVal);
+            }
+        });
+    }
+
+    //首页apitop10
+    function getHotApi() {
+        var hotApi = "";
+        ajaxHengyun({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/exchange/overview/getHostApi',
+            success: function (rows) {
+                if (rows.data) {
+                    rows.data.forEach(function (value, index) {
+                        var indexno = index + 1;
+                        if (indexno < 4) {
+                            hotApi += '<li><a href="${_cp}/module/generalApiView?id=' + value.id + '&catalogId=' + value.dirId + '"><span class="serial active">' + indexno + '</span>' + value.apiName + '</a></li>';
+                        } else {
+                            hotApi += '<li><a href="${_cp}/module/generalApiView?id=' + value.id + '&catalogId=' + value.dirId + '"><span class="serial ">' + indexno + '</span>' + value.apiName + '</a></li>';
+                        }
+                    });
+                }
+                ;
+                $("#hotApi").html(hotApi);
+            }
+        });
+    }
+
+    function generalList(id) {
+        window.location.href = "${_cp}/module/generalList?unitId=" + id;
+    }
+
+    //加载部门数据
+    function getOrgList() {
+        var orghtml = "";
+        ajaxHengyun({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/exchange/overview/getOrgList',
+            success: function (rows) {
+                if (rows.data) {
+                    rows.data.forEach(function (value, index) {
+                        var unitName = value.unitName;
+                        /*if(value.unitName!=null && value.unitName.length > 5 ){
+                            unitName=value.unitName.substr(0,5);
+                        }*/
+                        if (!value.iconUrl) {
+                            value.iconUrl = "nr_default.png";
+                        }
+                        ;
+                        orghtml += '<div class="col-lg-2 col-md-2 col-sm-2" onclick="generalList(\'' + value.unitId + '\')" title="' + value.unitName + '">';
+                        orghtml += '<div class="item">';
+                        orghtml += '<img src="${_static}/images/index/' + value.iconUrl + '" >';
+                        orghtml += '<p class="unitNameCss">' + unitName + '</p>';
+                        orghtml += '</div>';
+                        orghtml += '</div>';
+                    });
+                }
+                ;
+                $("#unitList").html(orghtml);
+            }
+        });
+    }
+
+    $(".main_bottom_content h3 span").click(function () {
+        var idName = $(this).attr("data-type");
+        $(".main_bottom_content h3 span").removeClass("active");
+        $(this).addClass("active");
+        $(".libraryItem").addClass("hidden");
+        $("#" + idName).removeClass("hidden");
+    })
+    $(".libraryItem li").mouseenter(function () {
+        var imgUrlHover = $(this).find("img").attr("data-imgHover");
+        $($(this).find("img")).attr("src", "${_static}/images/index/" + imgUrlHover);
+    }).mouseleave(function () {
+        var imgUrl = $(this).find("img").attr("data-img");
+        $($(this).find("img")).attr("src", "${_static}/images/index/" + imgUrl);
+    });
+    $("#theme>div").mouseenter(function () {
+        var imgUrlHover = $(this).find("img").attr("data-imgHover");
+        $($(this).find("img")).attr("src", "${_static}/images/index/" + imgUrlHover);
+    }).mouseleave(function () {
+        var imgUrl = $(this).find("img").attr("data-img");
+        $($(this).find("img")).attr("src", "${_static}/images/index/" + imgUrl);
+    });
+
+    function forward(busCode, busKey) {
+        window.location.href = "${_cp}/module/libraryList?busCode=" + busCode + "&busKey=" + busKey;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+##################################################
+# 注意:开发环境配置文件
+# 这个配置文件中reids，rabbitmq，eureka等资源链接测试服务器
+# 这个配置文件一般适用于 前端开发
+##################################################
+gxqpt:
+  variable:
+    gate-url: http://${gxqpt.hostname.gate}:10086   # 统一网关的链接前缀     # gate-url: http://192.168.1.45:10003   # 统一网关的链接前缀
+  hostname:
+    redis: 127.0.0.1       # 前端无需修改
+    rabbitmq: 127.0.0.1   #
+    nginx: ${gxqpt.hostname.fast}
+    eureka: 192.168.1.204     #
+    gate: 127.0.0.1       # 网关的ip
+    center: 127.0.0.1     # center的ip
+    fast: 192.168.1.49     # 根据自己环境修改
+  port:
+    nginx: ${server.port}
+    eureka: 10030
+    gate: 10003
+    center: 10086
+
+sso:
+  local-ip: ${gxqpt.hostname.fast}
+  local-port: ${server.port}
+  server-ip: ${gxqpt.hostname.center}
+  server-port: ${gxqpt.port.center}
+
+spring:
+  profiles:
+    active: dev
+  rabbitmq:
+    port: 5672
+    password: gxqpt
+    username: gxqpt
+  redis:
+    port: 6379
+    key-prefix: test
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/

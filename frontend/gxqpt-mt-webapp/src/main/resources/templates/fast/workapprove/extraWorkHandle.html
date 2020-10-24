@@ -1,0 +1,405 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+<script type="text/javascript" src="${_js}/uploadfile.js"></script>
+<!-- begin 外部CSS引入 -->
+<link type="text/css" rel="stylesheet"  href="${_lib }/jqgrid/css/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${_lib }/font-awesome/css/font-awesome.min.css">
+<link type="text/css" rel="stylesheet"  href="${_lib }/chosen/chosen.min.css">
+<link type="text/css" rel="stylesheet"  href="${_lib }/webuploader/webuploader.css">
+<link type="text/css" rel="stylesheet"  href="${_lib }/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=0.1">
+    <link rel="stylesheet" href="${_static}/css/app.css?v=1.0.0">
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+<!-- end 外部CSS引入 -->
+<!-- 自定义样式 begin -->
+<style type="text/css">
+	.row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+    .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+    .form-inline .control-label {
+        margin-bottom: 0;
+        margin-left: 0px;
+        vertical-align: middle;
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+        margin: 4px 0px 0;
+        margin-bottom: 3px;
+        margin-top: 5px;
+        line-height: normal;
+        vertical-align: middle;
+    }
+
+    .fileUpload {
+        width: 103px;
+        margin-left: 13px;
+    }
+
+    .form-label-container {
+        float: left;
+    }
+
+    .btns {
+        float: left;
+    }
+
+    .webuploader-pick {
+        padding: 3px 10px;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .search {
+        background: dodgerblue;
+        position: absolute;
+        width: 31px;
+        height: 31px;
+        top: 9px;
+        left: 657px;
+        z-index: 99;
+    }
+
+    .approveHandle {
+        display: none;
+    }
+    .align_center {
+		text-align: center;
+	}
+    .filelist li{
+        list-style: none;
+        width: 180px!important;
+        height: 180px!important;
+        margin-right:15px;
+        /*margin-bottom: 15px;*/
+        position: relative;
+        overflow: hidden;
+    }
+    .filelist .title{
+        width: 100%;
+        height: 25px;
+        color: #f5f5f5;
+        background:rgba(0,0,0,0.5);
+        text-align: center;
+        line-height: 25px;
+        transform: rotate(45deg);
+        position: absolute;
+        top: 30px;
+        right: -50px;
+
+    }
+    .filelist .file-panel{
+        position: absolute;
+        z-index: 10;
+        bottom:-30px;
+        background: rgba(0,0,0,0.5);
+        width: 100%;
+        text-align: right;
+        padding: 5px;
+    }
+    .imgWrap{
+        line-height: 180px!important;
+        text-align: center!important;
+        background: #ccc!important;
+    }
+</style>
+<!-- 自定义样式 end -->
+
+
+</head>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>加班申请审批</h5>
+                    </div>
+
+                    <div class="pull-right">
+                        <button class="btn btn-default go-back" onclick="history.go(-1)">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            取消
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="col-sm-12">
+                        <div class="inline-block"></div>
+                        <div class="inline-block margin-left"></div>
+                        <!--  可查看-->
+                        <div class="form-horizontal view-info">
+                            <div class="qingjia">
+
+                                <fieldset>
+                                    <ul id="chucaiForm">
+                                        <li>
+                                            <label class="view-lab1 widths">申请人</label><span
+                                                class="view-text currentAproveUserOperation"></span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">提交时间</label><span
+                                                class="view-text createTime"></span>
+                                        </li>
+                                        <li class="col2">
+                                            <label class="view-lab1 widths">加班日期</label><span
+                                                class="view-text endTime"></span>
+                                        </li>
+                                        <li class="col2">
+                                            <label class="view-lab1 widths">审批人</label><span
+                                                class="view-text currentAproveUserId">
+
+                                        </span>
+                                        </li>
+
+                                        <li class="col1">
+                                            <label class="view-lab1 widths" >加班内容</label><span class="view-text content" style="width: calc(100% - 127px);line-height: normal;overflow: auto"></span>
+                                        </li>
+                                    </ul>
+                                </fieldset>
+                            </div>
+
+                            <h5>附件展示信息</h5>
+                            <ul class="filelist">
+                                <li class="pull-left">
+                                    <!--<p class="title" ></p>-->
+                                    <p class="imgWrap" id="imgWrap">
+                                        <img class="img-responsive img-thumbnail" id="imgUrl" style="width: 100%;height: 100%;"
+                                             src="" />
+                                    </p>
+                                    <div class="file-panel">
+                                        <!--<a href="javascript:void(0)" class="downFile" onclick="">下载附件</a>-->
+                                    </div>
+                                </li>
+                            </ul>
+                        <fieldset id="spyj">
+                            <h5>审批意见</h5>
+                            <div>
+                                <table class="table defaultTable defaultTableTop">
+                                    <tbody>
+                                    <tr>
+                                        <th id="personName">审批意见</th>
+                                        <td id="approveState">
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>说明</th>
+                                        <td id="approveOponion"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <!--  可编辑-->
+                    <div class="form-inline approveHandle">
+                        <form action="" id="dataForm" method="post">
+                            <input type="hidden" name="id" id="id" value="${id!''}">
+                            <fieldset>
+                                <h5>审核</h5>
+                                <div class="form-field">
+                                    <div class="form-group">
+                                        <div class="form-control-wrap">
+                                            <label class="control-label" >
+                                                <span class="text-danger"></span>
+                                                <span>审核意见</span>
+                                                <span>：</span>
+                                            </label>
+                                            <input type="radio" name="adopt" id="leave" class="radioInput" value="1" checked>
+                                            <label class="control-label w0" for="leave">同意</label>
+                                            <input type="radio" name="adopt" id="businessTravel" class="radioInput" value="0">
+                                            <label class="control-label w0" for="businessTravel">不同意</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <h5><span class="text-danger"></span>说明</h5>
+                                <table class="table default-table">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <textarea class="form-control" style="width: 100%;" name="reason" id="reason" rows="5" cols=""  ></textarea>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </fieldset>
+                            <div class="text-center">
+                                <button class="btn btn-primary btn-submit" type="button"  onclick="saveData();">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    提交
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- end 页面内容主体 -->
+
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_js}/lib/webuploader/HYCore.js"></script>
+<!--end 外部JS引入 -->
+
+<!-- 自定义JS -->
+<script type="text/javascript">
+
+    $(function () {
+        ajaxHengyun({
+            type: "POST",
+            url: "${_gate_url}/api/developer/attence/workapprove/extraview",
+            data: {approveId: '${id!0}'},
+            success: function (rows) {
+                if (rows.errcode == 0) {
+                    var obj = rows.data;
+                    $("#chucaiForm .currentAproveUserOperation").text("${applyUserName!''}");
+                    $("#chucaiForm .createTime").text("${applyTime!''}");
+                    $("#chucaiForm .endTime").text(obj['endTime']);
+                    $("#chucaiForm .content").text(obj['content']);
+                    var currentAproveUserId = obj['currentAproveUserId'];
+                    var currentAproveUserName = currentAproveUserId;
+                    if(currentAproveUserId == 1){
+                        currentAproveUserName = '管理员';
+                    } else  if(currentAproveUserId == 2){
+                        currentAproveUserName = '张总';
+                    }else  if(currentAproveUserId == 3){
+                        currentAproveUserName = '李总';
+                    }else  if(currentAproveUserId == 4){
+                        currentAproveUserName = '小王';
+                    }else  if(currentAproveUserId == 5){
+                        currentAproveUserName = '小郑';
+                    }
+                    $("#chucaiForm .currentAproveUserId").text(currentAproveUserName);
+
+                    if(obj['imgUrl'] && (obj['imgUrl'].endsWith(".png") || obj['imgUrl'].endsWith(".jpg")
+                            || obj['imgUrl'].endsWith(".PNG")|| obj['imgUrl'].endsWith(".JPG"))){
+                        $("#imgUrl").attr('src',obj['imgUrl']);
+                    } else {
+                        $("#imgWrap").text('无法预览');
+                    }
+
+                    var approveRecord  = obj['approveRecord'];
+                    if(approveRecord){
+                        $("#personName").text(approveRecord['personName']);
+                        if(approveRecord['approveState'] == '1'){
+                            $("#approveState").text('同意！！！');
+                        } else {
+                            $("#approveState").text('驳回！！！');
+                        }
+                        $("#approveOponion").text(approveRecord['approveOponion']);
+                    } else {
+                        $("#spyj").css("display", "none");
+                    }
+                } else {
+
+                }
+            }
+        });
+    })
+
+    $(function () {
+        $(".filelist li").each(function () {
+            $(this).hover(function(){
+                $(this).find(".file-panel").animate({
+                    bottom:0
+                })
+            },function () {
+                $(this).find(".file-panel").animate({
+                    bottom:"-30px"
+                })
+            })
+        })
+    })
+
+    var handleStatus = "${handleStatus!view}";
+    if (handleStatus == "edit") {
+        $('.approveHandle').css("display", "block");
+    }
+    function saveData() {
+        var inAprove = $("input:radio[name='adopt']:checked").val();
+        var currentAproveUserId = '';
+        var currentAproveUserName = '';
+        var currentAproveUserOperation = "2";
+
+        if(inAprove == "1"){  //同意
+            currentAproveUserOperation = "2";
+        } else if(inAprove == "0"){  //不同意
+            currentAproveUserOperation = "3";
+            currentAproveUserId = $("#createUser").val();
+            currentAproveUserName = $("#createUserName").val();
+        }
+
+        var o = {
+            apprId:$('#id').val(),
+            inAprove:inAprove,
+            approveState:"1",
+            approveOponion :$('#reason').val(),
+            personId: "${_user_id!0}",
+            personName: "${l_u_i_s.name!''}",
+            currentAproveUserOperation: currentAproveUserOperation,
+            currentAproveUserId: currentAproveUserId,
+            currentAproveUserName: currentAproveUserName,
+            aproveState: "1",
+        }
+        ajaxHengyun({
+            url: "${_gate_url}/api/developer/attence/workapprove/recordSave",
+            type: 'post',
+            data:JSON.stringify(o),
+            dataType:"json",
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.errcode==0) {
+                    window.location.href="list";
+                } else {
+                    $(this).alertInfo(data.msg);
+                }
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+</script>
+
+
+</body>
+</html>

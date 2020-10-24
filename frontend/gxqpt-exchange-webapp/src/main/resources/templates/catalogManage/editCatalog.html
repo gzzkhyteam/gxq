@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+	</head>
+	<body class="bgNone">
+		<div class="workspace-body">
+			<div id="console-container" class="clearfix">
+				<div class="col-sm-12">
+					<div class="general_list_main clearfix">
+						<div class="main_bottom col-lg-12 col-sm-12">
+							<div class="view_item" ng-app="app" ng-controller="controller">
+								<form id="dataForm" action="" autocomplete="off">
+									<input type="hidden" name="id" value="${id}"/>
+									<input type="hidden" name="unitId" id="unitId" value=""/>
+									<input type="hidden" name="applyCode" id="applyCode" value=""/>
+									<input type="hidden" name="dirCode" id="dirCode" class="form-control"/>
+									<table class="table default-table tab-border-no-layer">
+										<tbody>
+											<tr>
+												<th width="120"><span class="requiredSpan">*</span>目录名称：</th>
+												<td>
+													<input type="text" name="dirName" id="dirName" class="form-control" datatype="*" nullmsg="请填写目录名称！"/>
+												</td>
+											</tr>
+											<!--<tr>
+												<th>目录编码：</th>
+												<td>
+													<input type="text" name="dirCode" id="dirCode" class="form-control"/>
+												</td>
+											</tr>-->
+											<tr>
+												<th>目录标识：</th>
+												<td>
+													<input type="text" name="dirType" id="dirType" class="form-control" value="2" readonly/>
+												</td>
+											</tr>
+											<tr>
+												<th>目录描述：</th>
+												<td>
+													<textarea id="desc" name="desc" rows="5" cols="" class="form-control"></textarea>
+												</td>
+											</tr>
+											<tr>
+												<th>是否为元目录：</th>
+												<td class="viewTd">
+													<input type="hidden" name="isBottom" id="isBottom" class="form-control" readonly="readonly" value="1"/>否
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<button type="button" class="btn-submit hidden" ></button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+		<script type="text/javascript" src="${_static}/js/com.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+		<script type="text/javascript">
+            $(function(){
+                openValidator({
+                    type:"POST",
+                    dataType: 'json',
+                    contentType : 'application/json',
+                    url: "${_gate_url}/api/exchange/directory/update",
+                },"#dataForm",{
+                    attrName:"name",
+                    prefix:"",
+                    suffix:"",
+                });
+            })
+            getCatalogInfo("${id}")
+			function getCatalogInfo(id){
+                ajaxHengyun({
+                    type:"GET",
+
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/directory/get',
+					data:{id:id},
+                    success:function(rows){
+                        if(rows.data){
+							var rowsObject=dealElement(rows.data);
+							$("#dirName").val(rowsObject.dirName);
+							$("#dirCode").val(rowsObject.dirCode);
+                            $("#unitId").val(rowsObject.unitId);
+                            $("#id").val(rowsObject.id);
+                            $("#applyCode").val(rowsObject.applyCode);
+							$("#desc").val(rowsObject.desc);
+                        }
+                    }
+                });
+			}
+            var index="";
+            function save(num){
+                index=num;
+                $('.btn-submit').click();
+            }
+           /* $('.btn-submit').valid({
+                form: '#dataForm',
+                //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+                //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+                showAllError: true,
+                checkpassed: function () {
+                    saveObj();
+                }
+            });*/
+
+            /*----------------------angular.js---------------------------------------*/
+            var app = angular.module('app', []);
+
+            app.controller('controller', function ($scope,$http,token) {
+                var urlPrev ='${_gate_url}';
+                $scope.submit = function () {
+                    $('.btn-submit').click();
+                };
+                $scope.save = function () {
+                    saveObj();
+                }
+            }).service('token',function () {
+                this.getToken = function () {
+                    return getToken();
+                }
+            });
+            $('.btn-submit').valid({
+                form: '#dataForm',
+                showAllError: true,
+                ignoreHidden: true,
+                checkpassed: function () {
+                    var appElement = document.querySelector('[ng-controller=controller]');
+                    var $scope = angular.element(appElement).scope();
+                    $scope.save();
+                }
+            });
+            /*提交*/
+            function saveObj(){
+                var gxqptDutiesDTO =$("#dataForm").serializeJSON();
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: "${_gate_url}/api/exchange/directory/update",
+                    data:JSON.stringify(gxqptDutiesDTO),
+                    success:function(rows){
+                        if (rows.data){
+                            gxqptDutiesDTO.type="catalog";
+                            parent.home.updateNode(gxqptDutiesDTO);
+                            parent.home.reloadPage("${id}","catalog");
+                            parent.layer.msg("编辑目录成功！",{time:1000});
+                            parent.layer.close(index);
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    }
+                });
+            };
+		</script>
+	</body>
+</html>

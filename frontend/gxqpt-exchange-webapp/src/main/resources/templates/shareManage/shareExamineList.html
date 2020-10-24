@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>共享审核</span>
+                </h3>
+            </div>
+        </div>
+        <div class="main_container row">
+            <form action="" class="search-form" autocomplete="off">
+                <ul class="clearfix">
+                    <li class="pull-left magRt8">
+                        <label class="control-label">API名称：</label>
+                        <input name="apiName" class="w120" placeholder=""/>
+                    </li>
+                    <li class="pull-left magRt8">
+                        <label class="control-label">对应目录：</label>
+                        <input name="dirName" class="w120" placeholder=""/>
+                    </li>
+                    <li class="pull-left magRt8">
+                        <label class="control-label">申请类型：</label>
+                        <select name="applyType" class="chosen-select w100">
+                            <option value="">全部</option>
+                            <option value="2">目录新增API</option>
+                            <option value="1">已有API续期</option>
+                            <option value="3">已封装API申请</option>
+                        </select>
+                    </li>
+                    <li class="pull-left magRt8">
+                        <label class="control-label">审批状态：</label>
+                        <select id="authStatus" name="authStatus" class="chosen-select w100">
+                            <option value="">全部</option>
+                            <option value="1">已通过</option>
+                            <option value="2">已驳回</option>
+                            <option value="3">待审批</option>
+                        </select>
+                    </li>
+                    <li class="pull-left magRt8">
+                        <label class="control-label">申请时间：</label>
+                        <input name="startTime" class="Wdate w100" placeholder=""/>
+                        <span class="color-warning">-</span>
+                        <input name="endTime" class="Wdate w100" placeholder=""/>
+                    </li>
+                    <li class="pull-right marginAuto">
+                        <button type="button" class="btn btn-primary search-button">
+                            <span class="glyphicon glyphicon-search"></span> 查询
+                        </button>
+                    </li>
+                </ul>
+            </form>
+            <table id="shareApprList" class="default-table tab-title-top">
+                <thead>
+                <tr>
+                    <th>API名称</th>
+                    <th width="160">API编号</th>
+                    <th>对应目录</th>
+                    <th>申请单位</th>
+                    <th>申请人</th>
+                    <th>申请原因</th>
+                    <th width="120">申请时间</th>
+                    <th width="90">授权期限</th>
+                    <th width="150">申请类型</th>
+                    <th width="100">处理状态</th>
+                    <th width="200">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <ul class="pagination" id="pagination"></ul>
+                <p class="pull-right currentPage">共<span class="total">0</span>条数据，当前第<i id="pageNum" class="colorBlue">1</i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript">
+
+    var apiName = "";
+    var dirName = "";
+    var applyType = "";
+    var authStatus = "";
+    var startTime = "";
+    var endTime = "";
+
+    function initParam() {
+        apiName = $("input[name='apiName']").val();
+        dirName = $("input[name='dirName']").val();
+        applyType = $("select[name='applyType']").val();
+        authStatus = $("select[name='authStatus']").val();
+        startTime = $("input[name='startTime']").val();
+        endTime = $("input[name='endTime']").val();
+    }
+
+    function getParam() {
+        initParam();
+        parm = {
+            data: {
+                apiName: apiName,
+                dirName: dirName,
+                applyType: applyType,
+                authStatus: authStatus,
+                startTime: startTime,
+                endTime: endTime
+            },
+            pageNo: 1,
+            pageSize: 10
+        }
+    }
+
+    getParam();
+    getList(parm);
+
+    /*获取系统列表*/
+    function getList(parm) {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/exchange/task/getApiTask',
+            data: JSON.stringify(parm),
+            success: function (rows) {
+                var html = ""
+                if (rows.data) {
+                    rows.data.list.forEach(function (value, index) {
+                        value = dealElement(value);
+                        var applyType = value.applyType;
+                        var auditStatus = value.auditStatus;
+                        var auditStatusName = "";
+                        if (auditStatus == 0){
+                            auditStatusName = "待处理";
+                        } else if (auditStatus == 1){
+                            auditStatusName = "已通过";
+                        }else if (auditStatus == 2){
+                            auditStatusName = "已驳回";
+                        }
+
+                        html += '<tr>';
+                        html += '<td title="'+value.apiName+'">' + value.apiName + '</td>';
+                        html += '<td>' + value.apiCode + '</td>';
+                        html += '<td title="'+value.dirName+'">' + value.dirName + '</td>';
+                        html += '<td title="'+value.unitName+'">' + value.unitName + '</td>';
+                        html += '<td>' + value.createUserName + '</td>';
+                        html += '<td title="'+value.applyReason+'">' + value.applyReason + '</td>';
+                        html += '<td>' + fmtDate(value.createTime) + '</td>';
+                        html += '<td>' + value.dateTerm + '</td>';
+                        html += '<td>' + value.applyTypeName + '</td>';
+                        html += '<td>' + auditStatusName + '</td>';
+                        html += '<td>';
+                        // html += '<a href="${_cp}/module/shareMagView?id=' + value.apiId +'">API详情</a>';
+                        if(value.dataType == 1){
+                            html+=  resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "share_appr_api_detail",
+                                btnHtml :'<a href="${_cp}/module/shareApplyView?id=' + value.applyId +'&apiId='+value.apiId+'">{{name}}</a>',
+                                htmlInsert: true
+                            });
+                        }else {
+                            html+=  resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "share_appr_api_detail",
+                                btnHtml :'<a href="${_cp}/module/shareApplyUnStructView?apiId=' + value.apiId + '&id=' + value.applyId + '&pageNo=' + parm.pageNo+'&authStatus=3">{{name}}</a>',
+                                htmlInsert: true
+                            });
+                        }
+
+                        if (auditStatus== 0) {
+                            // html += '<a href="javascript:void(0);" onclick="auditPage('+ value.id + ','+value.applyType+')">处理</a>';
+                            html+=  resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "share_appr_api_handle",
+                                btnHtml :'<a href="javascript:void(0);" onclick="auditPage(\''+ value.id + '\','+value.applyType+')">{{name}}</a>',
+                                htmlInsert: true
+                            });
+                        }else {
+                            // html += '<a href="javascript:void(0);" onclick="dealView(\''+ value.applyCode + '\')">处理详情</a>';
+                            html+=  resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "share_appr_handle_detail",
+                                btnHtml :'<a href="javascript:void(0);" onclick="dealView(\''+ value.applyCode + '\')">{{name}}</a>',
+                                htmlInsert: true
+                            });
+                        }
+                        html += '</td>';
+                        html += '</tr>';
+                    });
+                    if(rows.data.list.length==0){
+                        html+="<tr><td class='text-center' colspan='11'>暂无数据</td></tr>"
+                        $(".pagination,.currentPage").css("display","none");
+                    } else {
+                        $(".pagination,.currentPage").css("display","block");
+                    };
+                    $("#shareApprList tbody").html(html);
+                    $('#totalPages').text(rows.data.pages);
+                    $('.total').text(rows.data.total);
+                    jqPaginator(rows.data);
+                    var height=document.getElementById("container").scrollHeight;
+                    $("#home", window.parent.document).height(height);
+                }else{
+                    html+="<tr><td class='text-center' colspan='11'>暂无数据</td></tr>";
+                    $("#shareApprList tbody").html(html);
+                    $(".pagination,.currentPage").css("display","none");
+                    var height=document.getElementById("container").scrollHeight;
+                    $("#home", window.parent.document).height(height);
+                }
+            }
+        });
+    };
+
+    $(".search-button").click(function () {
+        getParam();
+        getList(parm);
+    })
+
+    function dealView(applyCode) {
+        parent.layer.open({
+            id: 'dataApplySecond',
+            type: 2,
+            anim: 6,
+            title: '处理详情',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['750px', '560px'],
+            content: "${_cp}/module/shareDealView?applyCode="+applyCode,
+            btn: ['关闭'],
+        });
+    }
+
+    function auditPage(taskId,applyType) {//处理
+        parent.layer.open({
+            id: 'auditPage',
+            type: 2,
+            anim: 6,
+            title: '处理',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['600px', '350px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/shareDeal?id="+taskId+"&applyType="+applyType,
+            btn: ['提交', '取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("auditPage");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+                getParam();
+                getList(parm);
+            },
+        });
+    }
+
+    function reloadList(){
+        getList(parm);
+    }
+</script>
+</body>
+</html>

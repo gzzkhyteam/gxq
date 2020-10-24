@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+    <style type="text/css">
+        i:hover{
+            cursor: pointer;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        input[type="number"]{
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                主机管理 > <span class="active">新增</span>
+            </div>
+            <a class="button-icon pull-right" onclick="history.back()">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="block">
+                <div class="text-title">新增主机信息</div>
+                <div class="content">
+                    <form class="form-horizontal" id="dataForm">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>主机名</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" ng-model="host.hostName" datatype="hostmanage" nullmsg="主机名不能为空" maxlength="64" errormsg="只允许输入1-64位中文+英文或下划线" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>内存（G）</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" ng-model="host.mem" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" datatype="type16" nullmsg="内存不能为空" errormsg="超出范围">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>硬盘（G）</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" ng-model="host.harddisk" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" datatype="type16" nullmsg="硬盘不能为空" errormsg="超出范围">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger" >*&nbsp;</span>CPU核数</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" ng-model="host.cpuCount" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" datatype="type8" nullmsg="CPU核数不能为空" errormsg="超出范围">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>操作系统类型</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" ng-model="host.osType" datatype="*" nullmsg="操作系统类型不能为空">
+                                    <option ng-repeat="s in systemList">{{s.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>操作系统版本</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" ng-model="host.osVersion" nullmsg="操作系统版本不能为空" maxlength="50" datatype="systemversion"  errormsg="只允许输入1-50位中文+英文+下划线或空格">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>服务商</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" ng-model="host.serverProvider" maxlength="64" datatype="hostmanage" nullmsg="服务商不能为空" errormsg="只允许输入1-64位中文+英文或下划线">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">是否虚拟主机</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" ng-model="host.virtualHost">
+                                    <option value=2>是</option>
+                                    <option value=1>否</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="host.virtualHost == '2'">
+                            <label class="col-sm-2 control-label">物理主机</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" ng-model="host.physicalHostId">
+                                    <option ng-repeat="h in hostList" value="{{h.id}}">{{h.hostName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>内网IP</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="ip示例：192.168.1.1" ng-model="host.ipAddr" dataType="*,ip" errormsg="请输入正确的IP" >
+                            </div>
+                            <!--<div class="col-sm-2"><i class="fa fa-plus" style="font-size: 25px;color: #999;line-height: 35px;"></i></div>-->
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">外网IP</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="ip示例：192.168.1.1" ng-model="host.ipAddrPublic" dataType="ip" errormsg="请输入正确的IP">
+                            </div>
+                            <!--<div class="col-sm-2"><i class="fa fa-minus" style="font-size: 25px;color: #999;line-height: 35px;"></i></div>-->
+                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-sm-2 control-label"></label>-->
+                            <!--<div class="col-sm-8">-->
+                                <!--<input type="text" class="form-control" placeholder="192.168.1.1">-->
+                            <!--</div>-->
+                            <!--<div class="col-sm-2"><i class="fa fa-minus pull-left" style="font-size: 25px;color: #999;line-height: 35px;"></i>-->
+                                <!--<i class="fa fa-plus pull-left" style="font-size: 25px;color: #999;line-height: 35px;margin-left:10px;"></i></div>-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" ng-model="host.remark" maxlength="500"></textarea>
+                            </div>
+                        </div>
+                        <div class="button-bar button-bar-center">
+                            <button class="btn btn-primary  btn-submit">提交</button>
+                            <button class="btn btn-default " onclick="history.back();return false;">取消</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+
+
+
+<script>
+    var pageType="hostList";
+
+</script>
+</body>
+<script type="text/javascript">
+
+    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/admin/host/saveHost",
+        },"#dataForm",{
+            attrName:"ng-model",
+            prefix:"host.",
+            suffix:"",
+        });
+    })
+
+    /*angularJS*/
+    var app = angular.module('app', []);
+
+    app.controller('controller', function ($scope, $http) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.host= {virtualHost:'1'};
+        //初始化表单验证
+        $('.btn-submit').valid({
+            form: '#dataForm',
+            showAllError: true,
+            ignoreHidden: true,
+            checkpassed: function () {
+                $scope.save();
+            }
+        });
+        /*获取操作系统*/
+        $scope.getSystem = function () {
+            $http.get(urlPrev + 'dictionary/getCodeList',{
+                params:{code:"os_type"},
+                headers: getHeaders(),
+            }).success(function (res) {
+                // if(res.data){
+                //     history.back();
+                // }
+                if(res.errcode == 0){
+                    $scope.systemList = res.data;
+                    $scope.host.osType = res.data[0].name;
+                }
+            })
+        }
+        $scope.getSystem();
+        //获取主机列表
+        $scope.getHostList = function () {
+            $http.get(urlPrev + 'host/getHostNameList',{
+                headers: getHeaders(),
+            }).success(function (res) {
+                if(res.errcode == 0){
+                    $scope.hostList = res.data;
+                }
+            })
+        }
+        $scope.getHostList();
+        //保存主机信息
+        $scope.save = function() {
+            $http.post(urlPrev + 'host/saveHost',$scope.host,{
+                headers: getHeaders(),
+            }).success(function (res) {
+                // if(res.data){
+                //     history.back();
+                // }
+                if(res.errcode == 0){
+                    history.back();
+                }
+            })
+        }
+    })
+    /*angularJS*/
+</script>
+</html>

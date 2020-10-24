@@ -1,0 +1,192 @@
+<template>
+	<Layout>
+		<Content>
+			<Breadcrumb>
+				<BreadcrumbItem>国信优易</BreadcrumbItem>
+				<BreadcrumbItem>申请管理</BreadcrumbItem>
+			</Breadcrumb>
+			<Card>
+				<Form :model="serverData" ref="searchformData" inline :label-width="80">
+                    <FormItem label="申请单位：" prop="unit">
+                        <Input v-model="serverData.unit"></Input>
+                    </FormItem>
+					<FormItem label="申请人：" prop="name">
+                        <Input v-model="serverData.name"></Input>
+					</FormItem>
+                    <FormItem label="单据类别：" prop="operatingSystem">
+						<Select v-model="serverData.operatingSystem">
+							<Option value="单据类别1">单据类别1</Option>
+							<Option value="单据类别2">单据类别2</Option>
+						</Select>
+					</FormItem>
+                    <FormItem label="申请时间：" prop="date">
+                        <DatePicker type="daterange" v-model="serverData.date" show-week-numbers placement="bottom-end" placeholder="请选择申请时间" style="float: left"></DatePicker>
+					</FormItem>
+					<FormItem>
+						<Button type="info" @click="search">查询</Button>
+					</FormItem>
+				</Form>
+                <hy-table
+                    highlight-row
+                    :columns="safetyEvalCol"
+                    :data="safetyEvalData"
+                    :total="40"
+                    :pageSize="10"
+                    :border='border'
+                    pageType="small"
+                    show-elevator
+                    show-sizer
+                    class="access-list"
+                    @on-page-change="getList" />
+			</Card>
+		</Content>
+	</Layout>
+</template>
+<script>
+export default {
+    data() {
+        return {
+            serverData:{},
+            border:true,
+            safetyEvalCol: [{
+                title: '序号',
+                type: 'index',
+                width: 80,
+                align: 'center'
+            }, {
+                title: '申请单号',
+                key: 'applyID'
+            }, {
+                title: '申请单位',
+                key: 'applyUnit'
+            }, {
+                title: '申请人',
+                key: 'applyAdmin'
+            }, {
+                title: '申请类别',
+                key: 'applyType'
+            }, {
+                title: '申请时间',
+                key: 'applyDate'
+            }, {
+                title: '申请状态',
+                key: 'applyState'
+            }, {
+                title: '处理环节',
+                key: 'steps'
+            }, {
+                title: '变更次数',
+                key: 'changeNum',
+                render: (h, params) => {
+                    const vm = this
+                    const num = params.row.changeNum
+                    const change = h('span', {
+                        class: 'handle',
+                        domProps: {
+                            innerHTML: num
+                        },
+                        on: {
+                            click () {
+                                vm.gotoCtrl(num)
+                            }
+                        }
+                    })
+                    return h('div', [change])
+                }
+            }, {
+                title: '操作',
+                type: 'act',
+                width: 200,
+                align: 'center',
+                render: (h, params) => {
+                    return h('div', [
+                        h('span', {
+                            class: 'handle',
+                            on: {
+                                click: () => {
+                                    this.$router.push({path:'/server/addApply'});
+                                }
+                            }
+                        }, '详情'),
+                        h('span', {
+                            class: 'handle',
+                            on: {
+                                click: () => {
+                                    this.$router.push({path:'/server/applyDeal'});
+                                }
+                            }
+                        }, '处理')
+                    ]);
+                }
+            }],
+            safetyEvalData: [{
+                applyID: '1111',
+                applyUnit:'高新区',
+                applyAdmin: '张三',
+                applyType: '新增',
+                applyDate: '2018-07-09 14:41:57',
+                applyState: '流程中',
+                steps: '管理员',
+            }, {
+                applyID: '1111',
+                applyUnit:'高新区',
+                applyAdmin: '张三',
+                applyType: '新增',
+                applyDate: '2018-07-09 14:41:57',
+                applyState: '流程中',
+                steps: '管理员',
+            }, {
+                applyID: '1111',
+                applyUnit:'高新区',
+                applyAdmin: '张三',
+                applyType: '新增',
+                applyDate: '2018-07-09 14:41:57',
+                applyState: '流程中',
+                steps: '管理员',
+            }, {
+                applyID: '1111',
+                applyUnit:'高新区',
+                applyAdmin: '张三',
+                applyType: '新增',
+                applyDate: '2018-07-09 14:41:57',
+                applyState: '流程中',
+                steps: '管理员',
+            }],
+        }
+    },
+    methods: {
+        search(){
+            console.log("查看");
+        },
+        // 从服务端获取列表数据
+        getList (pageNo, pageSize) {
+            console.log(pageNo)
+            console.log(pageSize)
+        },
+        // 操作
+        gotoCtrl (idx) {
+            console.log(idx);
+        }
+    }
+}
+</script>
+<style lang="less">
+	.act-btn-group{
+		button{
+			margin: 0 12px;
+		}
+    }
+    .ivu-modal-footer{
+        display: none;
+    }
+    .access-list{
+        span.handle{
+            margin: 0 5px;
+            display: inline-block;
+            cursor: pointer;
+            &:hover{
+            color: #57a3f3;
+            }
+        }
+    }
+</style>

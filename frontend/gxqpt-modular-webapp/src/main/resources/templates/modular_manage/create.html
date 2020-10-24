@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/webuploader.css">
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12" style="margin-top:30px;">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <form id="dataForm" action="" method="post" autocomplete="off">
+                            <table class="table default-table table-title-left">
+                                <input type="hidden" id="fileType" name="fileType">
+                                <input type="hidden" id="createCompanyName" name="createCompanyName">
+                                <tbody>
+                                    <tr>
+                                        <th><sub class="required">*</sub>仓库名称</th>
+                                        <td>
+                                            <select id="repName" name="repName" class="form-control chosen-select set-form"
+                                                    dataType="*"
+                                                    onchange="clearAllChecked(),validateModular()">
+                                                <option value="">请选择</option>
+                                            </select>
+                                        </td>
+                                        <th width="130"><sub class="required">*</sub>groupId</th>
+                                        <td>
+                                            <input id="groupId" class="form-control inp-form" name="groupId"
+                                                   dataType="/^[a-zA-Z][a-zA-Z0-9\.\-\_]{1,48}[a-zA-Z0-9]$/" placeholder="例:org.springframework"
+                                                   errormsg="3-50位字母、数字、-、_和. ,首末位字符为字母" onblur="clearAllChecked(),validateModular()" pl/>
+                                        </td>
+                                        <th width="130"><sub class="required">*</sub>artifactId</th>
+                                        <td>
+                                            <input id="artifactId" class="form-control inp-form" name="artifactId"
+                                                   dataType="/^[a-zA-Z][a-zA-Z0-9\.\-\_]{1,48}[a-zA-Z0-9]$/" placeholder="例:spring-core"
+                                                   errormsg="3-50位字母、数字、-、_和. ,首末位字符为字母" onblur="clearAllChecked(),validateModular()"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th width="130"><sub class="required">*</sub>模块名称</th>
+                                        <td>
+                                            <input id="modularName" class="form-control inp-form" name="modularName"
+                                                   dataType="s1-20" placeholder="请输入模块名称"/>
+                                        </td>
+                                        <th><sub class="required">*</sub>提供商名称</th>
+                                        <td colspan="3">
+                                            <select id="createCompanyId" name="createCompanyId" class="form-control chosen-select selWid-form-search"
+                                                    style="width: 100%">
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Categories</th>
+                                        <td id="modularCategory" colspan="5"></td>
+                                    </tr>
+                                    <tr>
+                                        <th><sub class="required">*</sub>Tags</th>
+                                        <td id="modularTag" colspan="5"></td>
+                                    </tr>
+                                    <tr>
+                                        <th><sub class="required">*</sub>模块描述</th>
+                                        <td colspan="5" style="padding: 0px;">
+                                            <textarea id="description" rows="3" name="description" class="form-control textarea-form"
+                                                      style="width: 100%;border: none;" dataType="*3-500" placeholder="请输入模块描述"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th width="130"><sub class="required">*</sub>class</th>
+                                        <td colspan="5">
+                                            <input type="file" id="file1" name="file" accept=".jar" dataType="/^[^\u4e00-\u9fa5]+$/"
+                                                               errormsg="文件名称不能包含中文" nullmsg="请选择上传文件" onchange="classifierFun(this)"/>
+                                            <input type="hidden" name="classifier" id="classifier"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th width="130">源码</th>
+                                        <td colspan="5">
+                                            <input type="file" id="file2" name="file" accept=".jar" onchange="checkFile(this)"
+                                                   errormsg="文件名称不能包含中文"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th width="130">API文档</th>
+                                        <td colspan="5">
+                                            <input type="file" id="file3" name="file" accept=".jar" onchange="checkFile(this)"
+                                                   errormsg="文件名称不能包含中文"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th width="130">帮助文档</th>
+                                        <td colspan="5">
+                                            <input type="file" id="file4" name="file" accept=".jar" onchange="checkFile(this)"
+                                                   errormsg="文件名称不能包含中文"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th width="130"><sub class="required">*</sub>版本号</th>
+                                        <td colspan="5">
+                                            <input id="version" class="form-control inp-form" name="version"
+                                                   dataType="/^[0-9][0-9\.]{1,18}[0-9]$/" errormsg="3-20位数字和. ,首末位字符为数字！"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn-submit hidden"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript">
+
+/*    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/modular/version/uploads",
+        },"#dataForm",{
+            attrName:"name",
+            prefix:"",
+            suffix:"",
+        });
+    })*/
+    //获取文件类型后缀
+    function classifierFun(el){
+        var file=$("#file1").val();
+        var val = file.split(".")[1];
+        if(val){
+            $("#classifier").val(val);
+        }
+        checkFile(el);
+    }
+    //获取仓库
+    repNameSelect();
+    function repNameSelect() {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            url: "${_gate_url}/api/modular/repository/find",
+            datatype: 'json',
+            success: function (rows) {
+                if (rows.data) {
+                    var html = "";
+                    rows.data.forEach(function (value, index) {
+                        if (value.name != "maven-central" && value.name != "maven-public"
+                            && value.name != "maven-snapshots" && value.name != "nuget-group"
+                            && value.name != "nuget-hosted" && value.name != "nuget.org-proxy") {
+                            html += '<option value="' + value.name + '">' + value.name + '</option>';
+                        }
+                    });
+                    $("#repName").append(html);
+                }
+            }
+        });
+    }
+
+    //获取登录人单位信息列表
+    ajaxHengyun({
+        type: "GET",
+        async: false,
+        url: "${_gate_url}/api/modular/provider/getAllProvider",
+        datatype: 'json',
+        success: function (rows) {
+            if (rows.data) {
+                var html = "";
+                rows.data.forEach(function (value, index) {
+                    html += "<option value = "+value.id+">" +value.name+ "</option>";
+                });
+                $("#createCompanyId").html(html);
+            }
+        }
+    });
+
+    //获取分类
+    modularTypeSelect();
+
+    function modularTypeSelect() {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            url: "${_gate_url}/api/modular/category/findCategoryDef",
+            datatype: 'json',
+            success: function (rows) {
+                if (rows.data) {
+                    var html = "";
+                    rows.data.forEach(function (value, index) {
+                        html += "<input class=\"modularCategory\" type=\"checkbox\" name=\"modularCategory\" value=\"" + value.id + "\">" + value.name + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                    });
+                    $("#modularCategory").html(html);
+                }
+            }
+        });
+    }
+
+    //获取标签
+    modularTagSelect();
+
+    function modularTagSelect() {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            url: "${_gate_url}/api/modular/tag/findTagDef",
+            datatype: 'json',
+            success: function (rows) {
+                if (rows.data) {
+                    var html = "";
+                    rows.data.forEach(function (value, index) {
+                        html += "<input class=\"modularTag checkbox\" type=\"checkbox\" name=\"modularTag\" value=\"" + value.id + "\">" + value.name + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                    });
+                    $("#modularTag").html(html);
+                }
+            }
+        });
+    }
+
+    //清除复选框的选中状态和置灰状态
+    function clearAllChecked() {
+        $(".modularCategory").each(function (index, obj) {
+            $(this).removeAttr("disabled");
+            $(this).removeAttr("checked");
+        });
+        $(".modularTag").each(function (index, obj) {
+            $(this).removeAttr("disabled");
+            $(this).removeAttr("checked");
+        })
+    }
+
+    //验证模块是否存在
+    function validateModular() {
+        var o = "";
+        var mclist = "";
+        var mtlist = "";
+        var repName = $("#repName").val();
+        var groupId = $("#groupId").val();
+        var artifactId = $("#artifactId").val();
+        if (repName != "" && groupId != "" && artifactId != "") {
+            ajaxHengyun({
+                type: "POST",
+                async: false,
+                url: "${_gate_url}/api/modular/modular/getModularByRepNameAndGidAndAid",
+                contentType: "application/json",    //注意传参格式
+                dataType: "json",
+                data: JSON.stringify({
+                    repName: $("#repName").val(),//仓库名称
+                    groupId: $("#groupId").val(),//groupId,
+                    artifactId: $("#artifactId").val(),//artifactId
+                }),
+                success: function (rows) {
+                    if (rows.data) {
+                        mclist = rows.data.mclist;
+                        mtlist = rows.data.mtlist;
+                        $("#modularName").val(rows.data.modularName).attr("readonly", "readonly");
+                        $("#description").val(rows.data.description).attr("readonly", "readonly");
+                        $("#createCompanyId option").each(function (index, value) {
+                            if (value.value == rows.data.companyId){
+                                value.selected = "selected";
+                            }
+                        });
+                        $("#createCompanyId").attr("disabled", "disabled");
+                        $(".modularCategory").each(function (index, obj) {
+                            o = $(this);
+                            mclist.forEach(function (value, index) {
+                                if (value.id == obj.value) {
+                                    o.prop("checked", "checked");
+                                }
+                            });
+                            o.attr("disabled", "disabled");
+                        });
+                        $(".modularTag").each(function (index, obj) {
+                            o = $(this);
+                            mtlist.forEach(function (value, index) {
+                                if (value.id == obj.value) {
+                                    o.prop("checked", "checked");
+                                }
+                            });
+                            o.attr("disabled", "disabled");
+                        })
+                    } else {
+                        $("#modularName").val("").removeAttr("readonly");
+                        $("#description").val("").removeAttr("readonly");
+                        $(".modularCategory").each(function (index, obj) {
+                            o = $(this);
+                            o.removeAttr("disabled").removeProp("checked");
+                        });
+                        $(".modularTag").each(function (index, obj) {
+                            o = $(this);
+                            o.removeAttr("disabled").removeProp("checked");
+                        })
+                    }
+                }
+            });
+        }
+    }
+
+    var index;
+
+    function save(num) {
+        index = num;
+        $('.btn-submit').click();
+    }
+
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        ignoreHidden: true,
+        showAllError: true,
+        checkpassed: function () {
+            var tags = $(".modularTag");
+            var flag = false;
+            tags.each(function(){
+                if($(this).is(":checked")){
+                    flag = true;
+                    return false; //跳出循环
+                }
+            });
+            if(flag){
+                saveObj();
+            }else{
+                parent.layer.msg("请添加标签！", {icon: 5, time: 2000});
+            }
+        }
+    });
+
+    /*发布*/
+    function saveObj() {
+        $("#createCompanyId").removeAttr("disabled", "disabled");
+        $("#createCompanyName").val($("#createCompanyId").find("option:selected").text());
+        var form = new FormData(document.getElementById("dataForm"));
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            url: "${_gate_url}/api/modular/version/uploads2",
+            data: form,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (rows) {
+                if (rows.data) {
+                    parent.home.getModularList();
+                    parent.layer.msg("发布模块成功！", {icon: 6, time: 2000});
+                    parent.layer.close(index);
+                } else {
+                    parent.layer.msg(rows.errmsg, {icon: 5, time: 2000});
+                }
+            }
+        });
+    }
+    // 文件格式校验
+    function checkFile(el){
+        var files = el.files;  //获取选择的文件对象
+        var allowUpload = true; //经过校验之后是否允许上传
+        var errorMessage = "";  //校验文件之后，文件不符合要求的提示信息
+        for(var i=0; i< files.length; i++){
+            var ary1 =  files[i].name.split(".");
+            var length = ary1.length - 1;
+            var acceptVal = ary1[length];
+            if(acceptVal.toLowerCase() != "jar"){
+                errorMessage += "请上传jar类型的文件！";
+                allowUpload = false;
+            }
+        }
+        if(allowUpload != true){
+            el.outerHTML = el.outerHTML; //清空选择的文件
+            parent.layer.msg(errorMessage, {icon: 6, time: 3000});
+        }
+    }
+</script>
+</body>
+</html>

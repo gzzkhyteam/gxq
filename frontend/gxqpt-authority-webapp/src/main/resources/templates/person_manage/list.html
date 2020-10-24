@@ -1,0 +1,982 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+		<link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+		<link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+		<link rel="stylesheet" href="${_static}/css/core/module.css">
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.exedit.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.exhide.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/zTree/js/fuzzysearch.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="${_static}/js/app.js"></script>
+		<script type="text/javascript" src="${_static}/js/module.js"></script>
+        <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+		<style>
+			.searchDiv{
+				font-size: 14px;
+				margin: 10px 10px 0;
+			}
+			.searchDiv input{
+				padding: 2px 5px;
+				outline: none;
+				width: 136px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="workspace-body">
+			<div class="console-container clearfix">
+				<div class="col-sm-12">
+					<!-- begin 标题 -->
+					<div class="console-title console-title-border clearfix">
+						<div class="pull-left">
+							<h5 class="page-title">
+	                    		权限管理系统 &gt; 用户中心 &gt; <span class="page-title-scend">人员管理</span>
+	                        </h5>
+						</div>
+						<div class="pull-right">
+						</div>
+					</div>
+				</div>
+				<!-- begin 页面内容主体 -->
+				<div class="main clearfix">
+					<div class="top-bar">
+						<lable class="change-system_tle">体系：</lable>
+						<select id="system" class="form-control change-system" onchange="setAppIdVal()">
+						</select>
+					</div>
+					<div class="content clearfix">
+						<div class="organ-list-tree pull-left">
+							<div class="panel panel-primary">
+								<div class="panel-heading">组织机构</div>
+								<div class="panel-body">
+									<div class="zTreeDemoBackground left">
+										<div class="searchDiv">
+											<label class="control-label">
+												<span class="text-danger"></span>
+												<span>名称：</span>
+											</label>
+											<input id="orgName" class="" placeholder=""/>
+										</div>
+										<ul id="ztree" class="ztree"></ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="right-box" class="right-box pull-left">
+			                <div class="list-section clearfix">
+			                    <form autocomplete="off" action="" id="searchform" class="form-inline search-form">
+			                        <div class="form-field">
+			                        	<div class="form-group">
+			                        		<label class="control-label">
+			                                	<span class="text-danger"></span>
+			                                    <span>姓名：</span>
+			                                </label>
+			                            	<div class="form-control-wrap">
+												<input id="name" name="name" class="form-control" placeholder=""/>
+											</div>
+			                            </div>
+			                    	</div>
+			                        <!--<div class="form-field">
+			                        	<div class="form-group">
+			                        		<label class="control-label">
+			                                	<span class="text-danger"></span>
+			                                    <span>登录账号：</span>
+			                                </label>
+			                            	<div class="form-control-wrap">
+												<input id="nickname" name="nickname" class="form-control" placeholder=""/>
+											</div>
+			                            </div>
+			                    	</div>-->
+			                    	<div class="form-field">
+			                        	<div class="form-group">
+			                            	<label class="control-label">
+			                                	<span class="text-danger"></span>
+			                                    <span>启用标记：</span>
+			                                </label>
+			                                <div class="form-control-wrap">
+			                                	<select id="isenable" name="isenable" class="form-control chosen-select selWid-form-search">
+			                                        <option value="">全部</option>
+			                                        <option value="1">启用</option>
+			                                        <option value="0">禁用</option>
+			                                    </select>
+			                                </div>
+			                            </div>
+			                        </div>
+			                        <div class="form-field">
+			                        	<div class="form-group">
+			                                <div class="form-control-wrap text-right">
+			                                	<button type="button" class="btn btn-primary search-button">
+			                                		<span class="glyphicon glyphicon-search"></span> 查询
+			                                    </button>
+			                                </div>
+			                            </div>
+			                        </div>
+			                    </form>
+			                    <div class="btn-group" id="systemgroup">
+			                    	<!--<button type="button" class="btn btn-default " onclick="createPage ()">
+                                		<span class="fa fa-plus"></span> 新增
+                                    </button>
+			                    	<button type="button" class="btn btn-default btnIn">
+                                		<span class="fa fa-plus"></span> 导入
+                                    </button>
+                                    <button type="button" class="btn btn-default btnOut">
+                                		<span class="fa fa-plus"></span> 导出
+                                    </button>
+									<button type="button" class="btn btn-default " onclick="downloadTemplet()">
+                                		<span class="fa fa-plus"></span> 模板下载
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-disable">
+                                        <span class="fa fa-plus"></span> 禁用
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-ennable">
+                                        <span class="fa fa-plus"></span> 启用
+                                    </button>-->
+                                    <!-- /*按钮权限开始*/-->
+                                    <script type="text/javascript" id="authority_emp_add">
+                                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "authority_emp_add",
+                                            btnHtml :"<button type=\"button\" class=\"btn btn-default \" onclick=\"createPage ()\"><span class=\"fa fa-plus\"></span>新增</button>",
+                                            htmlInsert: true
+                                        });
+                                    </script>
+                                    <script type="text/javascript" id="authority_emp_import">
+                                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "authority_emp_import",
+                                            btnHtml :"<button type=\"button\" class=\"btn btn-default btnIn\"><span class=\"fa fa-plus\"></span> 导入</button>",
+                                            htmlInsert: true
+                                        });
+                                    </script>
+                                    <script type="text/javascript" id="authority_emp_export">
+                                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "authority_emp_export",
+                                            btnHtml :"<button type=\"button\" class=\"btn btn-default btnOut\"><span class=\"fa fa-plus\"></span>导出</button>",
+                                            htmlInsert: true
+                                        });
+                                    </script>
+                                    <script type="text/javascript" id="authority_emp_downloadTemplet">
+                                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "authority_emp_downloadTemplet",
+                                            btnHtml :"<button type=\"button\" class=\"btn btn-default \" onclick=\"downloadTemplet()\"><span class=\"fa fa-plus\"></span>模板下载</button>",
+                                            htmlInsert: true
+                                        });
+                                    </script>
+                                    <script type="text/javascript" id="authority_emp_disenable">
+                                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "authority_emp_disenable",
+                                            btnHtml :"<button type=\"button\" class=\"btn btn-default btn-disable\"><span class=\"fa fa-plus\"></span>禁用</button>",
+                                            htmlInsert: true
+                                        });
+                                    </script>
+                                    <script type="text/javascript" id="authority_emp_ennable">
+                                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "authority_emp_ennable",
+                                            btnHtml :"<button type=\"button\" class=\"btn btn-default btn-ennable\"><span class=\"fa fa-plus\"></span>启用</button>",
+                                            htmlInsert: true
+                                        });
+                                    </script>
+                                    <!-- /*按钮权限end*/-->
+			                    </div>
+			                </div>
+			                <div class="list-section">
+			                    <div class="list-content">
+			                        <div class="form-inline">
+			                            <fieldset>
+		                            		<div class="grid-section">
+			                                    <table id="list">
+			                                    </table>
+			                                    <div id="pager"></div>
+			                                </div>
+											<table class="table dealInfoTab" style="display:none;">
+												<tbody>
+												<tr>
+													<td>
+														<div class="w90 form-control-wrap" style="width:100%;">
+															<div id="container" style="margin: 0;padding: 0; width:98%;">
+																<div id="uploader1" class="uploader">
+																	<div class="queueList">
+																		<ul id="file_html" class="filelist">
+																		</ul>
+																		<div id="dndArea1" class="placeholder dndArea" style="padding-top: 85px;">
+																			<div id="filePicker1" class="filePicker"></div>
+																			<p> </p>
+																		</div>
+																	</div>
+																	<div class="statusBar" style="display:none;">
+																		<div class="progress">
+																			<span class="text">0%</span> <span class="percentage"></span>
+																		</div>
+																		<div class="info"></div>
+
+																		<div class="btns">
+																			<div id="jxButton1" class="jxButton"></div>
+																			<div class="uploadBtn">开始上传</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+												</tbody>
+											</table>
+			                            </fieldset>
+			                        </div>
+			                    </div>
+			                </div>
+						</div>
+					</div>
+				</div>
+				<!-- end 页面内容主体 -->
+			</div>
+		</div>
+		<script type="text/javascript">
+            var _GATE_URL = "${_gate_url}";
+		</script>
+		<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCore1.js"></script>
+		<script type="text/javascript">
+            var height=$("#right-box").height()-169;
+            var mainorgid = null;
+            var maindeptid = null;
+            var systemCode = null;
+            var ids = new Array();//id集合
+            /* 设置systemCode的值 */
+            var systemFlag = true;
+            function setAppIdVal(){
+                systemCode=$("#system").val();
+                if(systemCode == 'sdzzww'){
+                    $('.btn-group button').attr('disabled',true);
+                    systemFlag = false;
+                }else{
+                    $('.btn-group button').attr('disabled',false);
+                    systemFlag = true;
+                }
+                mainorgid = null;
+                maindeptid = null;
+                getOrgan();
+            };
+            //获取体系
+            getSystem();
+            getJqgrid();
+            function getSystem() {
+                ajaxHengyun({
+                    type: 'POST',
+                    url: '${_gate_url}/api/admin/system/findSystemList',
+                    data:JSON.stringify({pageNo: 1, pageSize: 20,data:{}}),
+                    contentType : 'application/json',
+                    datatype: "json",
+                    success: function (data) {
+                        if(data.data.list.length){
+                            systemCode = data.data.list[0].code;
+                            /*if(systemCode == 'sdzzww'){
+                                $('.btn-group button').attr('disabled',true);
+                                systemFlag = false;
+                            }else{
+                                $('.btn-group button').attr('disabled',false);
+                                systemFlag = true;
+                            }*/
+                            $.each(data.data.list,function (index,item) {
+                                var option = ''
+                                if(item.code === 'gxqpt'){
+                                    option = '<option value = ' + item.code + ' selected>' + item.name + '</option>';
+                                    systemCode = item.code;
+                                    systemName = item.name;
+                                    $('.btn-group button').attr('disabled',false);
+                                }else{
+                                    option = '<option value = ' + item.code + '>' + item.name + '</option>';
+                                }
+                                $('#system').append(option);
+                            })
+                            getOrgan();
+                        }
+                    }
+                });
+            }
+            //获取单位部门
+            function getOrgan() {
+                ajaxHengyun({
+                    type: 'GET',
+                    url: '${_gate_url}/api/admin/gxqpt/org/find',
+                    data: {systemCode: systemCode,type:2},
+                    success: function (data) {
+                        if (data.data) {
+                            var units = data.data;
+                            nodes = builderTree(units);
+                            var setting = {
+                                data: {
+                                    key: {
+                                        name: 'name'
+                                    },
+                                    simpleData: {
+                                        idKey: 'id',
+                                    }
+                                },
+                                callback: {
+                                    onClick: onClick,
+                                }
+                            };
+                            $.fn.zTree.init($("#ztree"), setting, nodes);/* 生成树 */
+                            /*
+							*初始化模糊搜索方法
+							* fuzzySearch(zTreeId, searchField, isHighLight, isExpand)
+							*@param zTreeId ztree对象的id,不需要#
+							* @param searchField 输入框选择器
+							* @param isHighLight 是否高亮,默认高亮,传入false禁用
+							* @param isExpand 是否展开,默认合拢,传入true展开
+							*/
+                            fuzzySearch('ztree','#orgName',false,false);
+                            var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                            var nodes = treeObj.getNodes();
+                            if(nodes.length>0){
+                                var item=nodes[0].children;
+                                if (item.length>1) {
+                                    treeObj.selectNode(item[0]);
+                                    if(item[0].orgId){
+                                        mainorgid = item[0].orgId;
+                                    }
+                                    maindeptid = item[0].id;
+                                }
+                            }
+
+                        }
+                        reloadJqgrid();
+                    }
+                })
+            }
+
+            function builderTree(r){
+
+                 if(!r || r.length == 0){
+                     return ;
+				 }
+				 r.forEach(function (value, index) {
+
+				     var isChildOrg = true;
+					 if(!value.children || value.children.length == 0){
+                         value.children = [];
+                         isChildOrg = false;
+					 }
+                     if(!(!value.dpms || value.dpms.length == 0)){
+                         value.dpms.forEach(function (item, index) {
+                             item.icon='${_static}/images/sys_com/icn_02.png';
+                         	 value.children.push(item);
+                         });
+                     }
+                     if(isChildOrg){
+                     	builderTree(value.children);
+					 }
+                     if(value.treeType == '1'){
+                         value.icon = '${_static}/images/sys_com/icn_01.png';
+                     }else{
+                         value.icon = '${_static}/images/sys_com/icn_02.png';
+                     }
+                     return ;
+				 });
+				return r;
+			}
+            //点击资源节点查看人员详情
+            function onClick(event, treeId, treeNode) {
+                if(treeNode.treeType=="1"){
+                    mainorgid = treeNode.id;
+                    maindeptid = null;
+                }else if(treeNode.treeType=="2"){
+                    mainorgid = treeNode.orgId;
+                    maindeptid = treeNode.id;
+                }
+				reloadJqgrid();
+                loadFile();
+                return false;
+            };
+
+            /* 刷新表格 */
+            function reloadJqgrid(){
+                $("#list").setGridParam({
+                    postData: {pageNo:1,pageSize:20,
+                        data: {
+                            systemCode: systemCode, mainorgid: mainorgid, maindeptid: maindeptid
+                        }
+                    }
+                }).trigger("reloadGrid");
+                ids=[];
+            }
+            function getJqgrid(){/* 生成表格 */
+                $("#list").jqGrid({
+                    mtype: 'POST',
+                    url:"${_gate_url}/api/admin/emp/findEmpList",
+                    postData:{
+                        pageNo:1,pageSize:20,
+                        data: {
+                            systemCode: systemCode, mainorgid: mainorgid, maindeptid: maindeptid
+                        }
+                    },
+                    datatype: "json",
+                    contentType : 'application/json',
+                    serializeGridData:function(postData){
+                        return JSON.stringify(postData);
+                    },
+                    colNames: ['姓名', /*'登录账号',*/ '职务', '职务级别', '岗位', '办公电话', '主要手机号', '排序权重', '启用标记', '状态','身份id', '操作'],
+                    colModel: [{
+                        name: 'name',
+                        index: 'name'
+                    }, /*{
+                        name: 'nickname',
+                        index: 'nickname',
+                    }, */{
+                        name: 'maindutyname',
+                        index: 'maindutyname'
+                    }, {
+                        name: 'dutylevel',
+                        index: 'dutylevel',
+                    }, {
+                        name: 'mainpostname',
+                        index: 'mainpostname'
+                    }, {
+                        name: 'officetel',
+                        index: 'officetel',
+                    }, {
+                        name: 'mainmobile',
+                        index: 'mainmobile',
+                    }, {
+                        name: 'sortvalue',
+                        index: 'sortvalue',
+                    }, {
+                        name: 'isenable',
+                        index: 'isenable',
+                        formatter: formatterIsenable
+                    }, {
+                        name: 'status',
+                        index: 'status',
+                        formatter: formatterStatus
+                    },{
+                        name: 'identityId',
+                        index: 'identityId',
+                        hidden:true
+                    }, {
+                        name: 'act',
+                        index: 'act',
+                        title: false,
+                        width: '360',
+                        align: 'left',
+                        formatter: formatterAct
+                    }],
+                    jsonReader : {
+                        root:"data.list",
+                        page: "data.pageNum",
+                        total: "data.pages",
+                        records: "data.total"
+                    },
+                    multiselect: true,
+                    beforeSelectRow:function(rowid, e){//多选
+                        if(e.type == 'click'){
+                            i = $.jgrid.getCellIndex($(e.target).closest('td')[0]),
+                                cm = jQuery("#list").jqGrid('getGridParam', 'colModel');
+                            return (cm[i].name == 'cb'); //当点击的单元格的名字为cb时，才触发选择行事件
+                        }
+                        return false;
+                    },
+                    onSelectAll: function(aRowids,status){
+                        if(status){
+                            for(var i=0; i<aRowids.length; i++){
+                                var curRowData = jQuery("#list").jqGrid('getRowData', aRowids[i]);
+                                ids.push(aRowids[i]);
+                                ids=removeDuplicatedItem(ids);
+                            }
+                        }else{
+                            for(var i=0; i<aRowids.length; i++){
+                                var ret = jQuery.inArray(aRowids,ids);
+                                ids.splice(ret,1);
+                            }
+                        }
+                    },
+                    onSelectRow: function(id,check){
+                        if(check){
+                            var curRowData = jQuery("#list").jqGrid('getRowData', id);
+                            ids.push(id);
+                            ids=removeDuplicatedItem(ids);
+                        }else{
+                            var ret = jQuery.inArray(id,ids);
+                            ids.splice(ret,1);
+                        }
+                    },
+                    onPaging:function(pgButton){
+
+                        var pageNo=$(".ui-pg-input").val();
+                        pageNo=parseInt(pageNo);
+                        var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                        total=parseInt(total);
+                        if(pgButton=="next"){
+                            if(pageNo>=total){
+                                return false;
+                            }else{
+                                pageNo+=1;
+                            }
+                        }else if(pgButton=="prev"){
+                            if(pageNo>1){
+                                pageNo-=1;
+                            }else{
+                                return false;
+                            }
+                        }else if(pgButton=="last"){
+                            pageNo=total;
+                        }else if(pgButton=="first"){
+                            pageNo=1;
+                        }
+                        var pageSize=$(".ui-pg-selbox").val();
+                        if(pageNo!=0){
+                            $("#list").setGridParam({postData: {systemCode:systemCode,mainorgid:mainorgid,maindeptid:maindeptid,pageNo:pageNo,pageSize:pageSize}}).trigger("reloadGrid");
+                            return false;
+                        }
+                    },
+                    pager: '#pager',
+                    height: height,
+                });
+			}
+            function formatterIsenable(cellvalue, options, rawObject) {//初始化启用标志
+                if(cellvalue==1){
+                    return "启用";
+                }else{
+                    return "<span class='text-danger'>禁用</span>";
+                }
+            };
+            function formatterStatus (cellvalue, options, rawObject) {//初始化状态
+                if(cellvalue==1){
+                    return "在职";
+                }else if(cellvalue==2){
+                    return "转职中";
+                }else if(cellvalue==3){
+                    return "离职";
+                }else if(cellvalue==4){
+                    return "退休";
+                }else if(cellvalue==5){
+                    return "驻村";
+                }else if(cellvalue==6){
+                    return "休假";
+                }else if(cellvalue==7){
+                    return "工勤人员";
+                }else if(cellvalue==8){
+                    return "其它人员";
+                }else{
+                    return "";
+                }
+            };
+		    function formatterAct(cellvalue, options, rawObject) {
+		        var returnValue = "";
+		        if(systemFlag){
+                  /*  returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick="editPage('+rawObject.id+')">修改</a>';
+                    returnValue += '<span class="oper-separator"></span>';
+                    returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="delect('+rawObject.id+')">';
+                    returnValue += '删除</a>';
+                    returnValue += '<span class="oper-separator"></span>';
+                    returnValue += '<a class="ui-button wid100 " href="javascript:void(0);" onclick="createIdentity('+rawObject.id+')">新增身份</a>';
+                    returnValue += '<span class="oper-separator"></span>';
+                    returnValue += '<a class="ui-button wid100 " href="javascript:void(0);" onclick="settingIdentity('+rawObject.id+')">身份修改</a><br/>';
+                    returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick="viewPage('+rawObject.id+')">';
+                    returnValue += '详请</a>';*/
+
+                  /*按钮权限开始*/
+                    returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                        resource_code : "authority_emp_update",
+                        btnHtml :"<a class=\"ui-button marginLeft\" href=\"javascript:void(0);\" onclick=\"editPage('"+rawObject.id+"')\">修改</a>",
+                        htmlInsert: false
+                    });
+                    returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                        resource_code : "authority_emp_detelete",
+                        btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button\" href=\"javascript:void(0);\" onclick=\"delect('"+rawObject.id+"')\">删除</a>",
+                        htmlInsert: false
+                    });
+                    returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                        resource_code : "authority_emp_addIdentity",
+                        btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button wid100 \" href=\"javascript:void(0);\" onclick=\"createIdentity('"+rawObject.id+"')\">新增身份</a>",
+                        htmlInsert: false
+                    });
+                    returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                        resource_code : "authority_emp_updateIdentity",
+                        btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button wid100 \" href=\"javascript:void(0);\" onclick=\"settingIdentity('"+rawObject.id+"')\">身份修改</a><br/>",
+                        htmlInsert: false
+                    });
+                    returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                        resource_code : "authority_emp_detail",
+                        btnHtml :"<a class=\"ui-button marginLeft\" href=\"javascript:void(0);\" onclick=\"viewPage('"+rawObject.id+"','"+rawObject.identityId+"')\">详请</a>",
+                        htmlInsert: false
+                    });
+
+                    /*按钮权限end*/
+
+                    /* returnValue += '<span class="oper-separator"></span>';
+                    if(rawObject.isenable=="1"){
+                        returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="isenable('+rawObject.id+',\'0\')">';
+                        returnValue += '禁用</a>';
+                    }else if(rawObject.isenable=="0"){
+                        returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="isenable('+rawObject.id+',\'1\')">';
+                        returnValue += '启用</a>';
+                    }*/
+                   /* returnValue += '<span class="oper-separator"></span>';
+                    returnValue += '<a class="ui-button wid100 " href="javascript:void(0);" onclick="updatePasswordById('+rawObject.gxqptEmpId+')">';
+                    returnValue += '密码修改</a>';*/
+
+                   /*按钮权限开始*/
+                    returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                        resource_code : "authority_emp_updatePassword",
+                        btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button wid100 \" href=\"javascript:void(0);\" onclick=\"updatePasswordById('"+rawObject.gxqptEmpId+"')\">密码修改</a>",
+                        htmlInsert: false
+                    });
+                   /*按钮权限end*/
+
+                    /*根据定窑新业务需求，在创建emp是创建并绑定对应的user以及登录相关信息，不再需要用户绑定*/
+                    /*returnValue += '<span class="oper-separator"></span>';
+                    returnValue += '<a class="ui-button wid100" href="javascript:void(0);" onclick="bindUser('+rawObject.id+')">';
+                    returnValue += '用户绑定</a>';*/
+
+                   /* returnValue += '<span class="oper-separator"></span>';
+                    returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="bindUserView('+rawObject.gxqptEmpId+')">';
+                    returnValue += '绑定详情</a>';*/
+
+                    /*按钮权限开始*/
+                    returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                        resource_code : "authority_emp_bindDetail",
+                        btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button\" href=\"javascript:void(0);\" onclick=\"bindUserView('"+rawObject.gxqptEmpId+"')\">绑定详情</a>",
+                        htmlInsert: false
+                    });
+                    /*按钮权限end*/
+                }else{
+                   /* returnValue += '<a class="ui-button" style="display: inline-block; width: 100%; text-align: center; " href="javascript:void(0);" onclick="viewPage('+rawObject.id+')">';
+                    returnValue += '详请</a>';*/
+
+                    /*按钮权限开始*/
+                    returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                        resource_code : "authority_emp_detail",
+                        btnHtml :"<a class=\"ui-button\" style=\"display: inline-block; width: 100%; text-align: center; \" href=\"javascript:void(0);\" onclick=\"viewPage('"+rawObject+"')\">详情</a>",
+                        htmlInsert: false
+                    });
+                    /*按钮权限end*/
+                }
+		        return returnValue;
+		    }
+            /* 删除 */
+            function delect(id){
+                parent.layer.confirm("您确定要删除该人员吗？",{
+                    title:'温馨提示',
+                    shade: [0.4,'#000'],
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    dutiesDeleteById(id.toString());
+                });
+            }
+
+
+            /* 跳转新增页面 */
+            function createPage () {
+                parent.layer.open({
+                    id: 'create',
+                    type: 2,
+                    anim:6,
+                    title: '新增人员',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['80%', '80%'],
+                    content: "${_cp}/power/presonCreate?mainorgid="+mainorgid+"&maindeptid="+maindeptid+"&systemCode="+systemCode,
+                    btn: ['<span class="glyphicon glyphicon-ok"></span> 新增','<span class="glyphicon glyphicon-remove"></span> 取消'],
+                    yes: function (index, layero) {
+                        var html=layero.context;
+                        var Id=html.getElementById("create");
+                        var iframe=$(Id).find("iframe").attr("name");
+                        var rowData = parent[iframe].save(index);
+                    }
+                });
+            }
+		    /* 跳转编辑页面 */
+		    function editPage (id) {
+		    	parent.layer.open({
+		    	    id: 'edit',
+		    	    type: 2,
+		    	    anim:6,
+		    	    title: '编辑人员',
+		    	    maxmin: false, //开启最大化最小化按钮
+		    	    area: ['80%', '80%'],
+		    	    content: "${_cp}/power/presonEdit?id="+id+"&systemCode="+systemCode+"&mainorgid="+mainorgid+"&maindeptid="+maindeptid,
+		    	    btn: ['<span class="glyphicon glyphicon-ok"></span> 确认修改','<span class="glyphicon glyphicon-remove"></span> 取消'],
+		    	    yes: function (index, layero) {
+		    	        var html=layero.context;
+		    	        var Id=html.getElementById("edit");
+		    	        var iframe=$(Id).find("iframe").attr("name");
+		    	        var rowData = parent[iframe].save(index);
+		    	    }
+		    	});
+		    }
+		    /* 跳转用户绑定页面 */
+		    function bindUser (id) {
+		    	parent.layer.open({
+		    	    id: 'bindUser',
+		    	    type: 2,
+		    	    anim:6,
+		    	    title: '用户绑定',
+		    	    maxmin: false, //开启最大化最小化按钮
+		    	    area: ['810px', '85%'],
+		    	    content: "${_cp}/power/bindUser?id="+id+"&systemCode="+systemCode,
+		    	    btn: ['<span class="glyphicon glyphicon-ok"></span> 确认','<span class="glyphicon glyphicon-remove"></span> 取消'],
+		    	    yes: function (index, layero) {
+		    	        var html=layero.context;
+		    	        var Id=html.getElementById("bindUser");
+		    	        var iframe=$(Id).find("iframe").attr("name");
+		    	        var rowData = parent[iframe].save(index);
+		    	    }
+		    	});
+		    }
+		    /* 跳转用户绑定详情页面 */
+		    function bindUserView (id) {
+		    	parent.layer.open({
+		    	    id: 'bindUserView',
+		    	    type: 2,
+		    	    anim:6,
+		    	    title: '用户绑定详情',
+		    	    maxmin: false, //开启最大化最小化按钮
+		    	    area: ['720px', '360px'],
+		    	    content: "${_cp}/power/bindUserView?userId="+id,
+		    	    btn: ['<span class="glyphicon glyphicon-remove"></span> 关闭'],
+		    	});
+		    }
+		    /* 跳转详情页面 */
+		    function viewPage (id,identityId) {
+		    	parent.layer.open({
+		    	    id: 'edit',
+		    	    type: 2,
+		    	    anim:6,
+		    	    title: '人员详情',
+		    	    maxmin: false, //开启最大化最小化按钮
+		    	    area: ['80%', '80%'],
+		    	    content: "${_cp}/power/presonView?id="+id+"&systemCode="+systemCode+"&identityId="+identityId,
+		    	    btn: ['<span class="glyphicon glyphicon-remove"></span> 关闭'],
+		    	});
+		    }
+		    /* 修改启用状态 */
+		    function isenable(id,isenable){
+                var gxqptDutiesDTO ={
+                    id:id.toString(),
+					isenable:isenable
+				};
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: "${_gate_url}/api/admin/emp/updateById",
+                    data:JSON.stringify(gxqptDutiesDTO),
+                    success:function(rows){
+                        if (rows.data){
+                            parent.home.reloadJqgrid();
+                            parent.layer.msg("编辑启用状态成功！",{icon:6,time:1000});
+                            parent.layer.close(index);
+                        }else{
+                            parent.layer.msg("编辑启用状态出错，请重试！",{time:1000});
+                        }
+                    }
+                });
+			};
+		    /* 跳转密码修改页面 */
+		    function updatePasswordById (id) {
+		    	parent.layer.open({
+		    	    id: 'updatePassword',
+		    	    type: 2,
+		    	    anim:6,
+		    	    title: '修改密码',
+		    	    maxmin: false, //开启最大化最小化按钮
+		    	    area: ['390px', '210px'],
+		    	    content: "${_cp}/power/updatePassword?id="+id,
+		    	    btn: ['<span class="glyphicon glyphicon-ok"></span> 确认','<span class="glyphicon glyphicon-remove"></span> 关闭'],
+		    	    yes: function (index, layero) {
+		    	        var html=layero.context;
+		    	        var Id=html.getElementById("updatePassword");
+		    	        var iframe=$(Id).find("iframe").attr("name");
+		    	        var rowData = parent[iframe].save(index);
+		    	    }
+		    	});
+		    };
+            /* 删除人员 */
+            function dutiesDeleteById(id){
+                ajaxHengyun({
+                    type:"GET",
+                    url: "${_gate_url}/api/admin/emp/removeById",
+                    data:{id:id},
+                    success:function(rows){
+                        if(rows.data){
+                            parent.home.reloadJqgrid();
+                            parent.layer.msg("删除成功！",{icon: 6,time:1000});
+                        }else{
+                            parent.layer.msg("删除失败，请稍后重试！",{time:1000});
+                        }
+                    }
+                });
+            }
+            /* 模板下载 */
+            function downloadTemplet(){
+				// window.open("${_gate_url}/api/admin/emp/downloadTemplet");
+				window.open("${_static}/templet/人员信息导入模板.xls");
+			}
+
+
+            $(".btnIn").click(function(){
+                $("#filePicker1 div > label").click();
+            });
+            //$(".btnOutFail").hide();
+            /* 附件上传 begin */
+            loadFile();
+            function loadFile() {//alert(mainorgid);
+                fileUpload1 = new FileUpload({
+                    "filePicker" : "filePicker1",
+                    "dndArea" : "dndArea1",
+                    "uploader" : "uploader1",
+                    "jxButton" : "jxButton1",
+                    "busType" : "b_lxmb_pjzb",
+                    "tipMsg":"只能上传.xls后缀的目标文件",
+                    "orgid": mainorgid,
+                    "deptid": maindeptid,
+                    "systemCode": systemCode,
+                });
+            }
+            var FileList = new Array();
+            function successUpload(json) {
+                reloadJqgrid();
+                var msg;
+                if(json.errmsg=='ok'){
+                    msg = json.data;
+                }else if(json.errcode==56033 || json.errcode==56045||json.errcode==56002
+                    || json.errcode==56046||json.errcode==56047){
+                    msg = json.errmsg;
+                }else{
+                    if(json.errcode==56008|| json.errcode==56011
+                        || json.errcode==56010|| json.errcode==56007){
+                        msg = "请选择某个单位对应的部门进行导入";
+                    }
+                }
+                fileUpload1 = new FileUpload({
+                    "filePicker" : "filePicker1",
+                    "dndArea" : "dndArea1",
+                    "uploader" : "uploader1",
+                    "jxButton" : "jxButton1",
+                    "busType" : "b_lxmb_pjzb",
+                    "tipMsg":"只能上传.xls后缀的目标文件",
+                    "orgid": mainorgid,
+                    "deptid": maindeptid,
+                    "systemCode": systemCode,
+                });
+                parent.layer.alert(msg);
+            }
+            //查询
+            $(".search-button").click(function () {
+                var name = $("#name").val();
+                var isenable = $("#isenable").val();
+                var nickname = $("#nickname").val();
+                $("#list").setGridParam({
+                    postData: {pageNo:1,pageSize:20,
+                        data: {
+                            systemCode: systemCode, mainorgid: mainorgid, maindeptid: maindeptid,
+                            name:name,isenable:isenable,nickname:nickname
+                        }
+                    }
+                }).trigger("reloadGrid");
+            });
+            /*新增身份*/
+            function createIdentity (id) {
+                parent.layer.open({
+                    id: 'createIdentity',
+                    type: 2,
+                    anim:6,
+                    title: '新增身份',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['80%', '80%'],
+                    content: "${_cp}/power/createIdentity?mainorgid="+mainorgid+"&maindeptid="+maindeptid+"&systemCode="+systemCode+"&id="+id,
+                    btn: ['<span class="glyphicon glyphicon-ok"></span> 新增','<span class="glyphicon glyphicon-remove"></span> 取消'],
+                    yes: function (index, layero) {
+                        var html=layero.context;
+                        var Id=html.getElementById("createIdentity");
+                        var iframe=$(Id).find("iframe").attr("name");
+                        var rowData = parent[iframe].save(index);
+                    }
+                });
+            }
+            /*身份设定*/
+            function settingIdentity(id){
+                parent.layer.open({
+                    id: 'settingIdentity',
+                    type: 2,
+                    anim:6,
+                    title: '身份设定',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['1500px', '85%'],
+                    content: "${_cp}/power/settingIdentity?id="+id+"&systemCode="+systemCode,
+                });
+            }
+
+            /*导出*/
+            $(".btnOut").click(function(){
+                if(ids.length==0){
+                    parent.layer.msg("至少选择一条数据！", {icon: 6, time: 1000});
+                    return;
+                }
+
+                var userId ='';
+                for(var i=0;i<ids.length;i++){
+                    userId+=ids[i]+",";
+                }
+                if(userId!=''){
+                    userId = userId.substring(0,userId.length-1)
+                }
+                window.open("${_gate_url}/api/admin/emp/downloadEmpList?userId="+userId+"&orgId="+mainorgid+"&deptId="+maindeptid);
+            });
+
+            /*禁用*/
+            $(".btn-disable").click(function(){
+                if(ids.length==0){
+                    parent.layer.msg("至少选择一条数据！", {icon: 6, time: 1000});
+                    return;
+                }
+                ajaxHengyun({
+                    type:'POST',
+                    url:'${_gate_url}/api/admin/emp/disable',
+                    data:{ids:ids},
+                    success:function (res) {
+                        if(res.errcode==0){
+                            reloadJqgrid();
+                            parent.layer.msg("禁用成功！", {icon: 6, time: 1000});
+                        }else{
+                            parent.layer.msg("禁用失败！", {time: 1000});
+                        }
+                    }
+                })
+            });
+
+            /*启用*/
+            $(".btn-ennable").click(function(){
+                if(ids.length==0){
+                    parent.layer.msg("至少选择一条数据！", {icon: 6, time: 1000});
+                    return;
+                }
+                ajaxHengyun({
+                    type:'POST',
+                    url:'${_gate_url}/api/admin/emp/ennable',
+                    data:{ids:ids},
+                    success:function (res) {
+                        if(res.errcode==0){
+                            reloadJqgrid();
+                            parent.layer.msg("启用成功！", {icon: 6, time: 1000});
+                        }else{
+                            parent.layer.msg("启用失败！", {time: 1000});
+                        }
+                    }
+                })
+            });
+		</script>
+	</body>
+</html>

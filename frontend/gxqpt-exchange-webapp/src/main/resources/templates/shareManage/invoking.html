@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<ul class="navsecond clearfix">
+							<li class="pull-left"><a href="${_cp}/module/shareMagApplyList">共享申请</a></li>
+							<li class="pull-left"><a class="active" href="${_cp}/module/shareMagApiList">API管理</a></li>
+							<li class="pull-left"><a href="${_cp}/module/shareMagDemandList">需求申请</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="row marginTop">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>API管理</span> &gt; <span class="page-title-scend">调用详情</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="main_container row">
+					<form action="" class="search-form" autocomplete="off">
+						<ul class="clearfix">
+							<li class="pull-left">
+								<label class="control-label">调用单位：</label>
+                            	<input name="" class="" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">调用时间：</label>
+                            	<input name="" class="" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<button type="button" class="btn btn-primary search-button">
+                            		<span class="glyphicon glyphicon-search"></span> 查询
+                                </button>
+							</li>
+						</ul>
+                    </form>
+					<table class="default-table tab-title-top">
+						<thead>
+							<tr>
+								<th>调用单位 </th>
+								<th>单位标识</th>
+								<th>调用时间</th>
+								<th>交换数据量</th>
+								<th>调用时长</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="text-center">
+						<ul class="pagination" id="pagination" ></ul>
+						<p class="pull-right currentPage">当前第<i id="totalPages" class="colorBlue"></i>页/共<i class="colorBlue">10</i>页</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$.jqPaginator('#pagination', {
+		        totalPages: 10,
+		        visiblePages: 6,
+		        currentPage: 1,
+		        first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
+		        prev: '<li class="prev"><a href="javascript:;">前一页</a></li>',
+		        next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
+	    		last: '<li class="last"><a href="javascript:void(0);">尾页</a></li>',
+		        page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+		        onPageChange: function (num, type) {
+		            $('#totalPages').text(num);
+		        }
+		    });
+		    function dealPage(){//处理
+				parent.layer.open({
+                    id: 'dealPage',
+                    type: 2,
+                    anim:6,
+                    title: 'API异常处理',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['600px', '500px'],
+                    shade: [0.9, '#000'],
+                    content: "../shareManage/dealPage.html",
+                    btn: ['提交','取消'],
+                    yes: function (index, layero) {
+                        var html=layero.context;
+                        var Id=html.getElementById("dealPage");
+                        var iframe=$(Id).find("iframe").attr("name");
+                        var rowData = parent[iframe].save(index);
+                    },
+                });
+			}
+		</script>
+	</body>
+</html>

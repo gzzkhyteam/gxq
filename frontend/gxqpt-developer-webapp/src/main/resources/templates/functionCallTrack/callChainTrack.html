@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>应用服务管理 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/jqueryPagination/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/trace.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+	
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                功能调用跟踪 > <span class="active">调用链追踪</span>
+            </div>
+            <a class="button-icon pull-right" onclick="history.back()">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller">
+            <div class="row" id="trace-container">
+                <div id="timeLabel" class="span">
+                    <div class="handle">Services</div>
+                    <div class="duration-container">
+                        <div class="time-marker time-marker-0"></div>
+                        <div class="time-marker time-marker-1"></div>
+                        <div class="time-marker time-marker-2"></div>
+                        <div class="time-marker time-marker-3"></div>
+                        <div class="time-marker time-marker-4"></div>
+                        <div class="time-marker time-marker-5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/jqueryPagination/js/pagination.min.js"></script>
+<script type="text/javascript">
+    var pageType = "functionCallTrack";
+</script>
+</body>
+<script type="text/javascript">
+    app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http) {
+        //获取调用链列表
+        $scope.callChainList = function(currPage,pageSize) {
+            $http.get('${_gate_url}/api/zipkin/ext/trace/${traceId}',{
+                
+                headers: getHeaders(),
+            }).success(function (res) {
+            	
+                $scope.callChainList = res;
+                var rootTree = builderTree(res);
+                
+                var html = builderHtml(rootTree,0);
+                //alert(html)
+                $("#trace-container").append(html);
+                
+            })
+        }
+        $scope.callChainList();
+    })
+    
+    function builderTree(nodes){
+    	
+    	if(nodes == null || nodes.length < 2){
+    		return nodes;
+    	}
+    	
+    	var root = findRoot(nodes);
+    	builderTrees(nodes,root);
+    	return root;
+    }
+    
+    function findRoot(nodes){
+    	
+
+    	for(var i = 0;i<nodes.length;i++){
+    		
+    		if(nodes[i].id == nodes[i].traceId){
+    			return nodes[i];
+    		}
+    	}
+    }
+    
+    function builderTrees(nodes,node){
+    	
+    	if(node == null){
+    		return ;
+    	}
+    	var childrens = [];
+        for(var i = 0;i<nodes.length;i++){
+    		
+    		if(node.id == nodes[i]["parentId"]){
+    			childrens.push(nodes[i]);
+    			builderTrees(nodes,nodes[i]);
+    		}
+    	}
+        node["childrens"] = childrens;
+    }
+    
+    function builderHtml(node,depth){
+    	
+        if(node == null){
+        	return "";
+        }
+        var html = builderHtmlContent(node,depth);
+        if(node["childrens"] && node["childrens"].length > 0){
+
+        	
+        	for(var i = 0;i<node["childrens"].length;i++){
+        		html += builderHtml(node["childrens"][i],depth+1);
+        	}
+        }
+        return html;
+    }
+    
+    function builderHtmlContent(node,depth){
+    	var html = '<div id="e257d156d856c64d" style="margin-left: '+depth*2+'em;display:block" class="span service-span depth-'+depth*2+' highlight" data-keys="id,traceId,parentId,spanName,serviceNames,serviceName,durationStr,duration" data-id="'+node.id+'" data-trace-id="'+node.traceId+'" data-parent-id="'+node["parentId"]+'" data-span-name="http:/standard/analysis/classify" data-service-name="appid-gate" data-service-names="appid-gate" data-duration-str="'+node.timestamp+'" data-duration="'+node.duration+'" data-children="" data-error-type="none" style="display: block;">'
+			            +'<div class="handle">'
+			            +'<div class="service-name" style="margin-left: 20px">';
+			            if(depth == 0){
+			            	html +='<span class="expander" >-</span>'
+			            }
+			            html +=getServiceName(node)
+			            +'</div>'
+			            +'</div>'
+			
+			            +'<div class="duration-container">'
+			            +'<div class="time-marker time-marker-0">.</div>'
+			            +'<div class="time-marker time-marker-1">.</div>'
+			            +'<div class="time-marker time-marker-2">.</div>'
+			            +'<div class="time-marker time-marker-3">.</div>'
+			            +'<div class="time-marker time-marker-4">.</div>'
+			            +'<div class="time-marker time-marker-5">.</div>'
+				
+			            +'<div class="duration" style="left: 0.06272004647685529%; width: 0.1%">'
+			            +node.duration/100000+'s: '+node["name"]
+			            +' <div class="annotation core" style="left: 0%; width: 8px" title="Client Send" data-keys="endpoint,value,timestamp,relativeTime,serviceName" data-endpoint="192.168.1.204:10003 (appid-gate)" data-value="Client Send" data-timestamp="1524721364446000" data-relative-time="316.172s" data-service-name="appid-gate"></div>'
+			            +' <div class="annotation core" style="left: 100%; width: 8px" title="Client Receive" data-keys="endpoint,value,timestamp,relativeTime,serviceName" data-endpoint="192.168.1.204:10003 (appid-gate)" data-value="Client Receive" data-timestamp="1524721364452000" data-relative-time="316.178s" data-service-name="appid-gate"></div>'
+			            +'</div>'
+			            +' </div>'
+			
+			            +'<div class="binary-annotation" data-keys="key,value,type" data-key="http.method" data-value="POST" data-type=""></div>'
+			            +'<div class="binary-annotation" data-keys="key,value,type" data-key="http.path" data-value="/analysis/classify" data-type=""></div>'
+			            +'<div class="binary-annotation" data-keys="key,value,type" data-key="http.status_code" data-value="500" data-type=""></div>'
+			            +'<div class="binary-annotation" data-keys="key,value,type" data-key="http.url" data-value="/analysis/classify" data-type=""></div>'
+			            +'<div class="binary-annotation" data-keys="key,value,type" data-key="Local Component" data-value="zuul" data-type=""></div>'
+			            +'<div class="binary-annotation" data-keys="key,value,type" data-key="spring.instance_id" data-value="main-01:gxqpt-gate-server:10003" data-type=""></div>'
+			            +'<div class="binary-annotation" data-keys="key,value,type" data-key="Local Address" data-value="192.168.1.204:10003 (appid-gate)" data-type=""></div>'
+			            +'</div>';
+			 return html;
+    }
+    
+
+    function getServiceName(node){
+    	if(!node["annotations"]){
+    		return "-";
+    	}
+    	//这里若有生产者端，则展示生产者的serviceName
+    	for(var i in node["annotations"]){
+    		if(node["annotations"][i].value == "ss" || node["annotations"][i].value == "sr"){
+    			return node["annotations"][i].endpoint.serviceName;
+    		}
+    	}
+    	return node["annotations"][0].endpoint.serviceName;
+    }
+    
+</script>
+</html>

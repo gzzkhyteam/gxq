@@ -1,0 +1,364 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/webuploader.css">
+    <style>
+        .file {
+            filter: alpha(opacity:0);
+            opacity: 0;
+            width: 0px;
+        }
+        input[type="file"]{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12" style="margin-top:30px;">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline" ng-app="dict" ng-controller="controller">
+                        <form id="dataForm" action="" method="post" autocomplete="off">
+                            <table class="table default-table table-title-left">
+                                <input type="hidden" id="id" name="id" value="${id}">
+                                <input type="hidden" id="modularCategorys" name="modularCategorys">
+                                <input type="hidden" id="modularTags" name="modularTags">
+                                <input type="hidden" id="createCompanyId" name="createCompanyId">
+                                <tbody>
+                                <tr>
+                                    <th width="130"><sub class="required">*</sub>仓库名称</th>
+                                    <td>
+                                        <input type="hidden" id="repName" class="form-control inp-form" name="repName" readonly>
+                                        <span class="inp-form" id="repNameSpan"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="130"><sub class="required">*</sub>groupId</th>
+                                    <td>
+                                        <input type="hidden" id="groupId" class="form-control inp-form" name="groupId" readonly>
+                                        <span class="inp-form" id="groupIdSpan"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="130"><sub class="required">*</sub>artifactId</th>
+                                    <td>
+                                        <input type="hidden" id="artifactId" class="form-control inp-form" name="artifactId" readonly>
+                                        <span class="inp-form" id="artifactIdSpan"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="130"><sub class="required">*</sub>模块名称</th>
+                                    <td>
+                                        <input id="modularName" class="form-control inp-form" name="modularName"
+                                               dataType="s1-64" nullmsg="模块名称不能为空！"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Categories</th>
+                                    <td id="modularCategory">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="130"><sub class="required">*</sub>版本号</th>
+                                    <td>
+                                        <input id="version" class="form-control inp-form" name="version"
+                                               dataType="/^[0-9][0-9\.]{1,18}[0-9]$/" errormsg="3-20位数字和. ,首末位字符为数字！"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Tags</th>
+                                    <td id="modularTag">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><sub class="required">*</sub>模块描述</th>
+                                    <td style="padding: 0px;">
+                                            <textarea id="description" rows="6" name="description"  class="form-control textarea-form"
+                                                      style="width: 100%;border: none;" dataType="*3-500"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="130"><sub class="required">*</sub>class</th>
+                                    <td id="classifierjar">
+                                        <input type="file" id="file1" name="file" accept=".jar" dataType="/^[^\u4e00-\u9fa5]+$/"
+                                               errormsg="文件名称不能包含中文" nullmsg="请选择上传文件" onchange="classifierFun(this)"/>
+                                        <input type="hidden" name="classifier" id="classifier"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="130">源码</th>
+                                    <td id="sources">
+                                        <input type="file" id="file2" name="file" accept=".jar" onchange="checkFile(this)"
+                                               errormsg="文件名称不能包含中文"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="130">API文档</th>
+                                    <td id="doc">
+                                        <input type="file" id="file3" name="file" accept=".jar" onchange="checkFile(this)"
+                                               errormsg="文件名称不能包含中文"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="130">帮助文档</th>
+                                    <td id="help">
+                                        <input type="file" id="file4" name="file" accept=".jar" onchange="checkFile(this)"
+                                               errormsg="文件名称不能包含中文"/>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn-submit hidden"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript" src="${_static}/js/com_base.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+<script type="text/javascript">
+    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/modular/modular/update",
+        },"#dataForm",{
+            attrName:"name",
+            prefix:"",
+            suffix:"",
+        });
+    })
+
+    var dict = angular.module('dict', []);
+    dict.controller('controller', function ($scope,$http,token) {
+        var urlPrev ='${_gate_url}';
+        $scope.submit = function () {
+            $('.btn-submit').click();
+        };
+        $scope.save = function () {
+            saveObj();
+        }
+    }).service('token',function () {
+        this.token = function () {
+            return getToken();
+        }
+    });
+    /* 获取模块信息 */
+    var id = "${id}";
+    var modularCategory = "";
+    var modularTag = "";
+    ajaxHengyun({
+        type: "GET",
+        async: false,
+        url: "${_gate_url}/api/modular/modular/get",
+        datatype: 'json',
+        data: {id: id},
+        success: function (rows) {
+            if (rows.data) {
+                $("#modularName").val(rows.data.modularName);//模块名称
+                modularCategory = rows.data.mclist;//模块分类
+                modularTag = rows.data.mtlist;// 模块标签
+                $("#description").val(rows.data.description);//模块描述
+                $("#repName").val(rows.data.repName);//仓库名称
+                $("#groupId").val(rows.data.groupId);//groupId
+                $("#artifactId").val(rows.data.artifactId);//artifactId
+                $("#repNameSpan").text(rows.data.repName);//仓库名称
+                $("#groupIdSpan").text(rows.data.groupId);//groupId
+                $("#artifactIdSpan").text(rows.data.artifactId);//artifactId
+                $("#createCompanyId").val(rows.data.createCompanyId);//createCompanyId
+                $("#version").val(rows.data.version);//createCompanyId
+                if (rows.data.files) {
+                    rows.data.files.forEach(function (value, index) {
+                        var html = '<a href="' + value.filePath + '" target="_blank">下载</a>';
+                        if (value.classifier == '') {
+                            $("#classifierjar").append(html);
+                            $('#classifier').val();
+                        } else {
+                            $("#" + value.classifier).append(html);
+                        }
+                    })
+                }
+            }
+        }
+    });
+    //获取分类
+    modularCategorySelect();
+
+    function modularCategorySelect() {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            url: "${_gate_url}/api/modular/category/findCategoryDef",
+            datatype: 'json',
+            success: function (rows) {
+                if (rows.data) {
+                    var html = "";
+                    rows.data.forEach(function (value, index) {
+                        var flag = false;
+                        for (var i = 0; i < modularCategory.length; i++) {
+                            if (value.id == modularCategory[i].id) {
+                                html += "<input class=\"modularCategory\" type=\"checkbox\" name=\"modularCategory\" checked='checked' value=\"" + value.id + "\">" + value.name + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                flag = true;
+                            }
+                        }
+                        if (!flag) {
+                            html += "<input class=\"modularCategory\" type=\"checkbox\" name=\"modularCategory\" value=\"" + value.id + "\">" + value.name + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                        }
+                    });
+                    $("#modularCategory").html(html);
+                }
+            }
+        });
+    }
+    //获取文件类型后缀
+    function classifierFun(el){
+        var file=$("#file1").val();
+        var val = file.split(".").splice(-1);
+        if(val){
+            $("#classifier").val(val);
+        }
+        checkFile(el);
+    }
+    //获取标签
+    modularTagSelect();
+
+    function modularTagSelect() {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            url: "${_gate_url}/api/modular/tag/findTagDef",
+            datatype: 'json',
+            success: function (rows) {
+                if (rows.data) {
+                    var html = "";
+                    rows.data.forEach(function (value, index) {
+                        var flag = false;
+                        for (var i = 0; i < modularTag.length; i++) {
+                            if (value.id == modularTag[i].id) {
+                                html += "<input class=\"modularTag\" type=\"checkbox\" name=\"modularTag\" checked='checked' value=\"" + value.id + "\">" + value.name + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                flag = true;
+                            }
+                        }
+                        if (!flag) {
+                            html += "<input class=\"modularTag\" type=\"checkbox\" name=\"modularTag\" value=\"" + value.id + "\">" + value.name + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                        }
+                    });
+                    $("#modularTag").html(html);
+                }
+            }
+        });
+    }
+
+    //获取checkbox的选中项
+    function getCheckedVals(proName) {
+        var str = "";
+        if ($("input:checkbox[name=" + proName + "]:checked").val() != undefined) {
+            var i = 0;
+            $("input:checkbox[name=" + proName + "]:checked").each(function () {
+                if (i == 0) {
+                    str = $(this).val();
+                    i++;
+                } else {
+                    str = str + "," + $(this).val();
+                }
+            })
+        }
+        return str;
+    }
+
+    var index;
+
+    function save(num) {
+        var modularCategorys = getCheckedVals("modularCategory");
+        var modularTags = getCheckedVals("modularTag");
+
+        $("#modularCategorys").val(modularCategorys);
+        $("#modularTags").val(modularTags);
+        index = num;
+        $('.btn-submit').click();
+    }
+
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        ignoreHidden: true,
+        showAllError: true,
+        checkpassed: function () {
+            var appElement = document.querySelector('[ng-controller=controller]');
+            var $scope = angular.element(appElement).scope();
+            $scope.save();
+        }
+    });
+
+    /*提交*/
+    function saveObj() {
+
+        // var data = $("#dataForm").serializeJSON();
+        var form = new FormData(document.getElementById("dataForm"));
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            url: "${_gate_url}/api/modular/modular/update",
+            data: form,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (rows) {
+                if (rows.data) {
+                    parent.home.getModularList();
+                    parent.layer.msg("更新模块成功！", {icon: 6, time: 2000});
+                    parent.layer.close(index);
+                } else {
+                    parent.layer.msg(rows.errmsg, {icon: 5, time: 2000});
+                }
+            }
+        });
+    }
+    // 文件格式校验
+    function checkFile(el){
+        var files = el.files;  //获取选择的文件对象
+        var allowUpload = true; //经过校验之后是否允许上传
+        var errorMessage = "";  //校验文件之后，文件不符合要求的提示信息
+        for(var i=0; i< files.length; i++){
+            var ary1 =  files[i].name.split(".");
+            var length = ary1.length - 1;
+            var acceptVal = ary1[length];
+            if(acceptVal.toLowerCase() != "jar"){
+                errorMessage += "请上传jar类型的文件！";
+                allowUpload = false;
+            }
+        }
+        if(allowUpload != true){
+            el.outerHTML = el.outerHTML; //清空选择的文件
+            parent.layer.msg(errorMessage, {icon: 6, time: 3000});
+        }
+    }
+</script>
+</body>
+</html>

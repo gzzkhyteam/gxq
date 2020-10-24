@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/jqueryPagination/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                类型维护 > 功能类型维护 > <span class="active">列表</span>
+            </div>
+            <a href="${_cp}/module/functionTypeCreate" class="button-icon pull-right">
+                <img src="${_static}/images/add_icon.png"/> 新增功能类型
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+                <div class="main">
+                    <div class="table-box">
+                    <table class="table table-darck table-hover table-striped">
+                        <thead>
+                        <tr>
+                            <th width="50"></th>
+                            <th width="120">功能类型</th>
+                            <th width="140">功能类型编码</th>
+                            <th width="120">类型描述</th>
+                            <th width="120" class="text-center">涵盖功能数量</th>
+                            <th width="160" class="text-center">创建时间</th>
+                            <th width="120" class="text-center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="row in functionAllList">
+                            <td class="text-center">{{$index+1}}</td>
+                            <td>{{row.name}}</td>
+                            <td>{{row.code}}</td>
+                            <td>{{row.description}}</td>
+                            <td class="text-center">{{row.num}}</td>
+                            <td class="text-center">{{row.createTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                            <td class="text-center">
+                                <a href="${_cp}/module/functionTypeEdit?id={{row.id}}">修改</a>
+                                <!--<a href="javascript:" ng-click="remove(row.id)">删除</a>-->
+                                <a href="${_cp}/module/functionTypeView?id={{row.id}}">详情</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="functionAllList.length == 0" style="color:#f00;margin: 10px 30px;">没有数据</div>
+                    <div class="bottom-bar alignCenter" ng-if="functionAllList.length != 0">
+                        <div id="pagination_9"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqueryPagination/js/pagination.min.js"></script>
+<script>
+    var pageType={open:['typeManage'],act:['functionTypeList']};
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.getDeploy = function(currPage,pageSize) {
+            $http.post(urlPrev + '/dictionary/pageModuleType',{data:{name:$scope.functionType},pageNo:currPage || 1 ,pageSize:pageSize || 20},{
+                headers: getHeaders(),
+
+            }).success(function (res) {
+                $scope.functionAllList = res.data.list;
+                /*处理分页*/
+                $("#pagination_9").pagination({
+                    totalData: res.data.total,
+                    isShowTotalData: true,
+                    totalPage:res.data.pages,
+                    totalSize:res.data.total,
+                    pageSizeOpt: [
+                        {'value': 5, 'text': '5条/页'},
+                        {'value': 10, 'text': '10条/页'},
+                        {'value': 15, 'text': '15条/页'},
+                        {'value': 20, 'text': '20条/页','selected': true}
+                    ],
+                    callBack: function (currPage, pageSize) {
+                        $scope.getDeploy(currPage,pageSize);
+                    }
+                });
+            })
+        }
+        $scope.getDeploy();
+        $scope.remove = function(id) {
+            layer.confirm("您确定要删除吗？",{
+                title:'温馨提示',
+                shade: [0.4,'#000'],
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                $http.get(urlPrev + '/dictionary/deleteModuleType',{
+                    params:{
+                        id:id
+                    },
+                    headers:getHeaders(),
+                }).success(function (res) {
+                    if(res.errmsg=="ok"){
+                        layer.msg("删除成功！");
+                        $scope.getDeploy();
+                    }else{
+                        layer.msg(res.errmsg);
+                    }
+                });
+            });
+        }
+    }).service('token', function () {
+        this.getToken = function () {
+            return getToken();
+        }
+    })
+</script>
+</body>
+</html>

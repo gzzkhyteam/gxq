@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>FlexPaper</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css" media="screen">
+        html, body	{ height:100%; }
+        body { margin:0; padding:0; overflow:auto; }
+        #flashContent { display:none; }
+    </style>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/swfjs/js/flexpaper_flash.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+</head>
+<body>
+<div style="position:absolute;left:5px;top:5px;">
+    <a id="viewerPlaceHolder" style="width:820px;height:620px;display:block"></a>
+    <script type="text/javascript">
+        var id = '${id?c}';
+        ajaxHengyun({
+            type:"POST",
+            // async:false,
+            url: "${_gate_url}/api/file/p/swf/toSwf",
+            data: {id : id},
+            // datatype: "json",//必须添加，所有地方都一样
+            // contentType : 'application/json',   //必须添加，所有地方都一样
+            success:function(rows){
+                if (rows.errcode == 0){
+                    var swfFile = rows.data.swf;
+                    var fp = new FlexPaperViewer(
+                        '${_static}/js/swfjs/FlexPaperViewer',
+                        'viewerPlaceHolder', { config : {
+                                SwfFile :swfFile,
+                                Scale : 0.8,
+                                ZoomTransition : 'easeOut',
+                                ZoomTime : 0.5,
+                                ZoomInterval : 0.1,
+                                FitPageOnLoad : true,
+                                FitWidthOnLoad : true,
+                                FullScreenAsMaxWindow : false,
+                                ProgressiveLoading : false,
+                                MinZoomSize : 1,
+                                MaxZoomSize : 1.2,
+                                SearchMatchAll : false,
+                                InitViewMode : 'Portrait',
+                                PrintPaperAsBitmap : false,
+                                ViewModeToolsVisible : true,
+                                ZoomToolsVisible : true,
+                                NavToolsVisible : true,
+                                CursorToolsVisible : true,
+                                SearchToolsVisible : true,
+                                localeChain: 'en_US'
+                            }});
+                }
+            }
+        });
+    </script>
+</div>
+<!-- THE FOLLOWING CODE BLOCK CAN SAFELY BE REMOVED, IT IS ONLY PLACED HERE TO HELP YOU GET STARTED. -->
+</body>
+</html>

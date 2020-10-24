@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>渠道群组管理</title>
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/message/common.css" />
+	<link rel="stylesheet" type="text/css" href="${_static}/css/message/channel.css" />
+	<link rel="stylesheet" href="${_static}/css/core/module.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/message/drafts.css">
+	<style>
+		#right-box {
+			height: calc(100% - 45px);
+			border: 0;
+		}
+
+		.channel_grouptype {
+			width: 85% !important;
+			float: right !important;
+			border-bottom: 1px solid #ddd;
+			background: #eee;
+			height: auto;
+			font-size: 16px;
+			line-height: 40px;
+			color: #000;
+			padding-left: 10px;
+		}
+		@media screen and (max-device-width:1360px ) {
+			.list_oper{
+				margin-right: 0 !important;
+			}
+		}
+		.ui-jqgrid-hdiv .ui-jqgrid-htable .ui-th-div{
+			font-weight: bold;
+		}
+        #query-btns span{
+            height: auto;
+            line-height: 1;
+            padding: 9px 15px;
+        }
+	</style>
+</head>
+
+<body style="background: #ffffff;border: 1px solid #eee;padding: 2%;height: 98%;">
+<div class="draftsWrap">
+	<ul class="form-wrap">
+	<!--	<li>
+			<label for="">渠道类型：</label>
+			<input class="easyui-combobox" id="way_type">
+		</li>-->
+		<li>
+			<label for="">群组名称：</label>
+			<input type="text" id="groupName" class="dr-ipt">
+		</li>
+		<!--  
+		<li>
+			<label for="">渠道名称：</label>
+			<input type="text" id="channelName" class="dr-ipt">
+		</li>
+		-->
+		<li>
+			<label for="">创建时间：</label>
+			<input id="createTimeStart" name="createTimeStart" class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'#F{$dp.$D(\'createTimeEnd\')}'})" />
+			<span>至</span>
+			<input id="createTimeEnd" name="createTimeEnd" class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'createTimeStart\')}',startDate:'#F{$dp.$D(\'createTimeStart\',{d:+1})}'})" />
+		</li>
+		<li style="float: right;" class="list_oper">
+			<div class="btnbox" id="query-btns">
+				<span class="spancurrent" id="query" onclick="search()">查询</span>
+				<span onclick="createPage()" id="addBtn">新增</span>
+				<!--                <span>删除</span>-->
+			</div>
+		</li>
+		<div class="clearfix"></div>
+	</ul>
+	<div id="right-box" class="list-section">
+		<div class="grid-section">
+			<table id="list">
+			</table>
+			<div id="pager"></div>
+		</div>
+	</div>
+</div>
+
+<!-- 渠道详情 -->
+<div id="channel_check" class="panel-body panel-tabContent channel_check" style="display: none;position: relative;padding-top: 0;">
+	<form id="channel_checkContent" class="form-inline form-inline-two channel_checkContent" style="width: 100%;margin: 0;">
+		<div class="form-group" style="height: 40px;line-height:40px;border-bottom: 1px solid #ddd;">
+			<label for="recipient-name" class="control-label text-right" style="float: left;margin-left: 18%;color: #666;">&nbsp;群组名称   :   </label>
+			<span id="channel_groupName" style="width: 450px;float: left;margin-left: 15px;font-size: 16px;color: #000;" disabled="disabled"></span>
+		</div>
+		<div class="form-group " style="width: 68%;margin-left: 18%;margin-top: 30px;height: auto;">
+			<label for="recipient-name" class="control-label text-right" style="float: left;width: 15%;height: 180px;text-align: left;">&nbsp;包含渠道   :   </label>
+			<div class="qudaoBox1 channel" style="height:130px !important;">
+			</div>
+		</div>
+		<div class="form-group" style="margin-bottom: 20px;height:auto!important;width: 68%;margin-left: 18%;margin-top: 30px;">
+			<label for="recipient-name" class="control-label text-right fl" style="padding-left: 35px;">说明:</label>
+			<textarea name="" id="channel_groupDescript" cols="30" rows="10" style="width:450px;height:100px;margin-left: 17px;resize:none" disabled="disabled"></textarea>
+		</div>
+	</form>
+</div>
+
+</body>
+<script type="text/javascript" src="${_static}/js/jquery-1.8.0.js"></script>
+<script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/jquery.combobox.js"></script>
+<script>
+	$('.title_first',parent.document).text("渠道管理");
+	$(".title_second",parent.document).text("渠道群组管理>列表");
+    var tableObj = null; //jqgrid表对象
+    var arry = [];
+    Array.prototype.remove = function(from, to) {
+        var rest = this.slice((to || from) + 1 || this.length);
+        this.length = from < 0 ? this.length + from : from;
+        return this.push.apply(this, rest);
+    };
+    $(function() {
+        function unique1(array) {
+
+            var n = []; //一个新的临时数组
+            //遍历当前数组
+            for(var i = 0; i < array.length; i++) {
+                //如果当前数组的第i已经保存进了临时数组，那么跳过，
+                //否则把当前项push到临时数组里面
+                if(n.indexOf(array[i]) == -1) n.push(array[i]);
+            }
+            return n;
+
+        }
+        ajaxHengyun({
+            type: 'GET',
+            url: "${_gate_url}/api/msgs/channeltype/query",
+            dataType: "json",
+            contentType: "application/json",
+            cache: false,
+            success: function(res) {
+                res.data.unshift({
+                    name: '全部',
+                    id: ''
+                });
+            },
+        });
+    });
+    //获取文档列表
+    window.onload = function() {
+        getdocumentList();
+    };
+
+    function getdocumentList() {
+        var height = $("#right-box").height() - 115;
+        tableObj = $("#list").jqGrid({
+            mtype: 'post',
+            postData: {
+                pageNo: 1,
+                pageSize: 10
+            },
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function(postData) {
+            	if(postData.data){
+            		return JSON.stringify(postData);
+            	}else{
+            		var data = {
+			                pageNo: 1,
+			                pageSize: 10,
+			                data: {
+			                    name:"",
+			                    channel: "",
+			                    createTimeStart: "",
+			                    createTimeEnd: ""
+			                }
+			        }
+            		return JSON.stringify(data);            	
+            	}  
+            },
+            url: '${_gate_url}/api/msgs/channelgroup/query',
+            rowList: [10, 15, 20],
+            rowNum: 10,
+            sortname: 'id', //初始化的时候排序的字段
+            colNames: ['群组名称', '包含渠道', '说明', "创建时间", "操作"],
+            colModel: [{
+                name: 'name',
+                index: 'name'
+            }, {
+                name: 'channelNames',
+                index: 'channelNames'
+            }, {
+                name: 'explain',
+                index: 'explain',
+                formatter: formatterAct2 ,
+                width: '90'
+            }, {
+                name: 'createTime',
+                index: 'createTime',
+                width: '50'
+            }, {
+                name: 'act',
+                index: 'act',
+                title: false,
+                width: '50',
+                align: 'center',
+                formatter: formatterAct
+            }],
+            jsonReader: {
+                root: "data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            onPaging: function(pgButton) {
+                var pageNo = $(".ui-pg-input").val();
+                pageNo = parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total = parseInt(total);
+                if(pgButton == "next") {
+                    if(pageNo >= total) {
+                        return false;
+                    } else {
+                        pageNo += 1;
+                    }
+                } else if(pgButton == "prev") {
+                    if(pageNo > 1) {
+                        pageNo -= 1;
+                    } else {
+                        return false;
+                    }
+                } else if(pgButton == "last") {
+                    pageNo = total;
+                } else if(pgButton == "first") {
+                    pageNo = 1;
+                }
+                var pageSize = $(".ui-pg-selbox").val();
+                if(pageNo != 0) {
+                    $("#list").setGridParam({
+                        postData: {
+                            pageNo: pageNo,
+                            pageSize: pageSize
+                        }
+                    }).trigger("reloadGrid");
+                    return false;
+                }
+            },
+            pager: '#pager',
+            height: height
+        });
+    }
+    //上传时间
+    function formatterCreateTime(cellvalue, options, rawObject) {
+        Date.prototype.Format = function(fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if(/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for(var k in o)
+                if(new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+        return new Date(cellvalue).Format("yyyy-MM-dd hh:mm:ss");
+    }
+    //是否过期
+    function formatterIsEnable(cellvalue, options, rawObject) {
+        if(cellvalue == "true") {
+            return "在用";
+        } else {
+            return "过期";
+        }
+    }
+    //操作列
+    var id;
+    function formatterAct2(cellvalue, options, rawObject) {
+        if(null!=cellvalue)
+            return "<div style='overflow:hidden; text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2; '>"+cellvalue+"</div>"
+		else
+		    return "";
+    }
+    function formatterAct(cellvalue, options, rawObject) {
+        var returnValue = "";
+        id = rawObject.id;
+        if(rawObject.fileType == "doc" || rawObject.fileType == "docx" || rawObject.fileType == "txt" ||
+            rawObject.fileType == "xls" || rawObject.fileType == "xlsx" || rawObject.fileType == "pdf") {
+            returnValue += '<a class="ui-button" href="javascript:" onclick="viewPage(\'' + id + '\')">';
+            returnValue += '预览</a>';
+            returnValue += '<span class="oper-separator"></span>';
+        }
+        returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="xiangqing(\'' + id + '\')">';
+        returnValue += '详情</a>';
+        returnValue += '<span class="oper-separator"></span>';
+        returnValue += '<a class="ui-button" href="javascript:" onclick="editPage(\'' + id + '\')">';
+        returnValue += '编辑</a>';
+        returnValue += '<span class="oper-separator"></span>';
+        returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick="deletePage(\'' + id + '\')">';
+        returnValue += '删除</a>';
+        return returnValue;
+    }
+    //模糊查询
+    function search() {
+        var name = $('#groupName').val();//群组
+        var channel = $('#channelName').val();//渠道名称
+        var code = $('#code').val();
+        var classifyId = $("#classifyId").val();
+        var createUserName = $("#createUserName").val();
+        var createTimeStart = $("#createTimeStart").val();
+        if(createTimeStart != "") {
+            createTimeStart = createTimeStart + " 00:00:00";
+        }
+        var createTimeEnd = $("#createTimeEnd").val();
+        if(createTimeEnd != "") {
+            createTimeEnd = createTimeEnd + " 23:59:59";
+        };
+        var isEnable = $("#isEnable").val();
+        tableObj.setGridParam({
+            postData: {
+                pageNo: 1,
+                pageSize: 10,
+                data: {
+                    name:name||"",
+                    channel: channel||"",
+                    createTimeStart: createTimeStart,
+                    createTimeEnd: createTimeEnd
+                }
+            },
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function(postData) {
+                return JSON.stringify(postData);
+            }
+        }, true).trigger('reloadGrid');
+    }
+    //刷新表格
+    function reloadJqgrid() {
+        tableObj.setGridParam({
+            postData: {
+                pageNo: 1,
+                pageSize: 20,
+            }
+        }, true).trigger('reloadGrid');
+    }
+    /* 删除 */
+    function deletePage(id) {
+        parent.layer.confirm("您确定要删除吗？", {
+            title: '温馨提示',
+            shade: [0.4, '#000'],
+            btn: ['确定', '取消'] //按钮
+        }, function(value, index, elem) {
+            ajaxHengyun({
+                type: "POST",
+                url: "${_gate_url}/api/msgs/channelgroup/delete?id="+id,
+                success: function(rows) {
+                    if(rows.data) {
+                        parent.layer.msg("删除成功！", {
+                            icon: 6,
+                            time: 1000
+                        });
+                        parent.home.reloadJqgrid();
+                    } else {
+                        parent.layer.msg("删除失败，请稍后重试！", {
+                            time: 1000
+                        });
+                    }
+                }
+            });
+        }, function() {
+            closeLayer();
+        });
+    }
+    var newrowid;
+
+
+    function createPage() {
+        oLayer.init({
+            title: '创建渠道群组'
+        });
+    }
+    var initDom = $('#addEditModal').html();
+    var oLayer = {
+        init: function(opt) {
+            parent.layer.open({
+                type: 2,
+                title: opt.title,
+                offset:['22%','32%'],
+                area: ['50%', '70%'],
+                shadeClose: false,
+                content: '${_cp}/msgs/channelGroupCreate', //在sysNodeList是弹出对象id
+                end: function() {
+                    $('#addEditModal').html(initDom);
+                }
+            });
+        }
+    };
+
+    //编辑页面
+    function editPage(uid) {
+        var initDom1 = $('#editEditModal').html();
+        var url='${_cp}/msgs/channelGroupEdit?id='+uid;
+        parent.layer.open({
+            type: 2,
+            title:"编辑",
+            offset:['22%','32%'],
+            area: ['50%', '70%'],
+            shadeClose: false,
+            content:url, //在sysNodeList是弹出对象id
+            end: function() {
+                $('#addEditModal').html(initDom);
+            }
+        });
+    }
+
+    // 编辑
+    $(function() {
+        function unique1(array) {
+            var n = []; //一个新的临时数组
+            //遍历当前数组
+            for(var i = 0; i < array.length; i++) {
+                //如果当前数组的第i已经保存进了临时数组，那么跳过，
+                //否则把当前项push到临时数组里面
+                if(n.indexOf(array[i]) == -1) n.push(array[i]);
+            }
+            return n;
+
+        }
+    });
+    
+    function xiangqing(id) {
+        var url='${_cp}/msgs/channelGroupView?id='+id;
+        parent.layer.open({
+            type: 2,
+            title:"详情",
+            offset:['22%','32%'],
+            area: ['50%', '70%'],
+            shadeClose: false,
+            content:url, //在sysNodeList是弹出对象id
+            end: function() {
+            }
+        });
+
+    }
+    function ad1() {
+        ajaxHengyun({
+            type: "post",
+            url: "${_gate_url}/api/msgs/channeltype/querySelect",
+            contentType: "application/json",
+            cache: false,
+            success: function(res) {
+                //            console.log(res.data.list);
+                $(".channel_addType").last().combobox({
+                    disabled: false,
+                    editable: false, // 可编辑
+                    panelHeight: 'auto',
+                    valueField: 'id',
+                    textField: 'name',
+                    height: 34,
+                    width: 450,
+                    multiple: false, // 单选复选
+                    data: res.data.list,
+                    onSelect: function(data) {
+                        $(this).siblings(".qudao-checkBox").find(".checkbox-ul>li").remove();
+                        var type = data.name;
+                        var typeId = data.id;
+                        var _this = $(this);
+                        _this.attr("value", data.id)
+                        var _that = $(this).siblings(".qudao-checkBox").find(".checkbox-ul>.clearfix");
+                        if(arry.length > 0) {
+                            for(var i = 0, len = arry.length; i < len; i++) {
+                                if(arry[i] != type) {
+                                    arry.push(type);
+
+                                } else {
+                                    _this.next(".combo").find(".combo-text").val("");
+
+                                    alert("渠道类型不能重复选择！");
+                                    return false;
+                                }
+                            }
+                        } else {
+                            arry.push(type);
+                        }
+                        _this.next(".combo").find(".combo-text").attr("disabled", "disabled");
+                        _this.next(".combo").find(".combo-arrow").hide();
+
+                        ajaxHengyun({
+                            type: "post",
+                            url: "${_gate_url}/api/msgs/channel/getChannelByType",
+                            contentType: "application/x-www-form-urlencoded",
+                            data: {
+                                "typeId": typeId
+                            },
+                            success: function(data) {
+                                for(var i = 0; i < data.data.list.length; i++) {
+                                    _that.before(
+                                        '<li><input type="checkbox" class="qd-checkbox1" name="qdCheck" value=' + data.data.list[i].name + '>' + data.data.list[i].name + '</li>'
+                                    );
+                                    console.log(data.data.list[i].name)
+                                }
+
+                            }
+                        });
+                        //$(this).combobox('setValues',$(this).combobox('getValues'))
+                        //$(this).combobox('setTexts',$(this).combobox('getTexts'))
+                    },
+                    onLoadSuccess: function(data) {
+                        //                    console.log(data)
+                        /* $(this).combobox('setValues',"1");*/
+                    }
+                });
+            }
+        });
+    }
+
+
+
+
+</script>
+
+</html>
+
+
+
+

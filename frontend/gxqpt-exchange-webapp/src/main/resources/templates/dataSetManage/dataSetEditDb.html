@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>数据集管理</span> &gt; <span id="secondTil">数据集编辑</span> &gt; <span class="page-title-scend">数据集表结构维护</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+            </div>
+        </div>
+        <div class="view_container view_container_first row">
+            <div class="main_right pull-right">
+                <form id="dataForm" autocomplete="off">
+                    <div id="secondPage" class="secondPage minHeight360">
+                        <button type="button" class="btn btn-primary" onclick="create()">新增</button>
+                        <button type="button" class="btn btn-primary" onclick="deleteTr()">删除</button>
+                        <table id="databaseTab" class="table default-table tab-title-top">
+                            <thead>
+                            <tr>
+                                <th width="60">序号</th>
+                                <th>字段标识</th>
+                                <th>字段类型</th>
+                                <th>字段长度</th>
+                                <th>小数位</th>
+                                <th width="400">备注</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td colspan="6" class="text-center">暂无数据</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <!--<button type="button" class="btn btn-primary" onclick="openFlow()">查看流程</button>
+                        <button type="button" class="btn btn-primary" onclick="dataTypeView()">数据格式</button>-->
+                        <button type="button" class="btn btn-primary" onclick="history.back()">上一步</button>
+                        <button type="button" class="btn btn-primary btn-nextPage" onclick="save()">下一步</button>
+                        <button type="button" class="btn btn-primary" onclick="loadFirstPage()">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    function loadFirstPage(){
+        sessionStorage.setItem("secondTil","");
+        window.location.href='${_cp}/module/dataSetManageList?pageNo=${pageNo}';
+    };
+    function openFlow() {//查看流程
+        parent.layer.open({
+            id: 'applyDownload',
+            type: 2,
+            anim: 6,
+            title: '流程查看',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['820px', '450px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/dataSetFlow",
+            btn: ['关闭'],
+        });
+    }
+    function dataTypeView() {//数据格式查看
+        parent.layer.open({
+            id: 'dataTypeView',
+            type: 2,
+            anim: 6,
+            title: '数据格式查看',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['820px', '460px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/dataTypeView",
+            btn: ['关闭'],
+        });
+    }
+    function create() {//新增
+        if(setMode==1){
+            var inputCheckbox=$("#databaseTab tbody tr");
+            var fieldLists = [];
+            var filedStr = "";
+            inputCheckbox.each(function(index,value){
+                var fieldCode = $(value).find(".fieldCode").val();
+                fieldLists.push(fieldCode);
+            });
+            filedStr = fieldLists.join(",");
+            parent.layer.open({
+                id: 'create',
+                type: 2,
+                anim: 6,
+                title: '新增',
+                maxmin: false, //开启最大化最小化按钮
+                area: ['820px', '460px'],
+                shade: [0.9, '#000'],
+                content: "${_cp}/module/dataSetEditDbAdd?id="+setId+"&filedStr="+filedStr,
+                btn: ['确定','取消'],
+                yes: function (index, layero) {
+                    var html=layero.context;
+                    var Id=html.getElementById("create");
+                    var iframe=$(Id).find("iframe").attr("name");
+                    var rowData = parent[iframe].save(index);
+                },
+            });
+        }else if(setMode==2){
+            var trLength=$("#databaseTab tbody tr").length+1;
+            var html = "";
+            html+='<tr>';
+            html+='<td class="fieldId" data-id=""><input type="checkbox"/> <span>'+trLength+'</span></td>';
+            html+='<td><input type="text" class="form-control fieldCode" /></td>';
+            html+='<td><select class="form-control chosen-select fieldType">';
+            fieldTypeObj.forEach(function(value,index){
+                html+='<option value="'+value.dictName+'">'+value.dictName+'</option>';
+            });
+            html+='</select></td>';
+            html+='<td><input type="text" class="form-control precision"/></td>';
+            html+='<td><input type="text" class="form-control scale"/></td>';
+            html+='<td><input type="text" class="form-control fieldName"/></td>';
+            html+='</tr>';
+            $("#databaseTab tbody").append(html);
+            updateIformHeight();
+        }
+
+    }
+
+    function addTr(data){//新增返回数据
+        var html = "";
+        var trLength=$("#databaseTab tbody tr").length+1;
+        data.forEach(function(val,index){
+            val = dealElement(val,"");
+            html+='<tr>';
+            html+='<td class="fieldId" data-id="'+val.id+'"><input type="checkbox"/> <span>'+trLength+'</span></td>';
+            html+='<td><input type="text" class="form-control fieldCode" value="'+val.fieldCode+'"/></td>';
+            html+='<td><select class="form-control chosen-select fieldType">';
+            fieldTypeObj.forEach(function(value,index){
+                if(value.dictName==val.fieldType){
+                    html+='<option value="'+value.dictName+'" selected>'+value.dictName+'</option>';
+                }else{
+                    html+='<option value="'+value.dictName+'">'+value.dictName+'</option>';
+                };
+            });
+            html+='</select></td>';
+            html+='<td><input type="text" class="form-control precision" value="'+val.precision+'"/></td>';
+            html+='<td><input type="text" class="form-control scale" value="'+val.scale+'"/></td>';
+            html+='<td><input type="text" class="form-control fieldName" value="'+val.fieldName+'"/></td>';
+            html+='</tr>';
+            trLength+=1;
+        })
+        $("#databaseTab tbody").append(html);
+        updateIformHeight();
+    };
+
+    function deleteTr(){//删除
+        var inputCheckbox=$("#databaseTab tbody tr");
+        inputCheckbox.each(function(index,value){
+            var isChecked = $(value).find("input[type='checkbox']").prop("checked");
+            if(isChecked){
+                $(value).remove();
+            }
+        });
+        reloadSort();
+    }
+
+    function reloadSort(){//排序
+        var inputCheckbox=$("#databaseTab tbody tr");
+        inputCheckbox.each(function(index,value){
+            $($(value).find("span")[0]).text(index+1);
+        });
+    }
+
+    var fieldTypeObj , setMode, setId,tableCode;
+    getFieldType();
+    function getFieldType(){//获取数据类型
+        ajaxHengyun({
+            type: 'GET',
+            async:false,
+            url: '${_gate_url}/api/exchange/dataapi/api/findByDictCode',
+            data:{pId: "date_type"},
+            datatype: "json",
+            success: function (rows) {
+                if(rows.data){
+                    fieldTypeObj = rows.data;
+                }
+            }
+        });
+    }
+
+
+    function getTableField(){//获取表字段
+        ajaxHengyun({
+            type: "get",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/querySetElementField",
+            data: {setId:"${id}"},
+            success: function (rows) {
+                if (rows.data) {
+                    if(rows.data.fields.length==0){
+                        return false;
+                    };
+                    var html = "";
+                    setMode = rows.data.setMode;
+                    tableCode = rows.data.tableCode;
+                    setId = "${id}";
+                    rows.data.fields.forEach(function(val,index){
+                        val = dealElement(val,"");
+                        html+='<tr>';
+                        html+='<td class="fieldId" data-id="'+val.id+'"><input type="checkbox"/> <span>'+(index+1)+'</span></td>';
+                        html+='<td><input type="text" class="form-control fieldCode" value="'+val.fieldCode+'"/></td>';
+                        html+='<td><select class="form-control chosen-select fieldType">';
+                        fieldTypeObj.forEach(function(value,index){
+                            if(value.dictName==val.fieldType){
+                                html+='<option value="'+value.dictName+'" selected>'+value.dictName+'</option>';
+                            }else{
+                                html+='<option value="'+value.dictName+'">'+value.dictName+'</option>';
+                            };
+                        });
+                        html+='</select></td>';
+                        html+='<td><input type="text" class="form-control precision" value="'+val.precision+'"/></td>';
+                        html+='<td><input type="text" class="form-control scale" value="'+val.scale+'"/></td>';
+                        html+='<td><input type="text" class="form-control fieldName" value="'+val.fieldName+'"/></td>';
+                        html+='</tr>';
+                    })
+                    $("#databaseTab tbody").html(html);
+                    updateIformHeight();
+                }
+            }
+        });
+    };
+
+    //下一步
+    function save(){
+        var fieldLists=[];
+        var inputCheckbox=$("#databaseTab tbody tr");
+        inputCheckbox.each(function(index,value){
+            var id = $(value).find(".fieldId").attr("data-id");
+            var fieldCode = $(value).find(".fieldCode").val();
+            var fieldType = $(value).find(".fieldType").val();
+            var precision = $(value).find(".precision").val();
+            var scale = $(value).find(".scale").val();
+            var fieldName = $(value).find(".fieldName").val();
+            var obj = {
+                "fieldCode":fieldCode,
+                "fieldName":fieldName,
+                "fieldType": fieldType,
+                "id": id,
+                "precision": precision,
+                "scale": scale
+            }
+            fieldLists.push(obj);
+        });
+        var dataDTO={
+            id:"${id}",
+            editType:2,
+            resultFileName:fieldLists,
+            setMode:setMode,
+            tableCode:tableCode
+        };
+        
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url:  '${_gate_url}/api/exchange/set/createDatabaseDataSetSecond',
+            data:JSON.stringify(dataDTO),
+            success:function(rows){
+                if (rows.data){
+                    if(setMode==1){
+                        // window.location.href="${_cp}/module/dataSetEditDbRelation?id="+rows.data.id+"&tableCode="+rows.data.tableCode+"&dataSourcId="+rows.data.dbId+"&pageNo=${pageNo}";
+                        window.location.href="${_cp}/module/dataSetEditDataBaseFiled?id="+rows.data.id+"&tableCode="+rows.data.tableCode+"&dataSourcId="+rows.data.dbId+"&pageNo=${pageNo}";
+                    }else{
+                        window.location.href = "${_cp}/module/dataSetEditSql?id="+rows.data.id+"&pageNo=${pageNo}";
+                    }
+                }else{
+                    parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                }
+            }
+        });
+    };
+
+    //格式化对象中的值
+    function dealElement(obj,val){
+        if ( obj === null || obj === undefined || obj === "" ) return obj;
+        for ( var key in obj ){
+            if ( obj[key] == null){
+                obj[key]=val;
+            }
+        }
+        return obj;
+    }
+
+    getTableField();
+</script>
+</body>
+</html>

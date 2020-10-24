@@ -1,0 +1,488 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>降本提质</title>
+    <link rel="stylesheet" href="${_static}/v2/platform_bg/nui/css/nui.css"/>
+    <link rel="stylesheet" href="${_static}/v2/platform_bg/css/index.css"/>
+    <link rel="stylesheet" href="${_static}/v2/css_base/base.css"/>
+    <link rel="stylesheet" href="${_static}/v2/css_base/index.css"/>
+    <link rel="stylesheet" href="${_static}/v2/css_base/style.css"/>
+    <style type="text/css">
+        .block {
+            float: left;
+        }
+
+        .block-left {
+            width: 28%;
+        }
+
+        .block-mid {
+            width: 44%;
+        }
+
+        .block-right {
+            width: 28%;
+        }
+
+        .con-box {
+            margin-top: 30px;
+            height: 460px;
+        }
+
+        .charts-box {
+            margin: 0 18px;
+        }
+
+        .plot_title {
+            margin-left: 0 !important;
+        }
+
+        .table-head {
+            margin-top: 12px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="content">
+    <div id="index" class="section platform_bg" style="overflow: hidden;">
+        <div class="banner-img"></div>
+        <canvas id="canvas"></canvas>
+    </div>
+</div>
+<!-- 内容区-->
+<div class="py_big_con clearfix">
+    <div class="big_head">
+        <div class="nav">
+            <ul class="py_ul_l clearfix">
+                <!--<li>
+                    <a class="nav_left" href="${_cp}/module/v2/supervision">
+                        预警监管
+                    </a>
+                </li>
+                <li>
+                    <a class="nav_right" href="${_cp}/module/v2/operate">
+                        运维监控
+                    </a>
+                </li>-->
+                <li>
+                    <a class="nav_left" href="${_cp}/module/v2/share">
+                        共享交换
+                    </a>
+                </li>
+                <li>
+                    <a class="nav_right" href="${_cp}/module/v2/supervision">
+                        预警监管
+                    </a>
+                </li>
+            </ul>
+            <a href="javascript:void(0);" class="py_big_head clearfix"><img src="${_static}/v2/img/xuanz_05.png"></a>
+        </div>
+        <ul class="num-group">
+            <li class="num-item">
+                <div class="title">累计降本额</div>
+                <div class="icon_number" id="reduceCostTotal">
+                    <div class="unit">万</div>
+                </div>
+            </li>
+            <li class="num-item">
+                <div class="title">累计缩短工期</div>
+                <div class="icon_number" id="reduceTimeTotal">
+                    <div class="unit">人月</div>
+                </div>
+            </li>
+            <li class="num-item">
+                <div class="title">累计使用模块数</div>
+                <div class="icon_number" id="use_module">
+                    <div class="unit">次</div>
+                </div>
+            </li>
+            <li class="num-item">
+                <div class="title">累计调用服务数</div>
+                <div class="icon_number" id="use_service">
+                    <div class="unit">次</div>
+                </div>
+            </li>
+            <li class="num-item">
+                <div class="title">累计使用应用数</div>
+                <div class="icon_number" id="use_app">
+
+                    <div class="unit">次</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="main_box clearfix">
+        <div class="con-box">
+            <div class="width-25">
+                <div class="assembly_box">
+                    <div class="plot_title ml_27">
+                        <span>组件预估价值</span>
+                    </div>
+                    <div class="asse_bj">
+                        <div id="value" style="height: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="width-50" style="height: 100%;">
+                <div class="assembly_box width-50" style="height: 48%;">
+                    <div class="plot_title ml_27" style="margin-left: 98px !important;">
+                        <span>降本分析</span>
+                    </div>
+                    <div class="asse_bj">
+                        <div id="reduce" style="width: 100%;height: 100%;"></div>
+                    </div>
+                </div>
+                <div class="assembly_box width-50" style="height: 48%;">
+                    <div class="plot_title ml_27" style="margin-left: 98px !important;">
+                        <span>标准提质情况</span>
+                    </div>
+                    <div class="asse_bj">
+                        <div id="cost" style="height: 100%;"></div>
+                    </div>
+                </div>
+                <div class="assembly_box width-50" style="height: 48%;margin-top: 4%;">
+                    <div class="plot_title ml_27" style="margin-left: 98px !important;">
+                        <span>组件降本情况</span>
+                    </div>
+                    <div class="asse_bj">
+                        <div id="shorten" style="width: 100%;height: 100%;"></div>
+                    </div>
+                </div>
+                <div class="assembly_box width-50" style="height: 48%;margin-top: 4%;">
+                    <div class="plot_title ml_27" style="margin-left: 98px !important;">
+                        <span>组件增效情况</span>
+                    </div>
+                    <div class="asse_bj">
+                        <div id="time" style="height: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="width-25">
+                <div class="assembly_box" style="height: 100%;">
+                    <div class="plot_title ml_27">
+                        <span>已有降本案例</span>
+                    </div>
+                    <div class="asse_bj">
+                        <div id="trend" style="height: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="width-100" style="margin-top: 48px;height: 200px;">
+            <div class="width-40">
+                <div class="charts-box">
+                    <div class="plot_title ml_11">
+                        <span>降本情况</span>
+                    </div>
+                    <table class="table_list table-head" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th width="50">序号</th>
+                            <th width="200">名称</th>
+                            <th width="100">建设成本</th>
+                            <th width="100">使用成本</th>
+                            <th width="100">维护成本</th>
+                            <th width="100">降本合计</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <div class="roll-box">
+                        <table class="table_list table-rolling" cellspacing="0">
+                            <tbody class="reduce_cost">
+                            <tr style="visibility: hidden;">
+                                <td width="50"></td>
+                                <td width="200"></td>
+                                <td width="100"></td>
+                                <td width="100"></td>
+                                <td width="100"></td>
+                                <td width="100"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table_list table-rolling" cellspacing="0">
+                            <tbody class="reduce_cost">
+                            <tr style="visibility: hidden;">
+                                <td width="50"></td>
+                                <td width="200"></td>
+                                <td width="100"></td>
+                                <td width="100"></td>
+                                <td width="100"></td>
+                                <td width="100"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="width-30">
+                <div class="charts-box">
+                    <div class="plot_title ml_11">
+                        <span>提质情况</span>
+                    </div>
+                    <table class="table_list table-head" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th width="100">序号</th>
+                            <th>标准文档</th>
+                            <th>文档类型</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <div class="roll-box">
+                        <table class="table_list table-rolling" cellspacing="0">
+                            <tbody class="improve_quality">
+                            <tr>
+                                <th width="100"></th>
+                                <th width="180"></th>
+                                <th width="200"></th>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table_list table-rolling" cellspacing="0">
+                            <tbody class="improve_quality">
+                            <tr>
+                                <th width="100"></th>
+                                <th width="180"></th>
+                                <th width="200"></th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="width-30">
+                <div class="charts-box">
+                    <div class="plot_title ml_11">
+                        <span>增效情况</span>
+                    </div>
+                    <table class="table_list table-head" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th width="100">序号</th>
+                            <th width="180">应用名称</th>
+                            <th width="200">使用组件</th>
+                            <th width="100">缩短工期</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <div class="roll-box">
+                        <table class="table_list table-rolling" cellspacing="0">
+                            <tbody class="reduce_time">
+                            <tr>
+                                <th width="100"></th>
+                                <th width="180"></th>
+                                <th width="200"></th>
+                                <th width="100"></th>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table_list table-rolling" cellspacing="0">
+                            <tbody class="reduce_time">
+                            <tr>
+                                <th width="100"></th>
+                                <th width="180"></th>
+                                <th width="200"></th>
+                                <th width="100"></th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--main_box -->
+</div>
+<script src="${_static}/v2/js/jquery-1.11.1.min.js"></script>
+<script src="${_static}/v2/platform_bg/js/banner.js"></script>
+<script src="${_static}/v2/js/hengyun/hengyun_ajax.js"></script>
+<script src="${_static}/v2/js/hengyun/jquery.cookie.js"></script>
+<script src="${_static}/v2/js/echarts.js"></script>
+<script src="${_static}/v2/js/base.js"></script>
+<script src="${_static}/v2/js/index_5.js"></script>
+</body>
+<script type="text/javascript">
+    var gateUrl = "${_gate_url}";
+    $(function () {
+        getTime();
+        /*已有降本案例*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/developer/reducedCost/reducedExample",
+            success: function (reducedExample) {
+                if (!reducedExample || reducedExample.errcode != 0) {
+                    return;
+                }
+                // var data = componentEstimatedValue["data"];
+                // //top 上部的方框数字展示
+                // builderTopHtml2Show("#reduceCostTotal", data.reduceCostTotal);
+                // builderTopHtml2Show("#reduceTimeTotal", data.reduceTimeTotal);
+                // value(data);
+                // //trend();已有降本案例
+                // var _option = builderTrend(data);
+                trend(reducedExample.data);
+            },
+            error: function (r) {
+
+            }
+        });
+        /*组件预估价值*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/developer/reducedCost/componentEstimatedValue",
+            success: function (componentEstimatedValue) {
+                if (!componentEstimatedValue || componentEstimatedValue.errcode != 0) {
+                    return;
+                }
+                var data = componentEstimatedValue["data"];
+                // //top 上部的方框数字展示
+                builderTopHtml2Show("#reduceCostTotal", data.reduceCostTotal);
+                builderTopHtml2Show("#reduceTimeTotal", data.reduceTimeTotal);
+                // value(data);
+                // //trend();已有降本案例
+                // var _option = builderTrend(data);
+                value(data);
+            },
+            error: function (r) {
+
+            }
+        });
+        /*降本情况*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/developer/app/findApplicationReduceCost",
+            success: function (data) {
+                var list = ["appNameList", "originalCostList", "actualReduceCostList", "reduceProtectCost", "reduceCostList"]
+                setReduce(data.data, list, "reduce_cost");
+            },
+            error: function (r) {
+
+            }
+        });
+        /*增效情况*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/developer/app/findApplicationReduceTime",
+            success: function (data) {
+                var list = ["appNameList", "producerNameList", "reduceTimeList"];
+                setReduce(data.data, list, "reduce_time");
+            },
+            error: function (r) {
+
+            }
+        });
+        /*降本分析*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/developer/app/getReduceAnalysis",
+            success: function (data) {
+                reduce(data.data);
+            },
+            error: function (r) {
+            }
+        });
+        /*组件降本情况*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/developer/app/getAssemblyCost",
+            success: function (data) {
+                shorten(data.data);
+            },
+            error: function (r) {
+            }
+        });
+        /*组件增效情况*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/developer/app/getAssemblyTime",
+            success: function (data) {
+                time(data.data);
+            },
+            error: function (r) {
+            }
+        });
+        /*服务累计次数*/
+        ajaxHengyun({
+
+            url: gateUrl + "/api/developer/app/getSeviceUseNum",
+            success: function (r) {
+                buildI("#use_service", r.data.serviceNum);
+            },
+            error: function (r) {
+            }
+        });
+        /*标准提质情况*/
+        ajaxHengyun({
+            type: 'post',
+            url: gateUrl + "/api/standard/file/findAllFileCount",
+            success: function (r) {
+                if (!r || r.errcode != 0) {
+                    return;
+                }
+                cost(r.data);
+            },
+            error: function (r) {
+            }
+        });
+        /*提质情况*/
+        ajaxHengyun({
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({data: {}, pageNo: 0, pageSize: 1000}),
+            url: gateUrl + "/api/standard/file/query",
+            success: function (r) {
+                if (!r || r.errcode != 0) {
+                    return;
+                }
+                var list = ["name", "classifyName"];
+                setReduce(r.data.list, list, "improve_quality");
+            },
+            error: function (r) {
+            }
+        });
+    })
+    ;
+
+    function builderTopHtml2Show(jquerySelector, num) {
+
+        if (num < 0) {
+            return;
+        }
+        var html = "";
+        var numStr = num + "";
+        for (var i = 0; i < numStr.length; i++) {
+
+            html += '<div class="num">'
+                + '<div class="contain">'
+                + '<span class="original">' + numStr[i] + '</span>'
+                + '</div>'
+                + '</div>';
+        }
+        $(jquerySelector).prepend(html);
+        numAnimate($(jquerySelector + " .contain span"));
+    }
+
+    function builderTrend(data) {
+
+        return {appNames: data.nameList, appTime: data.reduceTimeNumlist, appCosts: data.reduceCostNumlist};
+
+    }
+
+
+    function getTime() {
+        var date = new Date();
+        var hour = date.getHours() - 6;
+        var minute = date.getMinutes();
+
+        var allMinute = hour * 60 + minute;
+        var useModule = parseInt(allMinute / 0.36);
+        var useApp = parseInt(allMinute / 13.5);
+        buildI("#use_app", useApp);
+        buildI("#use_module", useModule);
+    }
+</script>
+</html>

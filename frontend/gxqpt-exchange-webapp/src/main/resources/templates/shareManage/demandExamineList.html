@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>需求审核</span>
+						</h3>
+					</div>
+				</div>
+				<div class="main_container row">
+					<form action="" class="search-form" autocomplete="off">
+						<ul class="clearfix">
+							<li class="pull-left">
+								<label class="control-label">申请单位：</label>
+                            	<input name="unitName" class="" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">处理状态：</label>
+                            	<select id="handleStatus" name="handleStatus" class="chosen-select">
+                                	<option value="">全部</option>
+									<option value="1">待处理</option>
+									<option value="2">已驳回</option>
+									<option value="3">通过，待封装API</option>
+									<option value="4">已封装API</option>
+                                </select>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">申请时间：</label>
+                            	<input name="startTime" class="Wdate" placeholder=""/>
+                            	<span class="color-warning">-</span>
+								<input name="endTime" class="Wdate" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<button type="button" class="btn btn-primary search-button">
+                            		<span class="glyphicon glyphicon-search"></span> 查询
+                                </button>
+							</li>
+						</ul>
+                    </form>
+					<table id="demandApprList" class="default-table tab-title-top">
+						<thead>
+							<tr>
+								<th width="60">序号</th>
+								<th>申请单位</th>
+								<th width="120">申请时间</th>
+								<th width="100">联系人姓名</th>
+								<th>需求内容</th>
+								<th>用途</th>
+								<th>申请原因</th>
+								<th width="150">处理状态</th>
+								<th width="150">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<div class="text-center">
+						<ul class="pagination" id="pagination"></ul>
+						<p class="pull-right currentPage">共<span class="total">0</span>条数据，当前第<i id="pageNum" class="colorBlue">1</i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript">
+            var unitName = "";
+            var handleStatus = "";
+            var startTime = "";
+            var endTime = "";
+
+            function delayed(id) {//续期申请
+                parent.layer.open({
+                    id: 'delayed',
+                    type: 2,
+                    anim: 6,
+                    title: '续期申请',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['750px', '600px'],
+                    shade: [0.9, '#000'],
+                    content: "${_cp}/module/shareMagDelayed?id=" + id,
+                    btn: ['提交申请', '取消'],
+                    yes: function (index, layero) {
+                        var html = layero.context;
+                        var Id = html.getElementById("delayed");
+                        var iframe = $(Id).find("iframe").attr("name");
+                        var rowData = parent[iframe].save(index);
+                    },
+                });
+            }
+
+
+            function initParam() {
+                unitName = $("input[name='unitName']").val();
+				handleStatus = $("select[name='handleStatus']").val();
+                startTime = $("input[name='startTime']").val();
+                endTime = $("input[name='endTime']").val();
+            }
+
+            function getParam() {
+                initParam();
+                parm = {
+                    data: {
+                        unitName: unitName,
+						handleStatus: handleStatus,
+						startTime: startTime,
+						endTime: endTime},
+                    pageNo: 1,
+                    pageSize: 10
+                }
+            }
+
+            getParam();
+            getList(parm);
+
+            /*获取系统列表*/
+            function getList(parm) {
+                ajaxHengyun({
+                    type: "POST",
+                    async: false,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: '${_gate_url}/api/exchange/task/finddemandtask',
+                    data: JSON.stringify(parm),
+                    success: function (rows) {
+                        var html = ""
+                        if (rows.data) {
+                            rows.data.list.forEach(function (value, index) {
+                                html += '<tr>';
+                                html += '<td>' + ((rows.data.pageNum - 1)*rows.data.pageSize + index + 1) + '</td>';
+                                html += '<td title="'+value.name+'">' + value.name + '</td>';
+                                html += '<td>' + fmtDate(value.createTime) + '</td>';
+                                html += '<td>' + value.contName + '</td>';
+                                html += '<td title="'+value.content+'">' + value.content + '</td>';
+                                html += '<td title="'+value.purpose+'">' + value.purpose + '</td>';
+                                html += '<td title="'+value.applyReason+'">' + value.applyReason + '</td>';
+                                html += '<td>' + value.hdStatus + '</td>';
+                                var status = value.status;
+                                html += '<td>';
+                                if(status == 1){
+                                    // html += '<a href="${_cp}/module/demandDeal?id=' + value.id +"&demandId="+value.demandId+ '">处理</a>';
+                                    html+=  resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "demand_audio_handle",
+                                        btnHtml :'<a href="${_cp}/module/demandDeal?id=' + value.id +"&demandId="+value.demandId+ '">{{name}}</a>',
+                                        htmlInsert: true
+                                    });
+                                }else if(status == 3){
+                                    // html += '<a href=javascript:void(0);" onclick="setCatalog(' + value.id +','+value.apiId+','+value.demandId+')">封装API</a>';
+                                    html+=  resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "demand_audio_handle_api",
+                                        btnHtml :'<a href=javascript:void(0);" onclick="setCatalog(\'' + value.id +'\',\''+value.apiId+'\',\''+value.demandId+'\')">{{name}}</a>',
+                                        htmlInsert: true
+                                    });
+                                    // html += '<a href="${_cp}/module/shareMagDealView?id=' + value.demandId + '">处理详情</a>';
+                                    html+=  resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "demand_audio_handle_detail",
+                                        btnHtml :'<a href="${_cp}/module/shareMagDealView?id=' + value.demandId + '">{{name}}</a>',
+                                        htmlInsert: true
+                                    });
+                                }else if(status == 4){
+                                    // html += '<a href="${_cp}/module/shareMagView?id=' + value.apiId + '">API详情</a>';
+                                    html+=  resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "demand_audio_api_detail",
+                                        btnHtml :'<a href="${_cp}/module/shareMagView?id=' + value.apiId + '">{{name}}</a>',
+                                        htmlInsert: true
+                                    });
+                                }
+                                html += '</td>';
+                                html += '</tr>';
+                            });
+                            if(rows.data.list.length==0){
+                                html+="<tr><td class='text-center' colspan='8'>暂无数据</td></tr>"
+                                $(".pagination,.currentPage").css("display","none");
+                            } else {
+                                $(".pagination,.currentPage").css("display","block");
+                            };
+                            $("#demandApprList tbody").html(html);
+                            $('#totalPages').text(rows.data.pages);
+                            $('.total').text(rows.data.total);
+                            jqPaginator(rows.data);
+                            var height=document.getElementById("container").scrollHeight;
+                            $("#home", window.parent.document).height(height);
+                        }else{
+                            html+="<tr><td class='text-center' colspan='8'>暂无数据</td></tr>";
+                            $("#demandApprList tbody").html(html);
+                            $(".pagination,.currentPage").css("display","none");
+                            var height=document.getElementById("container").scrollHeight;
+                            $("#home", window.parent.document).height(height);
+                        }
+                    }
+                });
+            };
+            $(".search-button").click(function () {
+                getParam();
+                getList(parm);
+            })
+            function setCatalog(taskId,apiId,demandId){
+
+                if(!apiId){
+                    apiId='';
+				}
+                sessionStorage.setItem('taskId',taskId);
+                sessionStorage.setItem('pageNo',$("#pageNum").text());
+                window.location.href="${_cp}/module/shareMagSetApiCatalog?pageType=demand&applyId="+demandId+"&apiId="+apiId;
+            }
+		</script>
+	</body>
+</html>

@@ -1,0 +1,60 @@
+<template>
+    <div class="serviceDetail">
+        <trainDetailCard :detail="detail"></trainDetailCard>
+        <dealDetailCard :detail="detail" v-if="status === 3 || status === 5"></dealDetailCard>
+        <trainPointCard :detail="detail" v-if="status === 5"></trainPointCard>
+        <footer style="text-align: center;">
+            <Button type="default" @click="goback">返回</Button>
+        </footer>
+    </div>
+</template>
+
+<script>
+import api from '@/api/axiosApi'
+import operationApiList from '@/api/operationApiList'
+
+import trainDetailCard from "./trainCard/trainDetailCard.vue";
+import dealDetailCard from "./trainCard/dealDetailCard.vue";
+import trainPointCard from "./trainCard/trainPointCard.vue";
+export default {
+    components: {
+        trainDetailCard,
+        dealDetailCard,
+        trainPointCard
+    },
+    data(){
+        return{
+            detail: {},
+            status: this.$route.query.status
+        }
+    },
+    mounted () {
+        this.getDetail()
+    },
+    methods:{
+        getDetail() {
+            const vm = this
+            api(operationApiList.trainDetail, {
+                id: vm.$route.query.id
+            })
+            .then(res => {
+                if (res.data.errcode === 0) {
+                    vm.detail = res.data.data
+                }
+            }, error => {console.log(error)})
+        },
+        goback(){
+            this.$router.go(-1)
+        }
+    }
+}
+</script>
+
+<style>
+.serviceDetail{
+    background:#eee;
+    padding: 20px;
+    width:100%;
+    height:auto;
+}
+</style>

@@ -1,0 +1,266 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+<link type="text/css" rel="stylesheet" href="${_lib }/jqgrid/css/ui.jqgrid-bootstrap.css">
+<link type="text/css" rel="stylesheet" href="${_lib }/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${_lib }/font-awesome/css/font-awesome.min.css">
+<link type="text/css" rel="stylesheet"  href="${_js}/lib/webuploader/webuploader.css">
+<link type="text/css" rel="stylesheet"  href="${_js}/lib/webuploader/upload.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=1.0.0">
+    <link rel="stylesheet" href="${_static}/css/app.css?v=1.0.0">
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+<!-- end 外部CSS引入 -->
+<!-- 自定义样式 begin -->
+<style type="text/css">
+	.row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+    .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+    .form-inline .control-label {
+        margin-bottom: 0;
+        margin-left: 0px;
+        vertical-align: middle;
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+        margin: 4px 0px 0;
+        margin-bottom: 3px;
+        margin-top: 5px;
+        line-height: normal;
+        vertical-align: middle;
+    }
+
+    .fileUpload {
+        width: 103px;
+        margin-left: 13px;
+    }
+
+    .form-label-container {
+        float: left;
+    }
+
+    .btns {
+        float: left;
+    }
+
+    .webuploader-pick {
+        padding: 3px 10px;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .search {
+        background: dodgerblue;
+        position: absolute;
+        width: 31px;
+        height: 31px;
+        top: 9px;
+        left: 657px;
+        z-index: 99;
+    }
+
+
+    .align_center {
+		text-align: center;
+	}
+</style>
+<!-- 自定义样式 end -->
+
+
+</head>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>补签审批</h5>
+                    </div>
+
+                    <div class="pull-right">
+                        <button class="btn btn-default go-back" onclick="history.go(-1)">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            取消
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="col-sm-12">
+                        <div class="inline-block"></div>
+                        <div class="inline-block margin-left"></div>
+                        <!--  可查看-->
+                        <div class="form-horizontal view-info">
+                            <div class="qingjia">
+                                <fieldset>
+                                    <ul>
+                                        <li>
+                                            <label class="view-lab1 widths">申请人</label><span
+                                                class="view-text"></span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">提交时间</label><span
+                                                class="view-text"></span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">补签类型</label><span
+                                                class="view-text">
+                                            签到
+                                            签退
+                                        </span>
+                                        </li>
+                                        <li class="col2">
+                                            <label class="view-lab1 widths">补签时间</label><span
+                                                class="view-text"></span>
+                                        </li>
+
+                                        <li class="col2">
+                                            <label class="view-lab1 widths">备注</label><span
+                                                class="view-text"></span>
+                                        </li>
+
+                                    </ul>
+                                </fieldset>
+                            </div>
+                            <h5 style="padding: 10px 0;">附件展示信息</h5>
+                            <ul class="show-file">
+
+                            </ul>
+                                                <fieldset>
+                                                    <h5>审批意见</h5>
+                                                    <div>
+                                                        <table class="table defaultTable defaultTableTop">
+                                                            <tbody>
+                                                            <tr>
+                                                                <th>审批意见</th>
+                                                                <td>
+                                                                    同意！
+                                                                    驳回！
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>说明</th>
+                                                                <td></td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </fieldset>
+                        </div>
+
+                        <!--  可编辑-->
+                        <div class="form-inline approveHandle">
+                            <form action="" id="dataForm" method="post">
+                                <input type="hidden" name="id" value="">
+                                <fieldset>
+                                    <h5>审核</h5>
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <div class="form-control-wrap">
+                                                <label class="control-label" >
+                                                    <span class="text-danger"></span>
+                                                    <span>审核意见</span>
+                                                    <span>：</span>
+                                                </label>
+                                                <input type="radio" name="adopt" id="leave" class="radioInput" value="1"
+                                                       checked>
+                                                <label class="control-label w0" for="leave">同意</label>
+                                                <input type="radio" name="adopt" id="businessTravel" class="radioInput"
+                                                       value="0">
+                                                <label class="control-label w0" for="businessTravel">不同意</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset>
+                                    <h5><span class="text-danger"></span>说明</h5>
+                                    <table class="table default-table">
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <textarea class="form-control" style="width: 100%;" name="reason"
+                                                          rows="5" cols=""></textarea>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+                                <div class="align_center">
+                                    <button class="btn btn-primary btn-submit" type="button"  onclick="saveData();">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                        提交
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- end 页面内容主体 -->
+
+                    </div>
+					<div class="clear"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_js}/lib/webuploader/HYCore.js"></script>
+<!--end 外部JS引入 -->
+
+<!-- 自定义JS -->
+<script type="text/javascript">
+    function saveData() {
+        var o = $("#dataForm").serialize();
+        $.ajax({
+            url: "appSaveLeaderApprove.do",
+            type: 'post',
+            data: o,
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                if (data.result == 'success') {
+//                    parent.layer.closeAll();
+                    window.location.href = "${_cp}/attence/workapprove/list.do";
+                } else {
+                    alert(data.msg);
+                }
+            },
+            error: function () {
+                alert("asda");
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>

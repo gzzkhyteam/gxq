@@ -1,0 +1,574 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/build.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/contextMenu/contextMenu.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/viewer/viewer.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/module.css">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <style type="text/css">
+        h3 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        time, label {
+            margin: 0 10px;
+            font-weight: normal;
+        }
+
+        .picture_list {
+            margin: 10px 0;
+        }
+
+        .picture_list li {
+            float: left;
+            width: 180px;
+            height: 160px;
+            margin: 10px 20px 0 0;
+        }
+
+        .picture_list img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .list-section{
+            display: table;
+            width: 100%;
+        }
+        legend {
+            color: #777;
+            font-size: 1.2em;
+        }
+
+        .img-box {
+            position: relative;
+            float: left;
+            margin: 5px;
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+            background: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .img-box .select-btn-box{
+            top: 5px;
+            left: 5px;
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 20px;
+            display: none;
+            background: #fff url("${_static}/images/hook1.png") no-repeat center center;
+            background-size: 50% 50%;
+        }
+        .img-box .select-btn-box.selected{
+            background: #00A1CB url("${_static}/images/hook2.png") no-repeat center center;
+            background-size: 50% 50%;
+        }
+        .select-btn-box.selected,.img-box:hover .select-btn-box{
+            display: block;
+        }
+        .img-box .select-btn-box img{
+            margin: 25%;
+            width: 50%;
+            height: 50%;
+        }
+        .checkbox label::before{
+            top: 1px;
+        }
+        .pageShow{
+            text-align: center;
+            margin: 20px auto;
+        }
+        .valueImgTle{
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            text-align: center;
+            padding: 0 10px;
+            color: #666;
+            line-height: 27px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <!--标题-->
+            <div class="col-sm-12">
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5 class="page-title">
+                            云盘管理系统 &gt; <span class="page-title-scend">图片</span>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <!--内容-->
+            <div id="cloudDisk" class="col-sm-12">
+                <div class="list-section">
+                    <form action="" class="form-inline search-form" autocomplete="off">
+                        <div class="form-field">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    <span class="text-danger"></span>
+                                    <span>搜索：</span>
+                                </label>
+                                <div class="form-control-wrap">
+                                    <input name="submittedFileName" id="submittedFileName" class="form-control" placeholder=""/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <div class="form-group">
+                                <div class="form-control-wrap text-right">
+                                    <button type="button" class="btn btn-primary search-button">
+                                        确定
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pull-right">
+                            <div class="form-field">
+                                <div class="form-group">
+                                    <div class="form-control-wrap text-right">
+                                        <script type="text/javascript" id="file_image_share">
+                                            $(function () {
+                                                resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                    resource_code : "file_image_share",
+                                                    btnHtml :'<button type="button" class="btn btn-primary btn-share" onclick="btnShareAuto()"> <span class="fa {{icon}}"></span> {{name}}</button>',
+                                                    htmlInsert: true
+                                                });
+                                            })
+                                        </script>
+                                        <script type="text/javascript" id="file_image_upload">
+                                            $(function () {
+                                                resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                    resource_code : "file_image_upload",
+                                                    btnHtml :'<button type="button" class="btn btn-primary btn-upload"><span class="fa {{icon}}"></span> {{name}}</button>',
+                                                    htmlInsert: true
+                                                });
+                                            })
+                                        </script>
+                                        <script type="text/javascript" id="file_image_download">
+                                            $(function () {
+                                                resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                    resource_code : "file_image_download",
+                                                    btnHtml :'<button type="button" class="btn btn-primary btn-download" onclick="downloadPackage()"><span class="fa {{icon}}"></span> {{name}}</button>',
+                                                    htmlInsert: true
+                                                });
+                                            })
+                                        </script>
+                                        <script type="text/javascript" id="file_image_delete">
+                                            $(function () {
+                                                resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                    resource_code : "file_image_delete",
+                                                    btnHtml :'<button type="button" class="btn btn-primary" onclick="deletePackage()"><span class="fa {{icon}}"></span> {{name}}</button>',
+                                                    htmlInsert: true,
+                                                });
+                                            })
+                                        </script>
+                                        <!--<button type="button" class="btn btn-primary btn-share" onclick="btnShareAuto()">
+                                            <span class="fa fa-share-alt"></span> 分享
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-upload">
+                                            <span class="fa fa-upload"></span> 上传
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-download" onclick="downloadPackage()">
+                                            <span class="fa fa-download"></span> 下载
+                                        </button>
+                                        <button type="button" class="btn btn-primary" onclick="deletePackage()">
+                                            <span class="fa"></span> 批量删除
+                                        </button>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="list-Images" class="list-section">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/contextMenu/contextMenu.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/viewer/viewer.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    /*查询*/
+    var parm = {
+        pageNo:1,
+        pageSize: '100000',
+        data:{
+            dataType: 'IMAGE',
+            folderId: null,
+            submittedFileName:""
+        }
+    };
+    $(".search-button").click(function(){
+        parm.data.submittedFileName=$("#submittedFileName").val();
+        getAllImg(parm);
+    });
+    /*获取图片*/
+    getAllImg(parm);
+    function getAllImg(parm) {
+        ajaxHengyun({
+            type:"POST",
+            url: '${_gate_url}/api/file/file/page',
+            dataType: "json",//必须添加，所有地方都一样
+            contentType : 'application/json',   //必须添加，所有地方都一样
+            data: JSON.stringify(parm),
+            success: function (rows) {
+                if(rows.data){
+                    var imageList=rows.data.list;
+                    var imageTime=[];
+                    var arrayList=[];
+                    for (var k = 0; k < imageList.length; k++) {
+                        var n = imageTime.indexOf(imageList[k].createTime);
+                        if (n==-1) {
+                            imageTime.push(imageList[k].createTime);
+                        };
+                    };
+                    imageTime.sort(sortNumber);
+                    function sortNumber(a, b){
+                        return new Date(b).getTime() - new Date(a).getTime();
+                    };
+                    if(imageTime.length!=0){
+                        for (var i = 0; i < imageTime.length; i++) {
+                            var imageFenLei= [];
+                            for (var j = 0; j < imageList.length; j++) {
+                                if(imageList[j].createTime==imageTime[i]){
+                                    imageFenLei.push(imageList[j]);
+                                }
+                            };
+                            var imageItem={createTime:imageTime[i],list:imageFenLei};
+                            arrayList.push(imageItem);
+                        };
+                    };
+                    fileList(arrayList);
+                }
+            }
+        });
+    };
+    /* 加载文件列表 */
+    function fileList(rows){
+        var html='<article><legend>图片</legend></article>';
+        if(rows.length!=0){
+            rows.forEach(function(value, index){
+                html+='<div class="all-select clearfix">';
+                html+='<div class="checkbox">';
+                html+='<input id="checkbox'+index+'" class="checked_all styled" type="checkbox">';
+                html+='<label for="checkbox'+index+'">';
+                html+=value.createTime;
+                html+='</label></div>';
+                html+='<ul class="viewer">';
+                if(value.list.length!=0){
+                    value.list.forEach(function(valueImg, num){
+                        html+='<li class="img-box" data-Id="'+valueImg.id+'" data-Name="'+valueImg.submittedFileName+'">';
+                        html+='<img src="'+valueImg.url+'" style="max-width: 100px; max-height: 80px;" alt="'+valueImg.submittedFileName+'">';
+                        html+='<div class="select-btn-box"></div>';
+                        html+='<p class="valueImgTle" title="'+valueImg.submittedFileName+'">'+valueImg.submittedFileName+'</p>';
+                        html+='</li>';
+                    });
+                };
+                html+='</ul>';
+                html+='</div>';
+            });
+        }else{
+            if($("#submittedFileName").val()){
+                html+='<div class="pageShow">未找到符合条件的图片！</div>';
+            }else{
+                html+='<div class="pageShow">您还没上传过图片哦！</div>';
+            }
+        };
+        $("#list-Images").html(html);
+        $('.viewer').viewer({
+            navbar :false,
+            tooltip :true,
+            movable :true,
+            toolbar :true
+        });
+        contextMenu();
+    };
+    //选择图片
+    $('.list-section').on('click','.select-btn-box',function (e) {
+        var _this = this;
+        var checkedAll = $(_this).parent().parent().find(".checked_all");
+        if($(_this).hasClass('selected')){
+            $(_this).removeClass('selected');
+            $(checkedAll).removeProp("checked");
+        }else{
+            $(_this).addClass('selected');
+            var choeckbox_list = $(checkedAll).parent().parent().find(".select-btn-box");
+            var num = 0;
+            $(choeckbox_list).each(function(index,element){
+                var checked = $(element).is(".selected");
+                if(checked){
+                    num+=1;
+                }
+            });
+            if(num==$(choeckbox_list).length){
+                $(checkedAll).prop("checked",true);
+            }
+        }
+    });
+    /* 全选 */
+    $("body").on("click",".checked_all",function (){
+        var num=0;
+        var choeckbox_list =$(this).parent().parent().find(".select-btn-box");
+        $(choeckbox_list).each(function(index,element){
+            var checked = $(element).is(".selected");
+            if(checked){
+                num+=1;
+            }
+        });
+        if(num!=$(choeckbox_list).length){
+            $(choeckbox_list).each(function(index,element){
+                $(element).addClass("selected");
+            });
+        }else{
+            $(choeckbox_list).each(function(index,element){
+                $(element).removeClass("selected");
+            });
+        }
+    });
+    /* 鼠标右键 */
+    function contextMenu(){
+        var id,elementImg,url,fileName;
+        $(".img-box").contextMenu({
+            width: 110,// width
+            itemHeight: 30,// 菜单项height
+            bgColor: "#333",// 背景颜色
+            color: "#fff",// 字体颜色
+            fontSize: 12,// 字体大小
+            hoverBgColor: "#99CC66",// hover背景颜色
+            target: function(ele) {// 当前元素
+                id=$(ele).attr("data-Id");
+                elementImg=$(ele).find("img");
+                url=$(elementImg).attr("src");
+                fileName=$(ele).attr("data-Name");
+            },
+            menu: [{
+                text: "分享",
+                    icon: "${_static}/js/lib/contextMenu/img/yp_ico01.png",
+                    callback: function() {
+                        openSharePage(id,fileName);
+                    }
+                },
+                {
+                    text: "下载",
+                    icon: "${_static}/js/lib/contextMenu/img/yp_ico02.png",
+                    callback: function(value) {
+                        downLoadFolder(url,fileName);
+                    }
+                },
+                {
+                    text: "删除",
+                    icon: "${_static}/js/lib/contextMenu/img/yp_ico04.png",
+                    callback: function() {
+                        deleteFolder(id);
+                    }
+                }
+            ],
+        });
+    };
+
+    /*上传图片*/
+    $(document).on("click", ".btn-upload", function () {
+        parent.layer.open({
+            id: 'uploadFile',
+            type: 2,
+            anim:6,
+            title: '上传文件',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['800px', '80%'],
+            content: "${_cp}/file/uploadFile?folderId=-1&dataType=IMAGE",
+            btn: ['<span class="glyphicon glyphicon-ok"></span>上传','<span class="glyphicon glyphicon-remove"></span>取消'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("uploadFile");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    });
+    /* 下载文件 */
+    function downLoadFolder(url,filename){
+        var urlDownload="${_gate_url}/api/file/file/download?url="+url+"&filename="+filename;
+        window.open(urlDownload);
+    }
+    /* 批量下载文件 */
+    function downloadPackage(){
+        var ids = new Array();
+        var choeckbox_list = $(".img-box");
+        $(choeckbox_list).each(function(index,element){
+            var checked = $(element).find(".selected");
+            if(checked.length!=0){//选中
+                var id=$(element).attr("data-Id");
+                if(id){
+                    ids.push(id);
+                }
+            };
+        });
+        if(ids.length==0){
+            parent.layer.msg("请选择需要下载的图片！");
+            return false;
+        }else{
+            var urlDownload="${_gate_url}/api/file/file/downloadpackage?ids[]="+ids;
+            window.open(urlDownload);
+        };
+    };
+    /*删除单个图片*/
+    function deleteFolder(IdVal){
+        parent.layer.open({
+            type: 1,
+            title: '确认删除',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['320px', '136px'],
+            content: "确认要把所选文件放入回收站吗？",
+            btn: ['<span class="glyphicon glyphicon-ok"></span>确定','<span class="glyphicon glyphicon-remove"></span>取消'],
+            yes: function (index, layero) {
+                var parmOne = {
+                    id: IdVal
+                };
+                ajaxHengyun({
+                    type:"POST",
+
+                    
+                    url: "${_gate_url}/api/file/file/remove",
+                    data:parmOne,
+                    dataType:'json',
+                    success:function(rows){
+                        if (rows.data){
+                            getAllImg(parm);
+                            parent.layer.closeAll();
+                            parent.layer.msg('删除成功');
+                        }else{
+                            parent.layer.closeAll();
+                            parent.layer.msg("删除失败，请稍后重试！")
+                        }
+                    }
+                });
+            }
+        });
+    };
+    /* 更新文件目录*/
+    function updateFolder() {
+        getAllImg(parm);
+    }
+    /* 多个文件分享方法 */
+    function btnShareAuto(){
+        var ids = new Array();
+        var fileName="";
+        var choeckbox_list = $(".img-box");
+        $(choeckbox_list).each(function(index,element){
+            var checked = $(element).find(".selected");
+            if(checked.length!=0){//选中
+                var id=$(element).attr("data-Id");
+                fileName=$(element).attr("data-Name");
+                if(id){
+                    ids.push(id);
+                }
+            };
+        });
+        if(ids.length==0){
+            parent.layer.msg("请选择需要分享的文件！");
+            return false;
+        }
+        openSharePage(ids.join(","),fileName+"等");
+    };
+    /* 打开分享页面 */
+    function openSharePage(id,fileName) {
+        parent.layer.open({
+            id: 'shareContainer',
+            type: 2,
+            anim:6,
+            title: '分享文件（夹）：'+fileName,
+            maxmin: false, //开启最大化最小化按钮
+            area: ['600px', '300px'],
+            content: "${_cp}/file/share?id="+id+"&folderName="+encodeURIComponent(fileName),
+            btn: ['<span class="glyphicon glyphicon-ok"></span>创建连接','<span class="glyphicon glyphicon-backward"></span>关闭'],
+            yes: function (index, layero) {
+                var html=layero.context;
+                var Id=html.getElementById("shareContainer");
+                var iframe=$(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save();
+            }
+        });
+    }
+
+    /*批量删除*/
+    function deletePackage() {
+        var ids = new Array();
+        var fileName="";
+        var choeckbox_list = $(".img-box");
+        $(choeckbox_list).each(function(index,element){
+            var checked = $(element).find(".selected");
+            if(checked.length!=0){//选中
+                var id=$(element).attr("data-Id");
+                fileName=$(element).attr("data-Name");
+                if(id){
+                    ids.push(id);
+                }
+            };
+        });
+        if(ids.length==0){
+            parent.layer.msg("请选择需要删除的文件！");
+            return false;
+        }
+        parent.layer.open({
+            type: 1,
+            title: '确认删除',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['270px', '136px'],
+            content: "确认删除所选中的文件？",
+            btn: ['<span class="glyphicon glyphicon-ok"></span>确定','<span class="glyphicon glyphicon-remove"></span>取消'],
+            yes: function (index, layero) {
+                ajaxHengyun({
+                    type:"POST",
+
+                    
+                    url: "${_gate_url}/api/file/file/removeList",
+                    data:{ids:ids},
+                    datatype:'json',
+                    success:function(rows){
+                        
+                        if (rows.data){
+                            getAllImg(parm);
+                            parent.layer.closeAll();
+                            parent.layer.msg("删除成功！",{icon: 6,time:1500})
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>

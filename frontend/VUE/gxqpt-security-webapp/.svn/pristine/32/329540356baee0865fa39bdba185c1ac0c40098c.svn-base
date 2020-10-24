@@ -1,0 +1,167 @@
+<!-- 新增详情等的弹窗 -->
+<template>
+  <Modal
+    v-model="showModal"
+    title="新增"
+    width="600px">
+    <Form ref="dealForm" :model="dealForm" :rules="validate" :label-width="96">
+      <FormItem label="日志类别：" prop="item1" required>
+        <Select v-model="dealForm.item1">
+          <Option value="1">应用服务日志</Option>
+          <Option value="2">服务器运行日志</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="日志记录：" prop="item2" required>
+        <Input
+          type="textarea"
+          v-model="dealForm.item2"
+          disabled>
+        </Input>
+      </FormItem>
+      <FormItem label="故障分类：" prop="item3" required>
+        <Select v-model="dealForm.item3">
+          <Option value="1">网络环境</Option>
+          <Option value="2">应用服务</Option>
+          <Option value="3">服务器</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="故障级别：" prop="item4" required>
+        <Select v-model="dealForm.item4">
+          <Option value="1">高</Option>
+          <Option value="2">中</Option>
+          <Option value="3">低</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="附件：" prop="item5" required>
+        <hyUpload
+          ref="fileUpload"
+          action="/api/file/p/file/simple"
+          :onSuccess="fileUploadSuccess"
+          :default-file-list="defaultFiles" />
+      </FormItem>
+    </Form>
+    <div slot="footer">
+      <Button class="modalBtn" type="default" @click="showModal = false" size="large">取消</Button>
+      <Button class="modalBtn" type="primary" @click="submit" size="large">确定</Button>
+    </div>
+  </Modal>
+</template>
+
+<script>
+import api from '@/api/axiosApi'
+import operationApiList from '@/api/operationApiList'
+// 文件上传
+import hyUpload from '@/components/hengyun/hyUpload'
+import { HANDLE_TYPES } from './../constant'
+
+function getDealForm () {
+  return {
+    item1: '',
+    item2: '',
+    item3: '',
+    item4: '',
+    item5: ''
+  }
+}
+
+export default {
+  components: {
+    hyUpload
+  },
+  data () {
+    const vm = this
+    return {
+      showModal: false,
+      HANDLE_TYPES,
+      handleType: '',
+      dealForm: getDealForm(),
+      defaultFiles: [],
+      validate: {
+        item1: [{validator: (rule, value, cb) => {
+          if (!vm.dealForm.item1) {
+            cb(new Error('不能为空'))
+            return
+          }
+          cb()
+        }}],
+        files: [{validator: (rule, value, cb) => {
+          if (vm.dealForm.item5.length === 0) {
+            cb(new Error('文件不可为空'))
+          } else {
+            cb()
+          }
+        }}]
+      }
+    }
+  },
+  methods: {
+    open (type, id) {
+      const vm = this
+      vm.dealForm = getDealForm()
+      vm.handleType = type
+      vm.$refs.dealForm.resetFields()
+      // 非新增
+      if (type !== HANDLE_TYPES.CREATE) {
+        vm.dealForm.id = id
+        vm.getDetail()
+      }
+      vm.showModal = true
+    },
+    async getDetail () {
+      const vm = this
+      vm.showModal = true
+      const res = await api(operationApiList.alarmInformationPage, {
+        pageNo: pageNo || vm.pageInfo.pageNo,
+        pageSize: pageSize || vm.pageInfo.pageSize,
+        data: condition
+      })
+      if (res.data.errcode === 0) {
+        const data = res.data.data
+        vm.dealForm = data
+      } else {
+        vm.$Message.info(res.data.errmsg)
+      }
+    },
+    submit () {
+      const vm = this
+      if (vm.handleType === handleTypes.detail) {
+        vm.showModal = false
+        return
+      }
+      vm.$refs.dealForm.validate(valid => {
+        if (valid) {
+          vm.doSave(vm.dealForm)
+        } else {
+          vm.$Message.info('表单验证失败')
+        }
+      })
+    },
+    async doSave (data) {
+      const vm = this
+      if (vm.handleType === handleTypes.create) {
+        const res = await api(operationApiList.alarmInformationPage, data)
+        if (res.data) {
+          vm.$Message.success('保存成功！！！')
+          vm.$emit('on-ok')
+          vm.showModal = false
+        }
+      } else {
+        const res = await api(operationApiList.alarmInformationPage, data)
+        if (res.data) {
+          vm.$Message.success('更新成功！！！')
+          vm.$emit('on-ok')
+          vm.showModal = false
+        }
+      }
+    },
+    fileUploadSuccess(resp, file, fileList) {
+      if (resp.errcode == 0) {
+        this.dealForm.files = fileList
+        this.$refs.dealForm.validateField('item5', res => {})
+      } else {
+        this.$Message.info(resp.errmsg)
+      }
+    }
+  }
+}
+</script>

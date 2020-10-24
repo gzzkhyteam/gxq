@@ -1,0 +1,38 @@
+<template>
+	<div class="serviceDetail">
+		<editServerCard ref="servermgrEdit" v-on:examine="save"></editServerCard>
+	</div>
+</template>
+
+<script>
+	import editServerCard from './../../common/editServerCard'
+	import api from '@/api/axiosApi'
+	import softhardApiList from '@/api/softhardApiList'
+	export default {
+		props:['serverData'],
+		components: {
+			editServerCard
+		},
+		methods: {
+			handleSubmit() {
+				this.$refs["servermgrEdit"].handleSubmit("evalData");
+			},
+			save(param) { //查询服务分配管理新增
+				api(softhardApiList.servermanagerSave, param).then((res) => {
+					this.$emit('saveMgr', res.data);
+				}, (err) => {
+					//dong something...
+				})
+			},
+		}
+	}
+</script>
+
+<style>
+	/*.serviceDetail{
+    background:#eee;
+    padding: 20px;
+    width:85%;
+    height:auto;
+}*/
+</style>

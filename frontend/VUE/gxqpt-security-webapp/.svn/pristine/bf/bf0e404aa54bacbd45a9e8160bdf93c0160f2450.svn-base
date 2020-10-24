@@ -1,0 +1,90 @@
+<template>
+    <div class="serviceDetail">
+        <h2>服务器新增申请</h2>
+        <unitApplyinfo style="margin-top:30px;"></unitApplyinfo>
+        <specificInfo style="margin-top:30px;"></specificInfo>
+        <Card :bordered="false">
+            <p slot="title">审批意见：</p>
+            <div class="comment" style="text-align:center">
+                <ul>
+                    <li><span>2018.07.03 15：33：21</span>管理员已同意求。同意意见：资源申请合理</li>
+                    <li><span>2018.07.03 15：33：21</span>高新翼云提交资源需求</li>
+                </ul>
+            </div>
+        </Card>
+        <Modal v-model="pzState" title="无法配置处理" class-name="vertical-center-modal" width="70%">
+        	<Form ref="formData" :model="formData" :label-width="100">
+				<FormItem label="处理结果：" >
+					<Input disabled="disabled"></Input>
+				</FormItem>
+				<FormItem label="处理意见：">
+					<Input type="textarea" :rows="5" ></Input>
+				</FormItem>
+			</Form>
+			<div slot="footer">
+				<Button type="info" @click="pzSubmit">确定</Button>
+				<Button type="text" @click="pzClose">取消</Button>
+			</div>
+		</Modal>
+        <div class="btngroup">
+        	<Button type="primary" @click="btnBack">返回</Button>
+    		<Button type="primary" @click="applyPass">同意</Button>
+    		<Button type="primary" @click="pzBtn">无法配置</Button>
+        </div>
+    </div>
+</template>
+
+<script>
+import unitApplyinfo from '@/view/softhard/common/unitApplyinfo'
+import specificInfo from '@/view/softhard/common/specificInfo'
+export default {
+    data(){
+        return{
+        	pzState:false,
+        	formData:{}
+        }
+    },
+    components: {
+        unitApplyinfo,
+        specificInfo
+    },
+    methods:{
+    	btnBack(){
+    		this.$router.go(-1);
+    	},
+    	pzBtn(){
+    		this.pzState=true;
+    	},
+    	pzSubmit(){
+    		this.$router.go(-1);
+    	},
+    	pzClose(){
+    		this.pzState=false;
+    	},
+    	applyPass(){
+    		this.$router.push({path:'/createEngine'});
+    	}
+    }
+}
+</script>
+
+<style lang='less' scoped>
+.serviceDetail{
+    background:#eee;
+    padding: 20px;
+    width:85%;
+    height:auto;
+}
+.comment{
+    ul{
+        list-style: none;
+        li{
+            text-align: left;
+        }
+    }
+}
+.btngroup{
+	text-align: center;
+	margin-top: 20px;
+}
+</style>

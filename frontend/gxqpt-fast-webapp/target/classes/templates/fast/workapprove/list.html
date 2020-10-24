@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css" href="${_css}/reset.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/webuploader/webuploader.css">
+
+    <link rel="stylesheet" type="text/css" href="${_lib}/layer/skin/layer.css">
+
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+
+    <link rel="stylesheet" href="${_css}/app.css">
+
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <!-- end 外部CSS引入 -->
+
+    <!-- begin 自定义样式 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        label.control-label {
+            text-align: right;
+        }
+
+        table.infoList tr th {
+            border: 1px solid #e1e6eb;
+            padding: 10px 12px;
+            vertical-align: middle;
+            width: 180px;
+            font-weight: normal;
+        }
+
+        table.infoListTab tr th {
+            width: auto;
+        }
+
+        .upuserhead {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .uploader {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td input.form-control {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td select.form-control {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>
+                            考勤管理 > <font color="#0099cc">考勤审批</font>
+                        </h5>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary btn-qiantui" type="submit">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            签退
+                        </button>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary btn-qiandao" type="submit">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            签到
+                        </button>
+                    </div>
+
+                    <div class="pull-right">
+                        <button class="btn btn-primary btn-create" type="submit">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            新建审批
+                        </button>
+                    </div>
+                </div>
+                <!-- end 标题 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <div class="col-sm-12">
+                                    <form id='btn_Search_form' action="" class="form-inline search-form">
+
+                                        <div class="form-field">
+
+                                            <div class="form-group">
+                                                <label for="select0" class="control-label">
+                                                    <span>审批收发：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select id="select0" class="form-control select-w"
+                                                            name="approvalType"
+                                                            style="width: 153px;">
+                                                        <option value="0">全部</option>
+                                                        <option value="1">我发出</option>
+                                                        <option value="2">我收到</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="form-group">
+                                                <label for="select0" class="control-label">
+                                                    <span>状态：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select id="select0" class="form-control select-w" name="state"  style="width: 153px;" >
+                                                        <option value="">全部</option>
+                                                        <option value="1">待办</option>
+                                                        <option value="2">已办</option>
+                                                    </select>
+                                                </div>
+                                            </div> -->
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>时间：</span>
+                                                </label>
+                                                <div class="form-control-wrap ">
+                                                    <input id="starTime" class="form-input Wdate"
+                                                           onfocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',maxDate:getStarTime('endTime')})"
+                                                           name="startDate"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>至</span>
+                                                </label>
+                                                <div class="form-control-wrap ">
+                                                    <input id="endTime" class="form-input Wdate"
+                                                           onfocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',minDate:getStarTime('starTime')})"
+                                                           name="endDate"/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap text-right">
+                                                    <button type="button" class="btn btn-primary search-button"
+                                                            onclick="btn_Search()"><span
+                                                            class="glyphicon glyphicon-search"></span> 查询
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- begin 页面内容主体 -->
+                                <div class="col-sm-12">
+
+                                    <div>
+                                        <div class="inline-block"></div>
+                                        <div class="inline-block margin-left"></div>
+                                    </div>
+
+                                    <!-- begin 表格 -->
+                                    <div class="grid-section">
+
+                                        <table id="daibanList">
+                                        </table>
+
+                                        <div id="pager"></div>
+
+                                    </div>
+                                    <!-- end 表格  -->
+                                    <input type="hidden" id="userId" value="">
+                                </div>
+                                <!-- end 页面内容主体 -->
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib }/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+<script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js?v=1.0.0"></script>
+<!--end 外部JS引入 -->
+
+<!--begin 自定义JS -->
+<script type="text/javascript">
+    var postData = GetWebControls("#btn_Search_form");
+    var userId = null;
+    $(function () {
+        //我的待办
+        userId = $("#userId").val();
+        $("#daibanList").jqGrid(
+            {
+                mtype:"POST",
+                url: '${_gate_url}/api/developer/attence/workapprove/findBy',
+                postData:{
+                    pageNo:1,pageSize:20,
+                            data:postData
+                },
+                dataType:"json",
+                contentType:"application/json",
+                serializeGridData:function (postData) {
+                  return JSON.stringify(postData);
+                },
+                colNames: ['审批编号', '审批类型', '提交时间', '申请人', '当前环节', '操作'],
+                colModel: [
+                    {name: 'aproveCode', index: 'aproveCode', sortable: false},
+                    {name: 'aproveType', sortable: false, formatter: formatterAproveType},
+                    {name: 'applyTime', index: 'applyTime', formatter:formatterApplyTime},
+                    {name: 'applyUserName', index: 'applyUserName', sortable: false},
+                    {name: 'currentState', index: 'currentState', sortable: false},
+                    {name: 'act', title: false, width: '200', sortable: false, formatter: formatterAct1}],
+
+                pager: '#pager',
+                height: 'auto',
+                jsonReader : {
+                    root: "data.list",
+                    page: "data.pageNum",
+                    total: "data.pages",
+                    records: "data.total"
+                },
+                prmNames: {
+                    page: "page", // 表示请求页码的参数名称
+                    rows: "rows" // 表示请求行数的参数名称
+                }
+            });
+//        // 初始化查询按钮
+//        $("button.search-button").click(function () {
+//            var formObj = $("form.search-form").serializeObject();
+//            $("#daibanList").setGridParam({postData: formObj}).trigger("reloadGrid");
+//        });
+
+    });
+    function formatterApplyTime (cellvalue, options, rawObject) {//初始化时间
+        if (cellvalue) {
+            var date = new Date(cellvalue);
+            var time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+            return time;
+        }
+    }
+    jQuery("#daibanList").jqGrid('setGridParam', {
+        postData: postData,
+        url: '${_gate_url}/api/developer/attence/workapprove/findBy'
+    }).trigger('reloadGrid');
+
+    //关键字搜索
+    function btn_Search() {
+        postData = GetWebControls("#btn_Search_form");
+        jQuery("#daibanList").jqGrid('setGridParam', {
+            postData: {
+                pageNo: 1, pageSize: 20,
+                data:postData
+
+            },
+            url: '${_gate_url}/api/developer/attence/workapprove/findBy'
+        }).trigger('reloadGrid');
+    }
+
+    /**
+     * 新增审批
+     */
+    $("button.btn-create").click(function () {
+        window.location.href = 'create';
+    });
+
+    $("button.btn-qiandao").click(function () {
+        debugger
+        var userId = $.cookie("_user_id");
+        var postData={};
+        postData.userid=userId;
+        postData.inSignType="2";
+        postData.appId="${appId}";
+        var data = JSON.stringify(postData);
+        ajaxHengyun({
+            url:"${_gate_url}/api/developer/attence/attencemng/save",
+            type:"post",
+            data:data,
+            contentType: 'application/json;charset=utf-8', //设置请求头信息
+            success:function (data) {
+                if (data.data.id !=null){
+                    parent.layer.msg("签到成功")
+                }
+            }
+        })
+    });
+    $("button.btn-qiantui").click(function () {
+        var userId = $.cookie("_user_id");
+        var postData={};
+        postData.userid=userId;
+        postData.inSignType="1";
+        postData.appId="${appId}";
+        var data = JSON.stringify(postData);
+        ajaxHengyun({
+            url:"${_gate_url}/api/developer/attence/attencemng/save",
+            type:"post",
+            data:data,
+            dataType:"json",
+            contentType: 'application/json;charset=utf-8', //设置请求头信息
+            success:function (data) {
+                if (data.data.id !=null){
+                    parent.layer.msg("签退成功")
+                }
+            }
+        })
+
+    });
+    /*
+     自动获取页面控件值
+     */
+    function GetWebControls(element) {
+        var reVal = "";
+        $(element).find('input,select,textarea').each(function (r) {
+            var id = $(this).prop('name');
+            var value = $(this).val();
+            var type = $(this).prop('type');
+            if (id) {
+                switch (type) {
+                    case "checkbox":
+                        if ($(this).prop("checked")) {
+                            reVal += '"' + id + '"' + ':' + '"1",';
+                        } else {
+                            reVal += '"' + id + '"' + ':' + '"0",';
+                        }
+                        break;
+                    case "radio":
+                        if ($(this).prop("checked")) {
+                            reVal += '"' + id + '":' + '"' + $.trim(value) + '",';
+                        }
+                        break;
+                    default:
+                        if (value != "") { //如果值为空就传空，不需要传空格 -wgj
+                            reVal += '"' + id + '"' + ':' + '"' + $.trim(value) + '",';
+                        } else {
+                            reVal += '"' + id + '"' + ':' + '"",';
+                        }
+                        break;
+                }
+            }
+        });
+        reVal += '"appId":"${appId!""}",';
+        reVal = reVal.substr(0, reVal.length - 1);
+        reVal = reVal.replace(/\\/g, '\\\\');
+        reVal = reVal.replace(/\n/g, '\\n');
+        return jQuery.parseJSON('{' + reVal + '}');
+    }
+
+    //
+    function formatterAct1(cellvalue, options, rawObject) {
+        var returnString = "";
+        if (rawObject.currentAproveUserId != null && rawObject.currentAproveUserId == "${l_u_i_s.id!''}") {
+            if (rawObject.aproveType == '1') {//请假
+                returnString = returnString + "<a class='ui-button' href=sendAudit?id=" + rawObject.id + "&applyTime=" + rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName + "><i class='fa fa-pencil-square-o'></i>办理</a>";
+            } else if (rawObject.aproveType == '2') {//出差
+                returnString = returnString + "<a class='ui-button' href=acceptAudit?id=" + rawObject.id + "&applyTime=" + rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName + "><i class='fa fa-pencil-square-o'></i>办理</a>";
+            } else if (rawObject.aproveType == '3') {//普通
+                returnString = returnString + "<a class='ui-button' href=waitDoAudit?id=" + rawObject.id + "&applyTime=" + rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName + "><i class='fa fa-pencil-square-o'></i>办理</a>";
+            } else if (rawObject.aproveType == '4') {//加班
+                returnString = returnString + "<a class='ui-button' href=extraWorkHandle?id=" + rawObject.id + "&handleStatus=edit" + "&applyTime=" + rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName + "><i class='fa fa-pencil-square-o'></i>办理</a>";
+            } else if (rawObject.aproveType == '5') {//外勤申报
+                returnString = returnString + "<a class='ui-button' href=outsideHandle?id=" + rawObject.id + "&applyTime=" + rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName + "><i class='fa fa-pencil-square-o'></i>办理</a>";
+            } else if (rawObject.aproveType == '6') {//补签审批
+                returnString = returnString + "<a class='ui-button' href=supplyHandle?id=" + rawObject.id + "&applyTime=" + rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName + "><i class='fa fa-pencil-square-o'></i>办理</a>";
+            }
+        }
+        // if (rawObject.currentAproveUserOperation == "3" && rawObject.applyUserId == "${l_u_i_s.id!''}") {
+        //     if (rawObject.aproveType == '6') {
+        //         returnString = returnString + "<a class='ui-button' href=supplyEdit?id=" + rawObject.id + "&applyTime=" +rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName+ "><i class='fa fa-pencil fa-fw'></i>修改</a>";
+        //     } else {
+        //         returnString = returnString + "<a class='ui-button' href=submitApply?id=" + rawObject.id + "&applyTime=" +rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName+ "><i class='fa fa-pencil fa-fw'></i>修改</a>";
+        //     }
+        // }
+        if (rawObject.aproveType == '1') {//请假
+            returnString = returnString + "<a class='ui-button' href=sendAuditView?id=" + rawObject.id + "&applyTime=" +rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName+ "><i class='fa fa-eye'></i>查看</a>";
+        } else if (rawObject.aproveType == '2') {//出差
+            returnString = returnString + "<a class='ui-button' href=acceptAuditView?id=" + rawObject.id
+                + "&applyTime=" +rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName+ "><i class='fa fa-eye'></i>查看</a>";
+        } else if (rawObject.aproveType == '3') {//普通
+            returnString = returnString + "<a class='ui-button' href=waitDoAuditView?id=" + rawObject.id + "&applyTime=" +rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName+ "><i class='fa fa-eye'></i>查看</a>";
+        } else if (rawObject.aproveType == '4') {//加班
+            returnString = returnString + "<a class='ui-button' href=extraWorkHandle?id=" + rawObject.id + "&handleStatus=view" + "&applyTime=" +rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName+ "><i class='fa fa-eye'></i>查看</a>";
+        } else if (rawObject.aproveType == '5') {//外勤申报审批
+            returnString = returnString + "<a class='ui-button' href=outsideView?id=" + rawObject.id + "&applyTime=" +rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName+ "><i class='fa fa-eye'></i>查看</a>";
+        } else if (rawObject.aproveType == '6') {//外勤申报审批
+            returnString = returnString + "<a class='ui-button' href=supplyView?id=" + rawObject.id + "&applyTime=" +rawObject.applyTime + "&applyUserName=" + rawObject.applyUserName+ "><i class='fa fa-eye'></i>查看</a>";
+        }
+
+        return returnString;
+    }
+
+    function formatterAproveType(cellvalue, options, rawObject) {
+        if (rawObject.aproveType == "1") {
+            return "请假审批";
+        } else if (rawObject.aproveType == "2") {
+            return "出差审批";
+        } else if (rawObject.aproveType == "3") {
+            return "普通审批";
+        } else if (rawObject.aproveType == "4") {
+            return "加班审批";
+        } else if (rawObject.aproveType == "5") {
+            return "外勤申报审批";
+        } else if (rawObject.aproveType == "6") {
+            return "补签审批";
+        }
+    }
+
+    function delDate(index) {
+        var trObj = $(index).parent().parent();
+        var trObjChild = $(index).parent().parent().find('td')[1];
+        var Id = $(trObj).attr("id");
+        var name = $(trObjChild).attr("title");
+        $(this).removePromote({
+            controlId: '#daibanList',//jqgrad表格id
+            controlName: '您确定要删除编号为' + name + '的信息吗？',//提示内容
+            url: 'delete',//删除操作的路径
+            id: Id,//参数Id
+            successInfo: '删除成功！',//成功后的提示信息
+            errorInfo: '删除失败,请重试！'//失败后的提示信息
+        });
+    }
+</script>
+<!--end 自定义JS -->
+
+</body>
+</html>

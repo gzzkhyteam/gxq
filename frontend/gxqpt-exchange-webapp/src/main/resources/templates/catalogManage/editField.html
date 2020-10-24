@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+		<meta name="renderer" content="webkit"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+	</head>
+	<body class="bgNone">
+		<div class="workspace-body">
+			<div id="console-container" class="clearfix">
+				<div class="col-sm-12">
+					<div class="general_list_main clearfix">
+						<div class="main_bottom col-lg-12 col-sm-12">
+							<div class="view_item">
+								<form id="dataForm" autocomplete="off">
+                                    <input type="hidden" name="id" id="id"  value=""/>
+                                    <input type="hidden" name="dirId" id="dirId"  value=""/>
+                                    <input type="hidden" name="unitId" id="unitId" value=""/>
+                                    <table class="table default-table tab-border-no-layer">
+                                        <tbody>
+                                            <tr>
+                                                <th width="120"><span class="requiredSpan">*</span>字段名称：</th>
+                                                <td>
+                                                    <input type="text"  name="fieldName" id="fieldName" class="form-control" datatype="*" nullmsg="请填写字段名称！"/>
+                                                </td>
+                                            </tr>
+                                           <!-- <tr>
+                                                <th>数据类型：</th>
+                                                <td>
+                                                    <select id="fieldType" name="fieldType" class="form-control chosen-select selWid-form-search" onchange="fieldTypeSet(this)">
+                                                    </select>
+                                                </td>
+                                            </tr>-->
+                                            <tr>
+                                                <th>字段标识：</th>
+                                                <td>
+                                                    <input type="text" name="fieldCode" id="fieldCode" readonly="readonly" class="form-control"/>
+                                                </td>
+                                            </tr>
+											<tr>
+												<th>是否主键：</th>
+												<td>
+													<select id="isPrimary" name="isPrimary" class="form-control chosen-select" >
+														<option value="2">否</option>
+														<option value="1">是</option>
+													</select>
+												</td>
+											</tr>
+											<!--<tr>
+												<th><span class="requiredSpan">*</span>字段长度：</th>
+												<td>
+													<input type="text" name="fieldLength" id="fieldLength" class="form-control" datatype="integezs" nullmsg="请填写字段长度！" errormsg="字段长度错误！"/>
+												</td>
+											</tr>-->
+                                            <tr>
+                                                <th>字段描述：</th>
+                                                <td>
+                                                    <textarea  name="desc" id="desc" rows="5" cols="" class="form-control"></textarea>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <button type="button" class="btn-submit hidden"></button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+		<script type="text/javascript" src="${_static}/js/com.js" charset="utf-8"></script>
+		<script type="text/javascript">
+          /*  getFieldType();
+            function getFieldType(){//获取数据类型
+                ajaxHengyun({
+                    type: 'GET',
+                    url: '${_gate_url}/api/exchange/dataapi/api/findByDictCode',
+                    data:{pId: "date_type"},
+                    datatype: "json",
+                    success: function (rows) {
+                        if(rows.data){
+                            var html="";
+                            rows.data.forEach(function(value,index){
+                                html+='<option value="'+value.dictName+'">'+value.dictName+'</option>';
+                            });
+                            $("#fieldType").append(html);
+                            getDataElement("${id}");//根据id查询数据元数据信息
+                        }
+                    }
+                });
+            }
+            function fieldTypeSet(ele){//选择数据类型
+                var val = $(ele).val();
+                if(val=="longtext"||val=="datetime"){
+                    $("#fieldLength").removeAttr("datatype");
+                    $("#fieldLength").removeAttr("nullmsg");
+                    $("#fieldLength").removeAttr("errormsg");
+                    $("#fieldLength").parent().find(".Validform_info").remove();
+                    $("#fieldLength").removeClass("Validform_error");
+                }else{
+                    $("#fieldLength").attr("datatype","*");
+                    $("#fieldLength").attr("nullmsg","请填写字段长度！");
+                    $("#fieldLength").attr("errormsg","字段长度错误！");
+                }
+            };*/
+            getDataElement("${id}");//根据id查询数据元数据信息
+            function getDataElement(id){
+                ajaxHengyun({
+                    type:"GET",
+
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/element/get',
+                    data:{id:id},
+                    success:function(rows){
+                        if(rows.data){
+                            var rowsObject=dealElement(rows.data);
+                            $("#id").val(rowsObject.id);
+                            $("#dirId").val(rowsObject.dirId);
+                            $("#fieldName").val(rowsObject.fieldName);
+                           // $("#fieldType").val(rowsObject.fieldType);
+                            $("#unitId").val(rowsObject.unitId);
+                            $("#fieldCode").val(rowsObject.fieldCode);
+                           // $("#fieldLength").val(rowsObject.fieldLength);
+                            $("#desc").val(rowsObject.desc);
+                            $("#isPrimary").val(rowsObject.isPrimary);
+                        }
+                    }
+                });
+            }
+            var index="";
+            function save(num){
+                index=num;
+                $('.btn-submit').click();
+            }
+            $('.btn-submit').valid({
+                form: '#dataForm',
+                //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+                //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+                showAllError: true,
+                ignoreHidden: true,
+                checkpassed: function () {
+                    saveObj();
+                }
+            });
+            /*提交*/
+            function saveObj(){
+                var gxqptDutiesDTO =$("#dataForm").serializeJSON();
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: "${_gate_url}/api/exchange/element/update",
+                    data:JSON.stringify(gxqptDutiesDTO),
+                    success:function(rows){
+                        if (rows.data){
+                            gxqptDutiesDTO.type="field";
+                            gxqptDutiesDTO.dirName=gxqptDutiesDTO.fieldName;
+                            parent.home.updateNode(gxqptDutiesDTO);
+                            parent.home.reloadPage("${id}","field");
+                            parent.layer.msg("修改字段成功！",{time:1000});
+                            parent.layer.close(index);
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    }
+                });
+            };
+		</script>
+	</body>
+</html>

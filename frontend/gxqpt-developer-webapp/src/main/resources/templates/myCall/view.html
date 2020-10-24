@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css?v=1"/>
+    <link rel="stylesheet" href="${_static}/css/com_base.css"/>
+    <link rel="stylesheet" href="${_static}/css/index.css"/>
+    <script type="text/javascript" src="${_static}/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/hengyun/jquery.cookie.js"></script>
+    <script type="text/javascript" src="${_static}/js/com_base.js"></script>
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-width: auto;
+            background: #fff;
+        }
+        .form-horizontal{
+            width: 100%;
+            padding: 30px 0 0;
+        }
+        .form-horizontal .form-group{
+            margin-left: 0;
+            margin-right: 0;
+        }
+    </style>
+</head>
+<body>
+<form class="form-horizontal" id="dataForm" ng-app="app" ng-controller="controller" ng-cloak>
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="text-danger"></span>功能类型</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="fun.moduleTypeName" readonly >
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="text-danger"></span>功能名称</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="fun.name" readonly >
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="text-danger"></span>功能编码</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="fun.code" readonly >
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="text-danger"></span>功能状态</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="fun.moduleStatus | statusInitialize" readonly >
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="text-danger"></span>建议模块</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="fun.adviceModuleName | adviceInitialize" readonly >
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="text-danger"></span>申请使用应用</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="fun.appName" readonly >
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><span class="text-danger"></span>备注</label>
+        <div class="col-sm-8">
+            <textarea class="form-control" ng-model="fun.applyDesc" readonly style="resize: none"></textarea>
+        </div>
+    </div>
+</form>
+</body>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        /*获取功能详情*/
+        $http.get(urlPrev + '/assignModule/getById',{
+            params:{
+                id:'${id}',
+            },
+            headers:getHeaders(),
+        }).success(function (res) {
+            $scope.fun = res.data;
+        });
+    }).filter('statusInitialize', function() {//功能状态初始化
+        return function(text) {
+           if(text=="1"){
+                return "正常运行";
+           }else if(text=="10"){
+               return "已过时";
+           }else if(text=="20"){
+               return "已停用";
+           }
+        }
+    }).filter('adviceInitialize', function() {//建议模块初始化
+        return function(text) {
+            return text || '无'
+        }
+    })
+</script>
+</html>

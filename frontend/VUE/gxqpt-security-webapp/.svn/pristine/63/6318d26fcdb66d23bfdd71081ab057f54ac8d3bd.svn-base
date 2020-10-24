@@ -1,0 +1,356 @@
+<!-- 分配资源 -->
+<!-- 暂时无法想象如何开发，等待UI -->
+<template>
+    <Content>
+        <Form v-for="(item,idx) in applyData" :key="idx" :label-width="80" style="margin:80px 0;">
+            <Row>
+                <Col span="4">
+                    <FormItem label="CPU核数">
+                        <Input :value="item.cpuCount+'核'" disabled></Input>
+                    </FormItem>
+                </Col>
+                <Col span="4" offset="1">
+                    <FormItem label="内存">
+                        <Input :value="item.memorySize+'GB'" disabled></Input>
+                    </FormItem>
+                </Col>
+                <Col span="4" offset="1">
+                    <FormItem label="网络区域">
+                        <Input :value="item.netScope" disabled></Input>
+                    </FormItem>
+                </Col>
+                <Col span="4" offset="1">
+                    <FormItem label="网络带宽">
+                        <Input :value="item.netWide+'M'" disabled></Input>
+                    </FormItem>
+                </Col>
+            </Row>
+            <Row>
+                <Col span="4">
+                    <FormItem label="操作系统">
+                        <Input :value="item.system" disabled></Input>
+                    </FormItem>
+                </Col>
+                <Col span="4" offset="1" v-for="(disk,idx2) in item.disks" :key="idx2">
+                    <FormItem :label="disk.diskName">
+                        <Input :value="disk.diskSize+'GB'" disabled></Input>
+                    </FormItem>
+                </Col>
+                <Col span="4" offset="1">
+                    <FormItem label="数量">
+                        <Input :value="item.applyCount" disabled></Input>
+                    </FormItem>
+                </Col>
+            </Row>
+            <Button type="primary" @click="tableCreate(item)">分配</Button>
+            <Table class="tableList" v-if="tableShow" :columns="tableList.columns" :data="tableList.data" disabled-hover></Table>
+        </Form>
+        <Row class="bottom-bar" style="text-align: center">
+            <Col>
+                <Button type="default" @click="quit(-2)">取消</Button>
+                <Button type="primary" @click="quit(-1)">上一步</Button>
+                <Button type="primary" @click="submit">提交</Button>
+            </Col>
+        </Row>
+    </Content>
+</template>
+
+<script>
+import api from '@/api/axiosApi'
+import softhardApiList from '@/api/softhardApiList'
+
+function getConfigInfo() {
+  return {
+    serverID:'',
+    serverIP:'',
+    disksID:[],
+    disksMount:[],
+    diskProperty:[],
+  }
+}
+export default {
+    data(){
+        return{
+            applyData:[],//获取传递的数据如内存、CPU等
+            tableData:[],//表格数据
+            subData:{
+                dealServer:[],
+            },//提交数据整理
+            tableIdx:0,//父级table的index值
+            tableShow:false,//table显示判断
+            disksID:{id:''},//磁盘id默认模块
+            disksMount:{mount:''},//挂载点默认模块
+            diskProperty:{property:''},//磁盘属性默认模块
+            disksIDColumns:[
+                {
+                    title:'磁盘ID',
+                    key:'id',
+                    render: (h, params) => {
+                        return h('Input', {
+                            class:'server-list',
+                            props: {
+                                clearable:true,
+                            },
+                            on: {
+                                input: (value) => {
+                                    this.dealServerApp(this.subData,params);
+                                    this.subData.dealServer[this.tableIdx].disks[params.index].diskId = value;
+                                }
+                            }
+                        })
+                    }
+                }
+            ],
+            disksMountColumns:[
+                {
+                    title:'挂载点',
+                    key:'mount',
+                    render: (h, params) => {
+                        return h('Input', {
+                            class:'server-list',
+                            props: {
+                                clearable:true,
+                            },
+                            on: {
+                                input: (value) => {
+                                    this.dealServerApp(this.subData,params);
+                                    this.subData.dealServer[this.tableIdx].disks[params.index].diskPath = value;
+                                }
+                            }
+                        })
+                    }
+                }
+            ],
+            diskPropertyColumns:[
+                {
+                    title:'磁盘属性',
+                    key:'property',
+                    render: (h, params) => {
+                        return h('Select', {
+                            props:{
+                                value:'',
+                            },
+                            on: {
+                                'on-change':(event) => {
+                                    this.dealServerApp(this.subData,params);
+                                    this.subData.dealServer[this.tableIdx].disks[params.index].diskType = event;
+                                }
+                            }
+
+                        },
+                        [
+                            h('Option',{
+                                props: {
+                                    value: '1'
+                                }
+                            },'数据盘'),
+                            h('Option',{
+                                props: {
+                                    value: '2'
+                                }
+                            },'系统盘')
+                        ])
+                    }
+                }
+            ],
+            tableList: {
+                columns: [
+                    {
+                        type: 'index',
+                        title: '序号',
+                        width: 60,
+                        align: 'center'
+                    },
+                    {
+                        title: '服务器ID',
+                        key: 'serverID',
+                        render: (h, params) => {
+                            return h('Input', {
+                                class:'server-list',
+                                props: {
+                                    clearable:true,
+                                },
+                                on: {
+                                    input: (value) => {
+                                        if(!this.subData.dealServer[params.index]){
+                                            this.subData.dealServer[params.index] = {};
+                                        }
+                                        this.subData.dealServer[params.index].serverId = value;
+                                    }
+                                }
+                            })
+                        }
+                    },
+                    {
+                        title: '服务器ip',
+                        key: 'serverIP',
+                        render: (h, params) => {
+                            return h('Input', {
+                                class:'server-list',
+                                props: {
+                                    clearable:true,
+                                },
+                                on: {
+                                    input: (value) => {
+                                        if(!this.subData.dealServer[params.index]){
+                                            this.subData.dealServer[params.index] = {};
+                                        }
+                                        this.subData.dealServer[params.index].ip = value;
+                                    }
+                                }
+                            })
+                        }
+                    },
+                    {
+                        title: '磁盘ID',
+                        key: 'disksID',
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('Table', {
+                                class:'server-list',
+                                props: {
+                                    columns: this.disksIDColumns,
+                                    data:params.row.disksID,
+                                    'show-header':false
+                                },
+                                on: {
+                                    'on-row-click': (value) => {
+                                        this.tableIdx = params.index;//获取父表格的index
+                                    }
+                                }
+                            })
+                        }
+                    },
+                    {
+                        title: '挂载点',
+                        key: 'disksMount',
+                        align: 'center',
+                        render: (h, params) => {
+                        return h('Table', {
+                            class:'server-list',
+                            props: {
+                                columns: this.disksMountColumns,
+                                data:params.row.disksMount,
+                                'show-header':false
+                            },
+                            on: {
+                                'on-row-click': (value) => {
+                                    this.tableIdx = params.index;//获取父表格的index
+                                }
+                            }
+                        })
+                        }
+                    },
+                    {
+                        title: '磁盘属性',
+                        key: 'diskProperty',
+                        align: 'center',
+                        render: (h, params) => {
+                        return h('Table', {
+                            class:'server-list',
+                            props: {
+                                columns: this.diskPropertyColumns,
+                                data:params.row.diskProperty,
+                                'show-header':false
+                            },
+                            on: {
+                                'on-row-click': (value) => {
+                                    this.tableIdx = params.index;//获取父表格的index
+                                }
+                            }
+                        })
+                        }
+                    },
+                ],
+                data: []
+            },
+        }
+    },
+    mounted(){
+        if(this.$route.params.table){
+            this.applyData = this.$route.params.table;
+        }
+        console.log(this.$route.params.table);
+    },
+    methods:{
+        quit (n) {// 取消
+            this.$router.go(n)
+        },
+        tableCreate(item){//表格整理然后显示；
+            console.log(item);
+            for(var i = 0;i<item.applyCount;i++){
+                this.tableData.push(getConfigInfo());
+            }
+            for(var i = 0;i<this.tableData.length;i++){
+                for(var j =0;j<item.disks.length;j++){
+                    this.tableData[i].disksID.push(this.disksID);//根据数量遍历磁盘ID
+                    this.tableData[i].disksMount.push(this.disksMount);//根据数量遍历挂载点
+                    this.tableData[i].diskProperty.push(this.diskProperty);//根据数量遍历磁盘属性
+                }
+            }
+            this.tableList.data = this.tableData;
+            this.tableShow = true;
+            console.log(this.tableList.data);
+        },
+        submit(){//提交
+            if(this.dataDeal(this.subData)){
+                api(softhardApiList.uYApproveSubmit,this.subData).then((res) => {
+                    if(res.data.errcode == 0){
+                        this.$Message.success('提交成功');
+                        this.$router.go('-2');
+                    }else{
+                        this.$Message.error(res.data.errmsg);
+                    }
+                }, (err) => {
+                    //dong something...
+                })
+            }
+        },
+        dataDeal(data){
+            console.log(this.applyData);
+            data.stepCode = 'YOUYI_HANDLER';//this.$route.params.departData.stepCode;假数据
+            data.applyKeyid = this.$route.params.departData.id;
+            data.dealServer.forEach(item => {
+                item.applyKeyid = this.$route.params.departData.id;
+                item.cpuCount = this.applyData.cpuCount;
+                item.applyKeyid = this.$route.params.departData.id;
+                item.memorySize = this.applyData.memorySize;
+                item.netScope = this.applyData.netScope;
+                item.netWide = this.applyData.netWide;
+                item.system = this.applyData.system;
+            });
+            return true;
+        },
+        dealServerApp(data,params){
+            if(!data.dealServer[this.tableIdx]){
+                data.dealServer[this.tableIdx] = {};
+            }
+            if(!data.dealServer[this.tableIdx].disks){
+                data.dealServer[this.tableIdx].disks =[];
+            }
+            if(!data.dealServer[this.tableIdx].disks[params.index]){
+                data.dealServer[this.tableIdx].disks[params.index] = {}
+            }
+        }
+    }
+}
+</script>
+
+<style lang="less" scoped>
+.server-list /deep/ thead{
+    display: none;
+}
+.tableList{
+    margin-top:30px;
+}
+.tableList input{
+    border: 0px;outline:none;
+}
+.tableList /deep/.ivu-table-cell{
+    overflow: inherit;
+}
+.tableList /deep/.ivu-table{
+    overflow: inherit;
+}
+
+</style>

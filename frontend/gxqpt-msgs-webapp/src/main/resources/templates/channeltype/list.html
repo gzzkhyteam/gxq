@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+	<base href="<%=basePath%>">
+	<!--<title>消息平台</title>-->
+	<meta http-equiv="Expires" content="0" />
+	<meta name="renderer" content="webkit" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+	<link rel="stylesheet" href="${_static}/css/core/module.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/message/channel.css"/>
+	<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+	<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+	<script type="text/javascript" src="${_static}/js/app.js"></script>
+	<script type="text/javascript" src="${_static}/js/module.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+	<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+	<style type="text/css">
+		#right-box {
+			width: 100%;
+			height: calc(100% - 65px);
+			border: 0;
+		}
+	</style>
+</head>
+
+<body>
+<div class="workspace-body">
+	<div class="console-container clearfix">
+		<!-- begin 页面内容主体 -->
+		<div class="main">
+			<div id="right-box" class="list-section">
+				<!--<div class="list-content">-->
+				<!--<div class="form-inline">-->
+				<!--<fieldset>-->
+				<div class="grid-section">
+					<table id="list">
+					</table>
+					<div id="pager"></div>
+				</div>
+				<!--</fieldset>-->
+				<!--</div>-->
+				<!--</div>-->
+			</div>
+		</div>
+		<!-- end 页面内容主体 -->
+	</div>
+</div>
+<script type="text/javascript">
+	$('.title_first',parent.document).text("渠道管理");
+	$(".title_second",parent.document).text("渠道类型");
+    var tableObj = null;//jqgrid表对象
+    //获取文档类别
+    getdocumentClassify();
+    function getdocumentClassify() {
+
+    }
+    //获取文档列表
+    window.onload=function(){
+    	getdocumentList();
+    	$("#list_toppager_right").hide()
+    }   
+    function getdocumentList() {
+        var height = $("#right-box").height() +115;
+        tableObj=$("#list").jqGrid({
+            mtype:'GET',
+            datatype: "json",
+            contentType : 'application/json',
+            url: '${_gate_url}/api/msgs/channeltype/query',
+           	sortname : 'id',//初始化的时候排序的字段
+            colNames: ['渠道类型', '厂商名称', '支持消息类型', '说明',"创建时间"],
+            colModel: [{
+                name: 'name',
+                index: 'name',
+            }, {
+                name: 'factoryName',
+                index: 'factoryName',
+            }, {
+                name: 'msgType',
+                index: 'msgType',
+            }, {
+                name: 'remark',
+                index: 'remark',
+            }, {
+                name: 'createTime',
+                index: 'createTime'
+            }],
+          jsonReader : {
+              root:"data",
+          },
+            height: height
+        });
+    }
+
+    function  viewPage(id) {
+        reloadJqgrid();
+    }
+</script>
+</body>
+
+</html>

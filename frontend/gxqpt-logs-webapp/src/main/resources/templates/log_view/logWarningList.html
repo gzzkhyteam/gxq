@@ -1,0 +1,666 @@
+<!doctype html>
+<html>
+<head>
+    <base href="<%=basePath%>">
+
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- begin 外部CSS引入 -->
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+
+    <!-- end 外部CSS引入 -->
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/echarts/echarts.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+        }
+        .list-zx
+        {
+
+            width:100%;
+            height:100%;
+        }
+
+        .list-section {
+            width: 48%;
+            height: 340px;
+            float: left;
+            border: 1px solid #eeeeee;
+            padding: 10px;
+            background: #fff;
+            margin-left: 1%;
+            margin-right: 1%;
+            margin-top: 20px;
+        }
+
+        .list-content {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        .grid-section {
+        }
+
+        .ui-jqgrid .ui-jqgrid-btable tbody tr.jqgrow td, .ui-jqgrid {
+            background: #fff;
+        }
+
+        .ui-th-ltr, .ui-jqgrid .ui-jqgrid-htable th.ui-th-ltr, .ui-jqgrid .ui-jqgrid-btable
+        {
+            text-align: center;
+        }
+        .task-box{
+            height: 90px;
+            line-height: 90px;
+            text-align: center;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            width: 24%;
+            margin-right: 1%;
+        }
+        .task-box img{
+            margin-top:-15px;
+        }
+        .task-box span{
+            display: inline-block;
+            width: 120px;
+            height: 30px;
+            background: rgba(0,0,0,0.4);
+            color: #fff;
+            font-weight: bold;
+            line-height: 30px;
+            position: absolute;
+            transform: rotate(45deg);
+            text-align: center;
+            top: 10px;
+            right: -35px;
+            letter-spacing: 5px;
+
+        }
+        .task-box em{
+            font-size: 36px;
+            color: #fff;
+            font-style: normal;
+            padding:0 20px;
+        }
+        .fl{
+            float: left;
+            align:left;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        日志管理系统 &gt; 日志数据可视化 &gt; <span class="page-title-scend">日志告警分析</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!--<div style="height:78px;margin-left: 20px;margin-bottom: -8px;">
+            <form action="" class="form-inline search-form">
+                <div class="form-field">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <span class="text-danger"></span>
+                            <span>日志告警时间：</span>
+                        </label>
+                        <div class="form-control-wrap">
+                            <input id="startTime" name="startTime" class="Wdate"
+                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',readOnly:true,maxDate:'#F{$dp.$D(\'endTime\')}'})"/>
+                        </div>
+                        <span>~</span>
+                        <div class="form-control-wrap">
+                            <input id="endTime" name="endTime" class="Wdate"
+                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',readOnly:true,minDate:'#F{$dp.$D(\'startTime\')}',startDate:'#F{$dp.$D(\'startTime\',{d:+1})}'})"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <span class="text-danger"></span>
+                            <span>应用系统：</span>
+                        </label>
+                        <div class="form-control-wrap">
+                            <select id="appId" name="appId"  class="form-control chosen-select selWid-form-search" style="width: 100%">
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <div class="form-group">
+                        <div class="form-control-wrap text-right">
+                            <button type="button" class="btn btn-primary search-button" onclick="search()">
+                                <span class="glyphicon glyphicon-search"></span> 查询
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>-->
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+
+            <div id="left-box" class="list-section">
+                <div id="left-boxzx" class="list-zx">
+
+                </div>
+            </div>
+
+            <div id="right-box" class="list-section">
+
+                <div id="leftdown-boxzx" class="list-zx">
+
+
+                </div>
+            </div>
+            <div id="leftdown-box" class="list-section">
+               <!-- <p align="right"> <label>告警类型：</label> <select id="logType" name="logType">
+                    <option value ="">全部告警</option>
+                    <option value ="QUANTITY">数量告警</option>
+                    <option value ="KEY">关键词告警</option>
+                    <option value ="RESPONSE">响应时长告警</option>
+                </select></p>-->
+                <div id="right-boxzx" class="list-zx">
+
+
+                </div>
+            </div>
+
+            <div id="rightdown-box" class="list-section">
+
+                <div id="rightdown-boxzx" class="list-zx">
+
+
+                </div>
+            </div>
+
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script>
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script type="text/javascript" src="${_js}/viewJs/log_view/logWarning.js?v=2"></script>
+</body>
+</html>
+<!--<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart1 = echarts.init(document.getElementById('left-boxzx'));
+    var myChart2 = echarts.init(document.getElementById('right-boxzx'));
+    var myChart3 = echarts.init(document.getElementById('leftdown-boxzx'));
+    var myChart4 = echarts.init(document.getElementById('rightdown-boxzx'));
+
+    //获取应用系统
+    getSystemList();
+    /* 获取应用系统*/
+    function getSystemList() {
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            url: "${_gate_url}/api/developer/application/findList",
+            data:{type:1},
+            success: function (rows) {
+                if (rows.data) {
+                    $('#appId').append('<option value=""></option>');
+                    var arr = rows.data;
+                    for(var i=0;i<arr.length;i++){
+                        var appId = arr[i].appId;
+                        var name = arr[i].name;
+                        $('#appId').append('<option value='+appId+'>'+name+'</option>');
+
+                    }
+                }
+            }
+        });
+    }
+
+    var myDate = new Date();
+    var currentyear=myDate.getFullYear();
+    var currentmonth=myDate.getMonth()+1;
+    if(currentmonth<10)
+    {
+        currentmonth="0"+currentmonth.toString();
+    }
+    var currentday=myDate.getDate();
+    $(document).ready(function(){
+        var startTime = currentyear+"-"+currentmonth+"-"+currentday+" 00:00";
+        var endTime = currentyear+"-"+currentmonth+"-"+currentday+" 23:59";
+        $('#startTime').val(startTime);
+        $('#endTime').val(endTime);
+        var appId = $('#appId').val();
+        var logType = $('#logType').val();
+        loadOption1(startTime,endTime,appId);
+        loadOption2(startTime,endTime,appId);
+        loadOption3(startTime,endTime,appId,logType);
+        loadOption4(startTime,endTime,appId);
+    });
+
+    function search()
+    {
+        var startTime=$("#startTime").val();
+        var endTime=$("#endTime").val();
+        var appId = $("#appId").val();
+        var logType = $('#logType').val();
+        loadOption1(startTime,endTime,appId);
+        loadOption2(startTime,endTime,appId);
+        loadOption3(startTime,endTime,appId,logType);
+        loadOption4(startTime,endTime,appId);
+    }
+    option1 = {
+        title: {
+            text: '不同等级告警数量统计',
+            x:'center'
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            bottom:10,
+            data: ['一级告警', '二级告警','三级告警']
+        },
+        grid: {
+            left: '5%',
+            right: '8%',
+            bottom: '12%',
+            containLabel: true
+        },
+        xAxis: {
+            name:'时间',
+            type: 'category',
+            data: [],
+            axisLabel:{
+                interval:0,
+                rotate:45,//倾斜度 -90 至 90 默认为0
+                margin:2,
+                textStyle:{
+                    fontWeight:"bolder",
+                    color:"#000000"
+                }
+            }
+        },
+        yAxis: {
+            name:'数量',
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+
+        series: [
+            {
+                name: '',
+                type: 'bar',
+                data: []
+            },
+            {
+                name: '',
+                type: 'bar',
+                data: []
+            },
+            {
+                name: '',
+                type: 'bar',
+                data: []
+            }
+        ]
+    };
+    option2 = {
+        title: {
+            text: '告警级别数量占比',
+            left: 'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            // orient: 'vertical',
+            // top: 'middle',
+            bottom: 10,
+            left: 'center',
+            data: ['一级告警', '二级告警', '三级告警']
+        },
+        series : [
+            {
+                type: 'pie',
+                radius : '65%',
+                center: ['50%', '50%'],
+                selectedMode: 'single',
+                data:[
+
+                    {value:30, name: '一级告警'},
+                    {value:40, name: '二级告警'},
+                    {value:30, name: '三级告警'}
+                ],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ],
+        color: ['#0000E3','#00EC00','#FF8000']
+    };
+    option3 = {
+        title : {
+            text:'告警类型数量统计',
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },grid: {
+            left: '5%',
+            right: '8%',
+            bottom: '9%',
+            containLabel: true
+        },
+        xAxis: {
+            name:'时间',
+            type: 'category',
+            data: [],
+            axisLabel:{
+                interval:0,
+                rotate:45,//倾斜度 -90 至 90 默认为0
+                margin:2,
+                textStyle:{
+                    fontWeight:"bolder",
+                    color:"#000000"
+                }
+            }
+        },
+        yAxis: {
+            name:'数量',
+            type: 'value'
+        },
+        series: [{
+            data: [],
+            type: 'line'
+        }]
+    };
+
+
+    option4 = {
+        title: {
+            text: '告警类型数量占比',
+            left: 'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            // orient: 'vertical',
+            // top: 'middle',
+            bottom: 10,
+            left: 'center',
+            data: []
+        },
+        series : [
+            {
+                type: 'pie',
+                radius : '65%',
+                center: ['50%', '50%'],
+                selectedMode: 'single',
+                data:[],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+
+
+
+    // 使用刚指定的配置项和数据显示图表。
+    //myChart1.setOption(option1);
+    //myChart2.setOption(option2);
+    //myChart3.setOption(option3);
+    //myChart4.setOption(option4);
+
+    function loadOption1(startTime,endTime,appId){
+        ajaxHengyun({
+            type: "POST",
+            async:false,
+            dataType: 'json',
+            data: {startTime:startTime,endTime:endTime,applyId:appId},
+            url: "${_gate_url}/api/logs/count/warnLevelNumber",
+            success: function (rows) {
+                if(rows.data){
+                    var times = new Array();
+                    var onedates = new Array();
+                    var twodates = new Array();
+                    var threedates = new Array();
+                    //先解析json数据进行分层
+                    $.each(rows.data, function(key, val) {
+                        for (var i=0;i<val.length;i++) {
+                            if(i==0){
+                                var time = val[i].time;
+                                var number = val[i].number;
+                                times.push(time);
+                                onedates.push(number)
+                            }else if(i==1){
+                                var number = val[i].number;
+                                twodates.push(number)
+                            }else if(i==2){
+                                var number = val[i].number;
+                                threedates.push(number)
+                            }
+                        }
+                    });
+                }
+                
+                myChart1.setOption(option1);
+                myChart1.setOption({
+                    xAxis: {
+                        data:times
+                    },
+                    series :[
+                        {
+                            name: '一级告警',
+                            data: onedates
+                        },
+                        {
+                            name: '二级告警',
+                            data: twodates
+                        },
+                        {
+                            name: '三级告警',
+                            data: threedates
+                        }
+                    ]
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+            }
+        });
+
+    }
+    function loadOption2(startTime,endTime,appId){
+        ajaxHengyun({
+            type: "POST",
+            async:false,
+            dataType: 'json',
+            data: {startTime:startTime,endTime:endTime,applyId:appId},
+            url: "${_gate_url}/api/logs/count/warnLevelAccount",
+            success: function (rows) {
+                if (rows.data) {
+                    //先解析json数据进行分层
+                    var names=new Array();
+                    var nums=new Array();
+                    var i=0;
+                    //先解析json数据进行分层
+                    $.each(rows.data, function(key, val) {
+                        //names.push(val.logTypeName);
+                        var obj = new Object();
+                        if(i==0){
+                            obj.name='一级告警';
+                        }else if(i==1){
+                            obj.name='二级告警';
+                        }else if(i==2){
+                            obj.name='三级告警';
+                        }
+                        obj.value=val.number;
+                        nums.push(obj);
+                        i++;
+
+                    });
+                    
+                    //初始化全量数据框架
+                    myChart2.setOption(option2);
+                    myChart2.setOption({
+                        series :
+                            {
+                                data: nums
+                            }
+                    });
+                } else {
+                    layer.msg("数据加载失败，请稍后重试！", {time: 1000});
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+            }
+        });}
+    function loadOption3(startTime,endTime,appId,logType){
+        ajaxHengyun({
+            type: "POST",
+            async:false,
+            dataType: 'json',
+            data: {startTime:startTime,endTime:endTime,applyId:appId,logType:logType},
+            url: "${_gate_url}/api/logs/count/warnTypeNumber",
+            success: function (rows) {
+                if(rows.data){
+                    var times = new Array();
+                    var dates = new Array();
+                    //先解析json数据进行分层
+                    $.each(rows.data, function(key, val) {
+                        for (var i=0;i<val.length;i++) {
+                            var time = val[i].time;
+                            var number = val[i].number;
+                            times.push(time);
+                            dates.push(number)
+                        }
+                    });
+                }
+                myChart3.setOption(option3);
+                myChart3.setOption({
+                    xAxis: {
+                        data:times
+                    },
+                    series : {
+                        data: dates
+                    }
+
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+            }
+        });
+
+    }
+    function loadOption4(startTime,endTime,appId){
+        ajaxHengyun({
+            type: "POST",
+            async:false,
+            dataType: 'json',
+            data: {startTime:startTime,endTime:endTime,applyId:appId},
+            url: "${_gate_url}/api/logs/count/warnTypeAccount",
+            success: function (rows) {
+                if (rows.data) {
+                    //先解析json数据进行分层
+                    var names=new Array();
+                    var nums=new Array();
+                    //先解析json数据进行分层
+                    $.each(rows.data, function(key, val) {
+                        var obj = new Object();
+                        if(val.logTypeName=='QUANTITY'){
+                            obj.name='数量告警';
+                            names.push('数量告警');
+                        }else if(val.logTypeName=='KEY'){
+                            obj.name='关键字告警';
+                            names.push('关键字告警');
+                        }else if(val.logTypeName=='RESPONSE'){
+                            obj.name='响应时长告警';
+                            names.push('响应时长告警');
+                        }
+                        obj.value=val.number;
+                        nums.push(obj);
+
+                    });
+                    //初始化全量数据框架
+                    myChart4.setOption(option4);
+                    myChart4.setOption({
+                        legend: {
+                            data: names
+                        },
+                        series :
+                            {
+                                data: nums
+                            }
+                    });
+                } else {
+                    layer.msg("数据加载失败，请稍后重试！", {time: 1000});
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+            }
+        });}
+</script>-->

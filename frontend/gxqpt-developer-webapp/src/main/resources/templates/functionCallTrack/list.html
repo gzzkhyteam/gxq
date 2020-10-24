@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>应用服务管理 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/jqueryPagination/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+<body>
+<div class="main-box clearfix">
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                功能调用跟踪 > <span class="active">功能列表</span>
+            </div>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="table-box">
+                <div class="top-bar">
+                    <div class="form-inline pull-left">
+                        <div class="form-group">
+                            <label class="sr-only">Password</label>
+                            <select class="form-control" ng-model="para.appId">
+                                <option value="">---调用端应用---</option>
+                                <option ng-repeat="ca in callAppList" value="{{ca.appId}}">{{ca.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only">Password</label>
+                            <select class="form-control" ng-model="para.serviceName">
+                                <option value="">---被调用端服务---</option>
+                                <option ng-repeat="cs in calledServiceList" value="{{cs.serviceId}}">{{cs.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only"></label>
+                            <input type="number" class="form-control" placeholder="持续开始时间(s)" ng-model="para.minDuration">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only"></label>
+                            <input type="number" class="form-control" placeholder="持续结束时间(s)" ng-model="para.maxDuration">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only"></label>
+                            <input id="laydate" class="form-control laydate" placeholder="调用时间" ng-model="durationTime">
+                        </div>
+                        <button class="btn btn-primary btn-search" ng-click="reloadFunction()">查询</button>
+                    </div>
+                </div>
+                <table class="table table-darck table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th width="50" align="center"></th>
+                        <!--<th>功能名称</th>-->
+                        <!--<th>功能编码</th>-->
+                        <th>调用端应用</th>
+                        <th>被调用端服务</th>
+                        <th>调用时间</th>
+                        <!--<th>调用状态</th>-->
+                        <th width="170" class="text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="task in taskList">
+                        <td class="text-center">{{$index+1}}</td>
+                        <!--<td>{{taks.code}}</td>-->
+                        <!--<td>{{taks.memory}}</td>-->
+                        <td>{{task.appName}}</td>
+                        <td>{{task.endpointServiceName}}</td>
+                        <td>{{task.start}}</td>
+                        <!--<td>{{taks.hostPerson}}</td>-->
+                        <td class="act">
+                            <a href="${_cp}/module/callChainTrack?traceId={{task.traceId}}">调用链追踪</a>
+                            <!--<a href="${_cp}/module/peakAnalysis">波峰分析</a>-->
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="bottom-bar alignCenter">
+                    <div id="pagination_9"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/laydate/laydate.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqueryPagination/js/pagination.min.js"></script>
+<script type="text/javascript">
+    var pageType = "functionCallTrack";
+</script>
+</body>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+    
+    var allAppId2NameList = {};
+    
+    app.controller('controller', function ($scope, $http) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        var pagination = null;
+        $scope.para = {};
+        //初始化laydate
+        //日期范围
+        laydate.render({
+            elem: '#laydate',
+            range: true,
+            type: 'datetime',
+            done:function (value,date,endDate) {
+                $scope.para.startTs = value.split(" - ")[0];
+                $scope.para.endTs = value.split(" - ")[1];
+            }
+        });
+        
+        //获取所有的应用服务
+        $scope.getAllApp = function () {
+            $http.get(urlPrev + 'application/findAllList',{
+                headers:getHeaders()
+            }).success(function (res) {
+            	allAppId2NameList = {};
+                var applist = res.data;
+                for(var i in applist){
+                	allAppId2NameList[applist[i].appId] = applist[i].name;
+                }
+            })
+        }
+        
+        $scope.getAllApp();
+        //获取调用端应用
+        $scope.getCallApp = function () {
+            $http.get(urlPrev + 'application/findByType',{
+                params:{type:1},
+                headers:getHeaders(),
+            }).success(function (res) {
+                $scope.callAppList = res.data;
+            })
+        }
+        $scope.getCallApp();
+       var allCalledServiceList = {};
+        //获取被调用端服务
+        $scope.getCalledService = function () {
+            $http.get(urlPrev+'application/findByType',{
+                params:{type:2},
+                headers:getHeaders(),
+            }).success(function (res) {
+            	var dataList =  res.data;
+                $scope.calledServiceList = dataList;
+                allCalledServiceList = {};
+                for(var i in dataList){
+                	allCalledServiceList[dataList[i].serviceId] = dataList[i].name;
+                }
+            })
+        }
+        $scope.getCalledService();
+        //获取功能列表
+        $scope.getFunction = function(currPage,pageSize,load) {
+        	console.log($scope.para);
+            $scope.para.pageNo = currPage || 1;
+            $scope.para.pageSize = pageSize || 20;
+            $http.get('${_gate_url}/api/zipkin/ext/rootTraces',{
+                params:$scope.para,
+                headers: getHeaders(),
+            }).success(function (res) {
+
+            	if(res.list && res.list.length>0){
+            		
+            		for(var i in res.list){
+            			// 格式化数据
+            			var appIdAndServiceId = res.list[i].appId.split("@");
+            			if(appIdAndServiceId != null && appIdAndServiceId.length==2 && allAppId2NameList[appIdAndServiceId[0]]){
+            				res.list[i].appName = allAppId2NameList[appIdAndServiceId[0]];
+            			} else {
+            				res.list[i].appName =  "-";
+            			}
+            			if(appIdAndServiceId != null && appIdAndServiceId.length==2 && allCalledServiceList[appIdAndServiceId[1]]){
+            				res.list[i].endpointServiceName = allCalledServiceList[appIdAndServiceId[1]];
+            			} else {
+            				res.list[i].endpointServiceName =  "-";
+            			}
+            		}
+            	}
+            	
+                $scope.taskList = res.list;
+                
+                /*处理分页*/
+                if(load) {
+                    $("#pagination_9").pagination('setPage', 1, res.pages, res.total);
+                }else{
+                    pagination = $("#pagination_9").pagination({
+                        totalPage:res.pages,
+                        totalSize:res.total,
+                        // totalDataText:res.total,
+                        totalData: res.total,
+                        isShowTotalData: true,
+                        pageSizeOpt: [
+                            {'value': 5, 'text': '5条/页'},
+                            {'value': 10, 'text': '10条/页'},
+                            {'value': 15, 'text': '15条/页'},
+                            {'value': 20, 'text': '20条/页','selected': true}
+                        ],
+                        callBack: function (currPage, pageSize) {
+                            $scope.getFunction(currPage,pageSize);
+                        }
+                    });
+                }
+            })
+        }
+        $scope.getFunction();
+        $scope.reloadFunction = function () {
+            $scope.getFunction(1,pagination.get(0).pageText.pageSize,true);
+        }
+    })
+    /*angularJS*/
+</script>
+</html>

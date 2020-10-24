@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/popPage/css/pop.css"/>
+    <link rel="stylesheet" href="${_static}/css_base/index.css"/>
+    <link rel="stylesheet" href="${_static}/js/jqueryPagination/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css_base/style.css"/>
+    <script src="${_static}/js/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/popPage/js/pop.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/jqueryPagination/js/pagination.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script src="${_static}/js/hengyun/jquery.cookie.js"></script>
+</head>
+<style type="text/css">
+    html,
+    body {
+        margin: 0;
+        height: 100%;
+        /*background: #3071A9;*/
+    }
+
+    tr {
+        background: rgba(27, 45, 128, 0.4) !important;
+    }
+
+    tr:nth-child(even) {
+        background: rgba(27, 45, 128, 0.6) !important;
+    }
+</style>
+
+<body>
+<table class="table_list table-head" cellspacing="0" id="matter">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>任务事项</th>
+        <th>任务来源</th>
+        <th>数量</th>
+        <th>环节</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!--<tr>
+        <td>1</td>
+        <td>事项1</td>
+        <td>省公文处理和事务办理</td>
+        <td>1</td>
+        <td>办理</td>
+        <td>进入</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>事项2</td>
+        <td>省公文处理和事务办理</td>
+        <td>1</td>
+        <td>办理</td>
+        <td>进入</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>事项3</td>
+        <td>省公文处理和事务办理</td>
+        <td>1</td>
+        <td>办理</td>
+        <td>进入</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>事项4</td>
+        <td>省公文处理和事务办理</td>
+        <td>1</td>
+        <td>办理</td>
+        <td>进入</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>事项5</td>
+        <td>省公文处理和事务办理</td>
+        <td>1</td>
+        <td>办理</td>
+        <td>进入</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>事项6</td>
+        <td>省公文处理和事务办理</td>
+        <td>1</td>
+        <td>办理</td>
+        <td>进入</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>事项7</td>
+        <td>省公文处理和事务办理</td>
+        <td>1</td>
+        <td>办理</td>
+        <td>进入</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>事项8</td>
+        <td>省公文处理和事务办理</td>
+        <td>1</td>
+        <td>办理</td>
+        <td>进入</td>
+    </tr>-->
+    </tbody>
+</table>
+<div class="pagination-box" style="text-align: center;margin-top: 12px;">
+    <div id="pagination"></div>
+</div>
+</body>
+<script type="text/javascript">
+    var urlPrev = '${_gate_url}';
+    getProcessMatter(1,10);
+    //查询待办任务
+    function getProcessMatter(currPage,pageSize) {
+        ajaxHengyun({
+            type: 'post',
+            url: urlPrev + '/api/msgs/p/backlog/page',
+           // url: 'http://127.0.0.1:10086/api/msgs/p/backlog/page',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                pageNo: currPage,
+                pageSize: pageSize,
+                data: {
+                    more: 0,
+                    createUserId: $.cookie('_user_id')
+                }
+            }),
+            success: function (res) {
+                if (res.data && res.data.list.length) {
+                    var str = '';
+                    var n = 0;
+                    $.each(res.data.list, function (index, value) {
+                        n++;
+                        str += '<tr>' +
+                            '<td>' + n + '</td>' +
+                            '<td>' + value.task + '</td>' +
+                            '<td>' + value.taskSource + '</td>' +
+                            '<td>' + value.taskNum + '</td>' +
+                            '<td>' + value.taskLink + '</td>' +
+                            '<td><a data-id=' + value.id + ' href=' + value.taskUrl + ' target="_blank">进入</a></td>' +
+                            '</tr>';
+                    })
+                    $('#matter tbody').html(str);
+                    pagination = $("#pagination").pagination({
+                        totalPage: res.data.pages,
+                        totalSize: res.data.total,
+                        pageSize:res.data.pageNum,
+                        css: 'css-3',
+                        isShowFL: false,
+                        isShowPageSizeOpt: false,
+                        isShowSkip: false,
+                        isShowRefresh: false,
+                        isShowTotalPage: false,
+                        isResetPage: false,
+                        callBack: function (currPage, pageSize) {
+                            getProcessMatter(currPage, pageSize);
+                        }
+                    });
+                }
+            }
+        })
+    }
+</script>
+
+</html>

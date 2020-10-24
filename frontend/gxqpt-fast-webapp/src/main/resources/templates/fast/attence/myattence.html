@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css" href="${_css}/reset.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+
+    <link rel="stylesheet" href="${_css}/app.css">
+
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <script type="text/javascript" src="${_lib}/webuploader/webuploader.js"></script>
+    <script type="text/javascript" src="${_lib}/webuploader/HYCore.js"></script>
+
+    <!-- end 外部CSS引入 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        .form-inline ul {
+            text-align: left;
+        }
+
+        .form-inline a {
+            display: inline-block;
+            color: #333333;
+            font-size: 14px;
+            text-align: center;
+            width: 23.5%;
+            margin: 10px 5px;
+        }
+
+        .form-inline a img {
+            width: 100%;
+        }
+
+        .list-card li {
+            width: 190px;
+            height: 90px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-right: 1.2%;
+            display: inline-block;
+        }
+
+        .list-card li .title {
+            width: 100%;
+            height: 23px;
+            line-height: 23px;
+            padding-left: 10px;
+            color: #FFFFFF;
+            background-color: #57bcdd;
+        }
+
+        .list-card li .content span {
+            margin-top: 10px;
+        }
+
+        .list-card li .content span {
+            width: 48%;
+            display: inline-block;
+        }
+
+        .list-card li .content span:FIRST-CHILD {
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        .list-card li .content span:LAST-CHILD {
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .task-box {
+            height: 120px;
+            line-height: 120px;
+            text-align: center;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            width: 32.6%;
+            /*width: 32%;
+             margin-right: 1%; */
+        }
+
+        .task-box img {
+            margin-top: -15px;
+        }
+
+        .task-box span {
+            display: inline-block;
+            width: 120px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-weight: bold;
+            line-height: 30px;
+            position: absolute;
+            transform: rotate(45deg);
+            text-align: center;
+            top: 10px;
+            right: -35px;
+            letter-spacing: 2px;
+
+        }
+
+        .task-box em {
+            font-size: 36px;
+            color: #fff;
+            font-style: normal;
+            padding: 0 20px;
+        }
+
+        .form-control-wrap {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>
+                            考勤管理 > <font color="#0099cc">我的考勤</font>
+                        </h5>
+                    </div>
+                    <div class="pull-right">
+                        <label class="control-label"> <span>时限范围</span> <span>：</span>
+                        </label>
+                        <div class="form-control-wrap ">
+                            <input class="form-control Wdate" id="startTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',onpicked:function() {
+										  $dp.$('startTime').value = $dp.cal.getDateStr();
+										}})" name="startTime">
+                        </div>
+                        <label class="control-label">
+                            <span class="text-danger"></span>
+                            <span>至</span>
+                        </label>
+                        <div class="form-control-wrap ">
+                            <input class="form-control Wdate" id="endTime" onfocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd',onpicked:function() {
+										   $dp.$('endTime').value = $dp.cal.getDateStr();
+										}})" name="endTime">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick=loadAll()>
+                            <span  class="glyphicon glyphicon-serach" ></span>查询
+                        </button>
+                        <button class="btn btn-default go-back">
+                            <span class="glyphicon glyphicon-backward"></span> 返回上一级
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="col-sm-12">
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="margin-top-1">
+                        <div class="total" style="padding: 15px;">
+
+                        </div>
+                        <div class="clear"></div>
+                        <div class="list-section" style="width:40%;height:310px;display: inline-block;">
+                            <div id="echart_1" style="height:100%;"></div>
+                        </div>
+                        <div class="list-section" style="width:52%;height:310px;margin-left:2%;display: inline-block;">
+                            <div id="echart_2" style="height:100%;"></div>
+                            <div class="text-center" style="color: #e00;">注：缺勤=病假+事假+休假+旷工+迟到+早退</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib}/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+
+<!--end 外部JS引入 -->
+<!--begin 自定义JS -->
+<script type="text/javascript">
+
+    $(function () {
+        var startTime = $dp.$('startTime').value;
+        var endTime = $dp.$('endTime').value;
+        loadTotalView(startTime, endTime);
+        loadBusy(startTime, endTime);
+        loadDetail(startTime, endTime);
+    });
+
+    function loadAll() {
+        var startTime = $dp.$('startTime').value;
+        var endTime = $dp.$('endTime').value;
+        loadTotalView(startTime, endTime);
+        loadBusy(startTime, endTime);
+        loadDetail(startTime, endTime);
+    }
+    //加载总数
+
+    function loadTotalView(startTime, endTime) {
+        ajaxHengyun({
+            url: '${_gate_url}/api/developer/attence/attencemng/loadTotalView',
+            type: "post",
+            dataType: "json",
+            async: false,
+            data: {startTime:startTime,endTime:endTime},
+            success: function (data) {
+                if (data.errmsg == 'ok') {
+                    $(".total div").remove();
+                    var valObj = data.data;
+                    var html = "";
+                    html += '<div class="col-sm-4 task-box" style="background: #e27b78;">';
+                    html += '<img src="${_cp}/static/images/daiban-icon.png"  alt=""/>';
+                    html += '<em>'+valObj.sjcqDay+'天</em>';
+                    html += '<span>正常出勤</span>';
+                    html += '</div>';
+                    html += '<div class="col-sm-4 task-box" style="background:#f3c077;margin:0 1%;">';
+                    html += '<img src="${_cp}/static/images/banli-icon.png"  alt=""/>';
+                    html += '<em>'+valObj.ycqDay+'天</em>';
+                    html += '<span>应出勤</span>';
+                    html += '</div>';
+                    html += '<div class="col-sm-4 task-box" style="background:#82c882;">';
+                    html += '<img src="${_cp}/static/images/banjie-icon.png"  alt=""/>';
+                    html += '<em>'+valObj.sjWorkHour+'小时</em>';
+                    html += '<span>实际工作</span>';
+                    html += '</div>';
+                    $(".total").append(html);
+                } else {
+
+                }
+            }
+        })
+
+    }
+    //加载忙碌程度
+    function loadBusy(startTime, endTime) {
+        ajaxHengyun({
+            url: '${_gate_url}/api/developer/attence/attencemng/loadBusy',
+            type: "post",
+            datatype:"json",
+            async: false,
+            data: {startTime:startTime,endTime:endTime},
+            success: function (data) {
+                var hour = data.data.hour;
+                if(hour<-125){
+                    hour = -125;
+                }else if(hour>125){
+                    hour =125;
+                }
+                if (data.errmsg == 'ok') {
+                    var echart1 = echarts.init(document.getElementById("echart_1"));
+                    var option = {
+                        title: {
+                            text: ""
+                        },
+                        radius: '100%',
+                        series: [
+                            {
+                                name: '业务指标',
+                                type: 'gauge',
+                                min: -125,
+                                max: 125,
+                                detail: {formatter: '{value}'},
+                                data: [{value: hour, name: '忙碌程度'}]
+                            }
+                        ]
+                    };
+                    echart1.setOption(option);
+                } else {
+
+                }
+            }
+        })
+
+    }
+    //加载柱状图
+    function loadDetail(startTime, endTime) {
+        ajaxHengyun({
+            url: '${_gate_url}/api/developer/attence/attencemng/loadDetail',
+            type: "post",
+            dataType: "json",
+            async: false,
+            data: {startTime:startTime,endTime:endTime},
+            success: function (data) {
+                if (data.errmsg == 'ok') {
+                    var echart2 = echarts.init(document.getElementById("echart_2"));
+                    var option = {
+                        title: {
+                            text: "各类情况统计"
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['加班', '病假', '事假', '休假', '旷工', '迟到', '早退']
+                        },
+
+                        calculable: true,
+                        xAxis: [
+                            {
+                                type: 'category',
+
+                                data: ['加班','缺勤','病假', '事假', '休假', '旷工', '迟到', '早退'],
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '',
+                                type: 'bar',
+                                itemStyle: {
+                                    normal: {
+                                        label: {
+                                            show: true,
+                                            position: 'top',
+                                            textStyle: {
+                                                color: '#615a5a'
+                                            }
+                                        }
+                                    }
+                                },
+                                itemStyle: {
+                                    normal: {
+                                        color: function (params) {
+                                            // build a color map as your need.
+                                            var colorList = [
+                                                '#C1232B', '#B5C334', '#FCCE10', '#E87C25', '#27727B',
+                                                '#FE8463', '#9BCA63', '#FAD860', '#F3A43B', '#60C0DD',
+                                                '#D7504B', '#C6E579', '#F4E001', '#F0805A', '#26C0C0'
+                                            ];
+                                            return colorList[params.dataIndex]
+                                        }
+                                    }
+                                },
+                                data: data.data.list,
+                                barWidth: 25,
+                            }
+                        ]
+                    };
+                    echart2.setOption(option);
+                } else {
+
+                }
+            }
+        });
+
+    };
+</script>
+<!--end 自定义JS -->
+
+
+</body>
+</html>

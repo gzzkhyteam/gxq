@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/module.css">
+    <style type="text/css">
+    	h3{line-height: 30px;}
+    	.folderName{width: 100%; margin-top: 10px; border: 0; border-bottom: 1px solid #66afe9; outline: 0; padding: 3px 0;}
+    	.error{background: #e51c23; padding: 5px; color: #fff; border-radius: 3px; margin-top: 9px; display: none; font-size: 12px;}
+        .fontColor{font-size: 12px; color: #aaa;}
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-sm-12 col-xs-12">
+        <div class="list-content">
+            <div class="form-inline">
+            	<h3><span>文件夹名称</span><span class="fontColor">（长度限30字符以内）</span></h3>
+            	<input type="text" name="" id="folderName" class="folderName" value="" autocomplete="off"/>
+            	<span class="error"><i class="fa fa-times-circle"></i> 非法文件名或文件已存在，请指定其他名称</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    function removeSpacing(obj) {
+        return obj.replace(/\s/gi, '')
+    }
+    function save(){
+        var fileName = $("#folderName").val();
+        fileName = removeSpacing(fileName);
+        if(fileName==''){
+            top.layer.confirm("文件夹名称不能为空字符串！",{
+                title:'温馨提示',
+                shade: [0.4,'#000'],
+                btn: ['确定'] //按钮
+            });
+            return;
+        }
+        if(fileName.length > 30){
+            top.layer.confirm("文件夹名称长度超出范围，限制30字符以内！",{
+                title:'温馨提示',
+                shade: [0.4,'#000'],
+                btn: ['确定'] //按钮
+            });
+            return;
+        }
+        var parm = {
+            orderNum: 0,
+            parentId: '${parentId}',
+            submittedFileName: fileName
+        };
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType:"application/json",
+            url: "${_gate_url}/api/file/file/saveFolder",
+            data:JSON.stringify(parm),
+            success:function(data){
+                if(data.errcode=="-1"){
+                    parent.layer.msg(data.errmsg,{time:1500});
+                }else{
+                    parent.home.updateFolder('${parentId}');
+                    parent.layer.closeAll();
+                    parent.layer.msg("新建成功！",{icon: 6,time:1500});
+                }
+            }
+        });
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css" href="${_css}/reset.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/webuploader/webuploader.css">
+
+    <link rel="stylesheet" type="text/css" href="${_lib}/layer/skin/layer.css">
+
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=0.1">
+
+    <link rel="stylesheet" href="${_css}/app.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <!-- end 外部CSS引入 -->
+    <!-- begin 自定义样式 -->
+    <link rel="stylesheet" href="${_css}/viewCss/workapprove/list.css">
+</head>
+<body>
+
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <!--标题-->
+            <div class="col-sm-12">
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5 class="page-title">
+                            考勤审批
+                        </h5>
+                    </div>
+                    <div class="console-title console-title-border pull-right" style="padding: 0">
+                        <div class="btn-group" id="send">
+                            <label class="btn btn-primary active" data-send="true">
+                                我发出的
+                            </label>
+                            <label class="btn btn-primary" data-send="false">
+                                我收到的
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <!-- end 标题 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <div class="col-sm-12">
+                                    <form id='btn_Search_form' action="" class="form-inline search-form">
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>审批类型：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <select
+                                                        id="aprType"
+                                                        name="aprType"
+                                                        class="form-control select-w"
+                                                        style="width: 153px;">
+                                                        <option value="" selected>全部</option>
+                                                        <option value="overtime">加班</option>
+                                                        <option value="leave">请假</option>
+                                                        <option value="business">出差</option>
+                                                        <option value="outside">外勤</option>
+                                                        <option value="supply">补签</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>状态：</span>
+                                                </label>
+                                                <div class="form-control-wrap ">
+                                                    <select
+                                                        id="curState"
+                                                        name="curState"
+                                                        class="form-control select-w"
+                                                        style="width: 153px;">
+                                                        <option value="" selected>全部</option>
+                                                        <option value="1">审批中</option>
+                                                        <option value="2">已驳回</option>
+                                                        <option value="3">已结束</option>
+                                                        <option value="5">已撤销</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>时间：</span>
+                                                </label>
+                                                <div class="form-control-wrap">
+                                                    <input id="startTime" name="startTime" class="form-control Wdate" placeholder=""/> — <input id="endTime" name="endTime" class="form-control Wdate" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap text-right">
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-primary search-button">
+                                                        查询
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="form-group">
+                                                <div class="form-control-wrap text-right">
+                                                    <button type="button" class="btn btn-primary">
+                                                        导出
+                                                    </button>
+                                                </div>
+                                            </div> -->
+                                            <div class="form-group">
+                                                <div class="form-control-wrap text-right">
+                                                    <a href="create" target="home" class="btn btn-primary">
+                                                        新建审批
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- begin 页面内容主体 -->
+                                <div class="col-sm-12">
+                                    <div>
+                                        <div class="inline-block"></div>
+                                        <div class="inline-block margin-left"></div>
+                                    </div>
+                                    <!-- begin 表格 -->
+                                    <div class="grid-section">
+                                        <table id="list">
+                                        </table>
+                                    </div>
+                                    <!-- end 表格  -->
+                                    <input type="hidden" id="userId" value="">
+                                </div>
+                                <!-- end 页面内容主体 -->
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<!-- 表格导出 -->
+<!-- <script type="text/javascript" src="${_static}/js/lib/export/xlsx.core.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/export/Blob.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/export/FileSaver.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/export/tableexport.min.js"></script> -->
+
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib }/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+<script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js?v=1.0.0"></script>
+<!--end 外部JS引入 -->
+
+<!--begin 自定义JS -->
+<script type="text/javascript" src="${_static}/js/viewJs/workapprove/list.js?v=1"></script>
+<!--end 自定义JS -->
+
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>整体概览</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="main_left pull-left">
+						<div class="subnav">
+							<ul class="clearfix">
+								<li class="pull-left active" data-type = "" onclick="getOrgData('ORG',1,8)">部门</li>
+								<li class="pull-left" data-type = "" onclick="getOrgData('domain',1,8)">领域</li>
+								<li class="pull-left" data-type = "" onclick="getOrgData('theme',1,8)">主题</li>
+								<li class="pull-left" data-type = "" onclick="getOrgData('industry',1,8)">行业</li>
+								<li class="pull-left" data-type = "" onclick="getOrgData('service',1,8)">服务</li>
+							</ul>
+						</div>
+						<div class="sidebar">
+							<ul id="busHtml">
+
+							</ul>
+						</div>
+						<div class="text-center w273" >
+							<ul class="pagination" id="paginationHtml"></ul>
+						</div>
+					</div>
+					<div class="main_right pull-right">
+						<div class="main_right_top clearfix">
+							<div class="pull-left">
+								<div class="shop" id="search">
+									<span class="shop_tel"><span id="title_label">人社局</span>[共<span class="colorBlue" id="apiCount">0</span>个API接口]</span>
+									<span class="shop_btn active" onclick="getList()" style=""><input type="hidden" value="1"/>更新时间</span>
+									<span class="shop_btn" onclick="getList()"><input type="hidden" value="2"/>访问量</span>
+									<span class="shop_btn" onclick="getList()"><input type="hidden" value="3"/>下载量</span>
+								</div>
+							</div>
+							<div class="pull-right relative">
+								<div class="search">
+									<input type="text" placeholder="请输入关键字" id="searchKey"   oninput="getList()" autocomplete="off"/>
+									<span class="fa fa-search" onclick="getList()"></span>
+								</div>
+							</div>
+						</div>
+						<!--元目录数据-->
+						<div class="main_right_content" id="bottomId">
+
+
+
+
+						</div>
+						<div class="text-center">
+							<ul class="pagination" id="pagination" ></ul>
+							<p class="pull-right currentPage">共<i id="totalNum" class="colorBlue"></i>条数据，当前第<i id="pageNum" class="colorBlue"></i>页/共<i id="totalPages"  class="colorBlue">10</i>页</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			function searchEvent(ele){
+				var contentText = $(ele).val();
+				if(contentText){
+					$(".searchResult").slideDown();
+				}else{
+					$(".searchResult").slideUp();
+				}
+			}
+            $(".shop span").click(function(){
+                $(this).siblings().removeClass("active");
+                $(this).addClass("active");
+            });
+
+			$(".subnav ul li").click(function(){
+			   $(this).siblings().removeClass("active");
+			   $(this).addClass("active");
+			});
+			$("body").on("click",".sidebar ul li",function(){
+                $(this).siblings().removeClass("active");
+                $(this).addClass("active");
+                var text=$(this).find("span.pull-left").text();
+                $("#title_label").text(text);
+            });
+            var utId='${unitId}';
+            if(utId=='null'){
+                utId=sessionStorage.getItem('unitIdCatalog');
+			}else{
+            	sessionStorage.setItem('unitIdCatalog','${unitId}');
+			}
+            var parm = {};
+			$(function(){
+                parm = {
+                    data:{
+                        busCode:"ORG",
+                        busKey: "",
+                        unitId:utId,
+                        indexNo:1,
+                    },
+                    pageNo:1,
+                    pageSize:6,
+                };
+                getOrgData("ORG",1,8);
+                getBottomData(parm);
+			});
+            //加载单位，领域，主题，行业服务数据
+            var unitState=false;
+            function getOrgData(busCode,pageNo,pageSize){
+                var busHtml="";
+                ajaxHengyun({
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+					data:JSON.stringify({data:{busCode:busCode},pageNo:pageNo,pageSize:pageSize}),
+                    url: '${_gate_url}/api/exchange/overview/getBusDataList',
+                    success: function (rows) {
+                        if(rows.data){
+                            rows.data.list.forEach(function(value,index){
+                                if(value.unitId==utId){
+                                    unitState=true;
+								};
+                                var dirname=value.dirName;
+                                if(value.dirName!=null && value.dirName.length > 12 ){
+                                    dirname=value.dirName.substr(0,12);
+								}
+                                if(busCode=="ORG"){
+                                    if(value.unitId == utId){
+                                        busHtml+='<li class="active" onclick="getBottomDataClick(\''+busCode+'\',\''+value.busKey+'\',\''+value.unitId+'\',1,1,6)" title="'+value.dirName+'">' +
+											'<input name="busCode" type="hidden" value="'+busCode+'">' +
+											'<input name="unitId" type="hidden" value="'+value.unitId+'">' +
+                                            '<input name="busKey" type="hidden" value="'+value.busKey+'">' +
+                                            '<a class="clearfix" href="javascript:void(0);" >' +
+                                            '<span class="pull-left">'+dirname+'</span><span class="pull-right">'+value.dataCount+'</span></a></li>';
+                                        $("#title_label").text(value.dirName);
+                                    }else{
+                                        busHtml+='<li onclick="getBottomDataClick(\''+busCode+'\',\''+value.busKey+'\',\''+value.unitId+'\',1,1,6)" title="'+value.dirName+'">' +
+											'<input name="busCode" type="hidden" value="'+busCode+'">' +
+											'<input name="unitId" type="hidden" value="'+value.unitId+'">' +
+                                            '<input name="busKey" type="hidden" value="'+value.busKey+'">' +
+                                            '<a class="clearfix" href="javascript:void(0);" >' +
+                                            '<span class="pull-left">'+dirname+'</span><span class="pull-right">'+value.dataCount+'</span></a></li>';
+                                    }
+                                }else{
+                                    busHtml+='<li onclick="getBottomDataClick(\''+busCode+'\',\''+value.busKey+'\',\''+value.unitId+'\',1,1,6)" title="'+value.dirName+'">' +
+                                        '<input name="busCode" type="hidden" value="'+busCode+'">' +
+										'<input name="busKey" type="hidden" value="'+value.busKey+'">' +
+										'<input name="unitId" type="hidden" value="'+value.unitId+'">' +
+                                        '<a class="clearfix" href="javascript:void(0);" >' +
+                                        '<span class="pull-left">'+dirname+'</span><span class="pull-right">'+value.dataCount+'</span></a></li>';
+                                }
+
+
+                            });
+                            if(rows.data.pages>1){
+                               /* var paginationHtml="";
+                                paginationHtml+='<ul class="pagination">';
+                                for(var i=1;i<=rows.data.pages;i++){
+                                    if(i==pageNo){
+                                        paginationHtml+='<li class="next active"><a href="javascript:void(0);" onclick="getOrgDataPagination(this,\''+busCode+'\','+i+','+pageSize+')">'+i+'</a></li>';
+                                    }else{
+                                        paginationHtml+='<li class="next"><a href="javascript:void(0);" onclick="getOrgDataPagination(this,\''+busCode+'\','+i+','+pageSize+')">'+i+'</a></li>';
+                                    }
+                                }
+                                paginationHtml+='</ul>';*/
+                                // $("#paginationHtml").html(paginationHtml);
+                                jqPaginatorLeft(rows.data,busCode,"paginationHtml");
+                            }else{
+                                $("#paginationHtml").html("");
+							};
+
+                        };
+                        if(!unitState){
+                            if(rows.data.pageNum < rows.data.pages){
+                            	getOrgData("ORG",rows.data.nextPage,8);
+							}
+                        }else{
+                            $("#busHtml").html(busHtml);
+                            updateIformHeight();
+                        }
+                    }
+                });
+
+            };
+            // 单位，领域，主题，行业服务数据分页
+            function jqPaginatorLeft(rows,busCode,pageId){
+                $.jqPaginator('#'+pageId, {
+                    totalPages: rows.pages,
+                    visiblePages: 6,
+                    currentPage: rows.pageNum,
+                    prev: '<li class="prev"><a href="javascript:;" onclick="getOrgDataPagination(this,\''+busCode+'\','+rows.prePage+',\''+rows.pageSize+'\')">&lt;</a></li>',
+                    next: '<li class="prev"><a href="javascript:;" onclick="getOrgDataPagination(this,\''+busCode+'\','+rows.nextPage+',\''+rows.pageSize+'\')">&gt;</a></li>',
+                    page: '<li class="prev"><a href="javascript:;" onclick="getOrgDataPagination(this,\''+busCode+'\',{{page}},\''+rows.pageSize+'\')">{{page}}</a></li>',
+                });
+            }
+            //单位，领域，主题，行业服务数据分页按钮点击方法
+            function getOrgDataPagination(ele,busCode,pageNo,pageSize){
+                $(ele).parent().siblings().removeClass("active");
+                $(ele).parent().addClass("active");
+                getOrgData(busCode,pageNo,pageSize);
+            };
+			//加载元目录数据
+            function getList(){
+                var indexNo=$("#search").find("span.active input").val();
+				var busCode=$("#busHtml").find("li.active input[name=busCode]").val();
+                var busKey=$("#busHtml").find("li.active input[name=busKey]").val();
+                var unitId=$("#busHtml").find("li.active input[name=unitId]").val();
+                parm.data.indexNo=indexNo;
+                parm.data.busCode=busCode;
+                parm.data.busKey=busKey;
+                parm.data.unitId=unitId;
+                getBottomData(parm);
+            };
+            function getBottomDataClick(busCode,busKey,unitId,indexNo,pageNo,pageSize){
+                if(unitId!="null"){
+                	sessionStorage.setItem('unitIdCatalog',unitId);
+				}
+                var objParameter = {
+                    data:{
+                        busCode:busCode,
+                        busKey: busKey,
+                        unitId:unitId,
+                        indexNo:indexNo,
+                    },
+                    pageNo:pageNo,
+                    pageSize:pageSize,
+                };
+                getBottomData(objParameter);
+			}
+            function getBottomData(parmObj){
+                $("#bottomId").html("");
+                getApiCount(parmObj.data.busCode,parmObj.data.unitId);
+                var searchKey=$("#searchKey").val();
+                parmObj.data.searchKey=searchKey;
+                var botmHtml="";
+                ajaxHengyun({
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data:JSON.stringify(parmObj),
+                    url: '${_gate_url}/api/exchange/overview/getBottomDirList',
+                    success: function (rows) {
+                        if(rows.data){
+                            if(rows.data.list.length>0){
+								rows.data.list.forEach(function(value,index){
+								    var domainName=value.domainName;
+								    if(value.domainName==null || value.domainName==''){
+                                        domainName='';
+									}
+									var themeThreeName=value.themeThreeName;
+									if(value.themeThreeName==null || value.themeThreeName=='' ){
+                                        themeThreeName='';
+									}
+									var industryThreeName=value.industryThreeName;
+									if(value.industryThreeName==null || value.industryThreeName=='' ){
+                                        industryThreeName='';
+									}
+									var serviceThreeName=value.serviceThreeName;
+									if(value.serviceThreeName==null || value.serviceThreeName=='' ){
+                                        serviceThreeName='';
+									}
+									botmHtml+='<div class="item" >';
+										botmHtml+='<h3>'+value.dirName+'</h3>';
+										botmHtml+='<div class="item_div">';
+											botmHtml+='<span class="clearfix"><b class="pull-left">更新时间：</b><i class="pull-left">'+value.updateTime+'</i></span>';
+											botmHtml+='<span class="clearfix"><b class="pull-left">访问量：</b><i class="pull-left">'+value.seeCount+'</i></span>';
+											botmHtml+='<span class="clearfix"><b class="pull-left">数据量：</b><i class="pull-left">'+value.dataCount+'</i></span>';
+											botmHtml+='<span class="clearfix"><b class="pull-left">下载量：</b><i class="pull-left">'+value.downCount+'</i></span>';
+											botmHtml+='<a class="pull-right" href="javascript:void(0);" onclick="generalView(\''+value.id+'\','+value.dataType+',\''+parmObj.data.unitId+'\')">详情</a>';
+										botmHtml+='</div>';
+										botmHtml+='<div class="item_div">';
+											botmHtml+='<span class="clearfix"><b class="pull-left">数据领域：</b><i class="pull-left">'+domainName+'</i></span>';
+											botmHtml+='<span class="clearfix"><b class="pull-left">主题分类：</b><i class="pull-left">'+themeThreeName+'</i></span>';
+											botmHtml+='<span class="clearfix"><b class="pull-left">行业分类：</b><i class="pull-left">'+industryThreeName+'</i></span>';
+											botmHtml+='<span class="clearfix"><b class="pull-left">服务分类：</b><i class="pull-left">'+serviceThreeName+'</i></span>';
+										botmHtml+='</div>';
+									botmHtml+='</div>';
+
+								});
+							}else{
+                                botmHtml+='<div class="item" >';
+                                botmHtml+='<div class="item_div text-center">';
+                                botmHtml+='暂无数据';
+                                botmHtml+='</div>';
+                                botmHtml+='</div>';
+							};
+
+                            $("#bottomId").html(botmHtml);
+                            $('#totalPages').text(rows.data.pages);
+                            $('#totalNum').text(rows.data.total);
+                            jqPaginatorById(rows.data,"pagination");
+                        }else{
+                            $(".pagination,.currentPage").css("display","none");
+                            parent.layer.msg(res.errmsg+"，请重试！",{time:3000});
+                        };
+                        updateIformHeight();
+                    }
+                });
+
+            }
+            //获取每个单位或类型的api数量
+			function getApiCount(busCode,unitId){
+                ajaxHengyun({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '${_gate_url}/api/exchange/overview/getApiSetCount?busCode='+busCode+'&unitId='+unitId,
+                    success: function (rows) {
+						$("#apiCount").html(rows.data.apiCount);
+                    }
+                });
+			}
+			//详情并更新查看次数
+            function generalView(id,dataType,unitId){
+                window.location.href='${_cp}/module/generalView?id='+id+'&unitId='+unitId+"&pageType=unit";
+                // if(dataType==1){
+                //     window.location.href='${_cp}/module/generalView?id='+id+'&unitId='+unitId;
+                // }
+                // else if(dataType==2){
+                //     window.location.href='${_cp}/module/unstructuredView?id='+id+'&unitId='+unitId;
+                // }
+                ajaxHengyun({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '${_gate_url}/api/exchange/overview/updateSeeCount?id='+id,
+                    success: function (rows) {
+
+                    }
+                });
+			}
+		</script>
+	</body>
+</html>

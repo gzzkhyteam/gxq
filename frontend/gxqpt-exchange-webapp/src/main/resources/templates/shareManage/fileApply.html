@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/webuploader.css"/>
+    	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/upload.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>共享管理</span> &gt; <span>新增</span> &gt; <span class="page-title-scend">文件申请基本信息录入</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<table class="table default-table tab-border-no-layer">
+								<tbody>
+								<tr>
+									<th width="100">申请单位名称：</th>
+									<td>
+										<input type="text" name="" id="" class="form-control" readonly="readonly" autocomplete="off"/>
+									</td>
+								</tr>
+								<tr>
+									<th>申请人：</th>
+									<td>
+										<input type="text" name="" id="" class="form-control" readonly="readonly" autocomplete="off"/>
+									</td>
+								</tr>
+								<tr>
+									<th>申请授权期限：</th>
+									<td>
+										<input type="text" name="" id="" class="form-control" autocomplete="off"/>
+									</td>
+								</tr>
+								<tr>
+									<th>申请理由：</th>
+									<td>
+										<textarea name="" rows="5" cols="" class="form-control"></textarea>
+									</td>
+								</tr>
+								<tr>
+									<th>申请依据：</th>
+									<td>
+										<div class="pull-left downFileText">
+											<div class="form-control"></div>
+										</div>
+										<div class="pull-right downFileBtn">
+											<div id="filePicker" class="filePicker photoFilePicker"></div>
+											<div id="uploader" class="uploader photoUploader hidden">
+												<div class="queueList">
+													<ul id="file_html" class="filelist">
+													</ul>
+													<div id="dndArea" class="placeholder dndArea" style="padding-top: 85px;">
+
+														<p> </p>
+													</div>
+												</div>
+												<div class="statusBar" style="display:none;">
+													<div class="progress">
+														<span class="text">0%</span> <span class="percentage"></span>
+													</div>
+													<div class="info"></div>
+													<div class="btns">
+														<div id="jxButton" class="jxButton"></div>
+														<div class="uploadBtn">开始上传</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+							<div class="text-center">
+								<button type="button" class="btn btn-primary" onclick="history.back()">上一步</button>
+								<a href="${_cp}/module/shareMagApplyThree" class="btn btn-primary">提交申请</a>
+								<button type="button" class="btn btn-primary" onclick="history.back()">取消</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCore.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			/* 附件上传 begin */
+		    loadFile();
+		    function loadFile() {
+		        fileUpload = new FileUpload({
+		            "filePicker" : "filePicker",
+		            "dndArea" : "dndArea",
+		            "uploader" : "uploader",
+		            "jxButton" : "jxButton",
+		            "_isAdmin":true
+		        });
+		    }
+		    function successUpload(json) {
+		        var url = json.data.list[0].url;
+		        $("#photo").val(url);
+		        $("#nopic").attr("src",url);
+		    };
+		    function save(index){
+				parent.home.setCatalog();
+				parent.layer.close(index);
+			};
+			function saveNext(index){
+				parent.layer.close(index);
+			};
+		</script>
+	</body>
+</html>

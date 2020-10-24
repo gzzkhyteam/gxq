@@ -1,0 +1,50 @@
+gxqpt:
+  cas-server:
+    ip: ${gxqpt.hostname.nginx}             # SSO CAS 服务的ip
+    port: ${gxqpt.port.nginx}         # SSO CAS 服务的端口
+  port:
+    nginx: 10086
+  hostname:
+    redis: 192.168.1.204
+    rabbitmq: 192.168.1.204
+    nginx: 127.0.0.1
+    eureka: 192.168.1.204
+    center: 192.168.1.204
+  variable:
+    gate-url: http://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}
+
+spring:
+  profiles:
+    active: test
+  rabbitmq:
+    port: 5672
+    password: gxqpt
+    username: gxqpt
+  redis:
+    port: 16379
+    key-prefix: test
+    password: SbtyMveYNfLzTks7H0apCmyStPzWJqjy
+
+############ cas client配置 开始 ############
+cas:
+  server:
+    default-index: http://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path}/admin/index
+  configure-key: casFlag
+############ cas client配置 结束 ############
+
+
+############ 多单点登录服务端 cas client配置 开始 ############
+multiplecas:
+  cas-configure:
+    gxqpt:
+      cas-server-login-url: http://${gxqpt.cas-server.ip}:${gxqpt.cas-server.port}/gxqpt-sso-webapp/login
+      cas-server-url-logout: http://${gxqpt.cas-server.ip}:${gxqpt.cas-server.port}/gxqpt-sso-webapp/logout
+      validation-cas-server-url-prefix: http://${gxqpt.cas-server.ip}:${gxqpt.cas-server.port}/gxqpt-sso-webapp
+      default-sevice-name:  http://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path}/admin/index
+############ 多单点登录服务端 cas client配置 结束 ############
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/

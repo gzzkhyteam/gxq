@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.exedit.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+</head>
+<body>
+<div class="zTreeDemoBackground left">
+    <ul id="ztree" class="ztree"></ul>
+</div>
+</body>
+<script type="text/javascript">
+     // 获取url里面的指定参数
+    function getQueryString(paraName) {
+      var url = document.location.toString();
+      var arrObj = url.split("?");
+      if (arrObj.length > 1) {
+      var arrPara = arrObj[1].split("&");
+      var arr;
+      for (var i = 0; i < arrPara.length; i++) { arr=arrPara[i].split("=");
+
+              if (arr != null && arr[0] == paraName) {
+                  return arr[1];
+              }
+          }
+          return "";
+      }
+      else {
+          return "";
+      }
+    }
+    var fromPage = Number(getQueryString('fromPage'));
+    //标准化管理树配置
+    var setting = {
+        check: {
+            enable: true,
+            chkStyle: "radio",
+            radioType: "all"
+        },
+        data: {
+            key: {
+                name: 'name'
+            },
+            simpleData: {
+                enable: true,//设置是否启用简单数据格式
+                idKey: 'id',//设置启用简单数据格式时id对应的属性名称
+                pIdKey: 'pId',//设置启用简单数据格式时parentId对应的属性名称,ztree根据id及pid层级关系构建树结构
+                rootPId: -1
+            }
+        },
+        callback: {
+            // beforeCheck: zTreeBeforeCheck,
+            onClick: zTreeOnClick
+        }
+    };
+
+    // function zTreeBeforeCheck(treeId, treeNode, clickFlag) {
+    //     if(treeNode.isParent){
+    //         parent.layer.msg("请选择子节点！", {icon: 7,time: 2000});
+    //         return false;//当是父节点 返回false 不让选取
+    //     }
+    // }
+    function zTreeOnClick(e,treeId, treeNode, clickFlag) {//节点点击事件
+        var treeObj = $.fn.zTree.getZTreeObj("ztree");
+        treeObj.checkNode(treeNode, !treeNode.checked, true);
+    }
+    /*  获取分类树 */
+    getTree();
+
+    function getTree() {
+        var ajaxUrl = "${_gate_url}/api/standard/classify/getTree";
+        if (fromPage) {
+            // 移动终端
+            ajaxUrl = "${_gate_url}/api/standard/classify/getAllTreeById?treeId=511555870396514401";
+        }
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            url: ajaxUrl,
+            datatype: 'json',
+            data: {id: '${id!}'},
+            contentType: 'application/json',
+            success: function (rows) {
+                if (rows.data) {
+                    //加载分类树
+                    $.fn.zTree.init($("#ztree"), setting, rows.data);
+                    //加载树后默认展开根节点
+                    var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    var nodes = treeObj.getNodes();
+                    if (nodes.length > 0) {
+                        for (var i = 0; i < nodes.length; i++) {
+                            treeObj.expandNode(nodes[i], true, false, false);
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</html>

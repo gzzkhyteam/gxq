@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+	<link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/module.css">
+    <style type="text/css">
+    	h3{line-height: 30px;}
+        #uploader .queueList, .uploader .queueList {padding: 10px;}
+        #uploader .queueList{overflow: auto;}
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-sm-12 col-xs-12">
+        <div class="list-content">
+            <div class="form-inline">
+            	<!--<h3>文件将上传到/</h3>-->
+            	<div id="filePicker" class="filePicker"></div>
+            	<input type="text" name="" id="" class="file-name" value="" />
+            	<div id="uploader" class="uploader">
+					<div class="queueList">
+						<ul id="file_html" class="filelist">
+							<li>还未选择文件</li>
+						</ul>
+						<div id="dndArea" class="placeholder dndArea" style="padding-top: 0px;">
+							<p> </p>
+						</div>
+					</div>
+					<div id="jxButton" class="jxButton"></div>
+                    <div id="uploadBtn" class="uploadBtn"></div>
+                    <div class="statusBar" style="display:none;">
+                        <div class="progress">
+                            <span class="text">0%</span> <span class="percentage"></span>
+                        </div>
+                        <div class="info"></div>
+                    </div>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+<!--带秒传功能 HYCoreSpeed-->
+<!--<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreSpeed.js"></script>-->
+<!--普通上传 HYCore-->
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCore.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+/* 附件上传 begin */
+var token = $.cookie("_token");
+var folderId="${folderId}";
+var dataType="${dataType}";
+loadFile();
+function loadFile() {
+    fileUpload = new FileUpload({
+        "filePicker" : "filePicker",
+        "dndArea" : "dndArea",
+        "uploader" : "uploader",
+        "jxButton" : "jxButton",
+        "folderId":folderId,
+        "dataType":dataType,
+        "token":token,
+        "_isAdmin":true
+    });
+}
+var FileList = new Array();
+function successUpload(json) {
+    var fileInfo = json.fileInfo;
+    var sss = "" ;
+ 	for (var s in fileInfo) {
+        sss += s + ":" + fileInfo[s] + "/n";
+	}
+	FileList.push(fileInfo);
+}
+function deleteFile(id){
+	for(var i=0;i<FileList.length;i++){
+		if(FileList[i].id==id){
+			FileList.splice(FileList[i],1);
+		}
+	}
+}
+
+function save() {
+    $(".uploadBtn").click();
+}
+
+/* 附件上传 end */
+var height=$(".workspace-body").height()-180;
+$("#uploader .queueList").css("height",height);
+</script>
+</body>
+</html>

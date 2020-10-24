@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>共享交换系统</title>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/header.css"/>
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js?v=1"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <script src="${_static}/js/lib/layer/layer.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+    <script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+	<script src="${_static}/js/lib/metisMenu/jquery.metisMenu.js"></script>
+	<script src="${_static}/js/lib/bootstrap/3.3.6/bootstrap.min.js"></script>
+	<script src="${_static}/js/lib/metisMenu/hplus.min.js"></script>
+	<script src="${_static}/js/lib/tipsy/jquery.tipsy.js"></script>
+	<script src="${_static}/js/lib/layer/layer.js"></script>
+	<!--<script src="${_static}/js/index.js"></script>-->
+	<script>
+	    var userId = "${l_u_i_s.id}";
+        var gateUrl="${_gate_url}";
+	</script>
+	<script type="text/javascript" src="${_static}/js/com_msg.js"></script>
+</head>
+<body onselectstart="return false;">
+<!--<canvas id="space"></canvas>
+<div class="bottom_bg"></div>-->
+<div class="header">
+	<div class="pull-left logo">
+		<img src="${_static}/images/com/logo.png" align="logo"/>
+	</div>
+	<div class="pull-right user_info clearfix">
+		<div id="conclusionShow" class="infoTip" data-title="消息列表" data-container="body" data-toggle="popover"  data-placement="bottom" data-trigger="click" data-html=true data-content="">
+			<img src="${_static}/images/infoIcon.png"/>
+			<span id="msgElement"></span>
+		</div>
+		<div class="photo pull-left">
+			<!--<img src="${_static}/images/index/nav_tx.png" alt="user_photo">-->
+			<img alt="" src="${l_u_i_s.photo!''}" alt="user_photo"
+				 onerror="this.onerror='';src='${_static}/images/index/icon0_02.png'" , id="user_photo">
+		</div>
+		<div id="userSelect" class="user_operation pull-left">
+			<label>${l_u_i_s.name!''}</label><i class="fa fa-caret-down"></i>
+			<i class="triangle"></i>
+			<ul id="userTxt">
+				<!--<li class="title">我的审核</li>-->
+				<li>
+					<!--<a href="${_cp}/module/catalogAuditList" target="home">目录审核</a>-->
+					<!-- /*按钮权限开始*/-->
+					<script type="text/javascript" id="my_ Auditing">
+                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                            resource_code : "my_ Auditing",
+                            btnHtml :'<a class="ui-button" href="" target="home">{{name}}</a>',
+                            htmlInsert: true
+                        });
+					</script>
+					<!-- /*按钮权限end*/-->
+				</li>
+				<li>
+					<!--<a href="${_cp}/module/catalogAuditList" target="home">目录审核</a>-->
+                    <!-- /*按钮权限开始*/-->
+                    <script type="text/javascript" id="directory_auditing">
+                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                            resource_code : "directory_auditing",
+                            btnHtml :'<a class="ui-button" href="${_cp}/module/catalogAuditList" target="home">{{name}}</a>',
+                            htmlInsert: true
+                        });
+                    </script>
+                    <!-- /*按钮权限end*/-->
+				</li>
+				<li>
+                   <!-- <a href="${_cp}/module/dataSetApplyList?pageNo=1" target="home">数据集审核</a>-->
+                    <script type="text/javascript" id="data_set_auditing">
+                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                            resource_code : "data_set_auditing",
+                            btnHtml :'<a class="ui-button" href="${_cp}/module/dataSetApplyList?pageNo=1" target="home">{{name}}</a>',
+                            htmlInsert: true
+                        });
+                    </script>
+                </li>
+				<li>
+                    <!--<a href="${_cp}/module/shareExamineList" target="home">共享审核</a>-->
+                    <script type="text/javascript" id="share_auditing">
+                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                            resource_code : "share_auditing",
+                            btnHtml :'<a class="ui-button" href="${_cp}/module/shareExamineList" target="home">{{name}}</a>',
+                            htmlInsert: true
+                        });
+                    </script>
+                </li>
+				<li>
+                    <!--<a href="${_cp}/module/demandExamineList?pageNo=1" target="home">需求审核</a>-->
+                    <script type="text/javascript" id="demand_auditing">
+                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                            resource_code : "demand_auditing",
+                            btnHtml :'<a class="ui-button" href="${_cp}/module/demandExamineList?pageNo=1" target="home">{{name}}</a>',
+                            htmlInsert: true
+                        });
+                    </script>
+                </li>
+			</ul>
+		</div>
+		<div class="logout pull-left">
+			<a href="${_logout_url}">
+				<img src="${_static}/images/com/nav_tc.png" />
+				<p>首页</p>
+			</a>
+		</div>
+	</div>
+	<div class="nav_container">
+		<img id="nav_l" class="nav_btn" src="${_static}/images/index/nav_l.png"/>
+		<div class="nav_main">
+			<ul class="clearfix"   id="side-menu">
+				<li class="pull-left active">
+					<a href="${_cp}/module/home" target="home">
+						<span class="navImg"><img src="${_static}/images/com/jhgx_l01.png" /></span>
+						<p>整体概览</p>
+					</a>
+				</li>
+				<!--菜单获取开始-->
+				<script type="text/javascript">
+                    var flag = true;
+                    $(function () {
+                        var params = window.location.search;
+                        var paramsUrl ="";
+                        if (params) {
+                            paramsUrl = params.split("=")[1];
+                            $($("#side-menu li")[0]).removeClass("active");
+                        };
+                        var menuList = resourceJs.init("${_gate_url!''}", "${_app_id!''}", "${l_u_i_s.id!''}").findMenu({cache: true});
+                        var menuHtml = "";
+                        if(menuList.length>0) {
+                            var htm = '';
+                            for (var i = 0; i < menuList.length; i++) {
+                               /* if(i==0){
+                                    var className="pull-left active";
+								}else{
+                                    var className="pull-left";
+								}*/
+                                var className="pull-left";
+                                var obj = menuList[i];
+								if(paramsUrl==obj.url){
+                                    htm += '<li class="'+className+' active">';
+								}else{
+                                    htm += '<li class="'+className+'">';
+								}
+                                htm += '<a href="' + obj.url;
+                                htm += '" target="home">';
+                                /*htm += '<span class="navicon ' + obj.icon + '"></span>';*/
+                                // htm += '<span class="nav-label">'+ obj.name + '</span>';
+								if(!obj.icon){
+								    obj.icon = "/images/com/jhgx_l06.png"
+								}
+                                htm += '<span class="navImg"><img src="${_static}'+obj.icon+'" /></span>';
+                                htm += '<p>'+ obj.name + '</p>'
+                                htm += '</a>';
+                                htm += '</li>';
+                            };
+                            var params = window.location.search;
+                            if(params){
+                                var paramsUrl = params.split("=");
+                                if(paramsUrl.length==2){
+                                    $("#home").attr("src", paramsUrl[1]);
+                                }else if(paramsUrl.length>2){
+                                    paramsUrl.splice(0,1);
+                                    var url = paramsUrl.join("=");
+                                    $("#home").attr("src", url);
+                                }
+                            };
+                            $("#side-menu").append(htm);
+                        }
+                    });
+				</script>
+				<!--<li class="pull-left active">
+					<a href="${_cp}/module/home" target="home">
+						<span class="navImg"><img src="${_static}/images/com/jhgx_l01.png" /></span>
+						<p>整体概览</p>
+					</a>
+                    &lt;!&ndash;<script type="text/javascript" id="exchange_overview">
+                        resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                            resource_code : "exchange_overview",
+                            btnHtml :'<a class="ui-button" href="${_cp}/module/home" target="home">整体概览</a>',
+                            htmlInsert: true
+                        });
+                    </script>&ndash;&gt;
+				</li>
+				<li class="pull-left">
+					<a href="${_cp}/module/dataCatalogManage" target="home">
+						<span class="navImg"><img src="${_static}/images/com/jhgx_l03.png" /></span>
+						<p>目录管理</p>
+					</a>
+				</li>
+				<li class="pull-left">
+					<a href="${_cp}/module/dataSetManageList?pageNo=1" target="home">
+						<span class="navImg"><img src="${_static}/images/com/jhgx_l04.png" /></span>
+						<p>数据集管理</p>
+					</a>
+				</li>
+				<li class="pull-left">
+					<a href="${_cp}/module/shareMagApplyList" target="home">
+						<span class="navImg"><img src="${_static}/images/com/jhgx_l05.png" /></span>
+						<p>共享管理</p>
+					</a>
+				</li>
+				<li class="pull-left">
+					<a href="${_cp}/module/systemList?pageNo=1" target="home">
+						<span class="navImg"><img src="${_static}/images/com/jhgx_l06.png" /></span>
+						<p>系统列表</p>
+					</a>
+				</li>
+				<li class="pull-left">
+					<a href="${_cp}/module/dataSourceList?pageNo=1" target="home">
+						<span class="navImg"><img src="${_static}/images/com/jhgx_l07.png" /></span>
+						<p>数据源管理</p>
+					</a>
+				</li>
+				<li class="pull-left">
+					<a href="javascript:void(0);" target="home">
+						<span class="navImg"><img src="${_static}/images/com/jhgx_l08.png" /></span>
+						<p>交换共享监控</p>
+					</a>
+				</li>
+				<li class="pull-left">
+					<a href="${_cp}/module/dataDictionary" target="home">
+						<span class="navImg"><img src="${_static}/images/com/jhgx_l09.png" /></span>
+						<p>数据字典</p>
+					</a>
+				</li>-->
+			</ul>
+		</div>
+		<img id="nav_r" class="nav_btn" src="${_static}/images/index/nav_r.png"/>
+	</div>
+</div>
+<div id="container" class="container">
+	<iframe id="home" name="home" frameborder="0" scrolling="no" width="100%" src="${_cp}/module/home"></iframe>
+</div>
+
+<!--<script src="${_static}/js/sys_com/canvasbg.js" type="text/javascript" charset="utf-8"></script>-->
+<script type="text/javascript">
+    sessionStorage.setItem("secondTil","");
+    if (window.top!=window.self){
+        top.location.href="${_cp}/module/index";
+    }
+
+    $("body").on("click",".nav_container li",function(){
+        $(this).addClass("active");
+        $(this).siblings().removeClass("active");
+    })
+    var num,showNum;
+    $(function(){
+        setNavWidth();
+        var height = $(".user_operation ul").height();
+        if(height>0){
+            $(".user_operation,.user_operation ul").off("mouseenter").on("mouseenter",function(){
+                var liEle = $(".user_operation ul li");
+                if(liEle.length==0){
+                    return false;
+                }
+                $(".user_operation ul,.triangle").css("display","inline-block");
+            });
+            $(".user_operation").off("mouseleave").on("mouseleave",function(){
+                if (!$("#userTxt:hover").length) {
+                	$(".user_operation ul,.triangle").css("display","none");
+                }
+            });
+            $(".user_operation ul").off("mouseleave").on("mouseleave",function(){
+                if (!$("#userSelect:hover").length) {
+                	$(".user_operation ul,.triangle").css("display","none");
+                }
+            });
+		}else{
+            $(".user_operation i").css("display","none");
+		}
+	});
+    function setNavWidth(){
+        num = $(".nav_container ul li").length;
+        var width = num*130;
+        $(".nav_container ul").css("width",num*130);
+        var widthUl = $(".nav_container").width()-50;
+        if(widthUl<width){
+            showNum = Math.floor(widthUl/130);
+            $(".nav_main").css("width",showNum*130);
+            $("#nav_r").css("display","block");
+        }else {
+            $(".nav_main").css("width",widthUl);
+            $("#nav_r").css("display","none");
+		}
+    };
+    $(window).resize(function(){
+        setNavWidth();
+    });
+    $("#nav_l").click(function(){
+        var width_L = $(".nav_main").scrollLeft();
+        if(width_L>0){
+            width_L-=130;
+            $(".nav_main").scrollLeft(width_L);
+            showNum-=1;
+            $("#nav_r").css("display","block");
+        }
+        if(width_L<=0){
+            $("#nav_l").css("display","none");
+        }
+    });
+    $("#nav_r").click(function(){
+        var width_L = $(".nav_main").scrollLeft();
+        if(num>showNum){
+            $(".nav_main").scrollLeft(width_L+130);
+            showNum+=1;
+            $("#nav_l").css("display","block");
+        }
+        if(num<=showNum){
+            $("#nav_r").css("display","none");
+        }
+    });
+    $("body").on("click","#applyBtn",function(){//数据申请按钮点击事件
+        home.dataApplyFirst();
+    });
+    $("body").click(function(){
+        home.removeAllRanges();
+    });
+    $("#conclusionShow").popover({
+        html: true,
+        content: '<div id="content"></div>'
+    }).on("mouseenter", function () {
+        var _this = this;   // 这里的this触发的dom,需要存起来 否则在下面 .popover的逻辑中this会变为弹出的dom
+        var isShow=$(".popover");
+        if(isShow.length==0){
+            $(_this).popover("show");
+        };
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide");
+            }
+        }, 300);
+    }).on("mousemove",function(){
+        var isShow=$(".popover");
+        if(isShow.length==0) {
+            $("#conclusionShow").popover("show");
+        }
+    }).on('shown.bs.popover', function () {
+        var ps =  $(".popoverCss li p.ptitle");
+        for (var i = 0; i < ps.length; i++) {
+            if(ps[i].offsetHeight > 40){
+                var html = ps[i].innerText;
+                var temp = "";
+                ps[i].innerText = temp;
+                var j = 0;
+                while(ps[i].offsetHeight <= 40){
+                    temp = html.substring(0, j+1);
+                    j++;
+                    ps[i].innerText = temp;
+                }
+                var leng = temp.length-2;
+                ps[i].innerText=temp.substring(0,leng)+"···";
+            }
+        }
+    });
+    $("body").on("mouseleave",".popover", function () {
+        setTimeout(function () {
+            if (!$("#conclusionShow:hover").length) {
+                $("#conclusionShow").popover("hide");
+            }
+        }, 300);
+    });
+    $("#conclusionShow").click (function(){
+        window.open(gateUrl+'/gxqpt-center/admin/home?type=all');
+    }) ;
+</script>
+</body>
+</html>

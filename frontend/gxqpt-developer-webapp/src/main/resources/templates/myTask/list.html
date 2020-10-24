@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>应用服务管理 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/jqueryPagination/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+    <style>
+        .table{
+            table-layout:fixed;
+        }
+        .table td{
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .table td span{
+            white-space: nowrap;
+        }
+        .layui-layer-prompt .layui-layer-content textarea.layui-layer-input {
+            height: 60%;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                我的任务 > <span class="active">列表</span>
+            </div>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="table-box">
+                <div class="top-bar clearfix">
+                    <div class="form-inline pull-left">
+                        <div class="form-group">
+                            <label class="sr-only">Password</label>
+                            <input class="form-control" placeholder="应用名称" ng-init="task.appName= ''"
+                                   ng-model="task.appName">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only">Password</label>
+                            <input class="form-control" placeholder="功能名称" ng-init="task.moduleName = ''"
+                                   ng-model="task.moduleName">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only">Password</label>
+                            <select class="form-control" ng-init="task.taskType = ''" ng-model="task.taskType">
+                                <option value="">---任务类型---</option>
+                                <option value="appApply">应用申请</option>
+                                <option value="moduleApply">功能申请</option>
+                                <option value="assignApply">调用申请</option>
+                                <option value="appAudit">应用审批</option>
+                                <option value="moduleAudit">功能审批</option>
+                                <option value="assginAudit">调用审批</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only">Password</label>
+                            <select class="form-control" ng-init="task.taskRole = ''" ng-model="task.taskRole">
+                                <option value="">---任务属性---</option>
+                                <option value="apply">申请</option>
+                                <option value="audit">审批</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only">Password</label>
+                            <select class="form-control" ng-init="task.auditStatus = ''" ng-model="task.auditStatus">
+                                <option value="">---任务状态---</option>
+                                <option value="1">待审核</option>
+                                <option value="2">审核通过</option>
+                                <option value="3">审核不通过</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary btn-search" ng-click="reloadTask()">查询</button>
+                    </div>
+                </div>
+                <table class="table table-darck table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th width="50" align="center"></th>
+                        <th width="100">应用名称</th>
+                        <th width="170">功能名称</th>
+                        <th width="80">任务类型</th>
+                        <th width="80">任务属性</th>
+                        <th width="80">任务状态</th>
+                        <th width="140">创建时间</th>
+                        <th>审核反馈信息</th>
+                        <th width="170" class="text-center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="task in taskList">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td title="{{task.appName}}"><span>{{task.appName}}</span></td>
+                        <td title="{{task.moduleName}}"><span>{{task.moduleName}}</span></td>
+                        <td title="{{task.taskType | formateTaskType}}"><span>{{task.taskType | formateTaskType}}</span></td>
+                        <td title="{{task.taskType | formateTaskRole}}"><span>{{task.taskType | formateTaskRole}}</span></td>
+                        <td title="{{task.auditStatus | formateAuditStatus}}"><span>{{task.auditStatus | formateAuditStatus}}</span></td>
+                        <td title="{{task.createTime}}"><span>{{task.createTime}}</span></td>
+                        <td title="{{task.auditDesc}}"><span>{{task.auditDesc}}</span></td>
+                        <td class="act">
+                            <a href="${_cp}/module/myTaskView?id={{task.id}}&taskType={{task.taskType}}">详情</a>
+                            <a ng-show="{{task.taskType | isAudit}} && task.auditStatus == 1" href="javascript:"
+                               ng-click="subFunction('pass',task.id,task.taskType)">通过</a>
+                            <a ng-show="{{task.taskType | isAudit}} && task.auditStatus == 1" href="javascript:"
+                               ng-click="subFunction('out',task.id,task.taskType)">驳回</a>
+                            <a ng-show="!{{task.taskType | isAudit}} && task.auditStatus == 3 && task.taskType == 'appApply'"
+                               href="${_cp}/module/appServiceCreate#?id={{task.id}}&taskType={{task.taskType}}">再次申请</a>
+                            <a ng-show="!{{task.taskType | isAudit}} && task.auditStatus == 3 && task.taskType == 'moduleApply'"
+                               href="${_cp}/module/provideCreate#?id={{task.id}}&taskType={{task.taskType}}">再次申请</a>
+                            <a ng-show="!{{task.taskType | isAudit}} && task.auditStatus == 3 && task.taskType == 'assignApply'"
+                               href="${_cp}/module/helpDoc?moduleId={{task.moduleId}}">再次申请</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div ng-if="taskList.length == 0" style="color:#f00;margin: 10px 0px;">没有数据</div>
+                <div class="bottom-bar alignCenter">
+                    <div id="pagination_9"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+
+<script type="text/javascript" src="${_static}/js/lib/jqueryPagination/js/pagination.min.js?v=1.1"></script>
+
+<script type="text/javascript">
+    var pageType = "myTaskList";
+
+    function remove() {
+        layer.confirm("您确定要删除吗？", {
+            title: '温馨提示',
+            shade: [0.4, '#000'],
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+
+        });
+    }
+</script>
+</body>
+<script type="text/javascript">
+    /*angularJS*/
+    var pagination = null;
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        // 防止重复提交
+        var requesting = false;
+        //获取任务列表
+        $scope.getTask = function (currPage, pageSize,load) {
+            $http.post(urlPrev + 'applyManager/listApply', {
+                data: $scope.task || {},
+                pageNo: currPage || 1,
+                pageSize: pageSize || 10
+            }, {
+                headers: getHeaders(),
+            }).success(function (res) {
+                $scope.taskList = res.data.list;
+                /*处理分页*/
+                if(load){
+                    $("#pagination_9").pagination('setPage',1,res.data.pages,res.data.total);
+                }else {
+                    pagination = $("#pagination_9").pagination({
+                        totalData: res.data.total,
+                        isShowTotalData: true,
+                        totalPage: res.data.pages,
+                        totalSize: res.data.total,
+                        pageSizeOpt: [
+                            {'value': 5, 'text': '5条/页'},
+                            {'value': 10, 'text': '10条/页', 'selected': true},
+                            {'value': 15, 'text': '15条/页'},
+                            {'value': 20, 'text': '20条/页'}
+                        ],
+                        callBack: function (currPage, pageSize) {
+                            $scope.getTask(currPage, pageSize);
+                        }
+                    });
+                }
+            })
+        }
+        $scope.getTask();
+        $scope.reloadTask = function () {
+            $scope.getTask(1,pagination.get(0).pageText.pageSize,true);
+        }
+        $scope.subFunction = function (type, id, taskType) {
+            var typeName = "";
+            var obj = {id: id, taskType: taskType};
+            if (type == "pass") {
+                obj.passornot = true;
+                typeName = "通过反馈意见";
+            } else if (type == "out") {
+                obj.passornot = false;
+                typeName = "驳回反馈意见";
+            }
+            layer.prompt({
+                formType: 2,
+                title: typeName,
+                area: ['500px', '300px'],
+                yes: function (index, layero) {
+                    $(layero.find('#error_p')).remove();
+                    obj.auditDesc = layero.find('.layui-layer-input').val();
+                    if (obj.passornot == false && (obj.auditDesc == null || obj.auditDesc == "")) {
+                        $(layero.find('.layui-layer-input')).after("<p id='error_p' style='color: red;'>提示：意见不能为空</p>")
+                        return;
+                    } else {
+                        if (requesting) {
+                            return
+                        }
+                        requesting = true;
+                        $http.post(urlPrev + 'applyManager/updateByAudit', obj, {
+                            headers: getHeaders(),
+                        }).success(function (res) {
+                            setTimeout(function () {
+                                requesting = false;
+                            }, 500);
+                            if (res.errcode == 0) {
+                                layer.msg(res.data, {icon: 6});
+                                layer.close(index);
+                                $scope.getTask();
+                            } else {
+
+                                $(layero.find('.layui-layer-input')).after("<p id='error_p' style='color: red;'>提示："+res.errmsg+"</p>")
+                            }
+                        })
+                    }
+                }
+            });
+        }
+    }).service('token', function () {
+        this.getToken = function () {
+            // return $.cookie('token');
+            return getToken();
+        }
+    }).filter('formateTaskType', function () {
+        return function (text) {
+            if (text == 'appApply') {
+                return '应用申请';
+            } else if (text == 'moduleApply') {
+                return '功能申请';
+            } else if (text == 'assignApply') {
+                return '调用申请';
+            } else if (text == 'appAudit') {
+                return '应用审批';
+            } else if (text == 'moduleAudit') {
+                return '功能审批';
+            } else if (text == 'assignAudit') {
+                return '调用审批';
+            }
+        }
+    }).filter('formateTaskRole', function () {
+        return function (text) {
+            if (text.indexOf('Apply') >= 0) {
+                return '申请';
+            } else {
+                return '审批';
+            }
+        }
+    }).filter('formateAuditStatus', function () {
+        return function (text) {
+            if (text == '1') {
+                return '待审核';
+            } else if (text == '2') {
+                return '审核通过';
+            } else if (text == '3') {
+                return '审核不通过';
+            }
+        }
+    }).filter('isAudit', function () {
+        return function (text) {
+            if (text.indexOf('Audit') >= 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    })
+    /*angularJS*/
+</script>
+
+</html>

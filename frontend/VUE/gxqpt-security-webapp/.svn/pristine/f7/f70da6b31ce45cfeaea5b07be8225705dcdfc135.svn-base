@@ -1,0 +1,107 @@
+<template>
+  <Layout>
+    <Content>
+      <Breadcrumb>
+        <BreadcrumbItem>运维分析</BreadcrumbItem>
+        <BreadcrumbItem>运维评价</BreadcrumbItem>
+      </Breadcrumb>
+      <Card>
+        <Row type="flex" justify="space-between">
+          <Col style="width: 49%">
+            <chart-card title="模块新增量">
+              <chartLine ref="newModules" el="newModules" :lineOption="newModulesOption">
+                <div id="newModules" style="height: 400px;"></div>
+              </chartLine>
+            </chart-card>
+          </Col>
+          <Col style="width: 49%">
+            <chart-card title="模块使用量">
+              <chartBar ref="moduleUsage" el="moduleUsage" :barOption="moduleUsageOption">
+                <div id="moduleUsage" style="height: 400px;"></div>
+              </chartBar>
+            </chart-card>
+          </Col>
+        </Row>
+        <Row type="flex" justify="space-between">
+          <Col style="width: 49%">
+            <chart-card title="模块使用top10">
+              <chartBar ref="moduleTopTen" el="moduleTopTen" :barOption="moduleTopTenOption">
+                <div id="moduleTopTen" style="height: 400px;"></div>
+              </chartBar>
+            </chart-card>
+          </Col>
+          <Col style="width: 49%">
+            <chart-card title="模块使用率">
+              <chartLine ref="moduleUsageRate" el="moduleUsageRate" :lineOption="moduleUsageRateOption">
+                <div id="moduleUsageRate" style="height: 400px;"></div>
+              </chartLine>
+            </chart-card>
+          </Col>
+        </Row>
+      </Card>
+    </Content>
+  </Layout>
+</template>
+
+<script>
+import {mapState} from 'vuex'
+import api from '@/api/axiosApi'
+import operationApiList from '@/api/operationApiList'
+// echart图外层容器，包括卡片样式
+import chartCard from '@/view/home/chartCard.vue'
+import chartLine from './../echarts/chartLine.vue'
+import chartBar from './../echarts/bar.vue'
+// echart图的一些共用的配置
+import {symbolLine, symbolBar, horizontalBar} from '@/assets/js/echartOption'
+
+export default {
+  components: {
+    chartCard,
+    chartLine,
+    chartBar
+  },
+  data () {
+    return {
+      newModulesOption: symbolLine(),
+      moduleUsageOption: symbolBar(),
+      moduleTopTenOption: horizontalBar(),
+      moduleUsageRateOption: symbolLine()
+    }
+  },
+  computed: {
+    ...mapState(['userInfo'])
+  },
+  mounted() {
+    this.drawNewModules()
+    this.drawModulesRate()
+    this.drawModuleTopTen()
+    this.drawModuleUsage()
+  },
+  methods: {
+    // 新增模块数
+    drawNewModules () {
+      this.newModulesOption.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      this.newModulesOption.series[0].data = [10, 380, 100, 560, 1290, 1330, 1320]
+      this.$refs.newModules.refresh()
+    },
+    // 模块使用量
+    drawModuleUsage () {
+      this.moduleUsageOption.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      this.moduleUsageOption.series[0].data = [10, 380, 100, 560, 1290, 1330, 1320]
+      this.$refs.moduleUsage.refresh()
+    },
+    // 模块top10
+    drawModuleTopTen () {
+      this.moduleTopTenOption.yAxis.data = ['巴西','印尼','美国','印度','中国','世界人口(万)']
+      this.moduleTopTenOption.series[0].data = [18203, 23489, 29034, 104970, 131744, 630230]
+      this.$refs.moduleTopTen.refresh()
+    },
+    // 模块使用率
+    drawModulesRate () {
+      this.moduleUsageRateOption.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      this.moduleUsageRateOption.series[0].data = [10, 50, 22, 36, 89, 100, 43]
+      this.$refs.moduleUsageRate.refresh()
+    }
+  }
+}
+</script>

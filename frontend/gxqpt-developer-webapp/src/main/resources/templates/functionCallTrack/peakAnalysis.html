@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>应用服务管理 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/laydate/theme/default/laydate.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+    <style type="text/css">
+        .charts {
+            width: 100%;
+            height: 350px;
+        }
+        .laydate{
+            width: 190px !important;
+        }
+        .charts-box .top-bar{
+            padding-left: 4%;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                调用情况分析 > <span class="active">波峰分析</span>
+            </div>
+            <a class="button-icon pull-right" onclick="history.back()">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="charts-box">
+                <div class="top-bar">
+                    <div class="form-inline pull-left">
+                        <div class="form-group">
+                            <label>应用</label>
+                            <select class="form-control" ng-model="searchCondition.appId" ng-change="conditionChange()">
+                                <option ng-repeat="item in appList" value="{{item.appId}}">{{item.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>功能</label>
+                            <select class="form-control" ng-model="searchCondition.moduleId" ng-change="conditionChange()">
+                                <option ng-repeat="item in funcList" value="{{item.id}}">{{item.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>时间范围</label>
+                            <input id="laydate" class="form-control laydate" placeholder="请选择时间范围" ng-model="dateRange">
+                        </div>
+                        <div class="form-group">
+                            <label>刻度</label>
+                            <select class="form-control" ng-model="searchCondition.timeScale" ng-change="conditionChange()">
+                                <option value="hour">时</option>
+                                <option value="day">天</option>
+                                <option value="weekend">周</option>
+                                <option value="month">月</option>
+                                <option value="quarter">季度</option>
+                                <option value="year">年</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="charts1" class="charts"></div>
+                <div id="charts2" class="charts"></div>
+                <div id="charts3" class="charts"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/echarts/echarts.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/laydate/laydate.js"></script>
+<script type="text/javascript">
+    var pageType = "peakAnalysis";
+
+    function remove() {
+        layer.confirm("您确定要删除吗？", {
+            title: '温馨提示',
+            shade: [0.4, '#000'],
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+
+        });
+    }
+</script>
+<script type="text/javascript">
+    /**************************************时间格式化处理************************************/
+    function dateFtt(fmt,date) {
+        var o = {   
+            "M+" : date.getMonth()+1,                 //月份   
+            "d+" : date.getDate(),                    //日   
+            "h+" : date.getHours(),                   //小时   
+            "m+" : date.getMinutes(),                 //分   
+            "s+" : date.getSeconds(),                 //秒   
+            "q+" : Math.floor((date.getMonth()+3)/3), //季度   
+            "S"  : date.getMilliseconds()             //毫秒   
+        };   
+        if(/(y+)/.test(fmt))   
+            fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));   
+        for(var k in o)   
+            if(new RegExp("("+ k +")").test(fmt))   
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+        return fmt;
+    }
+
+    app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http) {
+        //初始化laydate
+        //日期范围
+        var date = dateFtt('yyyy-MM-dd', new Date());
+        laydate.render({
+            elem: '#laydate'
+            ,range: '-'
+            ,format: 'yyyy-MM-dd'
+            // ,value: date + ' - ' + date
+            ,btns: ['confirm'],
+            done: function(value, date, endDate){
+                $scope.dateRange = value;
+                $scope.conditionChange();
+            }
+        });
+
+        var timeScaleMap = {
+            day: 'useDay',
+            hour: 'useHour',
+            month: 'useMonth',
+            quarter: 'useQuarter',
+            weekend: 'useWeekend',
+            year: 'useYear'
+        }
+
+        $scope.appList = [];
+        $scope.funcList = [];
+        $scope.dateRange = date + ' - ' + date;
+        $scope.searchCondition = {
+            // 开始时间
+            startTime: date + ' 00:00:00',
+            // 结束时间
+            endTime: date + ' 23:59:59',
+            // 时间刻度
+            timeScale: 'hour',
+            // 功能id
+            moduleId: '',
+            // 应用id
+            appId: ''
+        };
+        //创建图表
+        var charts1 = echarts.init(document.getElementById('charts1'));
+        var charts2 = echarts.init(document.getElementById('charts2'));
+        var charts3 = echarts.init(document.getElementById('charts3'));
+
+        var chars1_colors = ['#5793f3', '#d14a61', '#675bba'];
+        var charts1_option = {
+            title: {
+                text: '调用波峰分析',
+                left: 'center'
+            },
+            color: chars1_colors,
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {type: 'cross'}
+            },
+            grid: {
+                left:'5%',
+                right:'5%',
+                containLabel: true
+            },
+            xAxis: {
+                data: ['fsadf', 'fsadf', 'mak', 'wkl'],
+                axisTick: {
+                    alignWithLabel: true
+                },
+                splitLine: {
+                    show: false
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: '调用次数',
+                splitLine: {
+                    show: false
+                }
+            },
+            series: [{
+                name: '调用次数',
+                type: 'line',
+                data: [34, 20, 49, 91]
+            }]
+        };
+        var charts2_option = {
+            title: {
+                text: '异常波峰分析',
+                left: 'center'
+            },
+            color: ['#5793f3', '#d14a61', '#675bba'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                }
+            },
+            grid: {
+                left:'5%',
+                right:'5%',
+                containLabel: true
+            },
+            xAxis: {
+                axisTick: {
+                    alignWithLabel: true
+                },
+                splitLine: {
+                    show: false
+                },
+                data: []
+            },
+            yAxis: {
+                type: 'value',
+                name: '异常次数',
+                position: 'left',
+                splitLine: {
+                    show: false
+                }
+            },
+            series: [{
+                name: '异常次数',
+                type: 'line',
+                data: []
+            }]
+        };
+        var charts3_option = {
+            title: {
+                text: '功能使用占比分析',
+                left: 'center'
+            },
+            color: chars1_colors,
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                },
+                formatter: '{a}<br>{b}: {c}次'
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type : 'category',
+                data : [],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            },
+            yAxis: {
+                type : 'value',
+                name: '调用次数'
+            },
+            series : [{
+                name: '功能使用占比分析',
+                type: 'bar',
+                data: []
+            }]
+        };
+        $scope.drawChart1 = function () {
+            charts1.setOption(charts1_option);
+        }
+        $scope.drawChart2 = function () {
+            charts2.setOption(charts2_option)
+        }
+        $scope.drawChart3 = function () {
+            charts3.setOption(charts3_option)
+        }
+        // 获取功能列表
+        $scope.getFuncList = function () {
+            $http.get('${_gate_url}/api/developer/assignModule/findAllMoudlesNoPage', {
+                headers: getHeaders(),
+            }).success(function (res) {
+                $scope.funcList = res.data || [];
+                // if ($scope.appList.length > 0) {
+                //     $scope.searchCondition.moduleId = $scope.funcList[0].id;
+                //     $scope.getChart1();
+                // }
+            })
+        }
+        // 获取应用列表
+        $scope.getAppList = function () {
+            $http.get('${_gate_url}/api/developer/application/find', {
+                headers: getHeaders(),
+            }).success(function (res) {
+                $scope.appList = res.data || [];
+                // if ($scope.appList.length > 0) {
+                //     $scope.searchCondition.appId = $scope.appList[0].id;
+                //     $scope.getChart1();
+                // }
+            })
+        }
+        // 获取数据并画图
+        $scope.getChart1 = function () {
+            $http.post('${_gate_url}/api/developer/moduleUse/getJnl',
+                $scope.searchCondition, {
+                headers: getHeaders(),
+            }).success(function (res) {
+                var xData = [];
+                var yData1 = [];
+                var yData2 = [];
+                for (var i = 0; i < res.data.length; i++) {
+                    xData.push(res.data[i][timeScaleMap[$scope.searchCondition.timeScale]]);
+                    yData1.push(res.data[i].newTotalNum);
+                    yData2.push(res.data[i].newErrorNum);
+                }
+                charts1_option.xAxis.data = xData;
+                charts1_option.series[0].data = yData1;
+
+                charts2_option.xAxis.data = xData;
+                charts2_option.series[0].data = yData2;
+                $scope.drawChart1();
+                $scope.drawChart2();
+            })
+        }
+
+        // 获取数据并画图
+        $scope.getChart3 = function () {
+            $http.get('${_gate_url}/api/developer/moduleUse/getModuleUseRank', {
+                headers: getHeaders(),
+            }).success(function (res) {
+                var xData = [];
+                var yData = [];
+                for (var i = 0; i < res.data.length; i++) {
+                    xData.push(res.data[i].appName);
+                    yData.push(res.data[i].totalNum);
+                }
+                charts3_option.xAxis.data = xData;
+                charts3_option.series[0].data = yData;
+                $scope.drawChart3();
+            })
+        }
+
+        // 搜索条件改变
+        $scope.conditionChange = function () {
+            var time = $scope.dateRange.split(' - ');
+            $scope.searchCondition.startTime = time[0] + ' 00:00:00';
+            $scope.searchCondition.endTime = time[1] + ' 23:59:59';
+            $scope.getChart1();
+        }
+
+        $scope.getAppList();
+        $scope.getFuncList();
+        $scope.getChart1();
+        $scope.getChart3();
+    })
+</script>
+</body>
+
+</html>

@@ -1,0 +1,777 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>主页</title>
+    <!--<link rel="stylesheet" href="${_static}/platform_bg/nui/css/nui.css" />-->
+    <link rel="stylesheet" href="${_static}/platform_bg/css/index.css"/>
+    <link rel="stylesheet" href="${_static}/css_base/base.css"/>
+    <link rel="stylesheet" href="${_static}/css_base/index.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/main.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/popPage/css/pop.css"/>
+    <script type="text/javascript">
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                recalc = function () {
+                    var clientWidth = docEl.clientWidth;
+                    if (!clientWidth) return;
+                    docEl.style.fontSize = 100 * (clientWidth / 1920) + '%';
+                };
+
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+    <style type="text/css">
+        .py_ul_l {
+            float: left;
+            margin-bottom: 20px;
+        }
+
+        .middleContent {
+            float: left;
+            width: 100%;
+        }
+
+        .footer {
+            float: left;
+            margin-top: 0px;
+        }
+
+        .footer span {
+            margin-top: -25px;
+        }
+
+        .slidebar_left_box .title-cnt,
+        .slidebar_right_box .title-cnt {
+            margin-top: 5px !important;
+        }
+
+        .middleContent {
+            height: 840px;
+        }
+
+        .one_box {
+            padding-top: 20px !important;
+        }
+
+        .three_box.up,
+        .three_box.down {
+            padding-top: 18px !important;
+            padding-bottom: 0px !important;
+        }
+
+        .one_box .pking,
+        .three_box .pking {
+            width: 100px !important;
+            height: 100px !important;
+            padding: 0 !important;
+        }
+
+        .one_box .item {
+            padding-left: 3.5em !important;
+        }
+
+        .one_box .pking p,
+        .three_box .pking img {
+            font-size: 18px;
+            margin-top: 15px;
+        }
+
+        .one_box .pking span,
+        .two_box .pking span,
+        .three_box .pking span,
+        .four_box .pking span {
+            font-weight: normal;
+        }
+
+        .one_box .pking span,
+        .three_box .pking span {
+            margin-top: 16px;
+        }
+
+        .slidebar_mid_box .ttname {
+            font-weight: normal !important;
+        }
+
+        .bottomWrapper .box {
+            float: left;
+        }
+
+        .bottomWrapper .box-left {
+            width: 50%;
+        }
+
+        .bottomWrapper .box-right {
+            width: 50%;
+        }
+
+        .slidebar_right_box .close {
+            position: absolute;
+            background: url(../static/images/main/x.png) no-repeat left top/100% 100%;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            float: right;
+            border-radius: 9px;
+            right: 0px;
+            margin-top: -5px;
+        }
+        .py_big_head {
+            background: url(${_static}/v1/img/logo.png) no-repeat;
+            -webkit-background-size: 100% 100%;
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+
+<body>
+<div class="content">
+    <div id="index" class="section platform_bg" style="overflow: hidden;">
+        <div class="banner-img"></div>
+        <canvas id="canvas"></canvas>
+    </div>
+</div>
+<!-- 内容区-->
+<div class="py_big_con clearfix">
+    <div class="big_head">
+        <div class="date_">
+            <div class="date"></div>
+        </div>
+        <div class="nav">
+            <ul class="py_ul_l clearfix">
+                <li>
+                    <a href="${_cp}/module/v3/main" class="nav_bg">
+                        数聚高新
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v3/share">
+                        共享交换
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v3/appIntegrate">
+                        应用集成
+                    </a>
+                </li>
+                <li>
+                    <a href="${_cp}/module/v3/operate">
+                        运维监控
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v3/jbtz">
+                        降本提质
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v3/supervision">
+                        预警监管
+                    </a>
+                </li>
+            </ul>
+            <a href="JavaScript:void(0);" class="py_big_head clearfix"></a>
+            <div id="mainPanle" class="middleContent">
+                <div class="topWrapper">
+                    <!-- slide left -->
+                    <div id="sidebar_left" class="xb4 xm4 xs4" style="padding-right: 15px;">
+                        <div class="sidebar_ptb">
+                            <!-- 提醒中心 -->
+                            <div class="slidebar_left_box s-l-b1">
+                                <div class="slidebar_left_cnt s-l-c1">
+                                    <div class="cnt-title">
+                                        <h2 class="title-cnt fl">
+                                            <img class="img" src="${_static}/images/mid_tp_01.png">提醒中心</h2>
+                                        <p class="t-obc"></p>
+                                    </div>
+                                    <div class="cnt-content">
+                                        <div style="padding:12px 20px;height: 100%;width: 100%;">
+                                            <ul class="one_box up clearfix" id="countInfoUp">
+                                                <li class="item">
+                                                    <div class="pking">
+                                                        <p>0</p>
+                                                        <span>待办公文</span>
+                                                    </div>
+                                                </li>
+                                                <li class="item">
+                                                    <div class="pking">
+                                                        <p class="color_2">0</p>
+                                                        <span>消息中心</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <ul class="one_box down clearfix" id="countInfoDown">
+                                                <li class="item">
+                                                    <div class="pking">
+                                                        <p class="color_3">0</p>
+                                                        <span>预警中心</span>
+                                                    </div>
+                                                </li>
+                                                <li class="item">
+                                                    <div class="pking">
+                                                        <p>0</p>
+                                                        <span>邮件中心</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <p class="cnt-obc"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 支撑平台 -->
+                            <div class="slidebar_left_box s-l-b2">
+                                <div class="slidebar_left_cnt s-l-c2">
+                                    <div class="cnt-title">
+                                        <h2 class="title-cnt fl">
+                                            <img class="img" src="${_static}/images/mid_tp_02.png">支撑平台</h2>
+                                        <p class="t-obc"></p>
+                                    </div>
+                                    <div class="cnt-content">
+                                        <ul class="two_box clearfix" id="application_zcpt">
+                                            <li class="item">
+                                                <div class="pking clearfix">
+                                                    <div class="pdking">
+                                                        <span><cell class="tablecell"><img
+                                                                src="${_static}/images/two_1.png"></cell></span>
+                                                        <span><cell class="tablecell">共享交换平台</cell></span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="item">
+                                                <a href="index.html" class="pking clearfix">
+                                                    <div class="pdking">
+                                                        <span><cell class="tablecell"><img
+                                                                src="${_static}/images/two_4.png"></cell></span>
+                                                        <span><cell class="tablecell">大数据分析平台</cell></span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="item">
+                                                <div class="pking clearfix">
+                                                    <div class="pdking">
+                                                        <span><cell class="tablecell"><img
+                                                                src="${_static}/images/two_2.png"></cell></span>
+                                                        <span><cell class="tablecell">统一监管平台</cell></span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="pking clearfix">
+                                                    <div class="pdking">
+                                                        <span><cell class="tablecell"><img
+                                                                src="${_static}/images/two_5.png"></cell></span>
+                                                        <span><cell class="tablecell">安全保障平台</cell></span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="pking clearfix">
+                                                    <div class="pdking">
+                                                        <span><cell class="tablecell"><img
+                                                                src="${_static}/images/two_3.png"></cell></span>
+                                                        <span><cell class="tablecell">统一运维平台</cell></span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="item">
+                                                <div class="pking clearfix">
+                                                    <div class="pdking">
+                                                        <span><cell class="tablecell"><img
+                                                                src="${_static}/images/two_6.png"></cell></span>
+                                                        <span><cell class="tablecell">移动终端平台</cell></span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <p class="cnt-obc"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- slide middle -->
+                    <div id="sidebar_mid" class="xb4 xm4 xs4">
+                        <div class="sidebar_mid_p">
+                            <!-- 接入应用 -->
+                            <div class="slidebar_mid_box s-m-b1">
+                                <div class="slidebar_mid_cnt s-m-c2" style="padding-top: 0;">
+                                    <div class="cnt-content">
+                                        <div class="access_main">
+                                            <img class="rotation img" src="${_static}/images/access_main.png">
+                                            <span class="txtCenter">接入应用</span>
+                                            <ul class="rotatemenu" id="application_jryy">
+                                                <li class="app app_1">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_01.png"></span>
+                                                        <span class="ttname" class="ttname">生态监测</span>
+                                                    </div>
+                                                </li>
+                                                <li class="app app_2">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_02.png"></span>
+                                                        <span class="ttname">国土监测</span>
+                                                    </div>
+                                                </li>
+                                                <li class="app app_3">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_03.png"></span>
+                                                        <span class="ttname">安全监管</span>
+                                                    </div>
+                                                </li>
+                                                <li class="app app_4">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_04.png"></span>
+                                                        <span class="ttname">结对帮扶</span>
+                                                    </div>
+                                                </li>
+                                                <li class="app app_5">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_05.png"></span>
+                                                        <span class="ttname">政务服务</span>
+                                                    </div>
+                                                </li>
+                                                <li class="app app_6">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_06.png"></span>
+                                                        <span class="ttname" class="app_color">移动办公</span>
+                                                    </div>
+                                                </li>
+                                                <li class="app app_7">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_07.png"></span>
+                                                        <span class="ttname">权力监督</span>
+                                                    </div>
+                                                </li>
+                                                <li class="app app_8">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_08.png"></span>
+                                                        <span class="ttname">招商安商</span>
+                                                    </div>
+                                                </li>
+                                                <li class="app app_9">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_09.png"></span>
+                                                        <span class="ttname">综合治税</span>
+                                                    </div>
+                                                </li>
+                                                <li class="app app_10">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_10.png"></span>
+                                                        <span class="ttname">经济监测</span>
+                                                    </div>
+                                                </li>
+                                                <li class="app app_11">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_11.png"></span>
+                                                        <span class="ttname">市场监管</span>
+                                                    </div>
+                                                </li>
+                                                <li class="app app_12">
+                                                    <div class="item">
+                                                        <span class="imgWz"><img
+                                                                src="${_static}/images/app_12.png"></span>
+                                                        <span class="ttname">信用评价</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!-- <p class="cnt-obc-color"></p> -->
+                                    </div>
+                                    <span class="flMidbgline"></span>
+                                    <span class="frMidbgline"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- slide right -->
+                    <div id="sidebar_right" class="xb4 xm4 xs4" style="padding-left: 15px;">
+                        <div class="sidebar_ptb">
+                            <!-- 快捷入口 -->
+                            <div class="slidebar_right_box s-r-b1">
+                                <div class="slidebar_right_cnt s-r-c1">
+                                    <div class="cnt-title" style="padding-left: 20px;">
+                                        <h2 class="title-cnt fl">
+                                            <img class="img" src="${_static}/images/mid_tp_03.png">快捷入口</h2>
+                                        <a class="more" href="javascript:;">配置</a>
+                                        <p class="t-obc"></p>
+                                    </div>
+                                    <div class="cnt-content">
+                                        <div style="height: 100%;width: 100%;">
+                                            <ul class="three_box up clearfix" id="fastEntryUp">
+                                                <!--<li class="item">
+                                                    <div class="close hidden"></div>
+                                                    <div class="pking">
+                                                        <img src="${_static}/images/three_img.png">
+                                                        <span>服务监控</span>
+                                                    </div>
+                                                </li>
+                                                <li class="item">
+                                                    <div class="close hidden"></div>
+                                                    <div class="pking">
+                                                        <img src="${_static}/images/three_img.png">
+                                                        <span>新建邮件</span>
+                                                    </div>
+                                                </li>
+                                                <li class="item">
+                                                    <div class="close hidden"></div>
+                                                    <div class="pking">
+                                                        <img src="${_static}/images/three_img.png">
+                                                        <span>权限管理</span>
+                                                    </div>
+                                                </li>
+                                                <li class="item">
+                                                    <div class="close hidden"></div>
+                                                    <div class="pking">
+                                                        <img src="${_static}/images/three_img.png">
+                                                        <span>日志管理 </span>
+                                                    </div>
+                                                </li>
+                                                <li class="item">
+                                                    <div class="close hidden"></div>
+                                                    <div class="pking">
+                                                        <img src="${_static}/images/three_img.png">
+                                                        <span>电子政务网</span>
+                                                    </div>
+                                                </li>
+                                                <li class="item">
+                                                    <div class="close hidden"></div>
+                                                    <div class="pking">
+                                                        <img src="${_static}/images/three_img.png">
+                                                        <span>***系统</span>
+                                                    </div>
+                                                </li>-->
+                                            </ul>
+                                        </div>
+                                        <p class="cnt-obc"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 支撑服务模块 -->
+                            <div class="slidebar_right_box s-r-b2">
+                                <div class="slidebar_right_cnt s-r-c2">
+                                    <div class="cnt-title" style="padding-left: 100px;">
+                                        <h2 class="title-cnt fl">
+                                            <img class="img" src="${_static}/images/mid_tp_04.png">支撑模块</h2>
+                                        <p class="t-obc"></p>
+                                    </div>
+                                    <div class="cnt-content">
+                                        <ul class="four_box clearfix" id="application_zcfwmk">
+                                        </ul>
+                                        <p class="cnt-obc"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottomWrapper">
+                    <div class="sup_box fl">
+                        <div class="sup_box_left"></div>
+                        <div class="sup_box_mid">
+                            <div class="box-left box">
+                                <div class="sup_title">
+                                    <span>支撑应用</span>
+                                    <div class="under"></div>
+                                </div>
+                                <ul class="sup_cont" id="application_zcyy">
+                                </ul>
+                            </div>
+                            <div class="box box-right">
+                                <div class="sup_title">
+                                    <span>支撑服务</span>
+                                    <div class="under"></div>
+                                </div>
+                                <ul class="sup_cont" id="application_zcfw">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="sup_box_right"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <span>技术支持：中科恒运股份有限公司</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="${_static}/js/jquery-1.11.1.min.js"></script>
+<script src="${_static}/platform_bg/js/banner.js"></script>
+<script type="text/javascript" src="${_static}/js/main.js"></script>
+<script type="text/javascript" src="${_static}/js/base.js"></script>
+<script src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script src="${_static}/js/hengyun/jquery.cookie.js"></script>
+<script src="${_static}/js/popPage/js/pop.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var gateUrl = "${_gate_url}";
+    $(function () {
+        getApplication();
+        getFastentryList();
+        getCountInfo();
+    });
+    //按王c需求支撑平台现在只有大数据分析、共享交换其他的采用静态页面
+    var staticZCPThtml = "";
+    function getApplication() {
+        ajaxHengyun({
+            url: gateUrl + "/api/admin/application/findAppVisibleForSelf",
+            success: function (data) {
+                if (data && data.errcode == 0) {
+                    var result = data.data;
+                    var zcpthtml = "";
+                    var jryyhtml = "";
+                    var zcfwhtml = "";
+                    var zcfwmkhtml = "";
+                    var zcyyhtml = "";
+                    var jryyindex = 0;
+                    $.each(result, function (idnex, item) {
+                        if (item.type == 'zcpt') {
+                            var mod ="";
+                            if(item.name=='大数据分析平台'){
+                                mod ="_blank";
+                            }
+                            zcpthtml += "<li class=\"item\">" +
+                                "<a href=\"" + item.indexUrl + "\" target=\""+mod+"\" class=\"pking clearfix\">" +
+                                "<div class=\"pdking\">" +
+                                "<span><cell class=\"tablecell\"><img onerror=\"nofondZcpt();\"  src=\"" + item.logoUrl + "\"></cell></span>" +
+                                "<span><cell class=\"tablecell\">" + item.name + "</cell></span>" +
+                                "</div>" +
+                                "</a>" +
+                                "</li>";
+                        } else if (item.type == 'jryy') {
+                            jryyindex++;
+                            jryyhtml += "<li class=\"app app_" + jryyindex + "\">" +
+                                "<a href=\"" + item.indexUrl + "\" >" +
+                                "<div class=\"item\">" +
+                                "<span class=\"imgWz\"><img onerror=\"nofondJryy();\" src=\"" + item.logoUrl + "\"></span>" +
+                                "<span class=\"ttname\" class=\"ttname\">" + item.name + "</span>" +
+                                "</div>" +
+                                "</a>" +
+                                "</li>";
+                        } else if (item.type == "zcfw") {
+                            zcfwhtml += "<li>" +
+                                "<a href=\"" + item.indexUrl + "\" >" +
+                                "<img onerror=\"nofondZcfw();\"  src='${_static}/images/sup_img.png'>" +
+                                "<span>" + item.name + "</span>" +
+                                "</a>" +
+                                "</li>";
+                        } else if (item.type == "zcfwmk") {
+                            zcfwmkhtml += "<li class=\"item\">" +
+                                "<a href=\"" + item.indexUrl + "\" >" +
+                                "<div class=\"pking clearfix\">" +
+                                "<div class=\"pdking\">" +
+                                "<span><cell class=\"tablecell\"><img onerror=\"nofondZcfwmk();\"  src=\"" + item.logoUrl + "\"></cell></span>" +
+                                "<span><cell class=\"tablecell\">" + item.name + "</cell></span>" +
+                                "</div>" +
+                                "</div>" +
+                                "</a>" +
+                                "</li>";
+                        } else if (item.type == 'zcyy') {
+                            zcyyhtml += "<li>" +
+                                "<a href=\"" + item.indexUrl + "\" >" +
+                                "<img onerror=\"nofondZcfw();\"  src='${_static}/images/sup_img.png'>" +
+                                "<span>" + item.name + "</span>" +
+                                "</a>" +
+                                "</li>";
+                        }
+                    });
+                    zcpthtml +=staticZCPThtml;
+                    $("#application_zcpt").html(zcpthtml);
+                    //$("#application_jryy").html(jryyhtml);//采用静态页面
+                    $("#application_zcfw").html(zcfwhtml);
+                    $("#application_zcfwmk").html(zcfwmkhtml);
+                    $("#application_zcyy").html(zcyyhtml);
+                }
+            }, error: function (data) {
+
+            }
+        });
+    }
+
+    function nofondZcpt() {
+        var img = event.srcElement;
+        img.src = "${_static}/images/two_1.png";
+        img.onerror = null;
+    }
+
+    function nofondJryy() {
+        var img = event.srcElement;
+        img.src = "${_static}/images/app_12.png";
+        img.onerror = null;
+    }
+
+    function nofondZcfw() {
+        var img = event.srcElement;
+        img.src = "${_static}/images/sup_img.png";
+        img.onerror = null;
+    }
+
+    function nofondZcfwmk() {
+        var img = event.srcElement;
+        img.src = "${_static}/images/four_img.png";
+        img.onerror = null;
+    }
+
+    //点击提醒中心事件
+    $('.slidebar_left_box').on('click', '.one_box .item', function () {
+        var title = $(this).find('span').text();
+        var url;
+        if(title=='待办事项'){
+            url  = 'popPage.html';
+            pop.init({
+                width: '50%',
+                title: title,
+                animateTime: 200,
+                src: url
+            });
+        }
+    });
+    //点击快捷入口配置按钮事件
+    $('.slidebar_right_cnt').on('click', '.more', function () {
+        $(this).toggleClass('configing');
+        if ($(this).hasClass('configing')) {
+            $(this).text('完成');
+            $('.slidebar_right_cnt .three_box').find('.close').removeClass('hidden');
+        } else {
+            $(this).text('配置');
+            $('.slidebar_right_cnt .three_box').find('.close').addClass('hidden');
+        }
+    })
+    //点击快捷入口应用删除按钮事件
+    $('.slidebar_right_cnt').on('click', '.close', function (e) {
+        $(this).parents('.item').remove();
+        return false;
+    })
+    //点击添加快捷应用按钮事件
+    $('.slidebar_right_cnt').on('click', '.add-icon', function () {
+        pop.init({
+            width: '50%',
+            title: '新增快捷入口',
+            animateTime: 200,
+            src: 'addShortcutEntrance.html'
+        })
+    })
+
+    /*获取右边快速入口列表*/
+    function getFastentryList() {
+        ajaxHengyun({
+            type: "GET",
+            url: "${_gate_url}/api/admin/fastEntry/getList",
+            datatype: 'json',
+            success: function (rows) {
+                if (rows.data) {
+                    var html_up = "";
+                    rows.data.forEach(function (value, index) {
+                        if (index < 6) {
+                            html_up+="<li class=\"item\">" +
+                                "<a class=\"clearfix\" target=\"_blank\" href=\"" + value.url + "\" title=\"" + value.appResourceName + "\">"+
+                                "<div class=\"close hidden\"></div>" +
+                                "<div class=\"pking\">" +
+                                "<img src=\"${_static}/images/three_img.png\">" +
+                                "<span class='flong' data-flong='5'>"+value.appResourceName+"</span>" +
+                                "</div>" +
+                                "</a>" +
+                                "</li>";
+                        }
+                        return false;
+                    });
+                    html_up+=" <li class=\"add-icon\"></li>";
+                    $("#fastEntryUp").html(html_up);
+                    initStrLong();
+                }
+                ;
+            },
+        });
+    };
+
+    //获取提醒中心
+    function getCountInfo() {
+        var flag = 0;
+        var title=["待办事项","待办公文","消息中心","预警中心","邮件中心"];
+        ajaxHengyun({
+            type: "GET",
+            url: "${_gate_url}/api/msgs/p/common/list",
+            datatype: 'json',
+            data:{reciverId:$.cookie('_user_id')},
+            success: function (rows) {
+                if (rows.data) {
+                    var html_up = "";
+                    var html_down = "";
+                    /*$.each(title,function(num,item){
+                       rows.data.forEach(function (value, index) {
+                          if(flag<3){
+                               if(value.name==item){
+                                   var color = "color_1";
+                                   if(item=='消息中心'){
+                                       color = "color_2";
+                                   }
+                                   html_up+="<li class=\"item\">" +
+                                       "<div class=\"pking\">" +
+                                       "<p class=\""+color+"\">"+value.count+"</p>" +
+                                       "<span>"+item+"</span>" +
+                                       "</div>" +
+                                       "</li>";
+                                   flag++;
+                               }
+                           }else{
+                               if(value.name==item){
+                                   var color = "color_1";
+                                   if(item=='预警中心'){
+                                       color = "color_3";
+                                   }
+                                   html_down+="<li class=\"item\">" +
+                                       "<div class=\"pking\">" +
+                                       "<p class=\""+color+"\">"+value.count+"</p>" +
+                                       "<span>"+item+"</span>" +
+                                       "</div>" +
+                                       "</li>";
+                               }
+                           }
+
+                        });
+                    });
+                    $("#countInfoUp").html(html_up);
+                    $("#countInfoDown").html(html_down);*/
+                    rows.data.forEach(function (value, index) {
+                        //显示待办任务其余静态页面王c
+                        if(value.name =='待办事项'){
+                            var color = "color_1";
+                            html_up+="<li class=\"item\">" +
+                                "<div class=\"pking\">" +
+                                "<p class=\""+color+"\">"+value.count+"</p>" +
+                                "<span>"+value.name+"</span>" +
+                                "</div>" +
+                                "</li>";
+                            return false;
+                        }
+                    });
+                    $("#countInfoUp").prepend(html_up);
+
+                }
+            },
+        });
+    }
+</script>
+</body>
+
+</html>

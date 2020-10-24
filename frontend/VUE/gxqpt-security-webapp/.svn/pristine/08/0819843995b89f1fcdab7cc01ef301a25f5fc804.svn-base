@@ -1,0 +1,218 @@
+<template>
+  <Layout>
+    <Content>
+      <Breadcrumb>
+        <BreadcrumbItem>部门用户</BreadcrumbItem>
+        <BreadcrumbItem>服务器配置变更</BreadcrumbItem>
+      </Breadcrumb>
+      <Card>
+        <Form
+          ref="formValidate"
+          :label-width="100"
+          :model="formInfo">
+          <Row>
+            <Col span="6">
+              <FormItem label="申请单位：">
+                <Input
+                  type="text"
+                  v-model="formInfo.orgname"
+                  disabled>
+                </Input>
+              </FormItem>
+            </Col>
+            <Col span="6" :offset="1">
+              <FormItem label="申请人：">
+                <Input
+                  type="text"
+                  v-model="formInfo.manageUname"
+                  disabled>
+                </Input>
+              </FormItem>
+            </Col>
+            <Col span="6" :offset="1">
+              <FormItem label="服务器ID：">
+                <Input
+                  type="text"
+                  v-model="formInfo.serverId"
+                  disabled>
+                </Input>
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="6">
+              <FormItem label="服务器ip：">
+                <Input
+                  type="text"
+                  v-model="formInfo.ip"
+                  disabled>
+                </Input>
+              </FormItem>
+            </Col>
+            <Col span="6" :offset="1">
+              <FormItem label="申请人邮箱：">
+                <Input
+                  type="text"
+                  v-model="formInfo.applyEmail">
+                </Input>
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="13">
+              <server-config ref="serverConfig" :applyServer="applyServer" :hidecode="hidecode" />
+            </Col>
+          </Row>
+          <FormItem label="申请原因：">
+            <Input
+              type="textarea"
+              style="width: 400px;"
+              v-model="formInfo.applyReason">
+            </Input>
+          </FormItem>
+          <FormItem label="附件说明：" style="margin-top: 40px;">
+            <hy-upload ref="evalReport" multiple :on-success="setEvalReport" :on-remove="removeEvalReport" :before-upload="evalBeforeUpload"></hy-upload>
+          </FormItem>
+          <FormItem>
+            <Button type="default" @click="quit">取消</Button>
+            <Button type="primary" @click="submit(1)">保存</Button>
+            <Button type="primary" @click="submit(2)">提交</Button>
+          </FormItem>
+        </Form>
+      </Card>
+    </Content>
+  </Layout>
+</template>
+
+<script>
+// 服务器配置表单
+import serverConfig from './../common/serverConfig'
+import api from '@/api/axiosApi'
+import softhardApiList from '@/api/softhardApiList'
+import hyUpload from '@/components/hengyun/hyUpload'
+const hidecode = ['操作系统', '网关描述', '申请数量']
+
+export default {
+  components: {
+    serverConfig,
+    hyUpload
+  },
+  data () {
+    return {
+      hidecode,
+      formInfo: {},
+      applyServer:{},
+      categoryList: [{
+        value: 1,
+        label: '分类1'
+      }],
+      typeList: [{
+        value: 2,
+        label: '类型1'
+      }],
+      providerList: [{
+        value: 3,
+        label: '提供方1'
+      }]
+    }
+  },
+  mounted(){
+    this.formInfo = this.$route.params.departData;
+    console.log(this.formInfo);
+    this.getApplyServerById();
+  },
+  methods: {
+    getApplyServerById() { // 根据id查询申请服务器资源
+      api(softhardApiList.getApplyServerById,{id:this.$route.params.departData.serverId}).then((res) => {
+        if(res.data.errcode == 0){
+          console.log(res);
+          res.data.data.disks.forEach(item => {
+            item.diskName = '数据磁盘' + (item.order+1)
+          })
+          this.applyServer = res.data.data;
+          this.applyServer.cpuCount = this.applyServer.cpuCount.toString();
+          this.applyServer.memorySize = this.applyServer.memorySize.toString();
+          this.applyServer.netScope = parseFloat(this.applyServer.netScope);
+          this.applyServer.netWide = parseFloat(this.applyServer.netWide);
+          console.log(this.applyServer);
+        }else{
+          this.$Message.error(res.data.errmsg);
+        }
+      }, (err) => {
+        //dong something...
+      })
+    },
+    validForm() {
+      this.$refs['formInfo'].validate();
+    },
+    evalBeforeUpload() { //文件上传前清空
+      // this.$refs.evalReport.$children[0].clearFiles();
+    },
+    setEvalReport(response, file, fileList) {
+      if(this.$route.params.id != 3){
+        this.formInfo.attachment = [];
+      }
+      console.log(fileList);
+      fileList.forEach(item => {
+        let obj = {};
+        if(item.response){
+          obj.busType = 'hd_applymanage_upload';
+          obj.fileName = item.response.data.list[0].submittedFileName;
+          obj.fileSize = item.response.data.list[0].size;
+          obj.fileType = item.response.data.list[0].mime;
+          obj.fileUrl = item.response.data.list[0].url;
+          obj.name = item.response.data.list[0].submittedFileName;
+          obj.url = item.response.data.list[0].url;
+          this.formInfo.attachment.push(obj);
+        }
+      });
+      console.log(this.formInfo);
+      this.validForm();
+    },
+    removeEvalReport(file, fileList) {
+      if(fileList.length) {
+        this.evalFormData.evalReport = 'ok';
+      } else {
+        this.evalFormData.evalReport = '';
+      }
+      this.validForm();
+    },
+    submit(type){//保存申请服务器
+      let data = {};
+      data = this.dataM(this.formInfo,type)
+      console.log(data);
+      api(softhardApiList.saveMyApply,data).then((res) => {
+        if(res.data.errcode == 0) {
+          this.$router.go(-1);//返回上一页
+        }else{
+            this.$Message.error(res.data.errmsg);
+        }
+      }, (error) => {})
+    },
+    dataM(formInfo,type){//保存的数据整理
+      let data = {};
+      data.applyEmail = formInfo.applyEmail;//申请人邮箱
+      data.applyOrgid = formInfo.orgid;//申请单位id
+      data.applyOrgname = formInfo.orgname;//申请单位名称
+      data.applyReason = formInfo.applyReason;//申请原因
+      data.serverKeyid = formInfo.id;//服务器变更id 
+      data.applyServer = [];
+      data.applyServer.push(this.applyServer);//服务器申请
+      data.applyType = 1;//申请类型(1新增2变更)
+      data.attachment = formInfo.attachment;//附件集合
+      data.id = formInfo.id;//主键
+      data.type = type;//提交类型：1仅保存，2提交
+      data.applyServer.forEach(item => {
+        item.cpuCount = parseFloat(item.cpuCount);
+        item.memorySize = parseFloat(item.memorySize);
+        item.netScope = item.netScope.toString();
+      })
+      return data;
+    },
+    // 取消
+    quit () {
+      this.$router.go(-1)
+    }
+  }
+}
+</script>

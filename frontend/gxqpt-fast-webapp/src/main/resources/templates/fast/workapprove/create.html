@@ -1,0 +1,1194 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css" href="${_css}/reset.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css"  href="${_lib}/jquery-step/jquery.step.css">
+
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css"/>
+
+    <!--<link rel="icon" href="" type="image/x-icon" />-->
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <script type="text/javascript" src="${_lib}/webuploader/webuploader.js"></script>
+    <script type="text/javascript" src="${_lib}/webuploader/HYCore.js"></script>
+
+    <!-- begin 自定义样式 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        label.control-label {
+            text-align: right;
+        }
+
+        table.infoList tr th {
+            border: 1px solid #e1e6eb;
+            padding: 10px 12px;
+            vertical-align: middle;
+            width: 180px;
+            font-weight: normal;
+        }
+
+        table.infoListTab tr th {
+            width: auto;
+        }
+
+        .upuserhead {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .uploader {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td input.form-control {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td select.form-control {
+            width: 100%;
+        }
+
+        .Validform_info {
+            display: inline-block;
+            color: #f11;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            vertical-align: bottom;
+        }
+
+
+    </style>
+    <!-- end   自定义样式 -->
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>新增审批</h5>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-default go-back">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            取消
+                        </button>
+                    </div>
+                </div>
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset class="form-inline">
+                                <div class=" form-field">
+                                    <div class="form-group">
+                                        <div class="form-control-wrap spans">
+                                            <label class="control-label" for="">
+                                                <span class="text-danger"></span>
+                                                <span>选择审批类型</span>
+                                                <span>：</span>
+                                            </label>
+                                            <input type="radio" name="qingjia" id="extraWork" class="radioInput"
+                                                   value="加班审批"
+                                                   checked>
+                                            <label class="control-label w0" for="extraWork">加班审批</label>
+                                            <!--<input type="radio" name="qingjia" id="leave" class="radioInput"-->
+                                                   <!--value="请假审批">-->
+                                            <!--<label class="control-label w0" for="leave">请假审批</label>-->
+                                            <input type="radio" name="qingjia" id="businessTravel"
+                                                   class="radioInput" value="出差审批">
+                                            <label class="control-label w0" for="businessTravel">出差审批</label>
+                                            <!--<input type="radio" name="qingjia" id="ordinary" class="radioInput" value="普通审批">-->
+                                            <!--<label class="control-label w0" for="ordinary">普通审批</label>-->
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                            <div class="form-inline">
+                                <form id="jiabanData" class="dataForm" method="post">
+                                    <div class="jiaban">
+                                        <fieldset class="div1">
+                                            <div class="col-sm-12">
+                                                <div class="form-field" style="margin: 0;">
+                                                    <div class="form-group" style="margin: 0">
+                                                        <label class="control-label w84" for="">
+                                                            <span class="text-danger">*</span>
+                                                            <span>加班日期</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input id="endTime2" class="form-control Wdate"
+                                                                   style="width: 205px;"
+                                                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                                                                   name="endTime2" dataType="*" nullmsg="请填写加班时间"
+                                                                   errormsg="请填写加班时间"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>加班内容</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                             <textarea id="extraContent" class="form-control"
+                                                                       style="width: 430px;"
+                                                                       name="content"
+                                                                       rows="5" cols="" dataType="*" nullmsg="请填写加班内容"
+                                                                       errormsg="请填写加班内容"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger"></span>
+                                                            <span>审批人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_jbspr"
+                                                             class="form-control-wrap input-group">
+                                                            <input type="text" class="form-control imgs"
+                                                                   id="addPerson_jbsprEmpName"
+                                                                   name="addPerson_jbsprEmpName"
+                                                                   style="width: 384px;"  value="周世军">
+                                                            <span class="input-group-btn">
+														<button class="btn btn-primary" type="button"><span
+                                                                class="glyphicon glyphicon-plus"></span></button>
+													    </span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden"
+                                                               id="addPerson_jbsprEmp"
+                                                               name="addPerson_jbsprEmp"  value="2"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </fieldset>
+                                    </div>
+                                </form>
+                                <form id="qingjiaData" class="dataForm" method="post">
+                                    <div class="qingjia">
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>请假类型</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <select id="leaveType" name="leaveType" class="form-control" style="width: 198px;" datatype="*" nullmsg="请填写请假类型" errormsg="请填写请假类型">
+                                                                <option value="">请选择请假类型</option>
+                                                                <option value="jb_type">事假</option>
+                                                                <option value="bj_type">病假</option>
+                                                                <option value="nxj_type">年休假</option>
+                                                                <option value="tqj_type">探亲假</option>
+                                                                <option value="hj_type">婚假</option>
+                                                                <option value="cj_type">产假</option>
+                                                                <option value="sj_type">丧假</option>
+                                                                <option value="wp_type">外派</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label" style="width:110px;">
+                                                            <span class="text-danger"></span>
+                                                            <span>工作代理人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <select name="workAgent" id="leaWorkAgent"
+                                                                    class="form-control"
+                                                                    style="width: 198px;">
+                                                                <option value="1">管理员</option>
+                                                                <option value="2">周世军</option>
+                                                                <option value="3">郭嘉龙</option>
+                                                                <option value="4">岳金成</option>
+                                                                <option value="5">隋智超</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label"
+                                                               style="width: 110px;margin-left: -25px;" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>请假起始时间</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input id="startTime" class="form-control Wdate"
+                                                                   style="width: 198px;"
+                                                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH',maxDate:getStarTime('endTime')})"
+                                                                   name="startTime" dataType="*" nullmsg="请填写开始时间"
+                                                                   errormsg="请填写开始时间"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label" style="width:110px;">
+                                                            <span>请假截止时间</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input id="endTime" class="form-control Wdate"
+                                                                   style="width: 198px;"
+                                                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH',minDate:getStarTime('startTime')})"
+                                                                   name="endTime" dataType="*" nullmsg="请填写结束时间"
+                                                                   errormsg="请填写结束时间"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>请假事由</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                <textarea class="form-control" style="width: 533px;" id="leaveReason"
+                                                          name="leaveReason"
+                                                          rows="5" cols="" dataType="*" nullmsg="请填写请假事由"
+                                                          errormsg="请填写请假事由"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>审批人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_qjsp1" class="input-group">
+                                                            <input type="text" class="form-control imgs w153" readonly
+                                                                   id="addPerson_qjspEmpName"
+                                                                   name="addPerson_qjspEmpName"  value="岳金成">
+
+                                                        </div>
+                                                        <input class="form-control" type="hidden" id="addPerson_qjspEmp"
+                                                               name="addPerson_qjspEmp"  value="4"/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label" style="width:110px;">
+                                                            <span class="text-danger"></span>
+                                                            <span>抄送范围</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_qjcs" class="input-group">
+                                                            <input type="text" class="form-control imgs w153"
+                                                                   id="addPerson_qjcsEmpName"
+                                                                   name="addPerson_qjcsEmpName" value="岳金成">
+                                                            <span class="input-group-btn">
+														<button class="btn btn-primary" type="button"><span
+                                                                class="glyphicon glyphicon-plus"></span></button>
+													</span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden" id="addPerson_qjcsEmp"
+                                                               name="addPerson_qjcsEmp" value="4"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </fieldset>
+
+                                    </div>
+                                </form>
+                                <form id="chuchaiData" class="dataForm" method="post">
+                                    <div class="chuchai">
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>出差类型</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <select id="businessType" name="businessType"
+                                                                    class="form-control"
+                                                                    onchange="trainNameShow()"
+                                                                    dataType="*"
+                                                                    nullmsg="请选择出差类型" errormsg="请选择出差类型" style="width:153px;">
+                                                                <option value="">请选择出差类型</option>
+                                                                <option value="cc_wcpx">外出培训</option>
+                                                                <option value="cc_gwcc">公务出差</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger"></span>
+                                                            <span>工作代理人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <select id="workAgent" name="workAgent"
+                                                                    class="form-control select-w"
+                                                                    style="width:164px;">
+                                                                <option value="1">管理员</option>
+                                                                <option value="2">周世军</option>
+                                                                <option value="3">郭嘉龙</option>
+                                                                <option value="4">岳金成</option>
+                                                                <option value="5">隋智超</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>出差地点</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <input type="radio" style="position: relative;top: -8px;"
+                                                               name="addrType" class="radioInput"
+                                                               value="3" onclick="getAddrTypeValue(this)"
+                                                               checked>
+                                                        <label class="control-label w0" for="extraWork">国外</label>
+                                                        <input type="radio" style="position: relative;top: -8px;"
+                                                               name="addrType" class="radioInput"
+                                                               value="1" onclick="getAddrTypeValue(this)"
+                                                               checked>
+                                                        <label class="control-label w0" for="extraWork">省内</label>
+                                                        <input type="radio" style="position: relative;top: -8px;"
+                                                               name="addrType" class="radioInput"
+                                                               onclick="getAddrTypeValue(this)"
+                                                               value="2">
+                                                        <label class="control-label w0" for="leave">省外</label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control " id="businessAddr"
+                                                                   name="businessAddr" dataType="*"
+                                                                   nullmsg="请填写出差地点" errormsg="请填写出差地点"
+                                                                   style="width: 340px;"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="trainContr" class="col-sm-12" style="display: none;">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>培训名称</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap" id="showTrainName">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>交通工具</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control " id="businessVehicle"
+                                                                   name="businessVehicle" dataType="*"
+                                                                   nullmsg="请填写交通工具" errormsg="请填写交通工具"
+                                                                   style="width: 429px;"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger"></span>
+                                                            <span>随行人员</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control " id="accompanyUser"
+                                                                   name="accompanyUser"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84" >
+                                                            <span class="text-danger"></span>
+                                                            <span>联系电话</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control " id="accompanyUserPhone"
+                                                                   name="accompanyUserPhone"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field" style="margin: 0">
+                                                    <div class="form-group" style="margin: 0;">
+                                                        <label class="control-label w84" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>出差时间</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input id="startTime1" class="form-control Wdate"
+                                                                   style="width: 205px;"
+                                                                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH',maxDate:getStarTime('endTime1')})"
+                                                                   name="startTime" dataType="*" nullmsg="请填写开始时间"
+                                                                   errormsg="请填写开始时间"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span>至</span>
+                                                        </label>
+                                                        <input id="endTime1" class="form-control Wdate"
+                                                               style="width: 205px;"
+                                                               onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH',minDate:getStarTime('startTime1')})"
+                                                               name="endTime" dataType="*" nullmsg="请填写结束时间"
+                                                               errormsg="请填写结束时间"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>审批人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_ccsp1" class="form-control-wrap input-group">
+                                                            <input type="text" class="form-control imgs" readonly
+                                                                   id="addPerson_ccspEmpName"
+                                                                   name="addPerson_ccspEmpName"  value="郭嘉龙" style="width: 384px;">
+                                                            </span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden" id="addPerson_ccspEmp"
+                                                               name="addPerson_ccspEmp"  value="3"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset style="display: none;">
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger"></span>
+                                                            <span>抄送范围</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_cccs" class="form-control-wrap input-group">
+                                                            <input type="text" class="form-control imgs"
+                                                                   id="addPerson_cccsEmpName"
+                                                                   name="addPerson_ccspEmpName" style="width: 384px;">
+                                                            <span class="input-group-btn">
+													<button class="btn btn-primary" type="button"><span
+                                                            class="glyphicon glyphicon-plus"></span></button>
+												</span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden" id="addPerson_cccsEmp"
+                                                               name="addPerson_cccsEmp"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="div1">
+
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>出差事由</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                <textarea class="form-control" style="width: 430px;" id="businessRenson"
+                                                          name="businessRenson" rows="5" cols="" dataType="*"
+                                                          nullmsg="请填写出差事由" errormsg="请填写出差事由"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </form>
+                                <form id="putongData" class="dataForm" method="post">
+                                    <div class="putong">
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>审批人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_ptsp" class="form-control-wrap input-group">
+                                                            <input type="text" class="form-control imgs" readonly
+                                                                   id="addPerson_ptspEmpName"
+                                                                   name="addPerson_ptspEmpName"
+                                                                   style="width: 384px;"  value="岳金成">
+                                                            <span class="input-group-btn">
+								                            	<button class="btn btn-primary" type="button"><span
+                                                                        class="glyphicon glyphicon-plus"></span></button>
+								                         </span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden" id="addPerson_ptspEmp"
+                                                               name="addPerson_ptspEmp"  value="4"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger"></span>
+                                                            <span>抄送范围</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div id="addPerson_ptcs" class="form-control-wrap input-group">
+                                                            <input type="text" class="form-control imgs"
+                                                                   id="addPerson_ptcsEmpName"
+                                                                   name="addPerson_ptcsEmpName" value="周世军"  style="width: 384px;">
+                                                            <span class="input-group-btn">
+													<button class="btn btn-primary" type="button"><span
+                                                            class="glyphicon glyphicon-plus"></span></button>
+												</span>
+                                                        </div>
+                                                        <input class="form-control" type="hidden" id="addPerson_ptcsEmp"
+                                                               name="addPerson_ptcsEmp" value="2"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="div1">
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>审批内容</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                <textarea class="form-control" style="width: 430px;"
+                                                          id="ordinaryContent" name="ordinaryContent" rows="5" cols=""
+                                                          dataType="*"
+                                                          nullmsg="请填写审批内容" errormsg="请填写审批内容"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </fieldset>
+                                    </div>
+                                </form>
+                                <div class="col-sm-12">
+                                    <label class="control-label w84 pull-left">
+                                        <span>附件上传</span>
+                                        <span>：</span>
+                                    </label>
+                                    <div id="wrapper4" class="pull-left"
+                                         style="margin:0;width:calc(100%  - 153px);">
+                                        <div id="container4" style="margin: 0;padding: 0;">
+                                            <div id="uploader4" class="uploader">
+                                                <!--头部，相册选择和格式选择-->
+                                                <div class="queueList">
+                                                    <div id="dndArea4" class="placeholder dndArea"
+                                                         style="padding-top: 85px;">
+                                                        <div id="filePicker4" class="filePicker"></div>
+                                                        <p></p>
+                                                    </div>
+                                                </div>
+                                                <div class="statusBar" style="display:none;">
+                                                    <div class="progress">
+                                                        <span class="text">0%</span> <span
+                                                            class="percentage"></span>
+                                                    </div>
+                                                    <div class="info"></div>
+
+                                                    <div class="btns">
+                                                        <div id="jxButton4" class="jxButton"></div>
+                                                        <div class="uploadBtn">开始上传</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 20px;" class="clearfix"></div>
+                                <div class="text-center jiabanSave">
+                                    <button id="saveOk1" class="btn btn-primary btn-submit" type="button">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                        提交
+                                    </button>
+                                </div>
+                                <div class="text-center qingjiaSave">
+                                    <button id="saveOk2" class="btn btn-primary btn-submit" type="button">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                        提交
+                                    </button>
+                                </div>
+                                <div class="text-center chuchaiSave">
+                                    <button id="saveOk3" class="btn btn-primary btn-submit" type="button">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                        提交
+                                    </button>
+                                </div>
+                                <div class="text-center putongSave">
+                                    <button id="saveOk4" class="btn btn-primary btn-submit" type="button">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                        提交
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end 页面内容主体 -->
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+<script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_lib}/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/Valid.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_lib}/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_lib}/webuploader/HYCore.js"></script>
+
+<script type="text/javascript" src="${_static}/js/app.js?v=1.0.0"></script>
+<!--end 外部JS引入 -->
+
+<!--begin 自定义JS -->
+<script type="text/javascript">
+    var spPersonNames;
+    var spPersonIds;
+    var spPersonList = [];
+    var spEmpName;
+    $(function () {
+        // getLastApprPerson("4");
+        // $('#addPerson_jbsprEmpName').val(spPersonNames);
+        // $('#addPerson_jbsprEmp').val(spPersonIds);
+        loadFile();
+    });
+    var addrType = 1;
+
+    function getAddrTypeValue(obj) {
+        addrType = obj.value;
+    }
+
+    function loadFile() {
+        fileUpload4 = new FileUpload({
+            "filePicker": "filePicker4",
+            "dndArea": "dndArea4",
+            "uploader": "uploader4",
+            "jxButton": "jxButton4",
+            "busType": "b_work_appr_ordinary"
+        });
+    }
+
+    var fileList = new Array();
+
+    function successUpload(json) {
+        if(json.errcode == 0 && json.data){
+            for(var i = 0; i< json.data.list.length; i++){
+                var obj = json.data.list[i];
+                fileList.push(obj.url);
+            }
+        }
+    }
+
+    $(".chuchai").css("display", "none");
+    $(".putong").css("display", "none");
+    $(".qingjia").css("display", "none");
+    $(".putongSave").css("display", "none");
+    $(".qingjiaSave").css("display", "none");
+    $(".chuchaiSave").css("display", "none");
+
+    $("input[type='radio']").click(function () {
+        var radioVal = $("input[type='radio']:checked").val();
+        if ("加班审批" == radioVal) {
+            // getLastApprPerson("4");
+            $('#addPerson_jbsprEmpName').val(spPersonNames);
+            $('#addPerson_jbsprEmp').val(spPersonIds);
+            $(".jiaban").css("display", "block");
+            $(".chuchai").css("display", "none");
+            $(".putong").css("display", "none");
+            $(".qingjia").css("display", "none");
+            $(".putongSave").css("display", "none");
+            $(".jiabanSave").css("display", "block");
+            $(".qingjiaSave").css("display", "none");
+            $(".chuchaiSave").css("display", "none");
+
+        } else if ("请假审批" == radioVal) {
+//                    getLastApprPerson("1")
+//                    $('#addPerson_qjspEmpName').val(spPersonNames);
+//                    $('#addPerson_qjspEmp').val(spPersonIds);
+            $(".jiaban").css("display", "none");
+            $(".qingjia").css("display", "block");
+            $(".chuchai").css("display", "none");
+            $(".putong").css("display", "none");
+            $(".putongSave").css("display", "none");
+            $(".jiabanSave").css("display", "none");
+            $(".qingjiaSave").css("display", "block");
+            $(".chuchaiSave").css("display", "none");
+        } else if ("出差审批" == radioVal) {
+//                    getLastApprPerson("2");
+//                    $('#addPerson_ccspEmpName').val(spPersonNames);
+//                    $('#addPerson_ccspEmp').val(spPersonIds);
+            $(".jiaban").css("display", "none");
+            $(".qingjia").css("display", "none");
+            $(".chuchai").css("display", "block");
+            $(".putong").css("display", "none");
+            $(".putongSave").css("display", "none");
+            $(".jiabanSave").css("display", "none");
+            $(".qingjiaSave").css("display", "none");
+            $(".chuchaiSave").css("display", "block");
+        } else {
+            // getLastApprPerson("3");
+            // $('#addPerson_ptspEmp').val(spPersonIds);
+            // $('#addPerson_ptspEmpName').val(spPersonNames);
+            $(".jiaban").css("display", "none");
+            $(".qingjia").css("display", "none");
+            $(".chuchai").css("display", "none");
+            $(".putong").css("display", "block");
+            $(".putongSave").css("display", "block");
+            $(".jiabanSave").css("display", "none");
+            $(".qingjiaSave").css("display", "none");
+            $(".chuchaiSave").css("display", "none");
+
+        }
+
+    })
+    $("#startTime1").blur(function () {
+        timeOnchange(2)
+    })
+    $("#endTime1").blur(function () {
+        timeOnchange(2)
+    })
+    $("#startTime").blur(function () {
+        timeOnchange(1)
+    })
+    $("#endTime").blur(function () {
+        timeOnchange(1)
+    })
+
+    function timeOnchange(type) {
+        var startDate = null;
+        var endDate = null;
+        if (type == 1) {
+            startDate = $("#startTime").val();
+            endDate = $("#endTime").val();
+        } else if (type == 2) {
+            startDate = $("#startTime1").val();
+            endDate = $("#endTime1").val();
+        }
+        if (startDate != "" && endDate != "") {
+            startDate = startDate + ":00:00";
+            endDate = endDate + ":00:00";
+            queryApproveLeader(startDate, endDate);
+            if (type == 1) {
+                // $('#addPerson_qjspEmpName').val(spEmpName);
+            } else if (type == 2) {
+                // $('#addPerson_ccspEmpName').val(spEmpName);
+            }
+        }
+    }
+
+    //根据选择的出差或者请假时间查询审批人
+    function queryApproveLeader(startDate, endDate) {
+        $.ajax({
+            url: "queryApproveLeader.do?startDate=" + startDate + "&endDate=" + endDate,
+            type: 'get',
+            async: false,
+            contentType: 'application/json;charset=utf-8', //设置请求头信息
+            dataType: "json",
+            success: function (data) {
+                spPersonList = data.spPersonList;
+                spEmpName = data.spEmpName;
+            }
+        });
+    }
+
+    function getLastApprPerson(type) {
+        $.ajax({
+            url: "queryLastApproPerson.do?type=" + type,
+            type: 'get',
+            async: false,
+            contentType: 'application/json;charset=utf-8', //设置请求头信息
+            dataType: "json",
+            success: function (data) {
+                spPersonIds = data.spPersonIds
+                spPersonNames = data.spPersonNames;
+                spPersonList = data.spPersonList;
+            }
+        });
+    }
+
+    //添加加班审批人
+    $("#addPerson_jbspr").click(function () {
+        // var personIdList = $("#addPerson_jbsprEmp").val();
+        // var checkParentName = $("#addPerson_jbsprEmpName").val();
+        // personId = "addPerson_jbspr";
+        // addsendPerson(personIdList, checkParentName, 1);
+    });
+    //添加请假审批人
+    $("#addPerson_qjsp").click(function () {
+
+        // var personIdList = $("#addPerson_qjspEmp").val();
+        // var checkParentName = $("#addPerson_qjspEmpName").val();
+        // personId = "addPerson_qjsp";
+        // addsendPerson(personIdList, checkParentName, 1);
+    });
+    //添加请假抄送人
+    $("#addPerson_qjcs").click(function () {
+        // var personIdList = $("#addPerson_qjcsEmp").val();
+        // var checkParentName = $("#addPerson_qjcsEmpName").val();
+        // personId = "addPerson_qjcs";
+        // addsendPerson(personIdList, checkParentName, 2);
+    });
+    //添加出差审批人
+    $("#addPerson_ccsp").click(function () {
+        // var personIdList = $("#addPerson_ccspEmp").val();
+        // var checkParentName = $("#addPerson_ccspEmpName").val();
+        // personId = "addPerson_ccsp";
+        // addsendPerson(personIdList, checkParentName, 1);
+    });
+    //添加出差抄送人
+    $("#addPerson_cccs").click(function () {
+        // var personIdList = $("#addPerson_cccsEmp").val();
+        // var checkParentName = $("#addPerson_cccsEmpName").val();
+        // personId = "addPerson_cccs";
+        // addsendPerson(personIdList, checkParentName, 2);
+    });
+    //添加普通审批人
+    $("#addPerson_ptsp").click(function () {
+        // var personIdList = $("#addPerson_ptspEmp").val();
+        // var checkParentName = $("#addPerson_ptspEmpName").val();
+        // personId = "addPerson_ptsp";
+        // addsendPerson(personIdList, checkParentName, 1);
+    });
+    //添加普通抄送人
+    $("#addPerson_ptcs").click(function () {
+        // var personIdList = $("#addPerson_ptcsEmp").val();
+        // var checkParentName = $("#addPerson_ptcsEmpName").val();
+        // personId = "addPerson_ptcs";
+        // addsendPerson(personIdList, checkParentName, 2);
+    });
+
+    function addsendPerson(personIdList, checkParentName, type) {
+        var title = "添加审批人";
+        if (type == 2) {
+            title = "添加抄送人";
+        }
+        var checkParentNames = encodeURIComponent(checkParentName);
+        layer.open({
+            type: 2,
+            id: 'addPerson',
+            title: title,
+            shadeClose: false,
+            scrollbar: false,
+            ignoreHidden: true,
+            shade: 0.6,
+            area: ['80%', '88%'],
+            content: "addPerson.do?personIdList=" + personIdList + "&checkParentName=" + checkParentNames,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 添加', '<span class="glyphicon glyphicon-backward"></span> 取消'],
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：
+                iframeWin.loaderParentPage();
+            }
+        });
+    }
+
+    var empLists = [];
+
+    function getPerson(datas) {
+        document.getElementById(personId + "Emp").value = datas.checkEmpId;
+        document.getElementById(personId + "EmpName").value = datas.name;
+        $("#" + personId + "EmpName").attr("title", datas.name);
+        if (datas.empObj != undefined && datas.empObj.length > 0) {
+            for (var i in datas.empObj) {
+                empLists.push(datas.empObj[i]);
+            }
+        }
+
+    }
+
+    function addPersonWhenSum(type, empIdsJson) {
+        var approvePersons = [];
+        var sortId = 1;
+        var empIds = empIdsJson.split(",");
+        for (var i = 0; i < empIds.length; i++) {
+
+            var personName = null;
+            for (var j in empLists) {
+                if (empLists[j].id == empIds[i]) {
+                    personName = empLists[j].empName;
+                    break;
+                }
+            }
+            if (personName != null && personName != '' && personName != undefined) {
+                var approvePerson = {
+                    personType: type,
+                    personId: empIds[i],
+                    personName: personName
+                };
+                if (approvePerson.personType == '1') {
+                    approvePerson.approveSortId = sortId;
+                    sortId++;
+                }
+                approvePersons.push(approvePerson);
+            }
+
+        }
+        return approvePersons;
+    }
+
+    //新增工作审批
+    $('#saveOk1,#saveOk2,#saveOk3,#saveOk4').valid({
+        form: '.dataForm',
+        showAllError: true,
+        checkpassed: function () {
+            parent.layer.confirm("您确定提交吗？", {btn: ['提交', '取消'], shade: false}, function (index) {
+                layer.load(2, {shade: [0.4, '#000']});
+                var o = {};
+                var url = null;
+                var approvePersonList = [];
+                var ccPersonList = [];
+                var radioVal = $("input[type='radio']:checked").val();
+                var apprPersonList = [];
+                if ("加班审批" == radioVal) {
+                    var personIdList0 = $("#addPerson_jbsprEmp").val();//请假
+                    if (personIdList0 == "") {
+                        $(this).alertInfo("请选择审批人");
+                        return false;
+                    }
+                    approvePersonList = addPersonWhenSum('1', $("#addPerson_jbsprEmp").val());
+                    o.endTime = $("#endTime2").val();
+                    o.content = $("#extraContent").val();
+                    o.imgUrl = fileList[0];
+                    o.currentAproveUserId = $("#addPerson_jbsprEmp").val();
+                    o.currentAproveUserName = $("#addPerson_jbsprEmpName").val();   //下一个审批人name
+                    o.currentAproveUserOperation = "1";
+                    o.aproveState = "1";
+                    o.inAprove = "0";
+
+                    url = "${_gate_url}/api/developer/attence/workapprove/extrasave";
+                } else if ("请假审批" == radioVal) {
+                    approvePersonList = addPersonWhenSum('1', $("#addPerson_qjspEmp").val());
+                    ccPersonList = addPersonWhenSum('2', $("#addPerson_qjcsEmp").val());
+                    o.leaveType = $("#leaveType").val();
+                    o.content = $("#content").val();
+                    o.workAgent = $("#leaWorkAgent").val();
+                    o.startTime = $("#startTime").val() + ":00:00";
+                    o.endTime = $("#endTime").val() + ":00:00";
+                    o.leaveReason = $("#leaveReason").val();
+                    o.imgUrl = fileList[0];
+                    o.ccPersonList = ccPersonList;
+                    o.currentAproveUserId = $("#addPerson_qjspEmp").val();
+                    o.currentAproveUserOperation = "1";
+                    o.aproveState = "0";
+                    o.inAprove = "0";
+                    url = "${_gate_url}/api/developer/attence/workapprove/leavesave";
+                } else if ("出差审批" == radioVal) {
+                    approvePersonList = addPersonWhenSum('1', $("#addPerson_ccspEmp").val());
+                    ccPersonList = addPersonWhenSum('2', $("#addPerson_cccsEmp").val());
+                    o.businessType = $("#businessType").val();
+                    o.workAgent = $("#workAgent").val();
+                    o.trainName = $("#trainName").val();
+                    o.businessVehicle = $("#businessVehicle").val();
+                    o.accompanyUser = $("#accompanyUser").val();
+                    o.accompanyUserPhone = $("#accompanyUserPhone").val();
+                    o.startTime = $("#startTime1").val() + ":00:00";
+                    o.endTime = $("#endTime1").val() + ":00:00";
+                    o.businessRenson = $("#businessRenson").val();
+                    o.ordinaryContent = $("#ordinaryContent").val();
+                    o.businessAddr = $("#businessAddr").val();
+                    o.addrType = addrType;
+                    o.imgUrl = fileList[0];
+
+                    o.currentAproveUserId = $("#addPerson_ccspEmp").val();   //下一个审批人id
+                    o.currentAproveUserName = $("#addPerson_ccspEmpName").val();   //下一个审批人name
+                    o.currentAproveUserOperation = "1";  //等待审批
+                    o.aproveState = "1";  //审批状态("0"为未提交，”1“为已提交)
+                    o.inAprove = "0";//是否已经审批过("0":还未审批过，"1"已经审批过)
+                    o.ccPersonList = ccPersonList;
+
+                    url = "${_gate_url}/api/developer/attence/workapprove/businesssave";
+                } else {
+                    var personIdList3 = $("#addPerson_ptspEmp").val();//普通
+                    if (personIdList3 == "") {
+                        $(this).alertInfo("请选择审批人");
+                        return false;
+                    }
+                    approvePersonList = addPersonWhenSum('1', $("#addPerson_ptspEmp").val());
+                    ccPersonList = addPersonWhenSum('2', $("#addPerson_ptcsEmp").val());
+
+                    o.ordinaryContent = $("#ordinaryContent").val();
+                    o.imgUrl = fileList[0];
+                    o.ccPersonList = ccPersonList;
+                    o.currentAproveUserId = $("#addPerson_ptspEmp").val();
+                    o.currentAproveUserOperation = "1";
+                    o.aproveState = "0";
+                    o.inAprove = "0";
+
+                    url = "${_gate_url}/api/developer/attence/workapprove/supplysave";
+                }
+                if (approvePersonList == null || approvePersonList.length == 0) {
+                    approvePersonList = spPersonList;
+                }
+                o.appId = "${appId!''}";
+                o.apprPersonList = approvePersonList;
+                o = JSON.stringify(o);
+                ajaxHengyun({
+                    url: url,
+                    type: 'post',
+                    contentType: 'application/json;charset=utf-8', //设置请求头信息
+                    data: o,
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.errcode  == 0) {
+                            layer.closeAll();
+                            window.location.href = "list.do";
+                        } else {
+                            layer.closeAll();
+                            $(this).alertInfo(data.msg);
+                        }
+                    }
+//            error: function () {
+//                parent.layer.closeAll();
+//            }
+                });
+                parent.layer.close(index);
+            });
+        }
+    });
+
+
+    function trainNameShow() {
+        if ($("#businessType").val() == "cc_wcpx") {
+            $("#trainContr").css({
+                display: 'block'
+            });
+            var inputText = $('<input type="text" class="form-control" id="trainName" name="trainName"   dataType="*" placeholder="请填写培训名称" errormsg="请填写培训名称" style="width: 429px"/>');
+            $("#showTrainName").append(inputText);
+        } else {
+            $("#trainContr").css({
+                display: 'none'
+            });
+        }
+    }
+</script>
+<!--end 自定义JS -->
+
+
+</body>
+</html>

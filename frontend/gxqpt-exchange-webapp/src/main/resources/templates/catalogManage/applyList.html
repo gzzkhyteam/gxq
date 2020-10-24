@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<ul class="navsecond clearfix">
+							<li class="pull-left">
+								<!--	<a class="active" href="${_cp}/module/dataCatalogManage">数据目录管理</a>-->
+								<script type="text/javascript" id="exchange_datadir_manage">
+                                    resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_datadir_manage",
+                                        btnHtml :'<a  href="${_cp}/module/dataCatalogManage" target="home">{{name}}</a>',
+                                        htmlInsert: true
+                                    });
+								</script>
+							</li>
+							<li class="pull-left">
+								<!--<a href="${_cp}/module/applyList">目录发布跟踪</a>-->
+								<script type="text/javascript" id="exchange_dirpublish_tracks">
+                                    resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_dirpublish_tracks",
+                                        btnHtml :'<a class="active" href="${_cp}/module/applyList" target="home">{{name}}</a>',
+                                        htmlInsert: true
+                                    });
+								</script>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="main_container row">
+					<form id="searchDataForm" class="search-form" autocomplete="off">
+						<ul class="clearfix">
+							<li class="pull-left">
+								<label class="control-label">处理状态：</label>
+                            	<select  name="status" class="chosen-select">
+                                	<option value="">全部</option>
+									<option value="4">未处理</option>
+									<option value="3">已通过</option>
+									<option value="2">已驳回</option>
+                                </select>
+							</li>
+							<li class="pull-left">
+								<label class="control-label">申请时间：</label>
+                            	<input id="startTime" name="startTime" class="Tdate w180" placeholder=""/>
+                            	<span class="color-warning">-</span>
+								<input id="endTime" name="endTime" class="Tdate w180" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<!--<button type="button" class="btn btn-primary search-button" onclick="searchBtn()">
+                            		<span class="glyphicon glyphicon-search"></span> 查询
+                                </button>-->
+								<script type="text/javascript" id="exchange_query_dir">
+									resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+										resource_code : "exchange_query_dir",
+										btnHtml :"<button type=\"button\" class=\"btn btn-primary search-button\" onclick=\"searchBtn()\">{{name}}</button>",
+										htmlInsert: true
+									});
+								</script>
+							</li>
+							<li class="pull-right marginAuto">
+								<!--<button type="button" class="btn btn-primary btn-create" onclick="window.location.href='${_cp}/module/applyCreate'">
+                            		新增
+                                </button>-->
+								<!-- /*按钮权限开始*/-->
+								<!--<script type="text/javascript" id="exchange_create_dir">
+                                    resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_create_dir",
+                                        btnHtml :"<button type=\"button\" class=\"btn btn-default\" onclick=\"window.location.href='${_cp}/module/applyCreate'\">新增</button>",
+                                        htmlInsert: true
+                                    });
+								</script>-->
+								<!-- /*按钮权限end*/-->
+							</li>
+						</ul>
+                    </form>
+					<table id="dataDirectoryList" class="default-table tab-title-top">
+						<thead>
+							<tr>
+								<th width="60">序号 </th>
+								<th>申请部门 </th>
+								<th width="240">申请人</th>
+								<th width="180">申请时间</th>
+								<th>申请理由</th>
+								<th width="100">处理状态</th>
+								<th class="text-left" width="130">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<div class="text-center">
+						<ul class="pagination" id="pagination" ></ul>
+						<p class="pull-right currentPage">共<i id="totalNum" class="colorBlue"></i>条数据，当前第<i id="pageNum" class="colorBlue"></i>页/共<i id="totalPages"  class="colorBlue"></i>页</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var pageNo = '${pageNo}';
+            var parm={
+                data:{},
+                pageNo:pageNo?pageNo:1,
+                pageSize:10
+            }
+            getList(parm);
+            searchBtn();
+            function searchBtn(){//查询
+                var dataDTO =$("#searchDataForm").serializeJSON();
+                if(dataDTO){
+                    dataDTO.status=parseInt(dataDTO.status);
+                }
+                parm.data=dataDTO;
+                parm.pageNo = 1;
+                getList(parm);
+            }
+            /*获取数据源列表*/
+            function  getList(parm) {
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url:  '${_gate_url}/api/exchange/directory/page ',
+                    data:JSON.stringify(parm),
+                    success:function(rows){
+                        var html=""
+                        if (rows.data){
+                            rows.data.list.forEach(function(value,index){
+                                value = dealElement(value);
+                                var statusName="";
+                                if(value.status==3){
+                                    statusName="已通过";
+                                };
+                                if(value.status==2){
+                                    statusName="已驳回";
+                                };
+                                if(value.status==4||value.status==1){
+                                    statusName="未处理";
+                                };
+                                var num = index+1;
+                               /* var isPtadminText="";
+                                if(value.isPtadmin==1){
+                                    isPtadminText="平台管理员直接发布";
+                                }else{
+                                    isPtadminText="单位管理员申请";
+                                }*/
+                                html+='<tr>';
+                                html+='<td>'+num+'</td>';
+                                html+='<td  title=\''+value.unitName+'\'>'+value.unitName+'</td>';
+                                html+='<td>'+value.userName+'</td>';
+                                html+='<td>'+value.optTime+'</td>';
+                                html+='<td title=\''+value.applicationReasons+'\'>'+value.applicationReasons+'</td>';
+                                html+='<td>'+statusName+'</td>';
+                                html+='<td>';
+                                html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                    resource_code : "exchange_dir_detail",
+                                    btnHtml :'<a class="ui-button" href="${_cp}/module/editList?applyCode='+value.applyCode+'&pageNo='+rows.data.pageNum+'&pageType=applyList'+'">{{name}}</a>',
+                                    htmlInsert: false
+                                });
+                                var isPtadmin=value.isPtadmin;
+                                if(value.isPtadmin==1) {
+                                    html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_deal_detail",
+                                        btnHtml :'<span class="oper-separator" ></span><a class="ui-button" href="javascript:void(0);" onclick="ptAdmindealView(\''+value.optTime+'\')">{{name}}</a>',
+                                        htmlInsert: false
+                                    });
+                                }else{
+                                    if(value.status==2 || value.status==3){
+                                        // html+='<a href="javascript:void(0);" onclick="dealView('+value.auditId+')">处理详情</a>';
+                                        html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "exchange_dealwith_detail",
+                                            btnHtml :'<span class="oper-separator" ></span><a class="ui-button" href="javascript:void(0);" onclick="dealView(\''+value.auditId+'\')">{{name}}</a>',
+                                            htmlInsert: false
+                                        });
+                                    }
+								}
+
+                                html+='</td>';
+                                html+='</tr>';
+                            });
+                            $("#dataDirectoryList tbody").html(html);
+                            $('#totalPages').text(rows.data.pages);
+                            $('#totalNum').text(rows.data.total);
+                            jqPaginator(rows.data);
+                        }else{
+                            $(".pagination,.currentPage").css("display","none");
+                            parent.layer.msg(res.errmsg+"，请重试！",{time:3000});
+                        };
+						updateIformHeight();
+                    }
+                });
+            };
+            function dealView(id){
+                parent.layer.open({
+                    id: 'dataApplySecond',
+                    type: 2,
+                    anim:6,
+                    title: '处理详情',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['750px', '400px'],
+                    shade: [0.5, '#000'],
+                    content: "${_cp}/module/applyDealView?id="+id,
+                    btn: ['关闭'],
+                });
+            }
+            function ptAdmindealView(optTime){
+                optTime = (new Date(optTime)).getTime();
+                parent.layer.open({
+                    id: 'dataApplySecond',
+                    type: 2,
+                    anim:6,
+                    title: '处理详情',
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['750px', '400px'],
+                    shade: [0.5, '#000'],
+                    content: "${_cp}/module/ptAdminDealView?optTime="+optTime,
+                    btn: ['关闭'],
+                });
+            }
+            $('#startTime').off('focus').on('focus',function(){
+                WdatePicker({skin:'twoer', lang:'zh-cn',maxDate:getTime("endTime"), dateFmt:'yyyy-MM-dd HH:mm:ss'});
+            });
+            $('#endTime').off('focus').on('focus',function(){
+                WdatePicker({skin:'twoer', lang:'zh-cn',minDate:getTime("startTime"), dateFmt:'yyyy-MM-dd HH:mm:ss'});
+            });
+
+		</script>
+	</body>
+</html>

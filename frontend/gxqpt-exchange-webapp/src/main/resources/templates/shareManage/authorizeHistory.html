@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<!--<div class="row">-->
+					<!--<div class="current pull-left">-->
+						<!--<ul class="navsecond clearfix">-->
+							<!--<li class="pull-left"><a href="${_cp}/module/shareMagApplyList">共享申请</a></li>-->
+							<!--<li class="pull-left"><a class="active" href="${_cp}/module/shareMagApiList">API管理</a></li>-->
+							<!--<li class="pull-left"><a href="${_cp}/module/shareMagDemandList">需求申请</a></li>-->
+						<!--</ul>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="row marginTop">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>API管理</span> &gt; <span class="page-title-scend">授权记录</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="main_container row">
+					<form action="" class="search-form" autocomplete="off">
+						<ul class="clearfix">
+							<li class="pull-left">
+								<label class="control-label">授予单位：</label>
+								<input id="unitName" name="unitName" class="" placeholder=""/>
+							</li>
+							<li class="pull-left">
+								<button type="button" class="btn btn-primary search-button">
+                            		<span class="glyphicon glyphicon-search"></span> 查询
+                                </button>
+							</li><li class="pull-right marginAuto">
+								<button type="button" class="btn btn-primary btn-create" onclick="unitCreate()">
+                            		新增授权单位
+                                </button>
+							</li>
+						</ul>
+                    </form>
+					<table id="orgList" class="default-table tab-title-top">
+						<thead>
+							<tr>
+								<th>API名称</th>
+								<th>授予单位</th>
+								<th>授权时间</th>
+								<th>权限到期时间</th>
+								<th>调用次数</th>
+								<th>交换数据量</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+					<div class="text-center">
+						<ul class="pagination" id="pagination" ></ul>
+						<p class="pull-right currentPage">共<span class="total">0</span>条数据，当前第<i id="pageNum" class="colorBlue">1</i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript">
+            var unitName = "";
+            var apiId = "${id}";
+
+            function initParam() {
+                unitName = $("input[name='unitName']").val();
+            }
+
+            function getParam() {
+                initParam();
+                parm = {
+                    data: {apiId:apiId ,unitName: unitName},
+                    pageNo: 1,
+                    pageSize: 10
+                }
+            }
+
+            getParam();
+            getList(parm);
+
+            /*获取单位列表*/
+            function getList(parm) {
+                ajaxHengyun({
+                    type: "POST",
+                    async: false,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: '${_gate_url}/api/exchange/dataapi/api/findauthunit',
+                    data: JSON.stringify(parm),
+                    success: function (rows) {
+                        var html = ""
+                        if (rows.data) {
+                            rows.data.list.forEach(function (value, index) {
+                                value = dealElement(value);
+                                html += '<tr>';
+                                html += '<td>' + value.apiName + '</td>';
+                                html += '<td>' + value.orgName + '</td>';
+                                html += '<td>' + value.dateTerm + '</td>';
+                                html += '<td>' +fmtDate(value.limitTime) + '</td>';
+                                html += '<td>' + value.callNum + '</td>';
+                                html += '<td>' + value.dataNum + '</td>';
+                                html += '<td>';
+                                html += '<a href="javascript:void(0);" onclick="deleteUnit(\'' + value.id + '\',2)">删除</a>';
+                                html += '</td>';
+                                html += '</tr>';
+                            });
+                            if(rows.data.list.length==0){
+                                html+="<tr><td class='text-center' colspan='7'>暂无数据</td></tr>"
+                                $(".pagination,.currentPage").css("display","none");
+                            } else {
+                                $(".pagination,.currentPage").css("display","block");
+                            };
+                            $("#orgList tbody").html(html);
+                            $('#totalPages').text(rows.data.pages);
+                            $('.total').text(rows.data.total);
+                            jqPaginator(rows.data);
+                            var height=document.getElementById("container").scrollHeight;
+                            $("#home", window.parent.document).height(height);
+                        }else{
+                            html+="<tr><td class='text-center' colspan='7'>暂无数据</td></tr>";
+                            $("#orgList tbody").html(html);
+                            $(".pagination,.currentPage").css("display","none");
+                            var height=document.getElementById("container").scrollHeight;
+                            $("#home", window.parent.document).height(height);
+                        }
+                    }
+                });
+            };
+            $(".search-button").click(function () {
+                getParam();
+                getList(parm);
+            })
+
+
+
+            $(".search-button").click(function () {
+                getParam();
+                getList(parm);
+            })
+
+
+			function deleteUnit(id) {
+                ajaxHengyun({
+                    type:"POST",
+                    // dataType: 'json',
+                    // 'content-type': 'application/json',
+                    url:  '${_gate_url}/api/exchange/apply/deleteshareunit',
+                    data:{id:id},
+                    success:function(rows){
+                        if (rows.data){
+                            parent.layer.msg("操作成功！",{time:1000});
+                            getParam();
+                            getList(parm);
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    }
+                });
+            }
+
+
+		    function unitCreate(){//新增授权单位
+				window.location.href="${_cp}/module/unitCreate?apiId="+apiId;
+			}
+		</script>
+	</body>
+</html>

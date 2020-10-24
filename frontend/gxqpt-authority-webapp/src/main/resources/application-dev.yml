@@ -1,0 +1,44 @@
+##################################################
+# 注意:本地环境配置文件
+# 这个配置文件中reids，rabbitmq，eureka等资源链接 本地
+# 纯本地环境，所有的ip都是 127.0.0.1
+##################################################
+gxqpt:
+  variable:
+    gate-url: http://${gxqpt.hostname.gate}:${gxqpt.port.gate}   # 统一网关的链接前缀
+  hostname:
+    redis: 192.168.1.204    # 前端无需修改
+    rabbitmq: 192.168.1.204   # 前端无需修改
+    nginx: ${gxqpt.hostname.authority}
+    eureka: 192.168.1.204     # 根据自己环境修改
+    gate: 192.168.1.204     # 网关的ip
+    center: 192.168.1.204     # center的ip
+    authority: 192.168.1.92  # 权限系统ip [前端这里修改成自己的ip，不能是127.0.0.1/localhost]
+  port:
+    nginx: ${server.port}
+    eureka: 10330
+    gate: 10086
+    center: 10086
+
+sso:
+  local-ip: ${gxqpt.hostname.authority}
+  local-port: ${server.port}
+  server-ip: ${gxqpt.hostname.center}
+  server-port: ${gxqpt.port.center}
+
+spring:
+  profiles:
+    active: dev
+  rabbitmq:
+    port: 5672
+    password: gxqpt
+    username: gxqpt
+  redis:
+    port: 16379
+    key-prefix: test
+    password: SbtyMveYNfLzTks7H0apCmyStPzWJqjy
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/

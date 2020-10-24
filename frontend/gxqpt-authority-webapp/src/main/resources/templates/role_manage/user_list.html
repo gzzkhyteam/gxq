@@ -1,0 +1,377 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta http-equiv="Expires" content="0"/>
+	<meta name="renderer" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+	<link rel="stylesheet" href="${_static}/css/core/module.css">
+</head>
+
+<body>
+<div class="zTreeDemoBackground left">
+	<div class="col-md-4">
+		<form autocomplete="off" action="" class="form-inline search-form">
+			<div class="form-field">
+				<div class="form-group">
+					<label class="control-label">
+						<span class="text-danger"></span>
+						<span>单位名称：</span>
+					</label>
+					<input id="orgName" name="roleName" class="form-control" placeholder=""/>
+				</div>
+			</div>
+			<button type="button" class="btn btn-primary" onclick="getBaseOrgInfo()">查询</button>
+		</form>
+		<div style="height: 560px;overflow: auto; border:1px solid #ddd;">
+			<ul id="ztree" class="ztree"></ul>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<div class="list-section">
+			<form action="" class="form-inline search-form">
+				<div class="form-field">
+					<div class="form-group">
+						<label class="control-label">
+							<span class="text-danger"></span>
+							<span>姓名：</span>
+						</label>
+						<input id="userName" class="form-control" placeholder=""/>
+					</div>
+				</div>
+				<button type="button" class="btn btn-primary" onclick="userSearch()">查询</button>
+			</form>
+			<div class="list-content">
+				<div class="form-inline">
+					<fieldset>
+						<div class="grid-section">
+							<table id="list">
+							</table>
+							<div id="pager"></div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    var id="${id}";
+    var appId="${appId}";
+    var removeArray=[];
+    var mainorgid=null;
+    var systemCode=null;
+    var roleListArray = [];//角色用户列表
+    var roleListBf = [];//角色用户列表备份
+    var searchOrgId = "",searchDepId = "";
+    var setting = {
+        /*check: {
+            enable: true,
+            chkStyle: "checkbox"
+        },*/
+
+        data: {
+            key: {
+                name: 'name'
+            },
+            simpleData: {
+                idKey: 'id',
+                enable: true,
+            }
+        },
+
+        callback:{
+            // onCheck: checkZtree,
+            onClick: onClick,
+        },
+
+        async: {
+            enable: true,
+            url:getUrl,
+			type:'GET',
+            dataType: 'json',
+            dataFilter: filter
+        }
+
+    };
+
+    function filter(treeId, parentNode, childNodes) {
+        if (!childNodes.data) return null;
+        for (var i=0, l=childNodes.data.length; i<l; i++) {
+            childNodes.data[i].icon='${_static}/images/sys_com/icn_02.png';
+            childNodes.data[i].name = childNodes.data[i].name.replace(/\.n/g, '.');
+        }
+        return childNodes.data;
+    }
+    getRoleUser();
+    /*  获取单位列表 */
+    getBaseOrgInfo();
+    function getBaseOrgInfo(){
+        ajaxHengyun({
+            type:"GET",
+            async:false,
+            url: "${_gate_url}/api/admin/role/getBaseOrgInfo",
+            data:{appId:appId},
+            datatype:'json',
+            success:function(rows){
+                if (rows.data){
+                    if(rows.data.length!=0){
+                        mainorgid = rows.data[0].id;
+                        systemCode = rows.data[0].sysCode;
+                        searchOrgId = rows.data[0].id;
+                        rows.data.forEach(function(value,inde){
+                            value.treeType = '1';
+                            value.icon='${_static}/images/sys_com/icn_01.png';
+						});
+                        //资源树配置
+                        $.fn.zTree.init($("#ztree"), setting, rows.data);
+                        setCheck();
+					}
+                    getPersonList();
+                }
+            },
+			error:function(){
+
+			}
+        });
+    }
+    /*  设置获取部门列表路径 */
+    function getUrl(treeId, treeNode){
+        var orgId = treeNode.id;
+        var systemCode = treeNode.sysCode;
+        return "${_gate_url}/api/admin/gxqpt/dpm/find?orgId=" + orgId + "&systemCode=" + systemCode;
+    }
+
+    /* 获取人员列表 */
+    function getPersonList(){
+        $("#list").jqGrid({
+            mtype: 'POST',
+            url:"${_gate_url}/api/admin/emp/findEmpList",
+            contentType : 'application/json',
+            postData:JSON.stringify({pageNo:1,pageSize:$(".ui-pg-selbox").val(),data:{systemCode:systemCode,mainorgid:mainorgid}}),
+            multiselect: true,
+            colNames: ['姓名', '职务', '岗位'],
+            colModel: [{
+                name: 'name',
+                index: 'name'
+            }, {
+                name: 'maindutyname',
+                index: 'maindutyname',
+            }, {
+                name: 'mainpostname',
+                index: 'mainpostname',
+            }],
+            jsonReader : {
+                root:"data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total",
+                id:"gxqptEmpId",
+            },
+            onPaging:function(pgButton){
+
+                var pageNo=$(".ui-pg-input").val();
+                pageNo=parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total=parseInt(total);
+                if(pgButton=="next"){
+                    if(pageNo>=total){
+                        return false;
+                    }else{
+                        pageNo+=1;
+                    }
+                }else if(pgButton=="prev"){
+                    if(pageNo>1){
+                        pageNo-=1;
+                    }else{
+                        return false;
+                    }
+                }else if(pgButton=="last"){
+                    pageNo=total;
+                }else if(pgButton=="first"){
+                    pageNo=1;
+                }
+                var pageSize=$(".ui-pg-selbox").val();
+                if(pageNo!=0){
+                    var dataQuery = {pageNo:pageNo,pageSize:pageSize,data:{systemCode:systemCode,mainorgid:mainorgid}};
+                    if (searchDepId != ''){
+                        dataQuery.data.maindeptid = searchDepId;
+					}
+                    $("#list").setGridParam({postData: JSON.stringify(dataQuery)}).trigger("reloadGrid");
+                    return false;
+                }
+            },
+            beforeSelectRow:function(rowid, e){
+                if(e.type == 'click'){
+                    i = $.jgrid.getCellIndex($(e.target).closest('td')[0]),
+                        cm = jQuery("#list").jqGrid('getGridParam', 'colModel');
+                    return (cm[i].name == 'cb'); //当点击的单元格的名字为cb时，才触发选择行事件
+                }
+                return false;
+            },
+            loadComplete: function() {
+                var rowIds = jQuery("#list").jqGrid('getDataIDs');
+                if(roleListArray.length >0 ){
+                    for(var k=0; k<rowIds.length; k++) {
+                        var curRowData = jQuery("#list").jqGrid('getRowData', rowIds[k]);
+                        var curChk = $("#list tr[id="+rowIds[k]+"]").find(":checkbox");
+                        $.each(roleListArray,function(i,data){
+                            if(rowIds[k] == data){
+                                curChk.attr('checked', 'true');
+                                $("#list").jqGrid('setSelection',data);
+                            }
+                        });
+                    }
+                }
+
+            },
+            onSelectAll: function(aRowids,status){
+                if(status){
+                    for(var i=0; i<aRowids.length; i++){
+                        var curRowData = jQuery("#list").jqGrid('getRowData', aRowids[i]);
+                        roleListArray.push(aRowids[i]);
+                        roleListArray=removeDuplicatedItem(roleListArray);
+                    }
+                }else{
+                    for(var i=0; i<aRowids.length; i++){
+                        var ret = jQuery.inArray(aRowids[i],roleListArray);
+                        if(ret >= 0){
+                        	roleListArray.splice(ret,1);
+                        }
+                    }
+                }
+            },
+            onSelectRow: function(id,check){
+                if(check){
+                    var curRowData = jQuery("#list").jqGrid('getRowData', id);
+                    roleListArray.push(id);
+                    roleListArray=removeDuplicatedItem(roleListArray);
+                }else{
+                    var ret = jQuery.inArray(id,roleListArray);
+                    if(ret >= 0){
+                        roleListArray.splice(ret,1);
+                    }
+                }
+            },
+            pager: '#pager',
+            height: 'auto',
+        });
+	}
+
+	/* 获取角色用户 */
+	function getRoleUser(){
+        ajaxHengyun({
+            type:"GET",
+            async:false,
+            url: "${_gate_url}/api/admin/role/getUser",
+            data:{appId:appId,id:id},
+            datatype:'json',
+            success:function(rows){
+                if (rows.data){
+                    roleListArray = rows.data;
+                    roleListBf = roleListArray.slice(0);
+         /*            console.log("已有的授权内容是：");
+                    console.log(roleListArray);
+                    console.log(roleListBf); */
+                }
+            },
+        });
+	}
+
+    function setCheck() {
+        var zTree = $.fn.zTree.getZTreeObj("ztree"),
+            type = {
+                "Y": 'ps',
+                "N": 'ps'
+            };
+        zTree.setting.check.chkboxType = type;
+    }
+    //点击资源节点加载人员列表
+    function onClick(event, treeId, treeNode) {
+	    if(treeNode.treeType == '1'){
+            searchOrgId = treeNode.id;
+            searchDepId = '';
+	        systemCode = treeNode.sysCode;
+		}else if(treeNode.treeType == '2'){
+            searchOrgId = treeNode.orgId;
+            searchDepId = treeNode.id;
+            systemCode = treeNode.systemCode;
+		}
+    	if(searchOrgId){
+            var name = $("#userName").val();
+	        mainorgid = searchOrgId;
+            $("#list").setGridParam({postData:JSON.stringify({pageNo:1,pageSize:20,data:{systemCode:systemCode,mainorgid:searchOrgId,maindeptid:searchDepId,name:name}})}).trigger("reloadGrid");
+		}else{
+            return false;
+		}
+    };
+
+	// 根据人员姓名模糊查询
+	function userSearch(){
+	    var name = $("#userName").val();
+        $("#list").setGridParam({postData:JSON.stringify({pageNo:1,pageSize:20,data:{systemCode:systemCode,mainorgid:searchOrgId,maindeptid:searchDepId,name:name}})}).trigger("reloadGrid");
+	};
+
+    function save(index){
+        var removeArray=[];
+        roleListBf = removeDuplicatedItem(roleListBf);
+        roleListBf.forEach(function(value,index){
+            var val = jQuery.inArray(value,roleListArray);
+            if(val<0){
+                removeArray.push(value);
+            }else{
+                roleListArray.splice(val,1);
+			};
+		});
+        var roleUserDto={};
+        roleUserDto.addUserIdList=roleListArray;
+        roleUserDto.removeUserIdList=removeArray;
+        roleUserDto.roleId=id;
+        var saveSetroleuser = JSON.stringify(roleUserDto);
+/*         console.log("提交授权表单，授权内容为：");
+        console.log(saveSetroleuser);
+        console.log("原始的的授权内容是：");
+        console.log(roleListBf); */
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url: "${_gate_url}/api/admin/role/setroleuser",
+            data: saveSetroleuser,
+            success:function(rows){
+                if (rows.data){
+                    parent.layer.msg("设置用户成功！",{icon:6,time:1000});
+                    parent.layer.close(index);
+                }else{
+                    parent.layer.msg("设置用户出错，请重试！",{time:1000});
+                }
+            }
+        });
+	}
+</script>
+</body>
+</html>

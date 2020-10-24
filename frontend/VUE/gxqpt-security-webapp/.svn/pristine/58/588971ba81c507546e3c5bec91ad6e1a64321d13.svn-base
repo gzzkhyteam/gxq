@@ -1,0 +1,58 @@
+<template>
+    <Sider ref="side1" hide-trigger collapsible :collapsed-width="70" width="220" v-model="isCollapsed">
+        <Menu width="auto" :class="menuitemClasses">
+            <MenuItem name="0" class="text-center" disabled @click.native="collapsedSider">
+                <Icon :class="rotateIcon" type="chevron-left" size="24"></Icon>
+            </MenuItem>
+            <template v-for="(menu, index) in menus">
+                <router-link :to="menu.link" v-if="!menu.subMenu">
+                    <MenuItem :name="index">
+                        <i class="iconfont" :class="menu.icon" v-if="menu.icon"></i>
+                        <span>{{menu.name}}</span>
+                    </MenuItem>
+                </router-link>
+                <Submenu :name="index" v-else>
+                    <template slot="title">
+                        <i class="iconfont" :class="menu.icon" v-if="menu.icon"></i>
+                        <span>{{menu.name}}</span>
+                    </template>
+                    <router-link :to="subMenu.link" v-for="(subMenu, idx) in menu.subMenu" :key="idx">
+                        <MenuItem :name="`${index}-${idx}`">
+                            <i class="iconfont" :class="subMenu.icon" v-if="subMenu.icon"></i>
+                            <span>{{subMenu.name}}</span>
+                        </MenuItem>
+                    </router-link>
+                </Submenu>
+            </template>
+        </Menu>
+    </Sider>
+</template>
+<script>
+export default {
+    props: [ 'menus' ],
+    data() {
+        return {
+            isCollapsed: false
+        }
+    },
+    computed: {
+        rotateIcon() {
+            return [
+                'menu-icon',
+                this.isCollapsed ? 'rotate-icon' : ''
+            ];
+        },
+        menuitemClasses() {
+            return [
+                'menu-item',
+                this.isCollapsed ? 'collapsed-menu' : ''
+            ]
+        }
+    },
+    methods: {
+        collapsedSider() {
+            this.$refs.side1.toggleCollapse();
+        }
+    }
+}
+</script>

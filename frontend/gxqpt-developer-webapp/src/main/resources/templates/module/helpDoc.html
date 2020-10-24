@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>应用服务管理 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css?v=1"/>
+    <style type="text/css">
+        .apply-icon {
+            position: fixed;
+            bottom: 180px;
+            right: 4%;
+            background: rgba(0, 0, 0, .1);
+            border-radius: 25px;
+            cursor: pointer;
+            padding: 5px;
+            border: 3px solid rgba(255, 255, 255, .85);
+            width: 45px;
+            height: 45px;
+            text-align: center;
+            line-height: 32px;
+            color: #36b3fe;
+        }
+        .btn-info{
+            border-radius: 30px;
+        }
+        .edui-default .edui-editor-toolbarboxouter,#edui1_bottombar{
+            display: none;
+        }
+        #editor{
+            height: auto;
+        }
+        #moduleName:hover{
+            color: #9e9e9e !important;
+        }
+        .rotate{
+            transform: rotate(180deg);
+            -webkit-transform: rotate(180deg);
+        }
+        #doc-container{
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        #doc-container img{
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body ng-app="app" ng-controller="controller" ng-cloak>
+<i id="adviceModule" class="btn btn-info apply-btn" ng-click="gotoAdvice()">建议模块</i>
+<i id="needApplyModule" class="btn btn-info apply-btn" title="功能申请" ng-click="apply(funId,funType)" style="bottom: 120px;">立即接入</i>
+<i id="notNeedApplyModule" class="btn btn-info apply-btn" style="display: none;background-color: #999;border-color: #999">开放功能，无需申请</i>
+
+<div class="main-box clearfix">
+    <div class="top-bar">
+        <div class="text-title pull-left">
+            首页 > 文档中心 > <span class="active">帮助文档</span>
+        </div>
+        <a onclick="window.history.back()" class="button-icon pull-right">
+            返回
+        </a>
+    </div>
+    <div class="main">
+        <div class="block clearfix">
+            <div class="left ztreeList">
+                <h3 class="listTitle" style="cursor: pointer;">帮助文档 <img id="rotate" class="rotate" src="${_static}/images/icon0_0.png"/></h3>
+                <div class="provideList">
+                    <ul ng-repeat="ft in functionList">
+                        <li class="text-title">{{ft.name}}</li>
+                        <li
+                            ng-repeat="f in ft.children"
+                            class="fun-item"
+                            id="{{f.id}}"
+                            ng-class="{'active':activeFunId == f.id}"
+                            ng-click="getDoc(f.id,f.moduleTypeName)"
+                        >{{f.name}}</li>
+                    </ul>
+                </div>
+                <ul>
+                    <li id="moduleName" style="color: #9e9e9e;background: #fcfcfc;"></li>
+                    <li ng-class="{'active':activeDoc.id == d.id}" ng-repeat="d in docList" ng-click="changeDoc(d)" style="margin-left: 20px;">{{d.title}}</li>
+                </ul>
+            </div>
+            <div class="left docDesc">
+                <div class="text-title"></div>
+                <div ng-show="activeDoc">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label"></label>
+                            <div class="col-sm-10">
+                                {{activeDoc.title}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label"></label>
+                            <div class="col-sm-10">
+                                <!-- <script id="editor" type="text/plain"></script> -->
+                                <div id="doc-container"></div>
+                                <code id="testcon" style="display:none;"></code>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div ng-hide="activeDoc" class="text-danger"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.all.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script>
+    $(".listTitle,.provideList").on("click", function (e) {
+        e = e || event;
+        e.stopPropagation()
+        if ($("#rotate").hasClass("rotate")) {
+            $("#rotate").removeClass("rotate");
+            $(".provideList").css("display", "none");
+        } else {
+            $("#rotate").addClass("rotate");
+            $(".provideList").css("display", "inline-block");
+        }
+    });
+    $("body").on("click", function () {
+        if ($("#rotate").hasClass("rotate")) {
+            $("#rotate").removeClass("rotate");
+            $(".provideList").css("display", "none");
+        }
+    });
+    $(".btn-save").click(function () {
+        var iframe = $("#helpDocVal")[0];
+        var helpDocVal = iframe.contentWindow.getAllHtml();
+    });
+</script>
+</body>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+    var allModuleCache = {};
+    app.controller('controller', function ($scope, $http,$location) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.functionList = [];
+        $scope.activeDoc = {};
+        // 建议模块的id
+        $scope.adviceId = '';
+        // 获取url里面的指定参数
+        $scope.getQueryString = function (query) {
+            var reg = new RegExp("(^|&)"+ query +"=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if(r!=null)return  unescape(r[2]); return null;
+        }
+        // 如果是点击列表过来的，那么就要选中当前的文档
+        $scope.defaultId = $scope.getQueryString('id');
+        $scope.defaultModuleId = $scope.getQueryString('moduleId');
+        // var ue = UE.getEditor('editor');
+        //获取功能类型
+        $scope.getFunctionType = function () {
+            $http.get(urlPrev + 'dictionary/getCodeList',{
+                params:{code:'module.type'},
+                headers:getHeaders(),
+            }).success(function (res) {
+                if(res.data && res.data.length){
+                    $scope.functionTypeList = res.data;
+                    $scope.getFunction();
+                }
+            });
+        }
+        //获取功能列表
+        $scope.getFunction = function () {
+            var n = 0;
+            $.each($scope.functionTypeList, function (index, value) {
+                (function (index, value) {
+                    $http.get(urlPrev + 'assignModule/findAllMoudlesNoPage', {
+                        // params: {moduleType: value.code, status: 1},
+                        params: {moduleType: value.code},
+                        headers: getHeaders(),
+                    }).success(function (res) {
+                        n++;
+                        var obj = {};
+                        obj.code = value.code;
+                        obj.name = value.name;
+                        obj.children = res.data;
+                        if(res.data){
+                        	for(var index = 0; index < res.data.length; index++){
+                        		allModuleCache[res.data[index].id] = res.data[index];
+                        	}
+                        }
+                        $scope.functionList.splice(index, 0, obj);
+                        // 所有树结构已经加载完成，如果是点击搜索列表过来的，选中当前文档
+                        if ($scope.functionTypeList.length == n) {
+                            setTimeout(function () {
+                                if($scope.defaultModuleId && res.data){
+                                    $.each($scope.functionList,function (index,value) {
+                                        $.each(value.children,function (index1,value1) {
+                                            if($scope.defaultModuleId == value1.id){
+                                                $(".ztreeList").find(".fun-item[id="+value1.id+"]").click();
+                                            }
+                                        });
+                                    });
+                                }else{
+                                    $(".ztreeList").find(".fun-item:first").click();
+                                }
+                            }, 0)
+                        }
+                    })
+                })(index, value);
+            })
+        }
+        $scope.getDoc = function (id,type) {
+        	$("#moduleName").text($("#"+id).text());
+            $scope.activeFunId = id;
+            $scope.funId = id;
+            $scope.funType = type;
+            var m = allModuleCache[id];
+            $scope.adviceId = m.adviceModule;
+        	var notNeedApply = m && m.publicIs;
+            $('#needApplyModule').hide();
+            $('#adviceModule').hide();
+            $('#notNeedApplyModule').hide();
+            // 无需申请
+        	if(notNeedApply){
+        		$("#notNeedApplyModule").show();
+        	} else {
+                switch (m.status) {
+                    // 正常
+                    case 1:
+                        $("#needApplyModule").show();
+                        break;
+                    // 已过时
+                    case 10:
+                        if (m.adviceModule && m.adviceModule != m.id) {
+                            $('#adviceModule').show();
+                        }
+                        $("#needApplyModule").show();
+                        break;
+                    // 停用
+                    case 20:
+                        if (m.adviceModule && m.adviceModule != m.id) {
+                            $('#adviceModule').show();
+                        }
+                        break;
+                }
+        	}
+        	
+            $http.get(urlPrev + 'serviceModuleDoc/findMoudleDoc', {
+                params:{moduleId:id},
+                headers: getHeaders(),
+            }).success(function (res) {
+                if (res.data && res.data.length) {
+                    $scope.docList = res.data;
+                    // 如果有默认的文档id，定位到默认的文档
+                    if ($scope.defaultId) {
+                        for (var i = 0; i < $scope.docList.length; i++) {
+                            if($scope.docList[i].id == $scope.defaultId || $scope.docList[i].moduleId == $scope.defaultId) {
+                                $scope.activeDoc = $scope.docList[i];
+                                $scope.defaultId = null;
+                                break;
+                            }
+                        }
+                    } else {
+                        $scope.activeDoc = res.data[0];
+                        // $scope.activeDoc.title = res.data[0].title;
+                    }
+                    // ue.setContent(res.data[0].content);
+                    // ue.setDisabled();
+                    $('#doc-container').html($scope.activeDoc.content);
+                }else{
+                    $scope.docList = [];
+                    $scope.activeDoc = null;
+                }
+            });
+        }
+        //切换文档模块
+        $scope.changeDoc = function (doc) {
+            $scope.activeDoc = doc;
+            $('#doc-container').html(doc.content);
+            // ue.setContent(doc.content);
+            // ue.setDisabled();
+        }
+        //申请应用
+        $scope.apply = function (id,type) {
+            var content = encodeURI("/gxqpt-developer/module/callApply?moduleId="+id+"&type="+type);
+            layer.open({
+                id: 'apply',
+                type: 2,
+                anim: 6,
+                title: '申请功能',
+                maxmin: false, //开启最大化最小化按钮
+                area: ['60%', '500px'],
+                content: content,
+                btn: ['<span class="glyphicon glyphicon-ok"></span> 确定', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+                yes: function (index, layero) {
+                    var html = layero.context;
+                    var Id = html.getElementById("apply");
+                    var iframe = $(Id).find("iframe").attr("name");
+                    var rowData = parent[iframe].save(index);
+                }
+            });
+        }
+        // 跳转到建议模块
+        $scope.gotoAdvice = function() {
+            $scope.defaultId = allModuleCache[$scope.adviceId].id;
+            $scope.getDoc(allModuleCache[$scope.adviceId].id, allModuleCache[$scope.adviceId].moduleTypeName);
+        }
+        $scope.getFunctionType();
+    }).filter('formateHtml',['$sce',function ($sce) {
+        return function (text) {
+            return $sce.trustAsHtml(text);
+        }
+    }])
+    /*angularJS*/
+</script>
+</html>

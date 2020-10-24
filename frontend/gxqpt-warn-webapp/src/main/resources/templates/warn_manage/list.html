@@ -1,0 +1,631 @@
+<!doctype html>
+<html>
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>预警台账</title>-->
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+
+    <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.exedit.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <style type="text/css">
+        #right-box {
+            width: 100%;
+            height: calc(100% - 115px);
+            border: 0;
+        }
+
+        .cbox {
+            display: inline;
+        }
+        #type{
+            cursor: auto;
+            width: 153px !important;
+        }
+        .form-control-wrap>i{
+            position: absolute;
+            top: 9px;
+            right: 9px;
+            font-size: 10px;
+        }
+        .ztree{
+            position: absolute;
+            width: 100%;
+            background: #f2f2f2;
+            z-index: 999;
+            display: none;
+        }
+        .ztree li a{
+            display: inline-block;
+            width: calc(100% - 16px);
+        }
+        .ztree li a span{
+            display: inline-block;
+            width: calc(100% - 16px);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .fontColorBlue{
+            color: #00b7ee;
+        }
+    </style>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        预警管理系统 &gt;<a href="${_cp}/warn/warnList"> <span class="page-title-scend">预警台账</span></a>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="list-section">
+                <form action="" class="form-inline search-form">
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>预警级别：</span>
+                            </label>
+                            <select id="level" name="level" class="form-control chosen-select selWid-form-search">
+                                <!--<option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+                                <option value="">全部</option>
+                                <option value=1>一般</option>
+                                <option value=2>较重</option>
+                                <option value=3>严重</option>
+                                <option value=4>特别严重</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>预警类型：</span>
+                            </label>
+                            <div id="warnType" class="form-control-wrap" style="position: relative;">
+                                <!--<select name="type" id="type" class="form-control" style="width: 150px" placeholder="">
+                                    <option value="">全部<option>
+                                </select>-->
+                                <input id="type" name="type" class="form-control inp-form" readonly="readonly" value="全部" data-id=""/>
+                                <i class="fa fa-caret-down"></i>
+                                <ul id="ztree" class="ztree"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>预警标题：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input name="title" id="title" class="form-control" placeholder=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>应用程序名称：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input name="appName" id="appName" class="form-control" placeholder=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>预警状态：</span>
+                            </label>
+                            <select id="status" name="status" class="form-control chosen-select selWid-form-search">
+                                <!--<option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+                                <option value="1">未确认</option>
+                                <option value="2">已确认</option>
+                                <option value="3">已处理</option>
+                                <option value="">全部</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>预警时间：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input id="warntimeStart" name="warntimeStart" class="Wdate"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'#F{$dp.$D(\'warntimeEnd\')}'})"/>
+                            </div>
+                            <span>~</span>
+                            <div class="form-control-wrap">
+                                <input id="warntimeEnd" name="warntimeEnd" class="Wdate"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'warntimeStart\')}',startDate:'#F{$dp.$D(\'warntimeStart\',{d:+1})}'})"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <div class="form-group">
+                            <div class="form-control-wrap text-right">
+                                <button type="button" class="btn btn-primary search-button" onclick="search()">
+                                    <span class="glyphicon glyphicon-search"></span> 查询
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-submit hidden"></button>
+                </form>
+            </div>
+            <div id="right-box" class="list-section">
+                <div class="grid-section">
+                    <table id="list">
+                    </table>
+                    <div id="pager"></div>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    var tableObj = null;//jqgrid表对象
+    var ids = new Array();
+
+    //获取预警信息列表
+    $(function(){
+        getwarnList();
+    });
+    function getwarnList() {
+        var height = $("#right-box").height() - 80;
+        tableObj = $("#list").jqGrid({
+            mtype: 'POST',
+            postData: {"pageNo": 1, "pageSize": 10,"isDeal":true},
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                return JSON.stringify(postData);
+            },
+            url: '${_gate_url}/api/warn/warn/findWarnList',
+            colNames: ['预警级别','预警类型','预警标题','应用程序名称','责任人','预警时间','预警状态','操作'],
+                colModel: [{
+                name:'level',
+                index:'level',
+                sortable: false,
+                formatter: formatterLevel
+            }, {
+                name: 'typeName',
+                index: 'typeName',
+                sortable: false,
+            }, {
+                name: 'title',
+                index: 'title',
+                sortable: false
+            }, {
+                name: 'appName',
+                index: 'appName',
+                sortable: false,
+            }, {
+                name: 'dname',
+                sortable: false,
+                formatter: formatterDname
+            },{
+                name: 'warntime',
+                index: 'warntime',
+                sortable: false
+                //formatter: formatterWarntime
+            }, {
+                name: 'status',
+                index: 'status',
+                sortable: false,
+                formatter: formatterStatus
+            }, {
+                name: 'act',
+                index: 'act',
+                title: false,
+                width: '350',
+                align: 'center',
+                sortable: false,
+                formatter: formatterAct
+            }],
+            jsonReader: {
+                root: "data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            rowNum: 10,
+            pager: '#pager',
+            height: height,
+            onPaging: function (pgButton) {
+                var pageNo = $(".ui-pg-input").val();
+                pageNo = parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total = parseInt(total);
+                if (pgButton == "next") {
+                    if (pageNo >= total) {
+                        return false;
+                    } else {
+                        pageNo += 1;
+                    }
+                } else if (pgButton == "prev") {
+                    if (pageNo > 1) {
+                        pageNo -= 1;
+                    } else {
+                        return false;
+                    }
+                } else if (pgButton == "last") {
+                    pageNo = total;
+                } else if (pgButton == "first") {
+                    pageNo = 1;
+                }
+                var pageSize = $(".ui-pg-selbox").val();
+                if (pageNo != 0) {
+                    $("#list").setGridParam({postData: {pageNo: pageNo, pageSize: pageSize}}).trigger("reloadGrid");
+                    return false;
+                }
+            }
+
+        });
+    }
+    //预警级别初始化
+    function formatterLevel(cellvalue, options, rawObject) {
+        if (cellvalue == 1){
+            return "一般";
+        }else if (cellvalue == 2){
+            return "较重";
+        }else if (cellvalue == 3){
+            return "严重";
+        }else if (cellvalue == 4){
+            return "特别严重";
+        }
+    }
+    //责任人初始化
+    function formatterDname(cellvalue, options, rawObject) {
+        if(!cellvalue){
+            return "<span class='fontColorBlue'>待定</span>";
+        }else{
+            return cellvalue;
+        }
+    };
+    //预警时间格式化
+    function formatterWarntime(cellvalue, options, rawObject) {
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+        return new Date(cellvalue).Format("yyyy-MM-dd hh:mm:ss");
+    }
+
+    //预警状态格式化
+    function formatterStatus(cellvalue, options, rawObject) {
+        if (cellvalue == "1") {
+            return "未确认";
+        } else if(cellvalue == "2") {
+            return "已确认";
+        } else if(cellvalue == "3"){
+            return "已处理";
+        } else {
+            return "";
+        }
+    }
+
+    //操作列
+    function formatterAct(cellvalue, options, rawObject) {
+        var returnValue = "";
+        var status=rawObject.status;
+        var whoHandle=rawObject.whoHandle;
+        var recType=rawObject.recType;
+        var id = rawObject.id;
+        var title = encodeURIComponent(rawObject.title);
+        var content = encodeURIComponent(rawObject.content);
+        var level = rawObject.handlerLeve;
+        var url = rawObject.callbackUrl;
+        var isHandle = rawObject.isHandle;
+        var warnId = rawObject.warnId;
+        var userId = rawObject.userId.toString();
+        if(status=="1"&&recType=="1"&&whoHandle) {
+            returnValue += '<a class="ui-button " href="javascript:" onclick="viewPage(\'' + id + '\')">';
+            returnValue += '详情</a>';
+            returnValue += '<span class="oper-separator"></span>';
+            returnValue += '<a class="ui-button" href="javascript:" onclick="confirmPage(\'' + id + '\','+level+','+warnId+','+userId+',\''+title+'\',\''+content+'\')">';
+            returnValue += '确认</a>';
+        } else if (recType=="3"&&whoHandle){
+            returnValue += '<a class="ui-button " href="javascript:" onclick="viewPage(\'' + id + '\')">';
+            returnValue += '详情</a>';
+            returnValue += '<span class="oper-separator"></span>';
+            if(isHandle){
+                returnValue += '<a class="ui-button" href="javascript:" onclick="handlePage(\'' + id + '\','+level+','+warnId+')">';
+            }else{
+                returnValue += '<a class="ui-button" href="'+url+'">';
+            }
+            returnValue += '处理</a>';
+        } else{
+            returnValue += '<a class="ui-button " href="javascript:" onclick="viewPage(\'' + id + '\')">';
+            returnValue += '详情</a>';
+        }
+        return returnValue;
+    }
+
+    //模糊查询
+    function search() {
+        var level = $.trim($("#level").val());
+        var appName = $.trim($('#appName').val());
+        var title = $.trim($('#title').val());
+        var typeId = $.trim($('#type').attr("data-id"));
+        var warntimeStart = $("#warntimeStart").val();
+        if (warntimeStart != "") {
+            warntimeStart = warntimeStart + " 00:00:00";
+        }
+        var warntimeEnd = $("#warntimeEnd").val();
+        if (warntimeEnd != "") {
+            warntimeEnd = warntimeEnd + " 23:59:59";
+        }
+        var status = $("#status").val();
+        tableObj.setGridParam({
+            postData: {
+                pageNo: 1, pageSize: 10, data: {
+                    level:level, appName: appName, typeId: typeId, warntimeStart: warntimeStart, warntimeEnd: warntimeEnd, status: status,title: title
+                }
+            },
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function(postData) {
+                return JSON.stringify(postData);
+            }
+        },true).trigger('reloadGrid');
+        //reloadJqgrid();
+    }
+
+    //刷新表格
+    function reloadJqgrid() {
+        var p = $("#list").jqGrid('getGridParam', 'page');//获取当前页
+        var pageSize = $(".ui-pg-selbox").val();
+        $("#list").setGridParam({
+            postData: {pageNo: p, pageSize: pageSize},
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                return JSON.stringify(postData);
+            }
+        }, true).trigger('reloadGrid');
+    }
+
+    /* 弹出详情页面 */
+    function viewPage(id) {
+        parent.layer.open({
+            id: 'view',
+            type: 2,
+            anim: 6,
+            title: '预警信息详情',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '55%'],
+            content: "${_cp}/warn/warnView?id=" + id,
+            btn: ['<span class="glyphicon glyphicon-remove"></span> 关闭'],
+        });
+    }
+
+    /* 弹出预警确认页面 */
+    function confirmPage(id,level,warnId,userId,title,content) {
+        parent.layer.open({
+            id: 'handle',
+            type: 2,
+            anim: 6,
+            title: '预警信息确认',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '60%'],
+            content: "${_cp}/warn/warnConfirm?id=" + id+"&level="+level+"&warnId="+warnId+"&userId="+userId+"&title="+title+"&content="+content,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 完成','<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("handle");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+    /* 弹出预警处理页面 */
+    function handlePage(id,level,warnId) {
+        parent.layer.open({
+            id: 'handle',
+            type: 2,
+            anim: 6,
+            title: '预警信息处理',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '60%'],
+            content: "${_cp}/warn/warnHandle?id=" + id+"&level="+level+"&warnId="+warnId,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 完成','<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("handle");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            },
+        });
+    }
+
+    // /* 获取应用程序名称 */
+    // $(function(){
+    //     AppName();
+    // });
+    //
+    // function AppName(){
+    //     ajaxHengyun({
+    //         type: 'GET',
+    //         async:false,
+    //         url: '${_gate_url}/api/developer/application/findAllList',
+    //         success: function (rows) {
+    //             if (rows.data) {
+    //                 var items = rows.data;
+    //                 var html="<option value=\"\">全部</option>";
+    //                 jQuery.each(items, function(key, val) {
+    //                     html+='<option value="'+val.appId+'">'+val.name+'</option>';
+    //                 });
+    //                 $("#appName").html(html);
+    //             };
+    //         }
+    //     })
+    // }
+
+    $(function(){
+        // Type();
+    });
+    //预警类型树配置
+    var setting = {
+        data: {
+            key: {
+                name: 'typeName'
+            },
+            simpleData: {
+                enable: true,//设置是否启用简单数据格式
+                idKey: 'id',//设置启用简单数据格式时id对应的属性名称
+                pIdKey: 'pId',//设置启用简单数据格式时parentId对应的属性名称,ztree根据id及pid层级关系构建树结构
+                rootPId: -1
+            }
+        },
+        view: {
+            showIcon: showIconForTree,
+
+        },
+        edit: {
+            enable: false,
+        },
+        callback: {
+            onClick: onClick,
+        }
+    };
+
+    /!*  获取分类树 *!/
+    getTree();
+
+    function getTree() {
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            url: "${_gate_url}/api/warn/warntype/findWarnTypeTree",
+            datatype: 'json',
+            data: {id: '${id!}'},
+            contentType: 'application/json',
+            success: function (rows) {
+                if (rows.data) {
+                    //加载分类树
+                    var node=[
+                        { typeName:"全部", id:"",children: rows.data},
+                    ]
+                    $.fn.zTree.init($("#ztree"), setting, node);
+                    //加载树后默认展开根节点
+                    var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                    var nodes = treeObj.getNodes();
+                    if (nodes.length > 0) {
+                        for (var i = 0; i < nodes.length; i++) {
+                            treeObj.expandNode(nodes[i], true, false, false);
+                        }
+                    }
+                    /*setCheck();
+                    clearClassifyInfo();
+                    onClick(event, nodes[0].id, treeObj.getNodeIndex(nodes[0]));*/
+                }
+            },
+        });
+    }
+    function showIconForTree(treeId, treeNode) {
+        return !treeNode.isParent;
+    };
+
+    //点击树形节点后，在右侧显示出分类名称，分类描述。
+    function onClick(event, treeId, treeNode) {
+        $("#type").val(treeNode.typeName);
+        $("#type").attr("data-id",treeNode.id);
+        $("#ztree").toggle();
+        return false;
+    }
+    /* 忽略 */
+    /*function ignorePage(id) {
+        parent.layer.confirm("您确定要忽略此预警信息吗？", {
+            title: '温馨提示',
+            shade: [0.4, '#000'],
+            btn: ['确定', '取消'] //按钮
+        }, function (value, index, elem) {
+            ajaxHengyun({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: "${_gate_url}/api/warn/warn/ignoreById",
+                data: {id: id},
+                success: function (rows) {
+                    if (rows.data) {
+                        parent.home.reloadJqgrid();
+                        parent.layer.msg("忽略成功！", {icon: 6, time: 1000});
+                        getwarnList();
+
+                        //window.location.reload();
+
+                    } else {
+                        parent.layer.msg("忽略失败，请稍后重试！", {time: 1000});
+                    }
+                }
+            });
+        }, function () {
+            closeLayer();
+        });
+    }*/
+    $("#type").click(function(e){
+        $("#ztree").toggle();
+        e.stopPropagation();
+    });
+    $("#warnType>i").click(function(e){
+        $("#type").click();
+        e.stopPropagation();
+    })
+    $("#ztree").click(function(e){
+        e.stopPropagation();
+    });
+</script>
+</body>
+</html>

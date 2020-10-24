@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/webuploader/webuploader.css">
+    <style>
+        .file {
+            filter: alpha(opacity:0);
+            opacity: 0;
+            width: 0px;
+        }
+       .list-section .selWid-form-search{
+           width:213px!important;
+           max-width: none;
+       }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12" style="margin-top:30px;">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <form id="dataForm" action="" method="post">
+                            <table class="table default-table table-title-left">
+                                <input type="hidden" id="fileType" name="fileType">
+                                <input type="hidden" id="dataChannel" name="dataChannel">
+                                <tbody>
+                                <tr>
+                                    <th><sub class="required">*</sub>应用系统</th>
+                                    <td>
+                                        <select id="appId" name="appId"  class="form-control chosen-select selWid-form-search" style="width: 100%" dataType="*"
+                                                nullmsg="应用系统不能为空！">
+                                        <!--<option value=""></option>
+                                        <option value="2">系统1</option>
+                                        <option value="4">系统2</option>-->
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><sub class="required">*</sub>日志类型</th>
+                                    <td >
+                                        <select id="logType" name="logType"  class="form-control chosen-select selWid-form-search" style="width: 100%" dataType="*"
+                                                nullmsg="日志类型不能为空！">
+                                            <option value=""></option>
+                                            <option value="APACHE">APACHE</option>
+                                            <option value="TOMCAT">TOMCAT</option>
+                                            <option value="APP">应用系统</option>
+                                            <option value="NGINX">NGINX</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><sub class="required">*</sub>日志上传</th>
+                                    <td><input class="form-control inp-form" id="fileName" name="fileName" dataType="*"
+                                               nullmsg="请选择文件！"/>
+                                        <input name="documentId" id="documentId" type="hidden"/>
+                                        <input name="documentPath" id="documentPath" type="hidden"/>
+                                    </td>
+                                    <td colspan="2">
+                                        <button type="button" class="btn btn-primary btn-upload">
+                                            <span class="fa fa-upload"></span> 上传
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn-submit hidden"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.min.js"></script>
+<script type="text/javascript">
+
+    //获取应用系统
+    getSystemList();
+    var index;
+
+    function save(num) {
+        index = num;
+        $('.btn-submit').click();
+    }
+
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            saveObj();
+        }
+    });
+
+    /*提交*/
+    function saveObj() {
+        var data = $("#dataForm").serializeJSON();
+        
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json',
+            url: "${_gate_url}/api/logs/file/save",
+            data: JSON.stringify(data),
+            success: function (rows) {
+                if (rows.data) {
+                    parent.home.reloadJqgrid();
+                    parent.layer.msg("新增文档成功！", {icon: 6, time: 1000});
+                    parent.layer.close(index);
+                } else {
+                    parent.layer.msg("新增文档出错，请重试！", {time: 1000});
+                }
+            }
+        });
+    };
+
+    //弹窗树-选择文档类别
+    function OpenTreeSelect() {
+        parent.layer.open({
+            id: 'choose',
+            type: 2,
+            anim: 6,
+            title: '文档类别选择',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '60%'],
+            content: "${_cp}/standard/selectClassifyType",
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确定', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("choose");
+                var iframe = $(Id).find("iframe").attr("name");
+
+                var treeObj = parent[iframe].$.fn.zTree.getZTreeObj("ztree");
+                var nodes = treeObj.getCheckedNodes(true);
+
+                if (nodes.length > 0) {
+                    var id = '', name = '';
+                    id = nodes[0].id;
+                    name = nodes[0].name;
+
+                    $('#classifyName').val(name);
+                    $('#classifyName').blur();
+                    $('#classifyId').val(id);
+                }
+                parent.layer.close(index);
+            }
+        });
+    }
+
+    /* 点击文件上传 */
+    $(".btn-upload").click(function () {
+
+        parent.layer.open({
+            id: 'uploadFile',
+            type: 2,
+            anim: 6,
+            title: '上传文件',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['800px', '80%'],
+            content: "${_cp}/logs/uploadFile?folderId=-1&dataType=",
+            btn: ['<span class="glyphicon glyphicon-ok"></span>确认上传', '<span class="glyphicon glyphicon-remove"></span>取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("uploadFile");
+                var iframe = $(Id).find("iframe").attr("name");
+                //从上传文件页面获取已上传完成的文件数组
+                var FileList = parent[iframe].FileList;
+                if(FileList.length == 0){
+                    parent.layer.msg("未成功上传文档，不能点击确认上传", {icon: 7,time: 3000});
+                    return false;
+                }
+                //遍历数组，分别对文件名称和文件类型，上传文件后返回的id进行赋值
+                for (var i = 0; i < FileList.length; i++) {
+                    var id = FileList[i][0].id;
+                    $("#documentId").val(id);
+                    var filename = FileList[i][0].submittedFileName;
+                    $("#documentPath").val(FileList[i][0].url);
+                    $("#fileName").val(splitFileName(filename)).blur();
+                    $("#fileType").val(FileList[i][0].ext);
+                }
+                //采集渠道赋值
+                $("#dataChannel").val("UPLOAD");
+                parent.layer.msg("文件确认上传成功！", {time: 1000});
+                parent.layer.close(index);
+            }
+        });
+    });
+
+    //切除文件名称的后缀.
+    function splitFileName(fileName) {
+        if (fileName.indexOf(".") != -1) {
+            fileName = fileName.substring(0, fileName.lastIndexOf("."));
+        }
+        return fileName;
+    }
+
+    /* 获取应用系统*/
+    function getSystemList() {
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            url: "${_gate_url}/api/developer/application/findList",
+            data:{type:1},
+            success: function (rows) {
+                if (rows.data) {
+                    $('#appId').append('<option value=""></option>');
+                    var arr = rows.data;
+                    for(var i=0;i<arr.length;i++){
+                        var appId = arr[i].appId;
+                        var name = arr[i].name;
+                        $('#appId').append('<option value='+appId+'>'+name+'</option>');
+
+                    }
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

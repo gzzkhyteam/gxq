@@ -1,0 +1,189 @@
+<template>
+    <Card :bordered="false">
+        <p slot="title">修改服务器</p>
+        <div style="text-align:center">
+            <Form ref="evalData" :model="evalData" :rules="ruleValidate" :label-width="70" class="clearfix">
+                <Row :gutter="40">
+                    <Col span="11">
+                        <FormItem label="服务器ID" prop="id">
+                            <Input v-model="evalData.id"></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span="11">
+                        <FormItem label="服务器IP" prop="ip">
+                            <Input v-model="evalData.ip"></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span="11">
+                        <FormItem label="CPU核数" prop="cpu">
+                            <Input v-model="evalData.cpu"></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span="11">
+                        <FormItem label="内存大小" prop="memory">
+                            <Input v-model="evalData.memory"></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span="11">
+                        <FormItem label="操作系统" prop="os">
+                            <Select v-model="evalData.os">
+                                <Option value="同意">同意</Option>
+                                <Option value="不同意">不同意</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col span="11">
+                        <FormItem label="所属网络" prop="network">
+                            <Select v-model="evalData.network">
+                                <Option value="同意">同意</Option>
+                                <Option value="不同意">不同意</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col span="11">
+                        <FormItem label="网络带宽" prop="networkBandwidth">
+                            <Select v-model="evalData.networkBandwidth">
+                                <Option value="同意">同意</Option>
+                                <Option value="不同意">不同意</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col span="18">
+                        <FormItem
+                                v-for="(item, index) in evalData.items"
+                                v-if="item.status"
+                                :key="index"
+                                :label="'磁盘 ' + item.index"
+                                :prop="'items.' + index + '.value'"
+                                :rules="{required: true, message: '磁盘 ' + item.index +' 不能为空', trigger: 'blur'}">
+                            <Row>
+                                <Col span="4">
+                                    <Input type="text" v-model="item.value" placeholder="输入磁盘容量"  style="width:90%"></Input>GB
+                                </Col>
+                                <Col span="4" offset="1">
+                                    <Button type="ghost" @click="handleRemove(index)">删除</Button>
+                                </Col>
+                            </Row>
+                        </FormItem>
+                        <FormItem>
+                            <Row>
+                                <Col span="12">
+                                    <Button type="dashed" long @click="handleAdd" icon="plus-round">添加</Button>
+                                </Col>
+                            </Row>
+                        </FormItem>
+                    </Col>
+                </Row>
+            </Form>
+        </div>
+    </Card>
+</template>
+
+<script>
+export default {
+    data(){
+        return{
+            index:1,
+            evalData:{
+                id:'hloadhoa dpadjop',
+                ip:'192.168.1.11',
+                cpu:4,
+                memory:'4GB',
+                os:'Windows10',
+                network:'政务外网',
+                networkBandwidth:'10M',
+                items: [
+                    {
+                        value: '',
+                        index: 1,
+                        status: 1
+                    }
+                ]
+            },
+            ruleValidate:{},
+            tableList: {
+                columns: [
+                {
+                    title: '磁盘ID',
+                    key: 'id'
+                },
+                {
+                    title: '磁盘名称',
+                    key: 'name'
+                },
+                {
+                    title: '磁盘容量',
+                    key: 'capacity'
+                },
+                {
+                    title: '磁盘状态',
+                    key: 'state'
+                },
+                {
+                    title: '挂载点',
+                    key: 'point'
+                },
+                {
+                    title: '磁盘属性',
+                    key: 'attribute'
+                },
+                {
+                    title: '创建时间',
+                    key: 'createDate'
+                }],
+                data: [
+                    {
+                        id: 'd-go61u5z6ziebqk596dom',
+                        name: 'S',
+                        capacity: '10GB',
+                        state: '使用中',
+                    },
+                    {
+                        id: 'd-go61u5z6ziebqk596dom',
+                        name: 'S',
+                        capacity: '10GB',
+                        state: '使用中',
+                    }
+                ]
+            },
+        }
+    },
+    created(){},
+    methods:{
+        goback(){
+            this.$router.go(-1);
+        },
+        // 从服务端获取列表数据
+        getList (pageNo, pageSize) {
+            console.log(pageNo)
+            console.log(pageSize)
+        },
+        handleSubmit (name) {
+            this.$refs[name].validate((valid) => {
+                if (valid) {
+                    this.$Message.success('Success!');
+                } else {
+                    this.$Message.error('Fail!');
+                }
+            })
+        },
+        handleReset (name) {
+            this.$refs[name].resetFields();
+        },
+        handleAdd () {
+            this.index++;
+            this.evalData.items.push({
+                value: '',
+                index: this.index,
+                status: 1
+            });
+        },
+        handleRemove (index) {
+            // this.evalData.items[index].status = 0;
+            this.evalData.items.splice(index,1);
+        }
+    },
+    components: {
+    },
+}
+</script>

@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+	</head>
+	<body class="bgNone">
+		<div class="workspace-body">
+			<div id="console-container" class="clearfix">
+				<div class="col-sm-12">
+					<div class="general_list_main clearfix">
+						<div class="main_bottom col-lg-12 col-sm-12">
+							<div class="view_item">
+								<form id="dataForm" action="" autocomplete="off">
+									<input type="hidden" name="dirId" id="dirId"  value="${id}"/>
+									<input type="hidden" name="unitId" id="unitId" value="${unitId}"/>
+									<table class="table default-table tab-border-no-layer">
+										<tbody>
+											<tr>
+												<th width="120"><span class="requiredSpan">*</span>字段名称：</th>
+												<td>
+													<input type="text" name="fieldName" id="fieldName" class="form-control" datatype="*1-20" nullmsg="请填写字段名称！" errormsg="字段名称长度限制20字符以内！"/>
+												</td>
+											</tr>
+										<!--	<tr>
+												<th><span class="requiredSpan">*</span>数据类型：</th>
+												<td>
+													<select id="fieldType" name="fieldType"  datatype="*" nullmsg="请填写数据类型！"  class="form-control chosen-select selWid-form-search" onchange="fieldTypeSet(this)">
+													</select>
+												</td>
+											</tr>-->
+											<tr>
+												<!--字段标识-->
+												<th><span class="requiredSpan">*</span>字段标识：</th>
+												<td>
+													<input type="text" name="fieldCode" id="fieldCode" class="form-control" datatype="fileRegLong" nullmsg="请填写字段标识！" errormsg="字段标识应为字母、数字、下划线组成并以字母开头且长度不能超过30！" onblur="getElementCode(this)"/>
+												</td>
+											</tr>
+											<tr>
+												<th>是否主键：</th>
+												<td>
+													<select id="isPrimary" name="isPrimary" class="form-control chosen-select" >
+														<option value="2">否</option>
+														<option value="1">是</option>
+													</select>
+												</td>
+											</tr>
+										<!--	<tr>
+												<th><span class="requiredSpan">*</span>字段长度：</th>
+												<td>
+													<input type="text" name="fieldLength" id="fieldLength" datatype="integezs" nullmsg="请填写字段长度！" errormsg="字段长度错误！" class="form-control"/>
+												</td>
+											</tr>-->
+											<tr>
+												<th>字段描述：</th>
+												<td>
+													<textarea rows="5" cols="" name="desc" id="desc" class="form-control" datatype="*0-200" nullmsg="字段描述不能超过200字符！"></textarea>
+												</td>
+											</tr>
+											<!--<tr>
+												<th>数据集字段：</th>
+												<td>
+													<input type="text" name="setField" id="setField" class="form-control"/>
+												</td>
+											</tr>-->
+										</tbody>
+									</table>
+									<button type="button" class="btn-submit hidden"></button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+		<script type="text/javascript">
+           /* getFieldType();
+            function getFieldType(){//获取数据类型
+                ajaxHengyun({
+                    type: 'GET',
+                    url: '${_gate_url}/api/exchange/dataapi/api/findByDictCode',
+                    data:{pId: "date_type"},
+                    datatype: "json",
+                    success: function (rows) {
+                        if(rows.data){
+                            var html="";
+                            rows.data.forEach(function(value,index){
+                                html+='<option value="'+value.dictName+'">'+value.dictName+'</option>';
+                            });
+                            $("#fieldType").append(html);
+                        }
+                    }
+                });
+            }*/
+           /* function fieldTypeSet(ele){//选择数据类型
+				var val = $(ele).val();
+				if(val=="longtext"||val=="datetime"||val=="date"){
+                    $("#fieldLength").removeAttr("datatype");
+                    $("#fieldLength").removeAttr("nullmsg");
+                    $("#fieldLength").removeAttr("errormsg");
+                    $("#fieldLength").parent().find(".Validform_info").remove();
+                    $("#fieldLength").removeClass("Validform_error");
+				}else{
+                    $("#fieldLength").attr("datatype","*");
+                    $("#fieldLength").attr("nullmsg","请填写字段长度！");
+                    $("#fieldLength").attr("errormsg","字段长度错误！");
+				}
+			};*/
+            var index="";
+            function save(num){
+                index=num;
+                $('.btn-submit').click();
+            }
+            $('.btn-submit').valid({
+                form: '#dataForm',
+                //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+                //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+                showAllError: true,
+                ignoreHidden: true,
+                checkpassed: function () {
+                    saveObj();
+                }
+            });
+            function getElementCode(ele){//查询字段编码是否存在
+                var fieldCode=$(ele).val();
+                if(fieldCode==""){
+                    return false;
+                };
+                ajaxHengyun({
+                    type: 'GET',
+                    url: '${_gate_url}/api/exchange/directory/getElementCode',
+                    data:{fieldCode: fieldCode,dirId:"${id}"},
+                    datatype: "json",
+                    success: function (rows) {
+                        if(!rows.data){
+                            $("#fieldCode").val("");
+                            parent.layer.msg("字段标识名称已存在，请重新填写！",{time:1500});
+                        }
+                    }
+                });
+            }
+            /*提交*/
+            function saveObj(){
+                var gxqptDutiesDTO =$("#dataForm").serializeJSON();
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    url: "${_gate_url}/api/exchange/element/save",
+                    data:JSON.stringify(gxqptDutiesDTO),
+                    success:function(rows){
+                        if (rows.data){
+                            rows.data.type="field";
+                            rows.data.dirName=rows.data.fieldName;
+                            parent.home.addNodes(rows.data,"${id}");
+                            parent.home.reloadPage(rows.data.id,"field");
+                            parent.layer.msg("新增字段成功！",{time:1000});
+                            parent.layer.close(index);
+                        }else{
+                            parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                        }
+                    }
+                });
+            };
+		</script>
+	</body>
+</html>

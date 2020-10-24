@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- begin 外部CSS引入 -->
+    <link type="text/css" rel="stylesheet" href="${_lib }/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_lib }/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_lib }/webuploader/webuploader.css">
+    <link rel="stylesheet" type="text/css" href="${_lib }/font-awesome/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="${_js}/lib/webuploader/upload.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=1.0.0">
+    <link rel="stylesheet" href="${_static}/css/app.css?v=1.0.0">
+    <script type="text/javascript">
+        var _GATE_URL = "${_gate_url}";
+    </script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <!-- end 外部CSS引入 -->
+    <!-- 自定义样式 begin -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+            font-size: 13px;
+        }
+
+        .form-inline .control-label {
+            margin-bottom: 0;
+            margin-left: -16px;
+            vertical-align: middle;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            margin: 4px 0px 0;
+            margin-right: 10px;
+            margin-bottom: 3px;
+            margin-left: 70px;
+            margin-top: 5px;
+            line-height: normal;
+        }
+
+        .downFile {
+            background: #28b5d6;
+            margin-top: 9px;
+            margin-left: 10px;
+        }
+
+        .widths {
+            width: 35%;
+        }
+
+        .form-control-wrap {
+            display: inline-block;
+        }
+
+        .align_center {
+            text-align: center;
+        }
+    </style>
+    <!-- 自定义样式 end -->
+
+
+</head>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>出差申请审批详情</h5>
+                    </div>
+
+                    <div class="pull-right">
+
+                        <button class="btn btn-default go-back">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            返回
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <input type="hidden" id="aproveType" value="2">
+                    <div class="col-sm-12">
+                        <div class="inline-block"></div>
+                        <div class="inline-block margin-left"></div>
+
+                        <!--  可查看-->
+                        <div class="form-inline view-info">
+                            <div class="qingjia">
+                            </div>
+
+
+                            <div class="chuchai">
+                                <fieldset>
+                                    <ul id="chucaiForm">
+                                        <li>
+                                            <label class="view-lab1 widths">申请人</label><span class="view-text currentAproveUserOperation"></span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">出差事由</label><span class="view-text businessRenson"></span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">提交时间</label><span class="view-text createTime"></span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">出差时间</label><span class="view-text chucaiTime"></span>
+                                        </li>
+
+                                        <li>
+                                            <label class="view-lab1 widths">出差地点</label><span class="view-text businessAddr"></span>
+                                        </li>
+                                        <li>
+                                            <label class="view-lab1 widths">随行人员</label><span class="view-text accompanyUser"></span>
+                                        </li>
+
+                                        <li>
+                                            <label class="view-lab1 widths">工作代理人</label><span class="view-text workAgent"></span>
+                                        </li>
+
+                                    </ul>
+                                </fieldset>
+                            </div>
+                            <h5>附件展示信息</h5>
+                            <ul class="show-file">
+                                <li class="pull-left">
+                                    <p class="title" ></p>
+                                    <p class="imgWrap" id="imgWrap">
+                                            <img class="img-responsive img-thumbnail" id="imgUrl" style="width: 100%;height: 100%;"
+                                                 src="" />
+                                    </p>
+                                    <div class="file-panel">
+                                        <!--<a href="javascript:void(0)" class="downFile" onclick="">下载附件</a>-->
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <div class="putong">
+                            </div>
+                            <fieldset id="spyj">
+                                <h5>审批意见</h5>
+                                <div>
+                                    <table class="table defaultTable defaultTableTop">
+                                        <tbody>
+                                        <tr>
+                                            <th id="personName">审批意见</th>
+                                            <td id="approveState">
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>说明</th>
+                                            <td id="approveOponion"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <!-- end 页面内容主体 -->
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" href="${_lib }/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" href="${_lib }/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_js}/lib/webuploader/HYCore.js"></script>
+<!--end 外部JS引入 -->
+
+<!-- 自定义JS -->
+<script type="text/javascript">
+    var aproveType = $("#aproveType").val();
+    var vs = "请假申请";
+    if (aproveType == "1") {
+        vs = "请假申请";
+    } else if (aproveType == "2") {
+        vs = "出差申请";
+    } else {
+        vs = "";
+    }
+    if ("请假申请" == vs) {
+        $(".qingjia").css("display", "block");
+        $(".chuchai").css("display", "none");
+        $(".putong").css("display", "none");
+    } else if ("出差申请" == vs) {
+        $(".qingjia").css("display", "none");
+        $(".chuchai").css("display", "block");
+        $(".putong").css("display", "none");
+    } else {
+        $(".qingjia").css("display", "none");
+        $(".chuchai").css("display", "none");
+        $(".putong").css("display", "block");
+    }
+
+    function downLoad() {
+        window.location.href = "${_cp}/bg/comm/file/downLoaderZip.do?applyId";
+    }
+
+    $(function () {
+        ajaxHengyun({
+            type: "POST",
+            // dataType: 'json',
+            // contentType: 'application/json',
+            url: "${_gate_url}/api/developer/attence/workapprove/businessview",
+            data: {approveId: '${id!0}'},
+            success: function (rows) {
+                if (rows.errcode == 0) {
+                    var obj = rows.data;
+                    $("#chucaiForm .currentAproveUserOperation").text("${applyUserName!''}");
+                    $("#chucaiForm .businessRenson").text(obj['businessRenson']);
+                    $("#chucaiForm .createTime").text("${applyTime!''}");
+                    $("#chucaiForm .chucaiTime").text(obj['startTime'] + '-' + obj['endTime'] );
+                    $("#chucaiForm .businessAddr").text(obj['businessAddr']);
+                    $("#chucaiForm .accompanyUser").text(obj['accompanyUser']);
+                    $("#chucaiForm .workAgent").text(obj['workAgent']);
+
+
+                    if(obj['imgUrl'] && (obj['imgUrl'].endsWith(".png") || obj['imgUrl'].endsWith(".jpg")
+                        || obj['imgUrl'].endsWith(".PNG")|| obj['imgUrl'].endsWith(".JPG"))){
+                        $("#imgUrl").attr('src',obj['imgUrl']);
+                    } else {
+                        $("#imgWrap").text('无法预览');
+                    }
+
+                    var approveRecord  = obj['approveRecord'];
+                    if(approveRecord){
+                        $("#personName").text(approveRecord['personName']);
+                        if(approveRecord['approveState'] == '1'){
+                            $("#approveState").text('同意！！！');
+                        } else {
+                            $("#approveState").text('驳回！！！');
+                        }
+                        $("#approveOponion").text(approveRecord['approveOponion']);
+                    } else {
+                        $("#spyj").css("display", "none");
+                    }
+                } else {
+
+                }
+            }
+        });
+
+    })
+
+</script>
+
+
+</body>
+</html>

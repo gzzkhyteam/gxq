@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <table class="table default-table table-title-left">
+                            <tbody>
+                            <tr>
+                                <th width="130">姓名</th>
+                                <td id="name"></td>
+                                <th width="130" rowspan="5">头像</th>
+                                <td rowspan="5">
+                                    <img id="photo" class="nopic" src="" alt="">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th >登录账号</th>
+                                <td id="nickname"></td>
+                            </tr>
+                            <tr>
+                                <th>所属部门</th>
+                                <td id="maindeptIdName"></td>
+                            </tr>
+                            <tr>
+                                <th>所属职务</th>
+                                <td id="maindutyname"></td>
+                            </tr>
+                            <tr>
+                                <th>职务级别</th>
+                                <td id="dutylevel"></td>
+                                <!-- <th>性别</th>
+                                 <td id="sex"></td>-->
+                            </tr>
+                            <tr>
+                                <!--<th>是否单位管理员</th>
+                                <td id="isorgadmin" ></td>-->
+                                <th>所属岗位</th>
+                                <td id="mainpostname"></td>
+                                <th>统一人员编号</th>
+                                <td id="empNo"></td>
+                            </tr>
+                            <tr>
+                                <th>性别</th>
+                                <td id="sex"></td>
+                                <th>出生日期</th>
+                                <td id="birthday"></td>
+                            </tr>
+                            <tr>
+                                <th>民族</th>
+                                <td id="nation"></td>
+                                <th>最高学历</th>
+                                <td id="education"></td>
+                            </tr>
+                            <tr>
+                                <th>办公电话</th>
+                                <td id="officetel"></td>
+                                <th>排序权重</th>
+                                <td id="sortvalue"></td>
+                            </tr>
+                            <tr>
+                                <th>手机1</th>
+                                <td id="mainmobile"></td>
+                                <th>手机2</th>
+                                <td id="submobile"></td>
+                            </tr>
+                            <tr>
+                                <th>是否政协委员</th>
+                                <td id="iscommittee"></td>
+                                <th>是否人大代表</th>
+                                <td id="isdeputy"></td>
+                            </tr>
+                            <tr>
+                                <th>是否单位一把手</th>
+                                <td id="isheader"></td>
+                                <th>是否单位领导</th>
+                                <td id="isleader"></td>
+                            </tr>
+                            <tr>
+                                <th>启用标记</th>
+                                <td id="isenable"></td>
+                                <th>状态</th>
+                                <td id="status"></td>
+                            </tr>
+                            <tr>
+                                <th>人员简介</th>
+                                <td colspan="3" id="descrption"></td>
+                            </tr>
+                            <tr>
+                                <th>人员职责</th>
+                                <td colspan="3" id="userduty"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript">
+    var id = "${id}";
+    var systemCode = "${systemCode}";
+    var identityId = "${identityId}";
+    var educationArray = [];
+    var dutyLevel = [];
+    /* 获取学历 */
+    ajaxHengyun({
+        type: 'GET',
+        url: '${_gate_url}/api/admin/dictionary/getCodeList?code=EDUCATION',
+        async: false,
+        success: function (rows) {
+            if (rows.data) {
+                educationArray = rows.data;
+            }
+            ;
+        }
+    });
+    //获取职务
+    ajaxHengyun({
+        type: 'GET',
+        url: '${_gate_url}/api/admin/dictionary/getCodeList?code=DUTY_LEVE',
+        async: false,
+        success: function (rows) {
+            if (rows.data) {
+                dutyLevel = rows.data;
+            }
+            ;
+        }
+    })
+    ajaxHengyun({
+        type: "GET",
+        url: "${_gate_url}/api/admin/emp/getById",
+        data: {id: id, systemCode: systemCode, identityId: identityId},
+        datatype: 'json',
+        success: function (rows) {
+            if (rows.data) {
+                rows.data = dealElement(rows.data, "");
+                $("#name").text(rows.data.name);
+                $("#nickname").text(rows.data.nickname);
+                if (rows.data.isorgadmin == "0") {
+                    $("#isorgadmin").text("否");
+                } else if (rows.data.isorgadmin == "1") {
+                    $("#isorgadmin").text("是");
+                }
+                $("#maindutyname").text(rows.data.maindutyname);
+                if (!rows.data.maindutyname) {
+                    $("#maindutyname").text("");
+                }
+                $("#mainpostname").text(rows.data.mainpostname);
+                if (!rows.data.mainpostname) {
+                    $("#mainpostname").text("");
+                }
+                $("#maindeptIdName").text(rows.data.mainorgname + "—" + rows.data.maindeptname);
+                if (rows.data.sex == "0") {
+                    $("#sex").text("女");
+                } else if (rows.data.sex == "1") {
+                    $("#sex").text("男");
+                }
+                $("#birthday").text(rows.data.birthday);
+                $("#nation").text(rows.data.nation);
+                $("#photo").attr("src", rows.data.photo);
+                $("#officetel").text(rows.data.officetel);
+                $("#sortvalue").text(rows.data.sortvalue);
+                if (!rows.data.sortvalue && rows.data.sortvalue != '0') {
+                    $("#sortvalue").text("");
+                }
+                $("#mainmobile").text(rows.data.mainmobile);
+                $("#submobile").text(rows.data.submobile);
+                if (rows.data.iscommittee == "0") {
+                    $("#iscommittee").text("否");
+                } else if (rows.data.iscommittee == "1") {
+                    $("#iscommittee").text("是");
+                }
+                if (rows.data.isdeputy == "0") {
+                    $("#isdeputy").text("否");
+                } else if (rows.data.isdeputy == "1") {
+                    $("#isdeputy").text("是");
+                }
+                if (rows.data.isheader == "0") {
+                    $("#isheader").text("否");
+                } else if (rows.data.isheader == "1") {
+                    $("#isheader").text("是");
+                }
+                if (rows.data.isleader == "0") {
+                    $("#isleader").text("否");
+                } else if (rows.data.isleader == "1") {
+                    $("#isleader").text("是");
+                }
+                if (rows.data.isenable == "0") {
+                    $("#isenable").text("否");
+                } else if (rows.data.isenable == "1") {
+                    $("#isenable").text("是");
+                }
+                if (rows.data.status == "1") {
+                    $("#status").text("在职");
+                } else if (rows.data.status == "2") {
+                    $("#status").text("转职中");
+                } else if (rows.data.status == "3") {
+                    $("#status").text("离职");
+                } else if (rows.data.status == "4") {
+                    $("#status").text("退休");
+                } else if (rows.data.status == "5") {
+                    $("#status").text("驻村");
+                } else if (rows.data.status == "6") {
+                    $("#status").text("休假");
+                } else if (rows.data.status == "7") {
+                    $("#status").text("工勤人员");
+                } else if (rows.data.status == "8") {
+                    $("#status").text("其它人员");
+                }
+                $("#descrption").text(rows.data.descrption);
+                $("#userduty").text(rows.data.userduty);
+                $("#empNo").text(rows.data.empNo);
+                $("#dutylevel").text(rows.data.dutylevel);
+                educationArray.forEach(function (value, index) {
+                    if (value.name == rows.data.education) {
+                        $("#education").text(value.name);
+                    }
+                });
+                // dutyLevel.forEach(function (value, index) {
+                //     if (value.code == rows.data.dutylevel) {
+                //         $("#dutylevel").text(value.name);
+                //     }
+                // });
+            }
+        }
+    });
+
+    //格式化对象中的值
+    function dealElement(obj, val) {
+        if (obj === null || obj === undefined || obj === "") return obj;
+        for (var key in obj) {
+            if (obj[key] == null) {
+                obj[key] = val;
+            }
+        }
+        return obj;
+    }
+</script>
+</body>
+</html>

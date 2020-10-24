@@ -1,0 +1,223 @@
+@charset 'utf-8';
+@default: #e9eaec;
+@primary: #0099CC;
+@light-primary: #5cadff;
+@dark-primary: #2b85e4;
+@info: #0099CC;
+@success: #19be6b;
+@warning: #ff9900;
+@error: #ed3f14;
+@white: #ffffff;
+@black: #000000;
+html {
+    font-size: 12px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.hidden {
+    display: none;
+}
+
+.clearfix {
+    width: 100%;
+    display: table;
+}
+
+html,
+body,
+#app,
+.ivu-layout {
+    min-height: 100%;
+    display: inherit;
+    min-width: 80%;
+    background-color: #f5f7f9;
+    .ivu-layout-header {
+        padding: 0 30px;
+        background: @primary;
+        .layout-logo {
+            img {
+                margin-top: 10px;
+                width: 160px;
+            }
+        }
+        .right-icon-box {
+            margin-top: 10px;
+            .icon-box {
+                float: left;
+                padding: 0 20px;
+                color: @white;
+                i {
+                    text-align: center;
+                    line-height: 30px;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 25px;
+                    font-size: 1.8rem;
+                    border: 2px solid @white;
+                    display: block;
+                    overflow: hidden;
+                }
+                i.icon-ren {
+                    line-height: 35px;
+                }
+                i.icon-index {
+                    line-height: 35px;
+                }
+                i.icon-xiaoxi {
+                    color: @primary;
+                    background: @white;
+                }
+                .text {
+                    float: left;
+                    width: 100%;
+                    text-align: center;
+                    line-height: 25px;
+                }
+            }
+        }
+    }
+    .ivu-layout-sider {
+        a {
+            color: inherit;
+        }
+        a.router-link-active {
+            color: @primary;
+            li {
+                border-right: 3px solid @primary;
+            }
+        }
+        background: @white;
+        .menu-icon {
+            transition: all .3s;
+        }
+        .rotate-icon {
+            transform: rotate(-180deg) !important;
+        }
+        .menu-item span {
+            display: inline-block;
+            overflow: hidden;
+            width: calc(100% - 50px);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: bottom;
+            transition: width .2s ease .2s;
+        }
+        .menu-item i {
+            transform: translateX(0px);
+            transition: font-size .2s ease, transform .2s ease;
+            vertical-align: middle;
+            font-size: 16px;
+        }
+        .collapsed-menu span {
+            width: 0px;
+            transition: width .2s ease;
+        }
+        .collapsed-menu i {
+            transform: translateX(5px);
+            transition: font-size .2s ease .2s, transform .2s ease .2s;
+            vertical-align: middle;
+            font-size: 22px;
+        }
+    }
+    .ivu-layout-content {
+        padding: 0 16px 16px;
+        .ivu-breadcrumb {
+            margin: 16px 0;
+            text-align: left;
+        }
+        .bottom-bar {
+            text-align: right;
+            margin-top: 30px;
+            user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-user-select: none;
+        }
+    }
+}
+.ivu-btn-small{
+    margin-right:5px;
+}
+
+/*对话框样式定义*/
+
+.ivu-modal {
+    .ivu-modal-header {
+        background: @light-primary;
+        .ivu-modal-header-inner {
+            color: @white;
+        }
+    }
+    .ivu-modal-close {
+        i {
+            color: @white;
+        }
+    }
+}
+
+.vertical-center-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .ivu-modal {
+        top: 0;
+    }
+}
+
+.ivu-form-item-content {
+    min-height: 32px;
+    height: auto;
+}
+
+.ivu-btn.ivu-btn-loading {
+    //  pointer-events: auto;
+}
+
+.ivu-form-item /deep/ .ivu-form-item-content { //解决验证信息错误显示问题
+    height: auto;
+}
+// 面包屑后半部分文字颜色全局修改
+.ivu-breadcrumb>span:last-child{
+    color: #2d8cf0
+}
+// // 菜单点击后字体颜色全局修改
+// .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
+//     color:#0098CF
+// }
+// 按钮样式修改
+.ivu-btn-info{
+    background-color: #2d8cf0;
+    border-color: #2d8cf0;
+}
+
+/*覆盖时间日期选择器翻页箭头的颜色*/
+.ivu-picker-panel-icon-btn{
+  color: #010713;
+}
+
+// 覆盖输入框disabled之后的样式
+.ivu-input-wrapper .ivu-input-disabled{
+  color:#797979 !important;
+}
+.ivu-select-single .ivu-select-selection .ivu-select-selected-value{
+  color:#797979 !important;
+}

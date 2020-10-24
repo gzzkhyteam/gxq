@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+
+    <meta charset="UTF-8">
+    <title>应用服务管理 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+    <style type="text/css">
+    #apiListUl{
+        background-color: #fff;
+        overflow: auto;
+    }
+    #apiListUl::-webkit-scrollbar{
+        width:6px;
+    }
+    #apiListUl::-webkit-scrollbar-thumb{
+        background:#607d8b;
+        border-radius:8px;
+    }
+    </style>
+</head>
+
+<body>
+
+
+<div class="main-box clearfix">
+    <div class="top-bar">
+        <div class="text-title pull-left">
+            首页 > 文档中心 > <span class="active">API文档</span>
+        </div>
+        <a onclick="window.history.back()" class="button-icon pull-right">
+            返回
+        </a>
+    </div>
+    <div class="main">
+        <div class="block clearfix">
+            <div class="left ztreeList" >
+                <h3 class="listTitle">API列表</h3>
+                <ul id="apiListUl">
+                </ul>
+            </div>
+            <div class="left docList">
+                <div class="apiDocList">
+                    <h3 class="apiDocListTitle clearfix">
+                        <span class="apiDocListDesc left">xxx</span>
+                        <!-- <span class="apiDocListBtn apiDocListBtnHide right">展开所有</span>
+                        <span class="right">|</span>
+                        <span class="apiDocListBtn apiDocListBtnShow  right">查看列表</span>
+                        <span class="right">|</span> -->
+                        <span class="apiDocListBtn  right">沙箱环境：<a href="#" target="_blank" id="toTry">调试一下</a></span>
+                    </h3>
+                    <ul class="apiDocListConter" id="apiDocListConter">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="templateLi" style="display: none;">
+     <li  class="item" >
+                            <p class="item_header clearfix">
+                                <span class="requestType left"></span>
+                                <span class="requestAddress left"></span>
+                                <span class="requestDesc right"></span>
+                            </p>
+                            <div class="item_conter">
+                                <h3 class="item_conter_title summary">注意事项</h3>
+                                <p class="item_conter_p"></p>
+                                <h3 class="item_conter_title description">Response Class (Status 200)</h3>
+                                <p class="item_conter_p">OK</p>
+                                <!-- <div class="item_conter_div">
+                                    <p>
+                                        <span data-type="model">Model</span>
+                                        <span>|</span>
+                                        <span class="active" data-type="exampleValue">Example Value</span>
+                                    </p>
+                                    <div class="model">
+                                        <span>Result«boolean» {</span>
+                                        <ul>
+                                            <li>
+                                                <span>data </span>(<span class="colorBlue">boolean</span>, <span class="colorGray">optional</span>),
+                                            </li>
+                                        </ul>
+                                        <span>}</span>
+                                    </div>
+                                    <pre class="exampleValue">
+										{
+										    "data": true,
+										    "errcode": 0,
+										    "errmsg": "string"
+										}
+                                    </pre>
+                                </div> -->
+                                <div class="item_conter_div form-inline">
+                                    <span>Response Content Type</span>
+                                    <select class="form-control " id="responseContent">
+                                        
+                                    </select>
+                                </div>
+                                <div class="item_conter_div">
+                                    <h3 class="colorGreen">Parameters</h3>
+                                    <table class="table">
+                                        <tbody>
+                                        <tr id="paramaterHeader">
+                                            <th>Parameter</th>
+                                            <th>Value</th>
+                                            <th>Description</th>
+                                            <th>Parameter Type</th>
+                                            <th>Data Type</th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="item_conter_div form-inline">
+                                        <span>Parameter content type: </span>
+                                        <select class="form-control" id="parameterContent">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="item_conter_div">
+                                    <h3 class="colorGreen">Response Messages</h3>
+                                    <table class="table">
+                                        <tbody>
+                                        <tr id="responseTableTR">
+                                            <th>HTTP Status Code</th>
+                                            <th>Reason</th>
+                                            <th>Response Model</th>
+                                            <th>Headers</th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script>
+
+	var htmlTemplate = "";
+	var userClickToModuleId = '${moduleId!}';
+	$(function (){
+		
+		htmlTemplate = $("#templateLi").html();
+		loadAllLeftApi();
+	});
+	
+	function loadAllLeftApi(){
+		var urlPrev = getUrlPrev('${_gate_url}');
+		ajaxHengyun({
+			
+			url: getUrlPrev('${_gate_url}')+"/assignModule/findAllMoudlesNoPage",
+			success: function (moduleList){
+				var index = 0;
+				for(var i=0;i<moduleList.data.length;i++){
+					if(userClickToModuleId == moduleList.data[i].id){
+						index = i;
+					}
+					$("#apiListUl").append('<li id="\''+moduleList.data[i].id+'\'" swagger="'+moduleList.data[i].apiSyncUrl+'" onclick="updateApiContent(this,\''+moduleList.data[i].id+'\')">'+moduleList.data[i].name+'</li>');
+				}
+				automaticClickApi("#apiListUl > :eq("+index+")");
+			}
+		});
+	}
+	
+	function automaticClickApi(jquerySeleter){
+		
+		$(jquerySeleter).trigger("click");
+	}
+    var swaggerApiMsg = null;
+	var swaggerApiCache = {};
+    var swaggerApiMsgCache = {};
+	function loadSwaggerApi(moduleId){
+		if(swaggerApiCache[moduleId]){
+			swaggerApiC = swaggerApiCache[moduleId];
+            swaggerApiMsg = swaggerApiMsgCache[moduleId];
+			showApiContent();
+			return ;
+		}
+
+		var urlPrev = getUrlPrev('${_gate_url}');
+		ajaxHengyun({
+			url: getUrlPrev('${_gate_url}')+"/serviceResource/detail?moduleId="+moduleId,
+			success: function (api){
+				var apiJson = eval("("+api.data.jsonContent+")");
+                var apiJsonMsg = eval("("+api.data.jsonMsg+")");
+				swaggerApiCache[moduleId] = apiJson;
+				swaggerApiC = apiJson;
+                swaggerApiMsgCache[moduleId] = apiJsonMsg;
+                swaggerApiMsg = apiJsonMsg;
+				showApiContent();
+			}
+		});
+	}
+	
+	var swaggerApiC = null;
+    function updateApiContent(thisObj,moduleId){
+    	$(".apiDocListDesc").text($(thisObj).text());
+    	$("#toTry").attr("href","${_gate_url}/api/gate/doc?url=" + thisObj.attributes.swagger.value.replace('http://192.168.30.151:10086', '${_gate_url}'));
+    	$("#apiListUl > li").removeClass("active");
+    	$(thisObj).addClass("active");
+        loadSwaggerApi(moduleId);
+    }
+    
+    function showApiContent(){
+    	
+	var swaggerApi = swaggerApiC;
+	var apiJsonMsg = swaggerApiMsg;
+    //var urls = apiJsonMsg['urls']+'';
+    	$("#apiDocListConter").empty();
+    	for(var path in swaggerApi.paths){
+    		var pathValue = swaggerApi.paths[path];
+    		//if(urls.indexOf(path)!=-1){   //一个swagger json串表示一个功能模块
+                for(var requestType in pathValue){
+                    $("#templateLi").html(htmlTemplate);
+                    $("#templateLi > li").addClass(requestType+"Color");
+                    $("#templateLi .requestType").text(requestType);
+                    $("#templateLi .requestAddress").text(path);
+
+                    $("#templateLi .requestDesc").text(pathValue[requestType]["summary"]);
+
+                    $("#templateLi .summary").text(pathValue[requestType]["summary"]);
+                    $("#templateLi .description").text(pathValue[requestType]["description"]);
+
+                    var paramentHtml = builderParamterTable(pathValue[requestType]["parameters"]);
+                    $("#templateLi #paramaterHeader").after(paramentHtml);
+
+                    var responseHtml = builderResponseTable(pathValue[requestType]["responses"]);
+                    $("#templateLi #responseTableTR").after(responseHtml);
+
+                    var producesOption = builderOption(pathValue[requestType]["produces"]);
+                    $("#templateLi #responseContent").append(producesOption);
+                    var parameterOption = builderOption(pathValue[requestType]["consumes"]);
+
+                    $("#templateLi #parameterContent").append(parameterOption);
+                    $("#apiDocListConter").append($("#templateLi").html());
+                }
+           // }
+    	}
+
+    	
+    	//增加点击事件
+    	addClick();
+    }
+    
+    //构建下拉列表option
+    function builderOption(arrays){
+    	
+    	if(!arrays || arrays.length < 1){
+    		return "";
+    	}
+    	var option = "";
+    	for(var i in arrays){
+    		
+    		option = "<option>"+arrays[i]+"</option>";
+    	}
+    	return option;
+    }
+    //构建Response Messages table
+    function builderResponseTable(responses){
+    	
+    	if(!responses){
+    		return "";
+    	}
+    	var result = "";
+    	for(var code in responses){
+    		var response = responses[code];
+    		
+    		result += "<tr >";
+    		result += "<td>"+code+"</td>";// paramater
+    		result += "<td>"+response["description"]+"</td>";//description
+    		result += "<td>"+swaggerRefToType(response["schema"]?response["schema"]["$ref"]:null)+"</td>";//parameterType
+    		result += "<td>-</td>";
+    		result += "</tr>";
+    	}
+    	return result;
+    }
+    
+    //构建请求参数列表
+    function builderParamterTable(parameters){
+    	if(!parameters){
+    		return "";
+    	}
+    	var result = "";
+    	for(var index in parameters){
+    		var parameter = parameters[index];
+    		result += "<tr >";
+    		result += "<td>"+parameter["name"]+"</td>";// paramater
+    		result += "<td><input type='text' class='form-control' value='"+parameter["in"]+"'/></td>";// value
+    		result += "<td>"+parameter["description"]+"</td>";//description
+    		result += "<td>"+parameter["required"]+"</td>";//parameterType
+    		if(parameter["type"]){
+    			result += "<td>"+parameter["type"]+"</td>";//type
+    		} else {
+    			var refType = parameter["schema"]["$ref"];
+    			
+    			result += "<td>"+swaggerRefToType(refType)+"</td>";
+    		}
+    		result += "</tr>";
+    	}
+    	
+    	return result;
+    }
+    
+    function swaggerRefToType(refType){
+    	
+    	if(!refType)
+    		return "";
+    	var result = refType.substring("#/definitions/".length);
+    	if(result == "Error"){
+    		return "";
+    	}
+    	return "<a onClick='buildTypeHtmlShow(this)'>"+result+"</a>";
+    }
+    
+    function addClick(){
+    	
+    	
+    	$(".apiDocListNmae,.apiDocListBtnToggle").click(function(){
+            var elementUl = $(this).parent().parent().find(".apiDocListConter");
+            $(elementUl).slideToggle();
+        });
+        $(".item_header").click(function(){
+            var elementUl = $(this).parent().find(".item_conter");
+            $(elementUl).slideToggle();
+        });
+        $(".apiDocListBtnShow").click(function(){
+            var elementUl = $(this).parent().parent().find(".item_conter");
+            $(elementUl).slideUp();
+        });
+        $(".apiDocListBtnHide").click(function(){
+            var elementUl = $(this).parent().parent().find(".item_conter");
+            $(elementUl).slideDown();
+        });
+        $(".item_conter_div p span").click(function(){
+            var type=$(this).attr("data-type");
+            $(this).addClass("active");
+            $(this).siblings().removeClass("active");
+            if(type=="model"){
+                $(".item_conter_div>.model").css("display","block");
+                $(".item_conter_div>.exampleValue").css("display","none");
+            }else if(type=="exampleValue"){
+                $(".item_conter_div>.model").css("display","none");
+                $(".item_conter_div>.exampleValue").css("display","block");
+            }
+        });
+    }
+    
+    
+    var htmlBR = "<br/>";
+    var swaggerJson = swaggerApiC;
+    
+    function buildTypeHtmlShow(thisObj){
+    	
+    	var type = $(thisObj).text();
+    	var result = buildTypeHtml(type);
+    	layer.open({
+            title:'详情',
+            content:result,
+            area: ['60%', '60%'],
+        });
+    }
+    function buildTypeHtml(type){
+        swaggerJson = swaggerApiC;
+    	var typeDefinitions = swaggerJson.definitions[type];
+    	
+    	if(!typeDefinitions)
+    		return "";
+    	var resultHtml = type +": {";
+    	resultHtml+=htmlBR;
+    	var propertiesRefType = [];
+    	for(var key in typeDefinitions.properties){
+    		
+    		var properties = typeDefinitions.properties[key];
+    		resultHtml += key + ": ";
+    		if(properties["type"] == "array"){
+    			
+    			resultHtml += "[数组]";
+    			properties = properties["items"];
+    		}
+    		var propertiesType = properties["type"] ? properties["type"] : properties["$ref"];
+    		
+    		
+    		if(!properties["type"] && properties["$ref"]){
+    			var refType = properties["$ref"].substring("#/definitions/".length);
+    			resultHtml += refType;
+    			propertiesRefType.push(refType);
+    		} else {
+    			
+    			resultHtml += propertiesType;
+    		}
+    		if(typeDefinitions.properties[key]["description"]){
+    			
+    			resultHtml += " ---"+typeDefinitions.properties[key]["description"] ;
+    		}
+    		resultHtml+=htmlBR;
+    	}
+    	resultHtml+=("} "+htmlBR);
+    	for(var i=0;i<propertiesRefType.length;i++){
+    		resultHtml+= buildTypeHtml(propertiesRefType[i],swaggerJson);
+    	}
+    	return resultHtml;
+    }
+
+</script>
+</body>
+</html>

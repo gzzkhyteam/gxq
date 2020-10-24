@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/qualityControl.css"/>
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/bootstrap/3.3.6/bootstrap.min.js"></script>
+    <script src="${_static}/js/lib/bootstrap/3.3.6/bootstrap-table.js"></script>
+    <script src="${_static}/js/lib/bootstrap/3.3.6/bootstrap-table-zh-CN.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="panel panel-default marginTop">
+            <div class="panel-body">
+                <form class="form-inline">
+                    <div class="form-group clearfix">
+                        <label for="unitName">企业名称：</label>
+                        <input type="text" class="form-control input-sm" id="unitName" placeholder="">
+                    </div>
+                    <div class="form-group clearfix">
+                        <label for="creditCode">统一信用代码：</label>
+                        <input type="email" class="form-control input-sm" id="creditCode" placeholder="">
+                    </div>
+                    <div class="form-group clearfix">
+                        <label for="legalRepresentative">法定代表人：</label>
+                        <input type="email" class="form-control input-sm" id="legalRepresentative" placeholder="">
+                    </div>
+                    <button type="button" class="btn btn-success btn-sm" onclick="into()"><i class="glyphicon glyphicon-search left"></i>搜索</button>
+                    <button type="button" class="btn btn-warning btn-sm" onclick="refreshFun()"><i class="glyphicon glyphicon-refresh left"></i>重置</button>
+                </form>
+            </div>
+        </div>
+        <div class="panel panel-default marginTop">
+            <div class="panel-body">
+                <table id="mytab" class="table table-bordered"></table>
+            </div>
+        </div>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel">详情</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label>企业名称</label>
+                                        <span id="companyName"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group clearfix">
+                                        <label>法定代表人</label>
+                                        <span id="legalRepresentative1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label>工商注册号</label>
+                                        <span id="registerNoView"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group clearfix">
+                                        <label>成立日期</label>
+                                        <span id="registerTime"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label>组织机构代码</label>
+                                        <span id="organizationCode"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group clearfix">
+                                        <label>统一信用代码</label>
+                                        <span id="creditCodeView"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label>经营起止日期</label>
+                                        <span id="businessTerm"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group clearfix">
+                                        <label>经营状态</label>
+                                        <span id="statusKeyword"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label>注册资本（万元）</label>
+                                        <span id="registerCapital"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group clearfix">
+                                        <label>资金单位（标准）</label>
+                                        <span id="registerCapitalUnit"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label>企业类型</label>
+                                        <span id="companyType"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group clearfix">
+                                        <label>行业</label>
+                                        <span id="industryType"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label>邮箱</label>
+                                        <span id="email"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group clearfix">
+                                        <label>电话</label>
+                                        <span id="tel"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label>网址</label>
+                                        <span id="website"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group clearfix">
+                                        <label>核准日期</label>
+                                        <span id="approveDate"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group clearfix">
+                                        <label>员工数量</label>
+                                        <span id="staffAmount"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <div class="form-group clearfix">
+                                        <label>办公地址</label>
+                                        <span id="address"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <div class="form-group clearfix">
+                                        <label>注册地址</label>
+                                        <span id="registerAddress"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <div class="form-group clearfix">
+                                        <label>登记机关</label>
+                                        <span id="registerAuthority"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <div class="form-group clearfix">
+                                        <label>企业经营范围</label>
+                                        <span id="businessScope"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    into();
+    function into() {
+        $('#mytab').bootstrapTable('destroy').bootstrapTable({
+            url: '${_gate_url}/api/exchange/p/api/findbusinfo/list',
+            method: "get",
+            queryParams: function (params) {
+                var temp = {
+                    pageSize: params.limit,
+                    pageNo: (params.offset / params.limit) + 1,
+                    unitName: $("#unitName").val(),
+                    creditCode: $("#creditCode").val(),
+                    legalRepresentative: $("#legalRepresentative").val(),
+                };
+                return temp;
+            },
+            responseHandler: function (res) {
+                return {
+                    "total": res.data.total,
+                    "rows": res.data.list
+                };
+            },
+            dataType: "json",
+            toolbar: "#toolbar",
+            sidePagination: "server",
+            striped: false, // 是否显示行间隔色
+            search : false,
+            uniqueId: "id",
+            pageSize: "10",
+            pagination: true, // 是否分页
+            sortable: false, // 是否启用排序
+            showRefresh: true, //是否显示刷新按钮
+            showToggle: true,
+            showColumns: true,
+            rightFixedColumns: true,
+            rightFixedNumber: 0,
+            virtualScroll: true,
+            columns: [
+                {
+                    field: 'investorEnterpriseName',
+                    title: '企业名称',
+                    width: 200,
+                    class: 'colStyle',
+                    formatter: fieldMatter
+                },
+                {
+                    field: 'creditCode',
+                    title: '统一信用代码',
+                    class: 'colStyle',
+                    width: 180,
+                    formatter: fieldMatter
+                },
+                {
+                    field: 'legalRepresentative',
+                    title: '法定代表人',
+                    class: 'colStyle',
+                    width: 90,
+                },
+                {
+                    field: 'industryType',
+                    title: '行业',
+                    class: 'colStyle',
+                    formatter: fieldMatter
+                },
+                {
+                    field: 'companyType',
+                    title: '企业类型',
+                    class: 'colStyle',
+                    formatter: fieldMatter
+                },
+                {
+                    field: 'businessTerm',
+                    title: '营业期限',
+                    class: 'colStyle',
+                    width: 200,
+                },
+                {
+                    field: 'registerTime',
+                    title: '注册时间',
+                    class: 'colStyle',
+                    width: 100,
+                },
+                {
+                    field: 'registerAuthority',
+                    title: '登记机关',
+                    class: 'colStyle',
+                    formatter: fieldMatter
+                },
+                {
+                    field: 'address',
+                    title: '地址',
+                    class: 'colStyle',
+                    formatter: fieldMatter
+                },
+                {
+                    field: 'price',
+                    title: '操作',
+                    width: 80,
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: actionFormatter,
+                }
+            ]
+        });
+    }
+    //操作栏的格式化
+    function actionFormatter(value, row, index) {
+        var id = value;
+        var result = "";
+        result += '<button type="submit" class="btn btn-primary btn-xs borderRadius" data-toggle="modal" data-target="#myModal" onclick="openDetail('+row.id+')" title="详情"><i class="glyphicon glyphicon-eye-open"></i></button>';
+        return result;
+    };
+    // 格式化
+    function fieldMatter(value, row, index) {
+        if (value) {
+            return "<span title="+value+">"+value+"</span>";
+        } else {
+            return "-";
+        }
+    };
+    // 重置
+    function refreshFun() {
+        $("#unitName").val("");
+        $("#creditCode").val("");
+        $("#legalRepresentative").val("");
+        into();
+    }
+    // 查看页面
+    function openDetail(id) {
+        $.ajax({
+            type: "get",
+            url: '${_gate_url}/api/exchange/p/api/findbusinfo/detail?id='+id,
+            success: function (rows) {
+                if (rows.errcode == 0) {
+                    if (rows.data) {
+                        var obj = dealElement(rows.data);
+                        $("#companyName").text(obj.companyName);
+                        $("#legalRepresentative1").text(obj.legalRepresentative);
+                        $("#registerTime").text(obj.registerTime);
+                        $("#organizationCode").text(obj.organizationCode);
+                        $("#creditCodeView").text(obj.creditCodeView);
+                        $("#businessTerm").text(obj.businessTerm);
+                        $("#statusKeyword").text(obj.statusKeyword);
+                        $("#registerCapital").text(obj.registerCapital);
+                        $("#registerCapitalUnit").text(obj.registerCapitalUnit);
+                        $("#companyType").text(obj.companyType);
+                        $("#industryType").text(obj.industryType);
+                        $("#email").text(obj.email);
+                        $("#tel").text(obj.tel);
+                        $("#website").text(obj.website);
+                        $("#approveDate").text(obj.approveDate);
+                        $("#staffAmount").text(obj.staffAmount);
+                        $("#address").text(obj.address);
+                        $("#registerAddress").text(obj.registerAddress);
+                        $("#registerAuthority").text(obj.registerAuthority);
+                        $("#businessScope").text(obj.businessScope);
+                    } else {
+                        $("#companyName").text("");
+                        $("#legalRepresentative1").text("");
+                        $("#registerTime").text("");
+                        $("#organizationCode").text("");
+                        $("#creditCodeView").text("");
+                        $("#businessTerm").text("");
+                        $("#statusKeyword").text("");
+                        $("#registerCapital").text("");
+                        $("#registerCapitalUnit").text("");
+                        $("#companyType").text("");
+                        $("#industryType").text("");
+                        $("#email").text("");
+                        $("#tel").text("");
+                        $("#website").text("");
+                        $("#approveDate").text("");
+                        $("#staffAmount").text("");
+                        $("#address").text("");
+                        $("#registerAddress").text("");
+                        $("#registerAuthority").text("");
+                        $("#businessScope").text("");
+                    }
+                } else {
+                    $("#companyName").text("");
+                    $("#legalRepresentative1").text("");
+                    $("#registerTime").text("");
+                    $("#organizationCode").text("");
+                    $("#creditCodeView").text("");
+                    $("#businessTerm").text("");
+                    $("#statusKeyword").text("");
+                    $("#registerCapital").text("");
+                    $("#registerCapitalUnit").text("");
+                    $("#companyType").text("");
+                    $("#industryType").text("");
+                    $("#email").text("");
+                    $("#tel").text("");
+                    $("#website").text("");
+                    $("#approveDate").text("");
+                    $("#staffAmount").text("");
+                    $("#address").text("");
+                    $("#registerAddress").text("");
+                    $("#registerAuthority").text("");
+                    $("#businessScope").text("");
+                }
+            }
+        });
+    };
+    //格式化返回值
+    function dealElement(obj){
+        if ( obj === null || obj === undefined || obj === "" ) return obj;
+        for ( var key in obj ){
+            if ( obj[key] == null){
+                obj[key]="";
+            }
+        }
+        return obj;
+    };
+</script>
+</html>

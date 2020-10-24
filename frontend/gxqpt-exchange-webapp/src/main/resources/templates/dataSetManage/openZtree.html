@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0"/>
+	    <meta name="renderer" content="webkit"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body class="bgNone">
+		<div class="workspace-body">
+			<div id="console-container" class="clearfix">
+				<div class="col-sm-12">
+					<div class="general_list_main clearfix">
+						<div class="main_bottom col-lg-12 col-sm-12">
+							<div class="view_item">
+								<ul id="ztree" class="ztree"></ul>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.core.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.excheck.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.exedit.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/zTree/js/jquery.ztree.exhide.js" charset="utf-8"></script>
+		<script src="${_static}/js/lib/layer/layer.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+            $(function(){
+                parent.home.updateIformHeight();
+            });
+			var catalogType="${type}";
+			if(catalogType){
+                catalogType=parseInt(catalogType);
+			};
+			var catalogIdsString="${catalogIds}";
+			var objectCatalog;
+            var setting = {
+                view: {
+                    fontCss: getFont,
+                    selectedMulti: false,
+                    showLine: false,
+                    showIcon: false
+                },
+                data: {
+                    key: {
+                        name: 'dirName'
+                    },
+                    simpleData: {
+                        idKey: 'id',
+                        enable: true
+                    }
+                },
+                check: {
+                    enable: true
+                },
+                callback: {
+                    onClick: onClick,
+                    beforeCheck: beforeCheck,
+                },
+            };
+            function getFont(treeId, node) {
+                if(node.setIdType){
+                    return  {'color':'#00FFFF'};
+                };
+            };
+            function onClick(e, treeId, treeNode) {
+                objectCatalog=treeNode;
+                return false;
+            };
+            var beforeCheckVal=false;
+            function beforeCheck(e, treeId, treeNode){
+            	if(!treeId.checked){
+                    var setIdType=treeId.setIdType;
+                    if(setIdType){
+                        layerConfirm(treeId, treeNode);
+                        return false;
+                        /*if(top.layer.confirm('该目录下已绑定数据集，是否确认更改？',{shade: [0.9, '#000']})){
+                            return true;
+                        }else{
+                            return false;
+                        }*/
+                    }else{
+                        return true;
+                    };
+				}
+			};
+            function layerConfirm(treeId, treeNode){
+                top.layer.confirm('该目录下已绑定数据集，是否确认更改？',{shade: [0.7, '#000']}, function(index){
+                    var zTree = $.fn.zTree.getZTreeObj("ztree");
+                    var node = zTree .getNodeByParam("id", treeId.id, null);
+                    zTree.checkNode(node, true, true);
+                    top.layer.close(index);
+                })
+			};
+            getZtree();
+            function getZtree(){
+                ajaxHengyun({
+                    type: 'GET',
+                    url: '${_gate_url}/api/exchange/directory/findDataTypeTree',
+                    data:{dataType: catalogType},
+                    datatype: "json",
+                    success: function (rows) {
+                        if(rows.data){
+                            dataZtree = builderTree(rows.data);
+                            var zNodes =[
+                                { dirName:"数据目录", type:"heelNode", open:true, "nocheck":true,
+                                    children: dataZtree,
+                                },
+                            ];
+                            var ztree = $.fn.zTree.init($("#ztree"), setting, zNodes);
+                            var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                            var nodes = treeObj.getCheckedNodes(true);
+                            if(nodes.length>0){
+                                nodes.forEach(function(value,index){
+									treeObj.expandNode(value, true, true, true);
+                                });
+                            }
+                        }
+                    }
+                });
+            };
+            function builderTree(r){
+
+                if(!r || r.length == 0){
+                    return ;
+                }
+                r.forEach(function (value, index) {
+
+                    var isChildOrg = true;
+                    if(!value.children || value.children.length == 0){
+                        value.children = [];
+                        isChildOrg = false;
+                    };
+                    value.nocheck=true;
+                    if(value.parentId=="-1"){
+                        value.type="unit" ;
+                    }else{
+                        if(value.isBottom=="1"){
+                            value.type="catalog" ;
+                        }else if(value.isBottom=="2"){
+                            value.type="catalog_bottom" ;
+                            value.nocheck=false;
+                        };
+                    };
+                    var ids = [];
+                    if(catalogIdsString){
+                        ids=catalogIdsString.split(",");
+					};
+                    ids.forEach(function(row,num){
+						if(row==value.id){
+						    value.checked=true;
+						}
+					});
+                    if(catalogType && value.dataType!=catalogType  && value.isBottom==2){
+                        value.isHidden = true;
+					}
+                    if(catalogType && value.dataType==catalogType  && value.setId){
+                        // value.isHidden = true;
+						value.setIdType=true;
+					}
+                    value.isParent=true;
+                    if(isChildOrg){
+                        builderTree(value.children);
+                    }
+                    return ;
+                });
+                return r;
+            }
+			function save(index){
+                var treeObj = $.fn.zTree.getZTreeObj("ztree");
+                var nodes = treeObj.getCheckedNodes(true);
+                
+				if(nodes.length<1){
+					parent.layer.msg("请选择目录！",{time:1500});
+				}else{
+				    var catalogId=[];
+				    var catalogName=[];
+				    nodes.forEach(function(value,index){
+                        catalogId.push(value.id);
+                        catalogName.push(value.dirName);
+                    });
+				    parent.home.setCatalog(catalogId,catalogName);
+				    parent.layer.close(index);
+				}
+			}
+		</script>
+	</body>
+</html>

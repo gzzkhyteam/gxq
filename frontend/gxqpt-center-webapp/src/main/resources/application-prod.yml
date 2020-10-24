@@ -1,0 +1,59 @@
+gxqpt:
+  cas-server:
+    ip: ${gxqpt.hostname.nginx}             # SSO CAS 服务的ip
+    port: ${gxqpt.port.nginx}         # SSO CAS 服务的端口
+  port:
+    nginx: 10086
+    sso: 10000
+    gate: 10003
+    eureka: 10030
+  hostname:
+    redis: 192.168.30.165
+    rabbitmq: 192.168.30.165
+    nginx: 127.0.0.1
+    eureka: 192.168.30.89
+    center: 192.168.30.157
+    sso: 192.168.30.157
+    gate: 192.168.30.159
+  variable:
+    gate-url: http://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}
+
+multiplecas:
+  cas-configure:
+    gxqpt:
+      # 其他州公网
+      casServerLoginUrl: http://${gxqpt.cas-server.ip}:${gxqpt.cas-server.port}/gxqpt-sso-webapp/login
+      casServerUrlLogout: http://${gxqpt.cas-server.ip}:${gxqpt.cas-server.port}/gxqpt-sso-webapp/logout
+      defaultSeviceName: http://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path}/admin/index
+      #  校验去单点登录  和 退出走center 内网
+      validationCasServerUrlPrefix: http://${gxqpt.hostname.sso}:${gxqpt.port.sso}/gxqpt-sso-webapp
+      casServerLogoutNotifyUrl: http://${gxqpt.hostname.center}:${server.port}
+    sdzzww: 
+      casServerLoginUrl: http://127.0.0.1:10086/gxqpt-sso-webapp/login
+      casServerUrlLogout: http://127.0.0.1:10086/gxqpt-sso-webapp/logout
+      validationCasServerUrlPrefix: http://127.0.0.1:10086/gxqpt-sso-webapp
+      defaultSeviceName: http://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path}/admin/index
+
+
+
+spring:
+  profiles:
+    active: prod
+  rabbitmq:
+    port: 5672
+    password: gxqpt
+    username: gxqpt
+  redis:
+    port: 16379
+    password: SbtyMveYNfLzTks7H0apCmyStPzWJqjy
+    key-prefix: prod
+    pool:
+      max-active: 100
+      min-idle: 2
+      max-idle: 8
+      max-wait: 100
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/

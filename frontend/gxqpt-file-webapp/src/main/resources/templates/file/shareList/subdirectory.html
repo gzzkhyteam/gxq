@@ -1,0 +1,443 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/module.css">
+</head>
+<body>
+    <div class="workspace-body">
+        <div class="console-container">
+            <div class="row">
+                <!--标题-->
+                <div class="col-sm-12">
+                    <div class="console-title console-title-border clearfix">
+                        <div class="pull-left">
+                            <h5 class="page-title">
+                                云盘管理系统  &gt; <span class="page-title-scend"><a class="link_a" href="javascript:void(0);" onclick="loadAllFile();">我的分享</a></span>  &gt; <span class="subdirectory" data-Id="${id}">${folderName}</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <!--内容-->
+                <div id="cloudDisk" class="col-sm-12">
+                    <div class="list-section">
+                        <form action="" class="form-inline search-form">
+                            <div class="form-field">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        <span class="text-danger"></span>
+                                        <span>搜索：</span>
+                                    </label>
+                                    <div class="form-control-wrap">
+                                        <input name="" class="form-control" placeholder="" id="name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-group">
+                                    <div class="form-control-wrap text-right">
+                                        <button type="button" class="btn btn-primary search-button" onclick="getLike()">
+                                            确定
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pull-right">
+                                <div class="form-field">
+                                    <div class="form-group">
+                                        <div class="form-control-wrap text-right">
+                                            <button type="button" class="btn btn-primary btn-create" onclick="remove('${folderId}')">
+                                                <span class="fa fa-ban"></span> 取消分享
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-download" onclick="downloadPackage()">
+                                                <span class="fa fa-download"></span> 下载
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="list-section">
+                        <div class="list-content">
+                            <div class="form-inline">
+                                <table id="folderList" class="table table-hover">
+                                    <col width="20"></col>
+                                    <col ></col>
+                                    <col width="60"></col>
+                                    <col width="150"></col>
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox" name="" id="checked_all" value="" /></th>
+                                        <th class="text-left">文件名</th>
+                                        <th>大小</th>
+                                        <th>更新日期</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <div class="pagerDiv">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    var secondNav = "";
+    if(sessionStorage.getItem('shareFolderArray')){
+        secondNav = JSON.parse(sessionStorage.getItem('shareFolderArray'));
+    };
+    if(secondNav && secondNav.length!=0){
+        var title = '云盘管理系统  &gt; <span class=\"page-title-scend\"><a class=\"link_a\" href=\"javascript:void(0);\" onclick="loadAllFile();">我的分享</a></span>';
+        secondNav.forEach(function (value, index) {
+            if(index==0){
+                if(value.name!=""){
+                    title+='&gt; ';
+                };
+                title+='<span class="subdirectory" data-Id="'+value.id+'"><a class="link_a" data-index="'+index+'" href="javascript:void(0);" onclick="loadFristFile(this);">'+value.name+'</a></span>';
+            }else if(index==secondNav.length){
+                title+='&gt; ';
+                title+='<span class="subdirectory" data-Id="'+value.id+'">'+value.name+'</span>';
+            }else{
+                title+='&gt; ';
+                title+='<span class="subdirectory" data-Id="'+value.id+'"><a class="link_a" data-index="'+index+'" href="javascript:void(0);" onclick="loadFile(this);">'+value.name+'</a></span>';
+            };
+        });
+        title+='&gt; ';
+        title+='<span class="subdirectory" data-Id="${id}">${folderName}</span>';
+        $(".page-title").html(title);
+    };
+    var id="${id}";
+    var parm = {
+        data: {id: id, name: ''},
+        pageNo: 1,
+        pageSize: '20',
+    };
+    var ids = new Array();
+    var dirArray = new Array();
+    getList(parm);
+    $(function(){
+        /* 选中当前行 */
+        $("body").on("click","#folderList tbody tr td",function(){
+            var choeckbox_int = $(this).find(".checkbox_int");
+            if($(choeckbox_int).length==0){
+                var choeckbox_set = $(this).parent().find(".checkbox_int");
+                var checked = $(choeckbox_set).prop("checked");
+                if(checked){
+                    $(choeckbox_set).removeProp("checked");
+                    $("#checked_all").removeProp("checked");
+                    var ret = jQuery.inArray($(choeckbox_set).attr("id"),ids);
+                    ids.splice(ret,1);
+                    var ret = jQuery.inArray($(choeckbox_set).attr("id"),dirArray);
+                    dirArray.splice(ret,1);
+                }else{
+                    $(choeckbox_set).prop("checked",true);
+                    var num=0;
+                    var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+                    $(choeckbox_list).each(function(index,element){
+                        var checked = $(element).prop("checked");
+                        if(checked){
+                            num+=1;
+                        }
+                    });
+                    if(num==$("#folderList tbody tr td .checkbox_int").length){
+                        $("#checked_all").prop("checked",true);
+                    };
+                    ids.push($(choeckbox_set).attr("id"));
+                    var dataType = $(choeckbox_set).attr("data-datatype");
+                    if(dataType=="DIR"){
+                        dirArray.push($(choeckbox_set).attr("id"));
+                    }
+                }
+            }
+        });
+        $("body").on("click",".checkbox_int",function (){
+            var num=0;
+            var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+            if($(this).prop("checked")){
+                ids.push($(this).attr("id"));
+                var dataType = $(this).attr("data-datatype");
+                if(dataType=="DIR"){
+                    dirArray.push($(this).attr("id"));
+                }
+            }else{
+                var ret = jQuery.inArray($(this).attr("id"),ids);
+                ids.splice(ret,1);
+                var ret = jQuery.inArray($(this).attr("id"),dirArray);
+                dirArray.splice(ret,1);
+            }
+            $(choeckbox_list).each(function(index,element){
+                var checked = $(element).prop("checked");
+                if(checked){
+                    num+=1;
+                }
+            });
+            if(num==$("#folderList tbody tr td .checkbox_int").length){
+                $("#checked_all").prop("checked",true);
+            }else{
+                $("#checked_all").removeProp("checked");
+            }
+        });
+        /* 全选 */
+        $("body").on("click","#checked_all",function (){
+            var num=0;
+            var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+            $(choeckbox_list).each(function(index,element){
+                var checked = $(element).prop("checked");
+                if(checked){
+                    num+=1;
+                }
+            });
+            if(num!=$("#folderList tbody tr td .checkbox_int").length){
+                $(choeckbox_list).each(function(index,element){
+                    $(element).prop("checked",true);
+                    ids.push($(element).attr("id"));
+                    var dataType = $(element).attr("data-datatype");
+                    if(dataType=="DIR"){
+                        dirArray.push($(element).attr("id"));
+                    }
+                });
+            }else{
+                $(choeckbox_list).each(function(index,element){
+                    $(element).removeProp("checked");
+                    var ret = jQuery.inArray($(element).attr("id"),ids);
+                    ids.splice(ret,1);
+                    var ret = jQuery.inArray($(element).attr("id"),dirArray);
+                    dirArray.splice(ret,1);
+                });
+            }
+        });
+        /* 进入下级目录 */
+        $("body").on("click","span.folderName i",function (e){
+            e.stopPropagation();
+            var folderIdElement = $(this).parent().parent().parent().find(".checkbox_int");
+            var dataType =  $(folderIdElement).attr('data-dataType');
+            if (dataType!="DIR"){
+                return false;
+            };
+            var array = [];
+            var subdirectory = $(".subdirectory");
+            if(subdirectory.length!=0){
+                subdirectory.each(function (index,value) {
+                    var id=$(value).attr("data-Id");
+                    var txt=$(value).text();
+                    var subdirectoryObject={
+                        'id':id,
+                        'name':txt
+                    };
+                    array.push(subdirectoryObject);
+                });
+            };
+            sessionStorage.setItem('shareFolderArray',JSON.stringify(array));
+            var id = $(folderIdElement).attr('id');
+            window.location.href="${_cp}/file/shareSubdirectory?id="+id+"&folderId="+'${folderId}'+"&folderName="+$(this).text();
+        });
+        /* 下载 */
+        $("body").on("click",".tooltip_span i.downLoad",function (e){
+            e.stopPropagation();
+            var idElement = $(this).parent().parent().parent().find(".checkbox_int");
+            var url = $(idElement).attr('data-url');
+            var folderMameElement = $(this).parent().parent().find(".folderName");
+            var folderName = $(folderMameElement).text();
+            var dataType =  $(idElement).attr('data-dataType');
+            if (dataType!="DIR"){
+                downLoadFolder(url,folderName);
+            }else{
+                parent.layer.msg("不支持文件夹下载！");
+            };
+        });
+    });
+    function getList(parm){
+        ajaxHengyun({
+            type:"POST",
+
+            
+            url: "${_gate_url}/api/file/share/findTree",
+            data:JSON.stringify(parm),
+            datatype: "json",//必须添加，所有地方都一样
+            contentType : 'application/json',   //必须添加，所有地方都一样
+            success:function(rows){
+                if (rows.data){
+                    if (rows.data) {
+                        if (rows.data.list) {
+                            fileList(rows.data.list);
+                        }else{
+                            fileList([]);
+                        }
+                        pagerList(rows.data);
+                    }
+                }
+            }
+        });
+    }
+    function getLike(){
+        var name = $("#name").val();
+        var data = {
+            data:{id:id,name:name},
+            pageNo: 1,
+            pageSize: '20',
+        };
+        getList(data);
+    }
+    function fileList(rows){
+        var html="";
+        if(rows.length!=0){
+            rows.forEach(function(value, index){
+                html+='<tr>';
+                if(ids.length!=0){
+                    var ret;
+                    ids.forEach(function (idsRow, index) {
+                        ret = jQuery.inArray(value.id.toString(),ids);
+                    });
+                    if(ret>=0){
+                        html+='<td><input type="checkbox" name="" id="'+value.id+'" data-dataType="'+value.dataType+'" data-url="'+value.url+'" class="checkbox_int" value="'+value.folderId+'" checked/></td>';
+                    }else{
+                        html+='<td><input type="checkbox" name="" id="'+value.id+'" data-dataType="'+value.dataType+'" data-url="'+value.url+'" class="checkbox_int" value="'+value.folderId+'" /></td>';
+                    }
+                }else{
+                    html+='<td><input type="checkbox" name="" id="'+value.id+'" data-dataType="'+value.dataType+'" data-url="'+value.url+'" class="checkbox_int" value="'+value.folderId+'" /></td>';
+                }
+                html+='<td class="text-left"><i class="fa '+ value.icon +'"></i> <span class="folderName"><i>';
+                if(value.submittedFileName){
+                    html+=value.submittedFileName;
+                }else{
+                    html+=value.filename;
+                }
+                html+='</i></span><span class="pull-right tooltip_span"><i class="fa fa-download downLoad" title="下载"></i></span></td>';
+                if(value.size){
+                    var size = fomatFloat(value.size / 1024, 2);
+                    if (size > 921.6) {
+                        size = fomatFloat(size / 1024, 2);
+                        if (size > 921.6) {
+                            size = fomatFloat(size / 1024, 2) + "G";
+                        } else {
+                            size = size + "M";
+                        }
+                    } else {
+                        size = size + "KB";
+                    }
+                    html+='<td>'+size+'</td>';
+                }else {
+                    html+='<td>—</td>';
+                }
+                var date= new Date(value.updateTime);
+                var updateIime= date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+                html+='<td>'+updateIime+'</td>';
+                html+='</tr>';
+            });
+        }else{
+            html+='<tr>';
+            html+='<td colspan="4" class="tip_td">您还没分享过文件哦</td>';
+            html+='</tr>';
+        }
+        $("#folderList tbody").html(html);
+    }
+    /* 取消分享方法 */
+    function remove(id){
+        var ids = new Array();
+        ids.push(id);
+        parent.layer.open({
+            type: 1,
+            title: '确认取消分享',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['410px', '136px'],
+            content: "取消分享后，该条分享记录将被删除，你确认要取消分享吗？",
+            btn: ['<span class="glyphicon glyphicon-ok"></span>确定','<span class="glyphicon glyphicon-remove"></span>取消'],
+            yes: function (index, layero) {
+                ajaxHengyun({
+                    type:"POST",
+
+                    
+                    dataType: 'json',
+                    url: "${_gate_url}/api/file/share/delete",
+                    data:{ids:ids},
+                    success:function(rows){
+                        if (rows.data){
+                            loadAllFile();
+                            parent.layer.closeAll();
+                        }else{
+                            parent.layer.closeAll();
+                            parent.layer.msg("取消分享出错，请稍后重试！");
+                        }
+                    }
+                });
+            }
+        });
+    }
+    /* 跳转全部分件 */
+    function loadAllFile(){
+        window.location.href="${_cp}/file/shareList";
+    };
+    /* 跳转到指定文件夹 */
+    function loadFile(element){
+        var folderIdElement = $(element).parent();
+        var id = $(folderIdElement).attr('data-Id');
+        var folderName = $(element).text();
+        var array = [];
+        var subdirectory = $(".subdirectory");
+        var indexElement = $(element).attr("data-index");
+        if(subdirectory.length!=0){
+            subdirectory.each(function (index,value) {
+                var id=$(value).attr("data-Id");
+                var txt=$(value).text();
+                var subdirectoryObject={
+                    'id':id,
+                    'name':txt
+                };
+                if(index<indexElement){
+                    array.push(subdirectoryObject);
+                };
+            });
+        };
+        sessionStorage.setItem('shareFolderArray',JSON.stringify(array));
+        window.location.href="${_cp}/file/shareSubdirectory?id="+id+"&folderId="+'${folderId}'+"&folderName="+folderName;
+    };
+    /* 跳转到指定文件夹 */
+    function loadFristFile(element){
+        var folderIdElement = $(element).parent();
+        var folderId = $(folderIdElement).attr('data-Id');
+        var folderName = $(element).text();
+        sessionStorage.setItem('shareFolderArray',[]);
+        window.location.href="${_cp}/file/shareView?id="+folderId+"&folderName="+folderName;
+    };
+    /* 下载文件 */
+    function downLoadFolder(url,filename){
+        var urlDownload="${_gate_url}/api/file/file/download?url="+url+"&filename="+filename;
+        window.open(urlDownload);
+    }
+    /* 批量下载文件 */
+    function downloadPackage(){
+        if(dirArray.length!=0){
+            parent.layer.msg("不支持文件夹下载！");
+            return false;
+        }
+        if(ids.length==0){
+            parent.layer.msg("请选择需要下载的文件！");
+            return false;
+        }else{
+            var urlDownload="${_gate_url}/api/file/file/downloadpackage?ids[]="+ids;
+            window.open(urlDownload);
+        };
+    };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css" href="${_css}/reset.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css"  href="${_lib}/jquery-step/jquery.step.css">
+
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=0.1">
+
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="${_lib }/ValidateForm/Validform.css">
+
+    <!-- begin 自定义样式 -->
+    <link rel="stylesheet" href="${_css}/viewCss/workapprove/create.css">
+    <!-- end   自定义样式 -->
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>新增审批</h5>
+                    </div>
+                </div>
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset class="form-inline">
+                                <div class="col-sm-12">
+                                    <div class=" form-field">
+                                        <div class="form-group">
+                                            <div class="form-control-wrap spans" id="typeCheck">
+                                                <label class="control-label">
+                                                    <span class="text-danger"></span>
+                                                    <span>选择审批类型</span>
+                                                    <span>：</span>
+                                                </label>
+                                                <label class="control-label w0">
+                                                    <input
+                                                        type="radio"
+                                                        name="aprType"
+                                                        class="radioInput"
+                                                        value="overtime"
+                                                        checked />
+                                                    加班审批
+                                                </label>
+                                                <label class="control-label w0">
+                                                    <input
+                                                        type="radio"
+                                                        name="aprType"
+                                                        class="radioInput"
+                                                        value="leave" />
+                                                    请假审批
+                                                </label>
+                                                <label class="control-label w0">
+                                                    <input 
+                                                        type="radio"
+                                                        name="aprType"
+                                                        class="radioInput"
+                                                        value="business" />
+                                                    出差审批
+                                                </label>
+                                                <label class="control-label w0">
+                                                    <input
+                                                        type="radio"
+                                                        name="aprType"
+                                                        class="radioInput"
+                                                        value="outside" />
+                                                    外勤审批
+                                                </label>
+                                                <label class="control-label w0">
+                                                    <input
+                                                        type="radio"
+                                                        name="aprType"
+                                                        class="radioInput"
+                                                        value="supply" />
+                                                    补签审批
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="form-inline" id="formData">
+                                <!-- 加班 -->
+                                <form id="overtime" class="dataForm">
+                                    <div class="jiaban">
+                                        <fieldset class="div1">
+                                            <div class="col-sm-12">
+                                                <div class="form-field" style="margin: 0">
+                                                    <div class="form-group" style="margin: 0;">
+                                                        <label class="control-label w84" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>加班日期</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input
+                                                                id="startTime0"
+                                                                class="form-control Wdate"
+                                                                style="width: 205px;"
+                                                                name="startTime"
+                                                                dataType="*"
+                                                                nullmsg="请填写开始时间"
+                                                                errormsg="请填写开始时间"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span>至</span>
+                                                        </label>
+                                                        <input id="endTime0" class="form-control Wdate"
+                                                               style="width: 205px;"
+                                                               name="endTime" dataType="*" nullmsg="请填写结束时间"
+                                                               errormsg="请填写结束时间"/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <p>共约<span id="time0">0</span>小时</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <!-- <span class="text-danger">*</span> -->
+                                                            <span>加班内容</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <textarea
+                                                                id="extraContent"
+                                                                class="form-control"
+                                                                style="width: 430px;"
+                                                                name="content"
+                                                                rows="5"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </form>
+                                <!-- 请假 -->
+                                <form id="leave" class="dataForm none">
+                                    <div class="qingjia">
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>请假类型</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <select id="leaveType" name="leaveType" class="form-control" style="width: 198px;" datatype="*" nullmsg="请填写请假类型" errormsg="请填写请假类型">
+                                                                <option value="">请选择请假类型</option>
+                                                                <option value="leave">事假</option>
+                                                                <option value="sick">病假</option>
+                                                                <option value="year">年休假</option>
+                                                                <option value="relatives">探亲假</option>
+                                                                <option value="marriage">婚假</option>
+                                                                <option value="maternity">产假</option>
+                                                                <option value="funeral">丧假</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label"
+                                                               style="width: 110px;margin-left: -25px;" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>请假起始时间</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input
+                                                                id="startTime"
+                                                                class="form-control Wdate"
+                                                                style="width: 198px;"
+                                                                name="startTime"
+                                                                dataType="*"
+                                                                nullmsg="请填写开始时间"
+                                                                errormsg="请填写开始时间"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label" style="width:110px;">
+                                                            <span>请假截止时间</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input
+                                                                id="endTime"
+                                                                class="form-control Wdate"
+                                                                style="width: 198px;"
+                                                                name="endTime"
+                                                                dataType="*"
+                                                                nullmsg="请填写结束时间"
+                                                                errormsg="请填写结束时间"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <p>共约<span id="time">0</span>小时</p>
+                                                </div>
+                                                <fieldset>
+                                                    <div class="form-field">
+                                                        <div class="form-group">
+                                                            <label class="control-label w84">
+                                                                <span>请假事由</span>
+                                                                <span>：</span>
+                                                            </label>
+                                                            <div class="form-control-wrap">
+                                                                <textarea
+                                                                    class="form-control"
+                                                                    style="width: 533px;"
+                                                                    id="leaveReason"
+                                                                    name="leaveReason"
+                                                                    rows="5" cols=""></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </form>
+                                <!-- 出差 -->
+                                <form id="business" class="dataForm none">
+                                    <div class="chuchai">
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>出差类型</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <select
+                                                                id="businessType"
+                                                                name="leaveType"
+                                                                class="form-control"
+                                                                dataType="*"
+                                                                nullmsg="请选择出差类型"
+                                                                errormsg="请选择出差类型"
+                                                                style="width:153px;">
+                                                                <option value="">请选择出差类型</option>
+                                                                <option value="train">外出培训</option>
+                                                                <option value="official">公务出差</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>出差地点</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <select
+                                                            id="province"
+                                                            name="province"
+                                                            class="form-control"
+                                                            dataType="*"
+                                                            nullmsg="请选择省份"
+                                                            errormsg="请选择省份"
+                                                            style="width:153px;">
+                                                        </select>
+                                                        <select
+                                                            id="city"
+                                                            name="city"
+                                                            class="form-control"
+                                                            dataType="*"
+                                                            nullmsg="请选择市"
+                                                            errormsg="请选择市"
+                                                            style="width:153px;">
+                                                        </select>
+                                                        <div class="form-control-wrap">
+                                                            <input
+                                                                class="form-control "
+                                                                id="address"
+                                                                name="address"
+                                                                dataType="*"
+                                                                nullmsg="请填写详细出差地点"
+                                                                errormsg="请填写详细出差地点"
+                                                                style="width: 292px;"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>交通工具</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input
+                                                                class="form-control "
+                                                                id="vehicle"
+                                                                name="vehicle"
+                                                                dataType="*"
+                                                                nullmsg="请填写交通工具"
+                                                                errormsg="请填写交通工具"
+                                                                style="width: 429px;"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger"></span>
+                                                            <span>随行人员</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input
+                                                                class="form-control "
+                                                                id="entourage"
+                                                                name="entourage"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84" >
+                                                            <span class="text-danger"></span>
+                                                            <span>联系电话</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input
+                                                                class="form-control "
+                                                                id="entouragePhone"
+                                                                name="entouragePhone"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field" style="margin: 0">
+                                                    <div class="form-group" style="margin: 0;">
+                                                        <label class="control-label w84" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>出差时间</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input
+                                                                id="startTime1"
+                                                                class="form-control Wdate"
+                                                                style="width: 205px;"
+                                                                name="startTime"
+                                                                dataType="*"
+                                                                nullmsg="请填写开始时间"
+                                                                errormsg="请填写开始时间"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span>至</span>
+                                                        </label>
+                                                        <input id="endTime1" class="form-control Wdate"
+                                                               style="width: 205px;"
+                                                               name="endTime" dataType="*" nullmsg="请填写结束时间"
+                                                               errormsg="请填写结束时间"/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <p>共约<span id="time1">0</span>小时</p>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="div1">
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <!-- <span class="text-danger">*</span> -->
+                                                            <span>出差事由</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                        <textarea
+                                                            class="form-control"
+                                                            style="width: 430px;"
+                                                            id="businessReason"
+                                                            name="businessReason"
+                                                            rows="5"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </form>
+                                <!-- 外勤 -->
+                                <form id="outside" class="dataForm none">
+                                    <div class="putong">
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field" style="margin: 0">
+                                                    <div class="form-group" style="margin: 0;">
+                                                        <label class="control-label w84" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>外勤时间</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input
+                                                                id="startTime2"
+                                                                class="form-control Wdate"
+                                                                style="width: 205px;"
+                                                                name="startTime"
+                                                                dataType="*"
+                                                                nullmsg="请填写开始时间"
+                                                                errormsg="请填写开始时间"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <span>至</span>
+                                                        </label>
+                                                        <input
+                                                            id="endTime2"
+                                                            class="form-control Wdate"
+                                                            style="width: 205px;"
+                                                            name="endTime"
+                                                            dataType="*"
+                                                            nullmsg="请填写结束时间"
+                                                            errormsg="请填写结束时间"/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <p>共约<span id="time2">0</span>小时</p>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="div1">
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <!-- <span class="text-danger">*</span> -->
+                                                            <span>外勤内容</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <textarea
+                                                                class="form-control"
+                                                                style="width: 430px;"
+                                                                id="description"
+                                                                name="description"
+                                                                rows="5"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </form>
+                                <!-- 补签 -->
+                                <form id="supply" class="dataForm none">
+                                    <div class="putong">
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84" >
+                                                            <span class="text-danger">*</span>
+                                                            <span>补签类型</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <select
+                                                                id="supplyType"
+                                                                name="supplyType"
+                                                                class="form-control"
+                                                                dataType="*"
+                                                                nullmsg="请选择补签类型"
+                                                                errormsg="请选择补签类型"
+                                                                style="width:153px;">
+                                                                <option value="">请选择补签类型</option>
+                                                                <option value="1">签到</option>
+                                                                <option value="2">签退</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <div class="col-sm-12">
+                                                <div class="form-field" style="margin: 0;">
+                                                    <div class="form-group" style="margin: 0">
+                                                        <label class="control-label w84" for="">
+                                                            <span class="text-danger">*</span>
+                                                            <span>补签日期</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input
+                                                                id="buqianTime"
+                                                                name="date"
+                                                                class="form-control Wdate"
+                                                                style="width: 205px;"
+                                                                dataType="*"
+                                                                nullmsg="请填写补签日期"
+                                                                errormsg="请填写正确的补签日期"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="div1">
+                                            <div class="col-sm-12">
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span>补签理由</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <textarea
+                                                                class="form-control"
+                                                                style="width: 430px;"
+                                                                id="ordinaryContent"
+                                                                name="reason"
+                                                                rows="5"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </form>
+                                <form id="commonData">
+                                    <fieldset>
+                                        <div class="col-sm-12">
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w84">
+                                                        <span class="text-danger">*</span>
+                                                        <span>审批人</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap input-group">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control imgs"
+                                                            id="addPerson_ptspEmpName"
+                                                            name="addPerson_ptspEmpName"
+                                                            dataType="*"
+                                                            nullmsg="请选择审批人"
+                                                            errormsg="请选择审批人">
+                                                        <div class="people-container"></div>
+                                                        <span class="input-group-btn" id="addPerson_ptsp">
+                                                            <button class="btn btn-primary" type="button">
+                                                                <span class="glyphicon glyphicon-plus"></span>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <div class="col-sm-12">
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w84">
+                                                        <span class="text-danger"></span>
+                                                        <span>抄送范围</span>
+                                                        <span>：</span>
+                                                    </label>
+                                                    <div id="addPerson_ptcs" class="form-control-wrap input-group">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control imgs"
+                                                            id="addPerson_ptcsEmpName"
+                                                            name="addPerson_ptcsEmpName"
+                                                            style="width: 384px;" />
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-primary" type="button">
+                                                                <span class="glyphicon glyphicon-plus"></span>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                                <div class="col-sm-12">
+                                    <label class="control-label w84 pull-left" style="margin-top: 12px">
+                                        <span class="text-danger"></span>
+                                        <span>附件上传</span>
+                                        <span>：</span>
+                                    </label>
+                                    <div id="wrapper" class="pull-left"
+                                         style="margin:0;width:calc(100%  - 153px);">
+                                        <div style="margin: 0;padding: 0;">
+                                            <div id="filePicker" class="filePicker"></div>
+                                            <div id="uploader" class="uploader hidden">
+                                                <div class="queueList">
+                                                    <ul id="file_html" class="filelist">
+                                                        <li>还未选择文件</li>
+                                                    </ul>
+                                                    <div id="dndArea" class="placeholder dndArea" style="padding-top: 0px;">
+                                                        <p></p>
+                                                    </div>
+                                                </div>
+                                                <div id="jxButton" class="jxButton"></div>
+                                                <div id="uploadBtn" class="uploadBtn"></div>
+                                                <div class="statusBar" style="display:none;">
+                                                    <div class="progress">
+                                                        <span class="text">0%</span> <span class="percentage"></span>
+                                                    </div>
+                                                    <div class="info"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 20px;" class="clearfix"></div>
+                                <div class="text-center">
+                                    <button id="saveForm" class="btn btn-primary btn-submit" type="button">提交</button>
+                                    <a href="list" class="btn btn-primary btn-submit" target="home">
+                                        返回
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end 页面内容主体 -->
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--begin 外部JS引入 -->
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+    var _cp = "${_cp}";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+<script type="text/javascript" src="${_lib}/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/Valid.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_lib}/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_lib}/webuploader/HYUpload.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js?v=1.0.0"></script>
+<!--end 外部JS引入 -->
+
+<!--begin 自定义JS -->
+<script type="text/javascript" src="${_js}/viewJs/workapprove/create.js?v=1"></script>
+<!--end 自定义JS -->
+
+
+</body>
+</html>

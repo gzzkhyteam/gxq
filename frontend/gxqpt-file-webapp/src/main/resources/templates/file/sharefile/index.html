@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <!-- 外部CSS引入 -->
+    <link type="text/css" rel="stylesheet"
+          href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+
+    <!--<link rel="stylesheet" type="text/css" href="${_static}/js/lib/metisMenu/metisMenu.min.css">-->
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/sidenav.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/libAnimation.css">
+
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/tipsy/tipsy.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_static}/js/lib/chosen/chosen.min.css">
+
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=1.0.0">
+    <link rel="stylesheet" href="${_static}/css/app.css?v=1.0.0">
+    <link rel="icon" href="" type="image/x-icon"/>
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/module.css">
+    <style type="text/css">
+        .index-top {
+            position: static;
+        }
+
+        .layui-layer-iframe .layui-layer-btn, .layui-layer-page .layui-layer-btn {
+            background-color: #0088b6;
+            padding-top: 0;
+            padding: 6px 0;
+        }
+        .layui-layer .layui-layer-title{
+            background-color: #0088b6;
+            color: #fff;
+        }
+        .layui-layer .layui-layer-content{
+            padding: 6px 16px;
+            text-align: left;
+            font-size: 14px;
+            line-height: 36px;
+        }
+        .navbar-ctrl {
+            margin-left: -35px;
+            margin-top: 10px;
+        }
+
+        .navbar-ctrl div {
+            width: 120px;
+            height: 30px;
+            line-height: 30px;
+            background: #09c;
+            text-align: center;
+        }
+
+        .navbar-ctrl div:hover {
+            background: #067DA5;
+        }
+
+        .navbar-ctrl a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .img_text {
+            display: inline-block;
+            width: 23px;
+            height: 23px;
+            border-radius: 100%;
+            background: #ff3333;
+            text-align: center;
+            line-height: 23px;
+            position: absolute;
+            left: 32px;
+            top: -3px;
+            font-size: 10px;
+        }
+    </style>
+    <title>云盘管理系统</title>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"></script>
+</head>
+<body>
+<div class="view-framework">
+    <!-- begin 顶部 -->
+    <div class="index-top">
+        <!-- begin logo -->
+        <div class="index-logo">
+            <img alt="" src="${_static}/images/icon/y_logo.png" style="margin-top: 8px;">
+        </div>
+        <!-- end logo -->
+    </div>
+    <!-- end 顶部 -->
+    <!-- begin 主体 -->
+    <div class="">
+        <div class="console-container">
+            <div class="row">
+                <!--标题-->
+                <div class="col-sm-12">
+                    <div class="console-title console-title-border clearfix">
+                        <div class="pull-left">
+                            <h5 class="page-title">
+                                云盘管理系统 &gt; <span class="page-title-scend">全部文件</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <!--内容-->
+                <div id="cloudDisk" class="col-sm-12">
+                    <div class="list-section">
+                        <form action="" class="form-inline search-form" autocomplete="off">
+                            <div class="form-field">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        <span class="text-danger"></span>
+                                        <span>搜索：</span>
+                                    </label>
+                                    <div class="form-control-wrap">
+                                        <input id="name" name="" class="form-control" placeholder=""/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-group">
+                                    <div class="form-control-wrap text-right">
+                                        <button type="button" class="btn btn-primary search-button" onclick="getLike()">
+                                            确定
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pull-right">
+                                <div class="form-field">
+                                    <div class="form-group">
+                                        <div class="form-control-wrap text-right">
+                                            <!--<button type="button" class="btn btn-primary btn-create" onclick="remove('${id}')">-->
+                                            <!--<span class="fa fa-ban"></span> 取消分享-->
+                                            <!--</button>-->
+                                            <button type="button" class="btn btn-primary btn-download"
+                                                    onclick="downloadPackage()">
+                                                <span class="fa fa-download"></span> 下载
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="list-section">
+                        <div class="list-content">
+                            <div class="form-inline">
+                                <table id="folderList" class="table table-hover">
+                                    <col width="20"></col>
+                                    <col></col>
+                                    <col width="60"></col>
+                                    <col width="150"></col>
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox" name="" id="checked_all" value=""/></th>
+                                        <th class="text-left">文件名</th>
+                                        <th>大小</th>
+                                        <th>更新日期</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <div class="pagerDiv">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end 主体 -->
+</div>
+
+<!-- 外部JS引入 -->
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<!-- 自定义JS -->
+<script type="text/javascript">
+    sessionStorage.setItem('shareArray', "");
+    var token = '';
+    var id = "${id}";
+    var _user_id = $.cookie("_user_id");
+    var _user_name = encodeURIComponent($.cookie("_user_name"));
+    var parm = {
+        data: {id: id, name: ''},
+        pageNo: 1,
+        pageSize: '20',
+    };
+    $(function () {
+        /* 判断该分享是否过期以及加密 */
+        $.ajax({
+            type: "GET",
+            async: false,
+            headers: {"token": token, "_isAdmin": true, "_user_id": _user_id, "_user_name": _user_name},
+            url: "${_gate_url}/api/file/share/url/ispassword",
+            data: {id: id},
+            dataType: 'json',
+            success: function (rows) {
+                if (rows.data) {
+                    if (rows.data.timeTag) {//未过期
+                        if (rows.data.passwordTag == false) {//未加密，加载数据
+                            getList(parm);
+                        } else {//加密，弹出输入密码框
+                            var sharePassword = getCookie("share" + id);//获取cookie
+                            if (sharePassword) {
+                                getList(parm);
+                            } else {
+                                parent.layer.open({
+                                    id: 'rename',
+                                    type: 2,
+                                    anim: 6,
+                                    closeBtn: 0,
+                                    shade: 0.8,
+                                    title: rows.data.adminName + '分享了加密文件',
+                                    maxmin: false, //开启最大化最小化按钮
+                                    area: ['500px', '210px'],
+                                    content: "${_cp}/no/sharefile/passwordTag?id=" + id,
+                                    btn: ['<span class="glyphicon glyphicon-ok"></span>提取文件'],
+                                    yes: function (index, layero) {
+                                        var html = layero.context;
+                                        var Id = html.getElementById("rename");
+                                        var iframe = $(Id).find("iframe").attr("name");
+                                        var rowData = parent[iframe].save();
+                                    }
+                                });
+                            }
+                        }
+                    } else {//分享已过期
+                        var html = "";
+                        html += '<tr>';
+                        html += '<td colspan="8" class="tip_td">该分享文件已过期!</td>';
+                        html += '</tr>';
+                        $("#checked_all").removeAttr("checked");
+                        $("#folderList tbody").html(html);
+                    }
+                }
+            }
+        });
+        /* 选中当前行 */
+        $("body").on("click", "#folderList tbody tr td", function () {
+            var choeckbox_int = $(this).find(".checkbox_int");
+            if ($(choeckbox_int).length == 0) {
+                var choeckbox_set = $(this).parent().find(".checkbox_int");
+                var checked = $(choeckbox_set).prop("checked");
+                if (checked) {
+                    $(choeckbox_set).removeProp("checked");
+                    $("#checked_all").removeProp("checked");
+                } else {
+                    $(choeckbox_set).prop("checked", true);
+                    var num = 0;
+                    var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+                    $(choeckbox_list).each(function (index, element) {
+                        var checked = $(element).prop("checked");
+                        if (checked) {
+                            num += 1;
+                        }
+                    });
+                    if (num == $("#folderList tbody tr td .checkbox_int").length) {
+                        $("#checked_all").prop("checked", true);
+                    }
+                }
+            }
+        });
+        $("body").on("click", ".checkbox_int", function () {
+            var num = 0;
+            var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+            $(choeckbox_list).each(function (index, element) {
+                var checked = $(element).prop("checked");
+                if (checked) {
+                    num += 1;
+                }
+            });
+            if (num == $("#folderList tbody tr td .checkbox_int").length) {
+                $("#checked_all").prop("checked", true);
+            } else {
+                $("#checked_all").removeProp("checked");
+            }
+        });
+        /* 全选 */
+        $("body").on("click", "#checked_all", function () {
+            var num = 0;
+            var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+            $(choeckbox_list).each(function (index, element) {
+                var checked = $(element).prop("checked");
+                if (checked) {
+                    num += 1;
+                }
+            });
+            if (num != $("#folderList tbody tr td .checkbox_int").length) {
+                $(choeckbox_list).each(function (index, element) {
+                    $(element).prop("checked", true);
+                });
+            } else {
+                $(choeckbox_list).each(function (index, element) {
+                    $(element).removeProp("checked");
+                });
+            }
+        });
+        /* 进入下级目录 */
+        $("body").on("click", "span.folderName i", function (e) {
+            e.stopPropagation();
+            var folderIdElement = $(this).parent().parent().parent().find(".checkbox_int");
+            var dataType = $(folderIdElement).attr('data-dataType');
+            if (dataType != "DIR") {
+                return false;
+            }
+            ;
+            var folderId = $(folderIdElement).attr('id');
+            var url = window.location.href;
+            sessionStorage.setItem('shareFolderUrl', url);
+            window.location.href = "${_cp}/no/sharefile/subdirectory?id=" + folderId + "&folderName=" + $(this).text();
+        });
+        /* 鼠标进入 */
+        /*$("body").on("mouseenter","#folderList tbody tr td.text-left",function(){
+            var element_span=$(this).find("span.tooltip_span");
+            $(element_span).css("display","inline-block");
+        });
+        $("body").on("mouseleave","#folderList tbody tr",function(){
+            var element_span=$(this).find("span.tooltip_span");
+            $(element_span).css("display","none");
+        });*/
+        /* 下载 */
+        $("body").on("click", ".tooltip_span i.downLoad", function (e) {
+            e.stopPropagation();
+            var idElement = $(this).parent().parent().parent().find(".checkbox_int");
+            var url = $(idElement).attr('data-url');
+            var folderMameElement = $(this).parent().parent().find(".folderName");
+            var folderName = $(folderMameElement).text();
+            var dataType = $(idElement).attr('data-dataType');
+            if (dataType != "DIR") {
+                downLoadFolder(url, folderName);
+            } else {
+                parent.layer.msg("不支持文件夹下载！");
+            }
+            ;
+        });
+    });
+
+    function getList(parm) {
+        $.ajax({
+            type: "POST",
+            async: false,
+            headers: {"token": token, "_isAdmin": true, "_user_id": _user_id, "_user_name": _user_name},
+            url: "${_gate_url}/api/file/share/page",
+            data: JSON.stringify(parm),
+            dataType: "json",//必须添加，所有地方都一样
+            contentType: 'application/json',   //必须添加，所有地方都一样
+            success: function (rows) {
+                if (rows.data) {
+                    if (rows.data.list) {
+                        fileList(rows.data.list);
+                    }else{
+                        fileList([]);
+                    }
+                    pagerList(rows.data);
+                }
+            }
+        });
+    }
+
+    function getLike() {
+        var name = $("#name").val();
+        var data = {
+            data: {id: id, name: name},
+            pageNo: 1,
+            pageSize: '20',
+        };
+        getList(data);
+    }
+
+    function fileList(rows) {
+        var html = "";
+        if (rows.length != 0) {
+            rows.forEach(function (value, index) {
+                html += '<tr>';
+                html += '<td><input type="checkbox" name="" id="' + value.id + '" data-dataType="' + value.dataType + '" data-url="' + value.url + '" class="checkbox_int" /></td>';
+                html += '<td class="text-left"><i class="fa ' + value.icon + '"></i> <span class="folderName"><i>';
+                if (value.submittedFileName) {
+                    html += value.submittedFileName;
+                } else {
+                    html += value.filename;
+                }
+                html += '</i></span><span class="pull-right tooltip_span"><i class="fa fa-download downLoad" title="下载"></i></span></td>';
+                if (value.size) {
+                    var size = fomatFloat(value.size / 1024, 2);
+                    if (size > 921.6) {
+                        size = fomatFloat(size / 1024, 2);
+                        if (size > 921.6) {
+                            size = fomatFloat(size / 1024, 2) + "G";
+                        } else {
+                            size = size + "M";
+                        }
+                    } else {
+                        size = size + "KB";
+                    }
+                    html += '<td>' + size + '</td>';
+                } else {
+                    html += '<td>—</td>';
+                }
+                var date = new Date(value.updateTime);
+                var updateIime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+                html += '<td>' + updateIime + '</td>';
+                html += '</tr>';
+            });
+        } else {
+            html += '<tr>';
+            html += '<td colspan="4" class="tip_td">您还没上传过文件哦</td>';
+            html += '</tr>';
+        }
+        $("#folderList tbody").html(html);
+    }
+
+    /* 取消分享方法 */
+    function remove(id) {
+        var ids = new Array();
+        ids.push(id);
+        parent.layer.open({
+            type: 1,
+            title: '确认取消分享',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['410px', '136px'],
+            content: "取消分享后，该条分享记录将被删除，你确认要取消分享吗？",
+            btn: ['<span class="glyphicon glyphicon-ok"></span>确定', '<span class="glyphicon glyphicon-remove"></span>取消'],
+            yes: function (index, layero) {
+                ajaxHengyun({
+                    type: "POST",
+                    async: false,
+                    dataType: 'json',
+                    url: "${_gate_url}/api/file/share/delete",
+                    data: {ids: ids},
+                    success: function (rows) {
+                        if (rows.data) {
+                            var parm = {
+                                pageNo: 1,
+                                pageSize: 100,
+                                data: {id: id, name: ''}
+                            };
+                            getList(parm);
+                            parent.layer.closeAll();
+                        } else {
+                            parent.layer.closeAll();
+                            parent.layer.msg("取消分享出错，请稍后重试！");
+                        }
+                    }
+                });
+            }
+        });
+    }
+    /* 下载文件 */
+    function downLoadFolder(url,filename){
+        var urlDownload="${_gate_url}/api/file/file/download?url="+url+"&filename="+filename;
+        window.open(urlDownload);
+    }
+    /* 批量下载文件 */
+    function downloadPackage(){
+        var ids = new Array();
+        var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+        var downloadType=true;
+        $(choeckbox_list).each(function(index,element){
+            var checked = $(element).prop("checked");
+            if(checked){
+                var dataType = $(element).attr("data-datatype");
+                if(dataType=="DIR"){
+                    downloadType=false;
+                }
+                var id = $(element).attr("id");
+                if(id){
+                    ids.push(id);
+                }
+            }
+        });
+        if(!downloadType){
+            parent.layer.msg("不支持文件夹下载！");
+            return false;
+        }
+        if(ids.length==0){
+            parent.layer.msg("请选择需要下载的文件！");
+            return false;
+        }else{
+            var urlDownload="${_gate_url}/api/file/file/downloadpackage?ids[]="+ids;
+            window.open(urlDownload);
+        };
+    };
+</script>
+
+<!--<a href="javascript:void(0);" id="sss">保存</a>-->
+
+<script type="text/javascript">
+    $(function(){
+        var pwd = $.cookie("_pwd");
+        var token = '${_token!""}';
+        var ticket = '${ticket!""}';
+        console.log(pwd);
+        console.log(token);
+
+        if(ticket){
+            var popup = window.open('', '');
+            popup.location.href='${_cp}/sharefile/${id}';
+            popup.close();
+        }
+
+        $("#sss").click(function () {
+            if(!token){
+                // location.href = 'http://127.0.0.1:10000/gxqpt-sso-webapp/login?service=http%3A%2F%2F127.0.0.1%3A9780%2Fno%2Fsharefile%2F${id}';
+
+                location.href = 'http://127.0.0.1:10000/gxqpt-sso-webapp/login?service=http%3A%2F%2F127.0.0.1%3A9780%2Fno%2Fsharefile%2F${id}';
+                // location.href = 'http://127.0.0.1:10000/gxqpt-sso-webapp/login?service=http%3A%2F%2F127.0.0.1%3A9780%2Fsharefile%2F${id}';
+                // location.href = '${_cp}/sharefile/${id}';
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

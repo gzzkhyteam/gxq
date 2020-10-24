@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css?v=0.1">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <!--标题-->
+            <div class="col-sm-12">
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5 class="page-title">
+                            应用功能 &gt; <span class="page-title-scend">新增</span>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <!--内容-->
+            <div class="col-sm-12">
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline">
+                            <form id="dataForm" action="" method="post">
+                                <input class="hidden" type="text" name="parentId" value="${parentId}">
+                                <table class="table default-table tab-border-no">
+                                    <col width="100"/>
+                                    <col />
+                                    <col width="100"/>
+                                    <col />
+                                    <tbody>
+                                    <tr>
+                                        <th><span class="text-danger">*</span>功能名称：</th>
+                                        <td ><input class="form-control inp-form" name="appName" dataType="*1-10" nullmsg="请填写功能名称" errormsg="功能名称限制10字符以内"/></td>
+                                        <th>是否显示：</th>
+                                        <td>
+                                            <input type="radio" name="isShow" value="2" checked/>
+                                            <label>是</label>
+                                            <input type="radio" name="isShow" value="1"/>
+                                            <label>否</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><span class="text-danger">*</span>功能路径：</th>
+                                        <td><input class="form-control inp-form" name="appPath" dataType="*" nullmsg="请填写功能路径"/></td>
+                                        <th><span class="text-danger">*</span>功能接口：</th>
+                                        <td class="pRelative">
+                                            <input class="form-control inp-form" name="showUrl" dataType="*" nullmsg="请填写功能接口"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>功能说明：</th>
+                                        <td colspan="3" id="appExplain" class="pRelative">
+                                            <input class="hidden" type="text" dataType="*" nullmsg="请填写功能说明" value="">
+                                            <div id="testcon" class="hidden" ></div>
+                                            <div class="hidden">
+                                                <div id="filePicker2" class="filePicker photoFilePicker"></div>
+                                                <div id="uploader2" class="uploader photoUploader">
+                                                    <div class="queueList">
+                                                        <ul id="file_html" class="filelist">
+                                                        </ul>
+                                                        <div id="dndArea2" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                                            <p></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="statusBar" style="display:none;">
+                                                        <div class="progress">
+                                                            <span class="text">0%</span> <span class="percentage"></span>
+                                                        </div>
+                                                        <div class="info"></div>
+                                                        <div class="btns">
+                                                            <div id="jxButton2" class="jxButton"></div>
+                                                            <div class="uploadBtn">开始上传</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="filePicker1" class="filePicker photoFilePicker"></div>
+                                                <div id="uploader1" class="uploader photoUploader">
+                                                    <div class="queueList">
+                                                        <ul id="file_html1" class="filelist">
+                                                        </ul>
+                                                        <div id="dndArea1" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                                            <p></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="statusBar" style="display:none;">
+                                                        <div class="progress">
+                                                            <span class="text">0%</span> <span class="percentage"></span>
+                                                        </div>
+                                                        <div class="info"></div>
+                                                        <div class="btns">
+                                                            <div id="jxButton1" class="jxButton"></div>
+                                                            <div class="uploadBtn">开始上传</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <script id="editor" type="text/plain" style="width: 100%;"></script>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                                <div class="center">
+                                    <button type="button" class="btn btn-primary btn-submit"> 提交 </button>
+                                    <button type="button" class="btn btn-default btn-back"> 取消 </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var _cp = "${_cp}";
+    var _GATE_URL = "${_gate_url}";
+    var _id = "${parentId}";
+    window.UEDITOR_HOME_URL = "${_static}/js/lib/ueditor/";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${_static}/js/lib/ueditor/ueditor.all.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreFile.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreImg.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript" src="${_static}/js/ueditor.js"></script>
+<script type="text/javascript" src="${_static}/js/viewJs/function/create.js"></script>
+</body>
+</html>

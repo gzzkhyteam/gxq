@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>应用服务管理 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                调用管理 > <span class="active">列表</span>
+            </div>
+            <a href="${_cp}/module/functionCenter" class="button-icon pull-right">
+                <img src="${_static}/images/add_icon.png"/> 申请功能
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="main_item clearfix" ng-repeat="rows in appList" on-finish-render-filters>
+                <h3 class="clearfix">
+                    <span class="left main_item_title">{{rows.typeName}}</span>
+                </h3>
+                <div class="main_item_conter clearfix" ng-repeat="item in rows.children">
+                    <div class="left">
+                        <img ng-src="{{item.logo || '${_static}/images/default.png'}}" onError="item.logo='${_static}/images/default.png'"/>
+                    </div>
+                    <div class="right">
+                        <h3>{{item.name}}</h3>
+                        <p class="texTellipsis">{{item.desc}}</p>
+                    </div>
+                    <div class="main_item_conter_hover">
+                        <ul class="clearfix">
+                            <li>
+                                <a href="javascript:void(0)" ng-click="view(item.assignModuleId)">详情</a>
+                            </li>
+                            <li><a href="${_cp}/module/apiDoc?moduleId={{item.id}}">API列表</a></li>
+                            <li><a href="${_cp}/module/peakAnalysis">调用情况</a></li>
+                            <li class="autoWidth"><a href="${_cp}/module/helpDoc/?moduleId={{item.id}}">帮助文档</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script>
+    var pageType="myCallList";
+</script>
+<script>
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope,$http,token,dataJson) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        var typeId=15;
+        getAllList();
+        function getAllList(){
+            $http.get(urlPrev + '/dictionary/getList?typeId='+typeId,{
+                headers:getHeaders(),
+            }).success(function (rows) {
+                $scope.dictionaryList = rows.data;
+                $http.get(urlPrev + '/assignModule/nopage',{
+                    headers:getHeaders(),
+                }).success(function (res) {
+                    if(res.data){
+                        $scope.appList = dataJson.get(res.data,$scope.dictionaryList);
+                    }
+                });
+            });
+        };
+        $(".main").on('mouseenter','.main_item_conter',function () {
+            $(this).find(".main_item_conter_hover").css("display", "block");
+        });
+        $(".main").on('mouseleave','.main_item_conter',function () {
+            $(this).find(".main_item_conter_hover").css("display", "none");
+        });
+        $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
+            //下面是在table render完成后执行的js
+            var element = $(".texTellipsis");
+            if(element.length>0){
+                element.each(function (index,value) {
+                    var height = $(value)[0].scrollHeight;
+                    var tempstr = $(value)[0].innerHTML;
+                    var len = tempstr.length;
+                    var i = 0;
+                    if(height>60){
+                        var temp = "";
+                        $(value)[0].innerHTML = temp;
+                        while($(value)[0].scrollHeight <= 60){
+                            temp = tempstr.substring(0, i+1);
+                            i++;
+                            $(value)[0].innerHTML = temp;
+                        }
+                        var slen = temp.length;
+                        tempstr = temp.substring(0, slen-1);
+                        len = tempstr.length
+                        $(value)[0].innerHTML = tempstr.substring(0, len-1) +"......";
+                    }
+                })
+            }
+        });
+        $scope.remove = function (id) {
+            $http.get(urlPrev + '/serviceModuleApply/delete',{
+                params:{
+                    id:id
+                },
+                headers:getHeaders(),
+            }).success(function (res) {
+                if(res.errmsg=="ok"){
+                    layer.msg("删除成功！");
+                    getAllList();
+                }else{
+                    layer.msg("删除失败！");
+                }
+            });
+        };
+        $scope.view =function(id) {
+            console.log(id);
+            // var id=$("#assignModuleId").val();
+            layer.open({
+                id: 'apply',
+                type: 2,
+                anim: 6,
+                title: '申请详情',
+                maxmin: false, //开启最大化最小化按钮
+                area: ['70%', '90%'],
+                content: "${_cp}/module/myCallView?id="+id,
+                btn: ['<span class="glyphicon glyphicon-remove"></span> 取消'],
+            });
+        }
+    }).service('token',function () {
+        this.getToken = function () {
+            return getToken();
+        }
+    }).service('dataJson',function () {
+        this.get = function (oldData,dictionaryList) {
+            var newData = [];
+            if(oldData.length){
+                $.each(oldData,function (index,value) {
+                    $.each(dictionaryList,function (index2,value2) {
+                        if(value.moduleType == value2.id){
+                            value.moduleName = value2.name;
+                        }
+                    });
+                    var appObj = value;
+                    if(newData.length){
+                        flag = true;
+                        $.each(newData,function (index1,value1) {
+                            value1.typeName
+                            if(value.moduleName == value1.typeName){
+                                value1.children.push(appObj);
+                                flag = false;
+                                return false;
+                            }
+                        })
+                        if(flag){
+                            var obj = {
+                                typeName:value.moduleName,
+                                children:[appObj]
+                            }
+                            newData.push(obj);
+                        }
+                    }else{
+                        var obj = {
+                            typeName:value.moduleName,
+                            children:[appObj]
+                        }
+                        newData.push(obj);
+                    }
+                })
+            }
+            return newData;
+        }
+    }).directive('onFinishRenderFilters', function ($timeout) {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attr) {
+                if (scope.$last === true) {
+                    $timeout(function() {
+                        scope.$emit('ngRepeatFinished');
+                    });
+                }
+            }
+        };
+    });
+</script>
+</body>
+</html>

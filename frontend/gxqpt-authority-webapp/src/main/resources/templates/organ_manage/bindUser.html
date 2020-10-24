@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <style>
+        .ui-jqgrid .ui-jqgrid-view .ui-jqgrid-labels input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="clearfix">
+        <!-- begin 页面内容主体 -->
+        <div class="col-lg-12 col-md-12 marginTop clearfix" ng>
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <fieldset>
+                            <div class="grid-section">
+                                <table id="list">
+                                </table>
+                                <div id="pager"></div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    var orgId = '${orgId}';
+    var tableObj = null;
+    var tagNum = 0;
+    $(function () {
+        tableObj = $("#list").jqGrid({
+            Mtype: 'POST',
+            url: "${_gate_url}/api/admin/user/pageManagerByOrg",
+            postData: {pageNo: 1, pageSize: 20, data: orgId},
+            dataType: 'json',
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                tagNum = 0;
+                datas = postData;
+                return JSON.stringify(postData);
+            },
+            colNames: ['姓名', '账号', '是否可登录'],
+            colModel: [{
+                name: 'name',
+                index: 'name',
+            }, {
+                name: 'account',
+                index: 'account',
+            }, {
+                name: 'tag',
+                index: 'tag',
+                formatter: formatterLoginable
+            }],
+            jsonReader: {
+                root: "data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            pager: '#pager',
+            height: 'auto',
+            onPaging: function (pgButton) {
+                var pageNo = $(".ui-pg-input").val();
+                pageNo = parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total = parseInt(total);
+                if (pgButton == "next") {
+                    if (pageNo >= total) {
+                        return false;
+                    } else {
+                        pageNo += 1;
+                    }
+                } else if (pgButton == "prev") {
+                    if (pageNo > 1) {
+                        pageNo -= 1;
+                    } else {
+                        return false;
+                    }
+                } else if (pgButton == "last") {
+                    pageNo = total;
+                } else if (pgButton == "first") {
+                    pageNo = 1;
+                }
+                var pageSize = $(".ui-pg-selbox").val();
+                if (pageNo != 0) {
+                    $("#list").setGridParam({
+                        postData: {
+                            pageNo: pageNo,
+                            pageSize: pageSize
+                        }
+                    }).trigger("reloadGrid");
+                    return false;
+                }
+            },
+
+        });
+    });
+
+    function formatterLoginable(cellvalue, options, rawObject) {
+        if (cellvalue == "1") {
+            tagNum++;
+            return "<a class=\"ui-button marginLeft \" href=\"javascript:\" onclick=\"bindManagerForUser(" + rawObject.tag + ",'" + rawObject.id + "')\">取消绑定</a>";
+        } else {
+            return "<a class=\"ui-button marginLeft \" href=\"javascript:\" onclick=\"bindManagerForUser(" + rawObject.tag + ",'" + rawObject.id + "')\">绑定</a>";
+        }
+    };
+
+    /* 绑定提交方法 */
+    function saveManager(index) {
+        var data = {
+            orgId: orgId,
+            userId: index
+        };
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/admin/gxqpt/org/saveManagerByOrg",
+            data: data,
+            success: function (rows) {
+                if (rows.data) {
+                    parent.layer.msg("绑定用户成功！", {icon: 6, time: 1000});
+                    parent.home.getOrgan();
+                } else {
+                    parent.layer.msg("绑定用户出错，请重试！", {time: 1000});
+                }
+                tableObj.setGridParam({
+                    postData: {pageNo: 1, pageSize: Number($('.ui-pg-selbox').val()), data: orgId}
+                }, true).trigger("reloadGrid");
+            }
+        });
+    }
+
+    function deleteManager(index) {
+        var data = {
+            orgId: orgId.toString(),
+            userId: index
+        };
+        ajaxHengyun({
+            type: "POST",
+            url: "${_gate_url}/api/admin/gxqpt/org/deleteManagerByOrg",
+            data: data,
+            success: function (rows) {
+                if (rows.data) {
+                    parent.layer.msg("取消绑定用户成功！", {icon: 6, time: 1000});
+                    parent.home.getOrgan();
+                } else {
+                    parent.layer.msg("取消绑定用户出错，请重试！", {time: 1000});
+                }
+                tableObj.setGridParam({
+                    postData: {pageNo: 1, pageSize: Number($('.ui-pg-selbox').val()), data: orgId}
+                }, true).trigger("reloadGrid");
+            }
+        });
+    }
+
+    /* 取消绑定提交方法 */
+
+    function bindManagerForUser(tag, userId) {
+        if (tag == 1) {
+            if (tagNum > 1) {
+                deleteManager(userId);
+            } else {
+                parent.layer.msg("该管理员至少需绑定一个用户！", {time: 2000});
+            }
+        } else if (tag == 0) {
+            saveManager(userId);
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>降本提质</title>
+		<link rel="stylesheet" href="${_static}/platform_bg/nui/css/nui.css" />
+		<link rel="stylesheet" href="${_static}/platform_bg/css/index.css" />
+		<link rel="stylesheet" href="${_static}/css_base/base.css" />
+		<link rel="stylesheet" href="${_static}/css_base/index.css" />
+		<link rel="stylesheet" href="${_static}/css_base/style.css" />
+		<style type="text/css">
+			.block {
+				float: left;
+			}
+			
+			.block-left {
+				width: 28%;
+			}
+			
+			.block-mid {
+				width: 44%;
+			}
+			
+			.block-right {
+				width: 28%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="content">
+			<div id="index" class="section platform_bg" style="overflow: hidden;">
+				<div class="banner-img"></div>
+				<canvas id="canvas"></canvas>
+			</div>
+		</div>
+		<!-- 内容区-->
+		<div class="py_big_con clearfix">
+			<div class="big_head">
+				<div class="date_">
+					<div class="date"></div>
+				</div>
+				<div class="nav">
+					 <ul class="py_ul_l clearfix">
+                <li>
+                    <a href="${_cp}/module/index">
+                        整体概览
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/share">
+                        共享交换
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/appIntegrate">
+                        应用集成
+                    </a>
+                </li>
+                <li>
+                    <a href="${_cp}/module/operate">
+                        运维监控
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/jbtz">
+                        降本提质
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/supervision">
+                        统一监管
+                    </a>
+                </li>
+            </ul>
+            <a href="${_cp}/module/main" class="py_big_head clearfix"></a>
+				</div>
+				<ul class="num-group">
+					<li class="num-item">
+						<div class="title">累计降本额</div>
+						<div class="icon_number" id="reduceCostTotal">
+						    
+							<div class="unit">万</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">累计缩短工期</div>
+						<div class="icon_number" id="reduceTimeTotal">
+							<div class="unit">个人月</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">累计使用模块数</div>
+						<div class="icon_number">
+							<div class="num">
+								<div class="contain">
+									<span class="original">1</span>
+								</div>
+							</div>
+							<div class="num">
+								<div class="contain">
+									<span class="original">2</span>
+								</div>
+							</div>
+							<div class="num">
+								<div class="contain">
+									<span class="original">2</span>
+								</div>
+							</div>
+							<div class="num">
+								<div class="contain">
+									<span class="original">4</span>
+								</div>
+							</div>
+							<div class="unit">次</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">累计调用服务数</div>
+						<div class="icon_number">
+							<div class="num">
+								<div class="contain">
+									<span class="original">1</span>
+								</div>
+							</div>
+							<div class="num">
+								<div class="contain">
+									<span class="original">2</span>
+								</div>
+							</div>
+							<div class="num">
+								<div class="contain">
+									<span class="original">2</span>
+								</div>
+							</div> 
+							<div class="num">
+								<div class="contain">
+									<span class="original">4</span>
+								</div>
+							</div>
+							<div class="unit">次</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">累计使用应用数</div>
+						<div class="icon_number">
+							<div class="num">
+								<div class="contain">
+									<span class="original">5</span>
+								</div>
+							</div>
+							<div class="num">
+								<div class="contain">
+									<span class="original">0</span>
+								</div>
+							</div>
+							<div class="num">
+								<div class="contain">
+									<span class="original">5</span>
+								</div>
+							</div>
+							<div class="num">
+								<div class="contain">
+									<span class="original">4</span>
+								</div>
+							</div>
+							<div class="unit">次</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="main_box clearfix">
+				<div class="block-left block">
+					<div class="case_box">
+						<div class="cost_title">
+							<span>分类价值占比</span>
+						</div>
+						<div class="cost_bj">
+							<div class="ratio_box">
+								<div id="reduce" class="ratio_left"></div>
+								<div class="ratio_mid"></div>
+								<div id="shorten" class="ratio_right"></div>
+							</div>
+						</div>
+					</div>
+					<div class="case_box">
+						<div class="cost_title">
+							<span>已有降本案例</span>
+						</div>
+						<div class="cost_bj">
+							<div id="trend" style="height: 100%;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="block-mid block">
+					<div class="cost_box">
+						<div class="cost_title">
+							<span>成本图</span>
+						</div>
+						<div class="cost_bj">
+							<div id="cost" style="height: 100%;"></div>
+						</div>
+					</div>
+					<div class="cost_box">
+						<div class="cost_title">
+							<span>工期图</span>
+						</div>
+						<div class="cost_bj">
+							<div id="time" style="height: 100%;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="block-right block">
+					<div class="assembly_box">
+						<div class="cost_title ml_27">
+							<span>组件预估价值</span>
+						</div>
+						<div class="asse_bj">
+							<div id="value" style="height: 100%;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--main_box -->
+		</div>
+		<script src="${_static}/js/jquery-1.11.1.min.js"></script>
+		<script src="${_static}/platform_bg/js/banner.js"></script>
+		<script src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script src="${_static}/js/hengyun/jquery.cookie.js"></script>
+		<script src="${_static}/js/echarts.js"></script>
+		<script src="${_static}/js/base.js"></script>
+		<script src="${_static}/js/index_5.js"></script>
+	</body>
+   <script type="text/javascript">
+       var gateUrl = "${_gate_url}";
+   	   $(function (){
+   		   
+	   		 ajaxHengyun({
+	    		 
+	    		 url:gateUrl+"/api/developer/reducedCost/componentEstimatedValue",
+	    		 success:function (componentEstimatedValue){
+	    			 if(!componentEstimatedValue || componentEstimatedValue.errcode != 0){
+	    				 return ;
+	    			 }
+	    			 var data = componentEstimatedValue["data"];
+	    			 //top 上部的方框数字展示
+	    			 builderTopHtml2Show("#reduceCostTotal",data.reduceCostTotal);
+	    			 builderTopHtml2Show("#reduceTimeTotal",data.reduceTimeTotal);
+	    			 
+	    			 //trend();已有降本案例
+	    			 var _option = builderTrend(data);
+	    			 trend(_option);
+	    		 },
+	    		 error:function (r){
+	    			 alert(r.responseJSON.error);
+	    		 }
+	    	 });
+   	   });
+   	   
+   	   function builderTopHtml2Show(jquerySelector,num){
+   		   
+   		   if(num < 0){
+   			   return ;
+   		   }
+   		   var html = "";
+   		   var numStr = num+"";
+   		   for(var i=0;i<numStr.length;i++){
+   			   
+   				html+='<div class="num">'
+					+'<div class="contain">'
+					+'<span class="original">'+numStr[i]+'</span>'
+					+'</div>'
+					+'</div>';
+   		   }
+   		  $(jquerySelector).prepend(html);
+   		  numAnimate($(jquerySelector + " .contain span"));
+   	   }
+   	   
+   	   function builderTrend(data){
+   		   
+   		   return {appNames: data.nameList,appTime: data.reduceTimeNumlist,appCosts: data.reduceCostNumlist};
+   		   
+   	   }
+   </script>
+</html>

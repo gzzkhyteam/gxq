@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>交换共享系统</title>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+	<div class="main clearfix">
+		<div class="view_container view_container_first row">
+			<div class="col-md-12">
+				<div id="secondPage" class="secondPage">
+					<div id="sqlQuery" class="layerDataApply marginTop">
+						<h3>选择要返回的数据字段
+							<a href="javascript:void(0);" class="selAll">全选</a>
+							<a href="javascript:void(0);" class="noselAll">取消全选</a>
+						</h3>
+						<ul id="fieldList" class="elementData  clearfix">
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var tableCodes="";
+    $(".selAll").click(function(){
+        var elementArray = $(".elementData li");
+        if(elementArray.length>0){
+            elementArray.each(function(index,value){
+                $(value).find("input").prop("checked",true);
+                $(value).find(".selectno").addClass("checked");
+            });
+        }
+    });
+    $(".noselAll").click(function(){
+        var elementArray = $(".elementData li");
+        if(elementArray.length>0){
+            elementArray.each(function(index,value){
+                $(value).find("input").removeAttr("checked");
+                $(value).find(".selectno").removeClass("checked");
+            });
+        }
+    });
+    $("body").on("click",".selectno",function(){
+        if($(this).hasClass("checked")){
+            $(this).removeClass("checked");
+            var ipt = $(this).parent().find("input");
+            $(ipt).removeAttr("checked");
+        }else{
+            $(this).addClass("checked");
+            var ipt = $(this).parent().find("input");
+            $(ipt).prop("checked",true);
+        }
+    });
+    var filedStr = "${filedStr}";
+    var filedObj;
+    setDataSource();
+    function setDataSource(){
+		ajaxHengyun({
+			type: "get",
+			dataType: 'json',
+			url: "${_gate_url}/api/exchange/set/getDbSourceTableInfo",
+			data: {setId:"${id}"},
+			success: function (rows) {
+				if(rows.data){
+					var html="";
+					var fields=rows.data.fieldList;
+					var filedArray = filedStr.split(",");
+					for(var i in fields){
+                        filedObj = fields;
+						var isSet = false;
+					    filedArray.forEach(function(val,index){
+					       if(val==fields[i].fieldCode){
+                               isSet = true;
+						   }
+						});
+					    if(!isSet){
+							html+='<li class="pull-left clearfix">';
+							html+='<input type="checkbox" name="unitIdsBox" class="hidden" value="'+fields[i].fieldCode+'" autocomplete="off"/>';
+							html+='<span class="selectno"></span>';
+							html+='<label class="pull-left">'+fields[i].fieldCode;
+							if(fields[i].fieldName){
+								html+='('+fields[i].fieldName+')';
+							}
+							html+='</label>';
+							html+='</li>';
+						}
+					};
+					if(!html){
+					    html+="<p class='text-center' style='background: #ddd; padding: 10px 0;'>无未选择字段！</p>";
+					}
+					$("#fieldList").html(html);
+					updateIformHeight();
+				}
+			}
+		});
+    };
+    /*提交*/
+    function save(index){
+        var fieldLists=[];
+        var inputCheckbox=$("input[name=unitIdsBox]:checked");
+        inputCheckbox.each(function(index,value){
+            filedObj.forEach(function(val,index){
+               if(val.fieldCode==$(value).val()){
+                   fieldLists.push(val);
+			   }
+			});
+        });
+        parent.home.addTr(fieldLists);
+        parent.layer.close(index);
+    };
+</script>
+</body>
+</html>

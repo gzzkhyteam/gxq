@@ -1,0 +1,355 @@
+<!doctype html>
+<html>
+
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        权限管理系统 &gt; 信息维护 &gt; <span class="page-title-scend">节假日元数据</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="list-section">
+                <form autocomplete="off" id="myForm" action="" class="form-inline search-form clearfix">
+                    <div class="form-field pull-left">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>名称：</span>
+                            </label>
+                            <input type="text" class="form-control" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>编码：</span>
+                            </label>
+                            <input type="text" class="form-control" name="number">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>是否启用：</span>
+                            </label>
+                            <select class="form-control" name="status">
+                                <option value="">全部</option>
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="reloadCalendarList()">查询</button>
+                    </div>
+                    <div class="pull-right">
+                        <!--<button type="button" class="btn btn-primary" onclick="createPage()">新增</button>-->
+                        <!--
+                             id="authority_role_add" 和 resource_code : "authority_role_add" 填写的值一定要跟
+                             在【权限系统】-【资源编码】一致！！！
+                         -->
+                        <script type="text/javascript" id="authority_role_add">
+                            resourceJs.init("${_gate_url!''}", "${_app_id!''}", "${l_u_i_s.id!''}").containButton({
+                                resource_code: "authority_role_add",
+                                btnHtml: "<button type=\"button\" class=\"btn btn-primary\" onclick=\"createPage()\" style=\"margin-top: 8px;\">{{name}}</button>",
+                                //btnHtml :'<a class="btn btn-primary" onclick="createPage()">{{name}}</a> ',
+                                htmlInsert: true
+                            });
+                        </script>
+                    </div>
+                </form>
+            </div>
+            <div id="right-box" class="list-section">
+                <div class="grid-section">
+                    <table id="list">
+                    </table>
+                    <div id="pager"></div>
+                    <!--</div>-->
+                </div>
+            </div>
+            <!-- end 页面内容主体 -->
+        </div>
+    </div>
+</div>
+    <script type="text/javascript">
+        var urlPrev = '${_gate_url}/api/admin/';
+        /*  获取节假日元数据 */
+        getCalendarList();
+        function getCalendarList() {
+            var height = $(".main").height() - 120;
+            $("#list").jqGrid({
+                mtype: 'POST',
+                url: urlPrev + "holiday/findHolidayOriginalPage",
+                postData: {pageNo: 1, pageSize: 20, data: {}},
+                datatype: "json",
+                contentType: 'application/json',
+                serializeGridData: function (postData) {
+                    return JSON.stringify(postData);
+                },
+                colNames: ['名称', '编码','日历类型', '开始时间', '持续天数', '描述', '操作'],
+                colModel: [{
+                    name: 'name',
+                    index: 'name'
+                }, {
+                    name: 'number',
+                    index: 'number',
+                }, {
+                    name: 'calendarType',
+                    index: 'calendarType',
+                    formatter:function(cellvalue, options, rawObject){
+                        if(cellvalue=='1'){
+                            return '阳历';
+                        }else{
+                            return '阴历';
+                        }
+                    }
+                }, {
+                    name: 'start',
+                    index: 'start',
+                    formatter: formatterCountDay
+                }, {
+                    name: 'holidayDays',
+                    index: 'holidayDays',
+                }, {
+                    name: 'story',
+                    index: 'story',
+                }, {
+                    name: 'act',
+                    index: 'act',
+                    title: false,
+                    width: '240',
+                    align: 'center',
+                    formatter: formatterAct
+                }],
+                jsonReader: {
+                    root: "data.list",
+                    page: "data.pageNum",
+                    total: "data.pages",
+                    records: "data.total"
+                },
+                onPaging: function (pgButton) {
+                    var pageNo = $(".ui-pg-input").val();
+                    pageNo = parseInt(pageNo);
+                    var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                    total = parseInt(total);
+                    if (pgButton == "next") {
+                        if (pageNo >= total) {
+                            return false;
+                        } else {
+                            pageNo += 1;
+                        }
+                    } else if (pgButton == "prev") {
+                        if (pageNo > 1) {
+                            pageNo -= 1;
+                        } else {
+                            return false;
+                        }
+                    } else if (pgButton == "last") {
+                        pageNo = total;
+                    } else if (pgButton == "first") {
+                        pageNo = 1;
+                    }
+                    var pageSize = $(".ui-pg-selbox").val();
+                    if (pageNo != 0) {
+                        $("#list").setGridParam({
+                            postData: {
+                                pageNo: pageNo,
+                                pageSize: pageSize
+                            }
+                        }).trigger("reloadGrid");
+                        return false;
+                    }
+                },
+                pager: '#pager',
+                height: height
+            });
+        }
+
+        function formatterCountDay(cellvalue, options, rawObject) {
+            var returnValue = "";
+            if(rawObject.calendarType=='1'){
+                returnValue += rawObject.month +'-'+rawObject.day;
+            }else {
+                returnValue+=lmonths[rawObject.month]+ldays[rawObject.day];
+            }
+            return returnValue;
+        }
+
+        function formatterAct(cellvalue, options, rawObject) {
+            var returnValue = "";
+            returnValue += '<a class="ui-button marginLeft" href="javascript:void(0);" onclick="editPage(\'' + rawObject.id + '\')"> 修改</a>';
+            returnValue += '<span class="oper-separator"></span>';
+            returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="viewPage(\'' + rawObject.id + '\')"> 详情</a>';
+            returnValue += '<span class="oper-separator"></span>';
+            returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="del(\'' + rawObject.id + '\')">删除</a>';
+            return returnValue;
+        }
+
+        //重新加载
+        function reloadCalendarList() {
+            var data = $('#myForm').serializeJSON();
+            $("#list").setGridParam({
+                postData: {pageNo: 1, pageSize: Number($('.ui-pg-selbox').val()), data: data}
+            }, true).trigger("reloadGrid");
+        }
+
+        /* 删除 */
+        function delect() {
+            parent.layer.confirm("您确定要删除吗？", {
+                title: '温馨提示',
+                shade: [0.4, '#000'],
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                closeLayer();
+            }, function () {
+                closeLayer();
+            });
+        }
+
+        /* 弹出新增页面 */
+        function createPage() {
+            parent.layer.open({
+                id: 'create',
+                type: 2,
+                anim: 6,
+                title: '新增节假日',
+                maxmin: false, //开启最大化最小化按钮
+                area: ['50%', '60%'],
+                content: "${_cp}/power/hdayManageCreate",
+                btn: ['<span class="glyphicon glyphicon-ok"></span> 提交', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+                yes: function (index, layero) {
+                    var html = layero.context;
+                    var Id = html.getElementById("create");
+                    var iframe = $(Id).find("iframe").attr("name");
+                    var rowData = parent[iframe].save(index);
+                }
+            });
+        }
+
+        /* 弹出修改页面 */
+        function editPage(id) {
+            parent.layer.open({
+                id: 'edit',
+                type: 2,
+                anim: 6,
+                title: '修改节假日',
+                maxmin: false, //开启最大化最小化按钮
+                area: ['50%', '60%'],
+                content: "${_cp}/power/hdayManageEdit?id=" + id,
+                btn: ['<span class="glyphicon glyphicon-ok"></span> 提交', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+                yes: function (index, layero) {
+                    var html = layero.context;
+                    var Id = html.getElementById("edit");
+                    var iframe = $(Id).find("iframe").attr("name");
+                    var rowData = parent[iframe].save(index);
+                }
+            });
+        }
+
+
+        /* 弹出详情页面 */
+        function viewPage(id) {
+            parent.layer.open({
+                id: 'view',
+                type: 2,
+                anim: 6,
+                title: '节假日详情',
+                maxmin: false, //开启最大化最小化按钮
+                area: ['50%', '50%'],
+                content: "${_cp}/power/hdayManageView?id=" + id,
+                btn: ['<span class="glyphicon glyphicon-remove"></span> 关闭'],
+            });
+        }
+
+        //删除
+        function del(id) {
+            ajaxHengyun({
+                url: urlPrev + 'holiday/delete?id=' + id,
+                type: 'GET',
+                success: function (res) {
+                    if (res.data) {
+                        parent.layer.msg('删除成功', {icon: 6});
+                        reloadCalendarList();
+                    }
+                }
+            })
+        }
+        var lmonths={
+            "01":"正月",
+            "02":"二月",
+            "03":"三月",
+            "04":"四月",
+            "05":"五月",
+            "06":"六月",
+            "07":"七月",
+            "08":"八月",
+            "09":"九月",
+            "10":"十月",
+            "11":"冬月",
+            "12":"腊月"
+        };
+        var ldays={
+            "01":"初一",
+            "02":"初二",
+            "03":"初三",
+            "04":"初四",
+            "05":"初五",
+            "06":"初六",
+            "07":"初七",
+            "08":"初八",
+            "09":"初九",
+            "10":"初十",
+            "11":"十一",
+            "12":"十二",
+            "13":"十三",
+            "14":"十四",
+            "15":"十五",
+            "16":"十六",
+            "17":"十七",
+            "18":"十八",
+            "19":"十九",
+            "20":"二十",
+            "21":"廿一",
+            "22":"廿二",
+            "23":"廿三",
+            "24":"廿四",
+            "25":"廿五",
+            "26":"廿六",
+            "27":"廿七",
+            "28":"廿八",
+            "29":"廿九",
+            "30":"三十",
+        }
+    </script>
+</body>
+
+</html>

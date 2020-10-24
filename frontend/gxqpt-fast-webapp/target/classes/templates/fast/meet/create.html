@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- 引入meta -->
+    <!-- begin 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css"
+          href="${_static}/css/reset.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib }/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib }/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib }/font-awesome/css/font-awesome.min.css">
+    <!--
+    <link rel="stylesheet" type="text/css"
+        href="${_lib}/chosen/chosen.min.css">
+    -->
+    <link rel="stylesheet" type="text/css" href="${_lib }/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib }/webuploader/webuploader.css">
+
+    <link rel="stylesheet" type="text/css" href="${_lib }/layer/skin/layer.css">
+
+    <link rel="stylesheet"
+          href="${_static}/themes/blue/css/ui.css">
+
+    <link rel="stylesheet" href="${_static}/css/app.css">
+    <link type="text/css" rel="stylesheet" href="${_lib }/ValidateForm/Validform.css"/>
+    <!-- end 外部CSS引入 -->
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+
+    <!-- begin 自定义样式 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        label.control-label {
+            text-align: right;
+        }
+
+        table.infoList tr th {
+            border: 1px solid #e1e6eb;
+            padding: 10px 12px;
+            vertical-align: middle;
+            width: 180px;
+            font-weight: normal;
+        }
+
+        table.infoListTab tr th {
+            width: auto;
+        }
+
+        .upuserhead {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .uploader {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td input.form-control {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td select.form-control {
+            width: 100%;
+        }
+        .search-choice{
+            line-height:40px!important;
+            text-align: center;
+        }
+        .chosen-container-multi .chosen-choices li{
+            width:100px!important;
+            padding:0!important;
+            height:30px!important;
+            line-height:30px!important;
+            margin:0!important;
+            border:none;
+
+        }
+        .chosen-container-multi .chosen-choices .search-choice{
+            border:none!important;
+            border-right:1px solid #ccc!important;
+        }
+        .chosen-container .chosen-results li{
+            width:100%!important;
+            text-align: center;
+            padding:0!important;
+            height:30px!important;
+            line-height:30px!important;
+            margin:0!important;
+        }
+        .chosen-container-multi .chosen-choices .search-field:last-child{
+            cursor: pointer;
+        }
+        .chosen-container{
+            min-width:158px;
+        }
+        .search-choice-close{
+            top:10px!important;
+            right:10px!important;
+        }
+        .w84{
+            width:108px !important
+        }
+        .text-center h5{
+            margin-bottom:10px;
+        }
+    </style>
+    <!-- end   自定义样式 -->
+
+</head>
+
+<body>
+
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>新增会议</h5>
+                    </div>
+
+                    <div class="pull-right">
+                        <button class="btn btn-default go-back">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            取消
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- begin 页面内容主体 -->
+                <!-- end 页面内容主体 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <form action="" id="dataForm" method="post">
+
+                                    <div class="form-inline">
+
+                                        <fieldset class="firstContend">
+                                            <h5>会议基本信息</h5>
+                                            <div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>会议名称</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control w85 " id="name" name="name" datatype="*" nullmsg="请填写会议名称"
+                                                                   errormsg="请填写会议名称"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>会议地点</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control w85" id="address" name="address" datatype="*" nullmsg="请填写会议地点" errormsg="请填写会议地点"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div>
+
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>会议开始时间</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control Wdate" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="startTime" name="startTime" datatype="*" nullmsg="请填写会议开始时间" errormsg="请填写会议开始时间"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>会议结束时间</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control Wdate" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="endTime" name="endTime" datatype="*" nullmsg="请填写会议结束时间" errormsg="请填写会议结束时间"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger"></span>
+                                                            <span>会议主持人</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control w85" id="moderator" name="moderator" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger"></span>
+                                                            <span>出席领导</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <input class="form-control w85" id="joinLeader" name="joinLeader" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger">*</span>
+                                                            <span>参会人员</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap" style="position: relative;">
+                                                            <select
+                                                                name="joinPerson"
+                                                                id="joinPerson"
+                                                                class="form-control chosen-select"
+                                                                datatype="chosenSelect"
+                                                                nullmsg="请选择参会人员"
+                                                                data-placeholder="请选择"
+                                                                multiple="multiple"
+                                                                style="width:438px;">
+                                                                <option value="2">周世军</option>
+                                                                <option value="3">郭嘉龙</option>
+                                                                <option value="4">岳金成</option>
+                                                                <option value="5">隋智超</option>
+                                                            </select>
+                                                        </div>
+                                                        <input class="form-control imgs w85" id="personnel" name="personnel" value=""
+                                                               type="hidden"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-field">
+                                                    <div class="form-group">
+                                                        <label class="control-label w84">
+                                                            <span class="text-danger"></span>
+                                                            <span>备注</span>
+                                                            <span>：</span>
+                                                        </label>
+                                                        <div class="form-control-wrap">
+                                                            <textarea class="form-control" style="width: 438px;" id="remark"
+                                                                      name="remark" rows="5" cols=""></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="text-center">
+                                        <h5></h5>
+                                        <button class="btn btn-primary btn-submit" type="button">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                            提交
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!--begin 外部JS引入 -->
+    <script type="text/javascript" src="${_lib }/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_lib }/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_lib }/chosen/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="${_lib }/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_lib }/webuploader/webuploader.min.js"></script>
+    <script type="text/javascript" src="${_lib }/layer/layer.js"></script>
+    <script type="text/javascript" src="${_lib }/ValidateForm/Validform_v5.3.2_min.js"></script>
+    <script type="text/javascript" src="${_lib}/ValidateForm/Valid.js"></script>
+
+    <!--end 外部JS引入 -->
+
+    <!--begin 自定义JS -->
+    <script type="text/javascript">
+        $('.btn-submit').valid({
+            form: '#dataForm',
+            showAllError: true,
+            ignoreHidden: false,
+            checkpassed: function () {
+                parent.layer.confirm("您确定提交吗？",{btn: ['提交','取消'],shade: false },function(index) {
+                    var train = {};
+                    var joinPerson = $("#joinPerson").val();
+                    train.name = $("#name").val();
+                    train.startTime = $("#startTime").val()+":00";
+                    train.endTime = $("#endTime").val();
+                    train.address = $("#address").val();
+                    train.moderator = $("#moderator").val();
+                    train.joinLeader = $("#joinLeader").val();
+                    train.remark = $("#remark").val();
+                    train.joinerIds = joinPerson;
+                    train.appId = '${appId!""}';
+                    ajaxHengyun({
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(train),
+                        url: "${_gate_url}/api/developer/meet/save",
+                        success: function (res) {
+                            if (res && res.errcode != 0) {
+                                layer.alert(res.errmsg);
+                                return;
+                            }
+                            parent.layer.closeAll();
+                            window.location.href = "${_cp}/fast/${appId}/meet/list";
+                            parent.layer.msg("添加会议成功!");
+                        }
+                    });
+                    parent.layer.close(index);
+                });
+            }
+        });
+
+        $(function(){
+            $('.Wdate').off('focus').on('click',function(){
+                WdatePicker({lang:'zh-cn', dateFmt:'yyyy-MM-dd HH:mm:ss'});
+            });
+        });
+        /**
+         * 初始化页面中的chosen select
+         */
+        $("select.chosen-select").each(function() {
+            $(this).chosen({
+                disable_search:true,
+                no_results_text:'没有查询到符合条件的记录'
+            });
+        });
+
+        /**
+         * 注册返回按钮点击事件
+         */
+        $("button.go-back").click(function() {
+            history.go(-1);
+        });
+    </script>
+    <!--end 自定义JS -->
+</body>
+</html>
+

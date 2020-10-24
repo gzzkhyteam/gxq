@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Expires" content="0" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <!-- begin 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css" href="${_cp}/static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/font-awesome/css/font-awesome.min.css">
+    <!--
+    <link rel="stylesheet" type="text/css"
+        href="${_lib}/chosen/chosen.min.css">
+    -->
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jquery-step/jquery.step.css">
+
+    <link rel="stylesheet" href="${_cp}/static/themes/blue/css/ui.css">
+    <link href="${_js}/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${_js}/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="${_cp}/static/css/app.css">
+    <link type="text/css" rel="stylesheet" href="${_lib}/ValidateForm/Validform.css"/>
+
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+	<script type="text/javascript" src="${_js}/hengyun/hengyun_ajax.js"></script>
+    <!-- end 外部CSS引入 -->
+    <!-- begin 自定义样式 -->
+    <link rel="stylesheet" href="${_cp}/static/css/taskSendFile/add.css">
+    <!-- end 自定义样式 -->
+
+</head>
+
+<body>
+  <form id="taskSendFileForm" method="post" onsubmit="return false;">
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div id="modalDialog" class="col-sm-12">
+				<!-- 模态框（Modal） -->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog" style="width:92%">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									&times;
+								</button>
+								<h4 class="modal-title" id="myModalLabel">
+									添加发送单位
+								</h4>
+							</div>
+							<div id="modalBody" class="modal-body">
+								<div class="form-inline view-info">
+									<fieldset>
+										<!-- begin 表格 -->
+										<div class="grid-section">
+											<table id="list">
+											</table>
+											<div id="pager"></div>
+										</div>
+										<!-- end 表格  -->
+									</fieldset>
+									<div class="clear"></div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" id="btnCloseSend">关闭
+								</button>
+								<button type="button" class="btn btn-primary" id="btnSaveSend">
+									确定
+								</button>
+							</div>
+						</div><!-- /.modal-content -->
+					</div>
+				</div>
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>
+                            收发文管理 &gt; <font color="#0099cc">发文登记</font>
+                        </h5>
+                    </div>
+                </div>
+                <!-- begin 页面内容主体 -->
+               
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <div class="col-sm-12">
+                                    <div class="col-md-6">
+	                                    <div class="form-field">
+	                                        <div class="form-group">
+	                                            <label class="control-label w120"><span
+	                                                    class="text-danger">*</span> <span>发文号</span> <span>：</span>
+	                                            </label>
+	                                            <div class="form-control-wrap">
+													<label class="control-label w120">
+													<input class="form-control" id="docNum" name="docNum"  nullmsg="请输入发文号" />
+													<input class="form-control" value="send" name="docType"  type="hidden">
+													</label>
+	                                             <!-- <select
+	                                                  class="form-control w153" name="documentT"  disabled
+	                                                  onchange="selectCountry(this);" data-placeholder="请选择">
+	                                                </select>-->
+	                                                
+	                                            </div>
+	                                            <div class="form-control-wrap">
+													<label class="control-label w120">
+													<span> 发文时间：</span>
+													</label>
+													<input class="form-control" style="width: 100px;" value='' id="docTime"
+														   value="" onclick="WdatePicker({isShowWeek:true,dateFmt:'yyyy-MM-dd'})" name="docTime"  datatype="*" errormsg="请选择发文时间" nullmsg="请选择发文时间" />
+
+	                                  				<!--<input class="form-control" style="width: 50px;" value='' name="documentYear" datatype="*" errormsg="请选择发文时间" nullmsg="请选择发文时间" disabled="disabled">年-->
+	                                            </div>
+												<div class="form-control-wrap">
+													<label class="control-label w120">
+														<span> 发文标题：</span>
+													</label>
+													<input class="form-control" style="width: 100px;" value='' id="title" name="title"
+														   value=""    datatype="*"  />
+
+													<!--<input class="form-control" style="width: 50px;" value='' name="documentYear" datatype="*" errormsg="请选择发文时间" nullmsg="请选择发文时间" disabled="disabled">年-->
+												</div>
+
+	                                            <!--<div class="form-control-wrap">
+													<input class="form-control" style="width: 50px;" value='' name="documentYear"
+														   value="" onclick="WdatePicker({isShowWeek:true,dateFmt:'MM-dd'})" name="recvFileTime"  datatype="*" errormsg="请选择发文时间" nullmsg="请选择发文时间" />号
+	                                  				<input class="form-control" style="width: 50px;" value='' name="documentNum" id="docNum" disabled="disabled" >  号 
+	                                            </div>-->
+	                                        </div>
+	                                    </div>
+                                    </div>
+                                    <div class="col-md-6">
+	                                    <div class="form-field">
+	                                        <div class="form-group">
+	                                            <label class="control-label w120"> <span
+	                                                    class="text-danger">*</span> <span>密级</span> <span>：</span>
+	                                            </label>
+	                                            <div class="form-control-wrap">
+	                                                <select
+	                                                        class="form-control w153" name="rank" datatype="*" errormsg="请选择密级" nullmsg="请选择密级"
+	                                                        onchange="selectCountry(this);" data-placeholder="请选择" >
+                                                        <option value="平急">平急</option>
+                                                        <option value="急件">急件</option>
+                                                        <option value="加急">加急</option>
+                                                        <option value="特急">特急</option>
+                                                        <option value="特提">特提</option>
+
+	                                                </select>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+                                    </div>
+                                </div>
+								<div class="col-sm-12">
+									<div class="col-md-12">
+										<div class="form-field">
+											<div class="form-group">
+												<label class="control-label w120"> <span
+														class="text-danger">*</span> <span>发送单位</span> <span>：</span>
+												</label>
+
+												<div class="form-control-wrap">
+													<select name="docUnit" id="" class="form-control chosen-select w153"
+															data-placeholder="请选择" >
+														<option value="市政府办公厅">市政府办公厅</option>
+														<option value="市发改委">市发改委</option>
+														<option value="市财政局">市财政局</option>
+														<option value="市审计局">市审计局</option>
+														<option value="市综合执法局">市综合执法局</option>
+														<option value="市建委">市建委</option>
+														<option value="市农委">市农委</option>
+														<option value="市民政局">市民政局</option>
+													</select>
+												</div>
+												<!--<button class="form-control btn btn-primary" type="button" id="openUnit">打开单位表</button>-->
+											</div>
+										</div>
+									</div>
+								</div>
+                                <div class="col-sm-12">
+                                    <div class="col-md-6">
+	                                    <div class="form-field">
+	                                        <div class="form-group">
+	                                            <label class="control-label w120"> <span
+	                                                    class="text-danger"></span> <span>拟稿人</span> <span>：</span>
+	                                            </label>
+	                                            <div class="form-control-wrap">
+	                                                <input class="form-control" name="drafterUserName" value="" >
+	                                            </div>
+	                                        </div>
+	                                    </div>
+                                    </div>
+                                </div>
+                                <!--<div class="col-sm-12">
+                                	<div class="col-md-6">
+	                                    <div class="form-field">
+	                                        <div class="form-group">
+	                                            <label class="control-label w120"> <span>创建时间</span> <span>：</span>
+	                                            </label>
+	                                            <div class="form-control-wrap">
+	                                                <input  class="form-control" name="time" value=""  disabled="disabled">
+	                                            </div>
+	                                        </div>
+	                                    </div>
+                                    </div>
+                                </div>-->
+                                <div class="col-sm-12">
+								<div class="col-md-12">
+									<div class="form-field">
+										<div class="form-group">
+											<label class="control-label w120"> <span
+													class="text-danger">*</span> <span>事由</span> <span>：</span>
+											</label>
+											<div class="form-control-wrap">
+												<textarea class="form-control" name="desc" rows="5" style="width: 645px;" datatype="*" errormsg="请输入事由" nullmsg="请输入事由"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+                                <div class="col-sm-12">
+                                	<div class="col-md-12">
+	                                    <div class="form-field">
+	                                        <div class="form-group">
+	                                            <label class="control-label w120"> <span
+	                                                    class="text-danger">*</span> <span>正文</span> <span>：</span>
+	                                            </label>
+	                                            <div class="form-control-wrap">
+	                                                <textarea class="form-control" name="content" rows="5" style="width: 645px;"
+	                                                          datatype="*1-600" errormsg="正文最多输入600个字符" nullmsg="请输入正文"></textarea>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+                                    </div>
+                                </div>
+                                    <div class="col-sm-12">
+                                    	<div class="col-md-12">
+	                                        <div class="form-field">
+	                                            <div class="form-group">
+	                                                <label class="control-label w120"> <span
+	                                                        class="text-danger"></span> <span>附件上传</span> <span>：</span>
+	                                                </label>
+	                                                <div class="form-control-wrap">
+	                                                    <div id="wrapper" class="pull-left" style="margin:0;width:calc(645px);">
+	                                                        <div id="container" style="margin: 0;padding: 0;">
+	                                                            <div id="uploader1" class="uploader uploader1-active">
+																	<div id="dndArea1" class="placeholder dndArea dndArea1-active"></div>
+																	<div id="filePicker1" class="filePicker"></div>
+																	<input type="text" value="" name="attachmentName" id="attachmentName" style="display: none;">
+																	<input type="text" value="" name="attachmentUrl" id="attachmentUrl" style="display: none;">
+																</div>
+	                                                        </div>
+	                                                    </div>
+	                                                </div>
+	                                            </div>
+	                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <div class="text-center">
+                                        <button class="btn btn-primary " id="reset" type="button">返回</button>                       
+                                        <button class="btn btn-primary btn-submits" type="button">保存</button>
+                                    </div>
+                            </fieldset>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- end 页面内容主体 -->
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+
+<div style="display: none;">
+
+</div>
+
+<script type="text/javascript">
+	var _GATE_URL = "${_gate_url}";
+</script>
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib}/bootstrap/3.3.6/bootstrap.min.js"></script>
+<script type="text/javascript" src="${_lib}/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib}/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib}/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_lib}/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib}/jquery-step/jquery.step.js"></script>
+<script type="text/javascript" src="${_lib}/layer/layer.js"></script>
+<script type="text/javascript" src="${_cp}/static/themes/blue/js/ui.js"></script>
+
+<script type="text/javascript" src="${_cp}/static/js/app.js"></script>
+<!--end 外部JS引入 -->
+<script type="text/javascript" src="${_cp}/static/js/uploadfile.js"></script>
+<script type="text/javascript" src="${_cp}/static/js/lj.js"></script>
+<!-- 检验 -->
+<script type="text/javascript" src="${_lib}/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_js}/Valid.js"></script>
+<script type="text/javascript" src="${_js}/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_js}/lib/webuploader/HYUploadFile.js"></script>
+<!--begin 自定义JS -->
+  
+<script type="text/javascript">
+//返回
+$("#reset").click(function(){
+	window.location.href="${_cp}/fast/${appId}/document/taskSendFile";
+});
+
+function onFocusSendUnit(){
+    var docUnit = $('#docUnit').val();
+    checkedNames = docUnit.split(',');
+    checkName = checkedNames.slice();
+    jQuery("#list").jqGrid('setGridParam', {
+        page : 1
+    }).trigger('reloadGrid');
+
+    $('#myModal').modal('show');
+    var width=$('#modalDialog').width()-70;
+    $(".ui-jqgrid table").setGridWidth(width);
+
+}
+
+$('#openUnit').click(function(){
+    checkedNames.splice(0, checkedNames.length);
+    var docUnit = $('#docUnit').val();
+    if (docUnit.indexOf(',')>=0)
+	{
+        checkedNames = docUnit.split(',');
+	}
+	else if (docUnit != "")
+	{
+        checkedNames.push(docUnit);
+	}
+	else{
+        //asdasd
+	}
+
+    checkName = checkedNames.slice();
+    jQuery("#list").jqGrid('setGridParam', {
+        page : 1
+    }).trigger('reloadGrid');
+
+    $('#myModal').modal('show');
+    var width=$('#modalDialog').width()-70;
+    $(".ui-jqgrid table").setGridWidth(width);
+});
+
+$('#btnCloseSend').click(function (){
+    parent.layer.alert("关闭前请保存数据，确定关闭吗？", function(index){
+        $('#myModal').modal('hide');
+        parent.layer.close(index);
+    });
+});
+
+$('#btnSaveSend').click(function (){
+    checkedNames = checkName.slice();
+    checkName.splice(0, checkName.length);
+
+    $('#docUnit').val("");
+    if (checkedNames.length < 1)
+    {
+        $('#myModal').modal('hide');;
+    }
+
+    if (checkedNames.length > 1)
+    {
+        $('#docUnit').val(checkedNames.join(','));
+    }
+    else {
+        $('#docUnit').val(checkedNames[0]);
+    }
+
+    $('#myModal').modal('hide');
+
+});
+
+var checkedNames= new Array();
+var checkName= new Array();
+
+//附件上传
+$(function(){
+    loadFile();
+    var SelectRowIndx;
+    // $("#list").jqGrid({
+    //     datatype : "json",
+    //     url : 'getDutyInfoListPage.do',
+    //     colNames : [ '单位名称','单位性质'],
+    //     colModel : [{name : 'name',index : 'name', width : '90'},
+    //         {name : 'typeCodeName',index : 'typeCodeName', width : '60'}],
+    //     rowNum : 10,
+    //     multiselect: true,
+    //     loadComplete: function() {
+    //         var rowIds = jQuery("#list").jqGrid('getDataIDs');
+    //         if(checkedNames.length >0 ){
+    //             for(var k=0; k<rowIds.length; k++) {
+
+    //                 var curChk = $("#list tr[id="+rowIds[k]+"]").find(":checkbox");
+    //                 var curRowData = jQuery("#list").jqGrid('getRowData', rowIds[k]);
+    //                 $.each(checkedNames,function(i,data){
+    //                     if(data.indexOf(curRowData.name) >= 0){
+    //                         curChk.attr('checked', 'true');
+    //                         $("#list").jqGrid('setSelection',data);
+    //                     }
+    //                 });
+    //             }
+    //         }
+    //     },
+    //     onSelectRow: function (id,check) {
+    //         //console.log(check);
+    //         var curRowData = jQuery("#list").jqGrid('getRowData', id);
+    //         if(check){
+
+    //             var ret = jQuery.inArray(curRowData.name,checkName);
+    //             if (ret == -1)
+    //             {
+    //                 //checkId.push(id);
+    //                 checkName.push(curRowData.name);
+    //             }
+
+
+
+    //         }else{
+    //             var ret = jQuery.inArray(curRowData.name,checkName);
+    //             checkName.splice(ret,1);
+    //         }
+    //         //SelectRowIndx = GetJqGridRowIndx("#" + this.id);
+    //     },
+    //     gridComplete: function () {
+    //         $("#" + this.id).jqGrid('setSelection', SelectRowIndx);
+    //     },
+    //     beforeSelectRow : function(rowid, e){
+    //     },
+    //     onSelectAll : function(rowids, status) {
+    //         if (status)
+    //         {
+    //             for (var i=0; i < rowids.length;++i)
+    //             {
+    //                 var id = rowids[i];
+    //                 var curRowData = jQuery("#list").jqGrid('getRowData', id);
+    //                 var ret = jQuery.inArray(curRowData.name,checkName);
+    //                 if (ret == -1)
+    //                 {
+
+    //                     //checkId.push(id);
+    //                     checkName.push(curRowData.name);
+    //                 }
+    //             }
+
+    //             //console.log(JSON.stringify(checkName));
+    //         }
+    //         else {
+    //             for (var i=0; i < rowids.length;++i)
+    //             {
+    //                 var id = rowids[i];
+    //                 var curRowData = jQuery("#list").jqGrid('getRowData', id);
+    //                 var ret = jQuery.inArray(curRowData.name,checkName);
+    //                 //checkId.splice(ret,1);
+    //                 checkName.splice(ret,1);
+    //             }
+    //         }
+    //     },
+    //     jsonReader : {
+    //         root : [{
+				// 	"id": "1111111",
+				// 	"name": "区县市",
+				// 	"alias": null,
+				// 	"typeCodeName": null,
+				// 	"typeCode": null,
+				// 	"typeCodeSzbmfl": null,
+				// 	"typeCodeCkdwbj": null,
+				// 	"typeCodeQxfl": null,
+				// 	"cityLeaderName": null,
+				// 	"cityLeaderId": null,
+				// 	"dwzyLeaderName": null,
+				// 	"dwzyLeaderMobile": null,
+				// 	"dwzyLeaderPhone": null,
+				// 	"dwzyLeaderFax": null,
+				// 	"contactDept": null,
+				// 	"contactUser": null,
+				// 	"contactUserMobile": null,
+				// 	"contactUserPhone": null,
+				// 	"contactUserFax": null,
+				// 	"abutmentDeptName": null,
+				// 	"abutmentDept": null,
+				// 	"abutmentDeptUserId": null,
+				// 	"abutmentDeptUserName": null,
+				// 	"abutmentDeptUserMobile": null,
+				// 	"abutmentDeptUserPhone": null,
+				// 	"abutmentDeptUserFax": null,
+				// 	"remark": null,
+				// 	"systemLookFlag": null,
+				// 	"account": null,
+				// 	"password": null,
+				// 	"status": null,
+				// 	"createUser": null,
+				// 	"createTime": null,
+				// 	"updateUser": null,
+				// 	"updateTime": null,
+				// 	"empName": null,
+				// 	"sort": null
+				// }, {
+				// 	"id": "71e94cc4887711e78f4dfa163ea7318c",
+				// 	"name": "贵阳市大数据发展管理委员会",
+				// 	"alias": null,
+				// 	"typeCodeName": "市直部门",
+				// 	"typeCode": null,
+				// 	"typeCodeSzbmfl": "政府部门",
+				// 	"typeCodeCkdwbj": "",
+				// 	"typeCodeQxfl": "",
+				// 	"cityLeaderName": "徐昊",
+				// 	"cityLeaderId": "21",
+				// 	"dwzyLeaderName": "唐振江",
+				// 	"dwzyLeaderMobile": "87989451",
+				// 	"dwzyLeaderPhone": "",
+				// 	"dwzyLeaderFax": "",
+				// 	"contactDept": null,
+				// 	"contactUser": "张敏",
+				// 	"contactUserMobile": "",
+				// 	"contactUserPhone": "",
+				// 	"contactUserFax": "87989932",
+				// 	"abutmentDeptName": null,
+				// 	"abutmentDept": "5cdf598746dc11e7bf81e8039a354752",
+				// 	"abutmentDeptUserId": "7c658c5a482c11e7ab38184f32d2f4d4",
+				// 	"abutmentDeptUserName": null,
+				// 	"abutmentDeptUserMobile": "",
+				// 	"abutmentDeptUserPhone": "",
+				// 	"abutmentDeptUserFax": "",
+				// 	"remark": "",
+				// 	"systemLookFlag": null,
+				// 	"account": "贵阳市大数据发展管理委员会",
+				// 	"password": "0192023a7bbd73250516f069df18b500",
+				// 	"status": 2,
+				// 	"createUser": null,
+				// 	"createTime": null,
+				// 	"updateUser": null,
+				// 	"updateTime": null,
+				// 	"empName": null,
+				// 	"sort": null
+				// }, {
+				// 	"id": "75e37a41887611e78f4dfa163ea7318c",
+				// 	"name": "贵阳市金阳建设投资（集团）有限公司",
+				// 	"alias": null,
+				// 	"typeCodeName": "市管企业",
+				// 	"typeCode": null,
+				// 	"typeCodeSzbmfl": "",
+				// 	"typeCodeCkdwbj": "",
+				// 	"typeCodeQxfl": "",
+				// 	"cityLeaderName": "钟汰甬",
+				// 	"cityLeaderId": "",
+				// 	"dwzyLeaderName": "曾军",
+				// 	"dwzyLeaderMobile": "87980199",
+				// 	"dwzyLeaderPhone": "",
+				// 	"dwzyLeaderFax": "",
+				// 	"contactDept": null,
+				// 	"contactUser": "王永波",
+				// 	"contactUserMobile": "87980197",
+				// 	"contactUserPhone": "",
+				// 	"contactUserFax": "87980180",
+				// 	"abutmentDeptName": null,
+				// 	"abutmentDept": "647be5a846dc11e7bf81e8039a354752",
+				// 	"abutmentDeptUserId": "10bd5bcd482e11e7ab38184f32d2f4d4",
+				// 	"abutmentDeptUserName": null,
+				// 	"abutmentDeptUserMobile": "",
+				// 	"abutmentDeptUserPhone": "",
+				// 	"abutmentDeptUserFax": "",
+				// 	"remark": "",
+				// 	"systemLookFlag": null,
+				// 	"account": "啊啊啊啊",
+				// 	"password": "0192023a7bbd73250516f069df18b500",
+				// 	"status": 2,
+				// 	"createUser": null,
+				// 	"createTime": null,
+				// 	"updateUser": null,
+				// 	"updateTime": null,
+				// 	"empName": null,
+				// 	"sort": null
+				// }, {
+				// 	"id": "abf8d7dd51b211e7a94980fa5b097f37",
+				// 	"name": "贵阳市驻京区域合作工作组",
+				// 	"alias": null,
+				// 	"typeCodeName": "市直部门",
+				// 	"typeCode": null,
+				// 	"typeCodeSzbmfl": "政府部门",
+				// 	"typeCodeCkdwbj": "",
+				// 	"typeCodeQxfl": "",
+				// 	"cityLeaderName": "刘文新",
+				// 	"cityLeaderId": "13",
+				// 	"dwzyLeaderName": "丁海",
+				// 	"dwzyLeaderMobile": "010-65543733",
+				// 	"dwzyLeaderPhone": "",
+				// 	"dwzyLeaderFax": "",
+				// 	"contactDept": null,
+				// 	"contactUser": "文广",
+				// 	"contactUserMobile": "010-65543733",
+				// 	"contactUserPhone": "13595020640",
+				// 	"contactUserFax": "",
+				// 	"abutmentDeptName": null,
+				// 	"abutmentDept": "d399686e482711e7ab38184f32d2f4d4",
+				// 	"abutmentDeptUserId": "3fb76bae482e11e7ab38184f32d2f4d4",
+				// 	"abutmentDeptUserName": null,
+				// 	"abutmentDeptUserMobile": "",
+				// 	"abutmentDeptUserPhone": "",
+				// 	"abutmentDeptUserFax": "",
+				// 	"remark": "贵阳市驻京区域合作工作委员会",
+				// 	"systemLookFlag": null,
+				// 	"account": "贵阳市驻京区域合作工作委员会",
+				// 	"password": "0192023a7bbd73250516f069df18b500",
+				// 	"status": 1,
+				// 	"createUser": null,
+				// 	"createTime": null,
+				// 	"updateUser": null,
+				// 	"updateTime": null,
+				// 	"empName": null,
+				// 	"sort": null
+				// }, {
+				// 	"id": "adc9ee5f51b211e7a94980fa5b097f37",
+				// 	"name": "贵阳市人民政府办公厅",
+				// 	"alias": null,
+				// 	"typeCodeName": "市直部门",
+				// 	"typeCode": null,
+				// 	"typeCodeSzbmfl": "政府部门",
+				// 	"typeCodeCkdwbj": "on",
+				// 	"typeCodeQxfl": "",
+				// 	"cityLeaderName": "陈少荣",
+				// 	"cityLeaderId": "14",
+				// 	"dwzyLeaderName": "刘本立",
+				// 	"dwzyLeaderMobile": "87989966",
+				// 	"dwzyLeaderPhone": "",
+				// 	"dwzyLeaderFax": "",
+				// 	"contactDept": null,
+				// 	"contactUser": "周鹏",
+				// 	"contactUserMobile": "87989528",
+				// 	"contactUserPhone": "",
+				// 	"contactUserFax": "84856256",
+				// 	"abutmentDeptName": null,
+				// 	"abutmentDept": "7475b5da46dc11e7bf81e8039a354752",
+				// 	"abutmentDeptUserId": "f83026f3482e11e7ab38184f32d2f4d4",
+				// 	"abutmentDeptUserName": null,
+				// 	"abutmentDeptUserMobile": "",
+				// 	"abutmentDeptUserPhone": "",
+				// 	"abutmentDeptUserFax": "",
+				// 	"remark": "",
+				// 	"systemLookFlag": null,
+				// 	"account": "贵阳市人民政府办公厅",
+				// 	"password": "0192023a7bbd73250516f069df18b500",
+				// 	"status": 2,
+				// 	"createUser": null,
+				// 	"createTime": null,
+				// 	"updateUser": null,
+				// 	"updateTime": null,
+				// 	"empName": null,
+				// 	"sort": null
+				// }, {
+				// 	"id": "add11a5151b211e7a94980fa5b097f37",
+				// 	"name": "贵阳市铁路建设办公室",
+				// 	"alias": null,
+				// 	"typeCodeName": "市直部门",
+				// 	"typeCode": null,
+				// 	"typeCodeSzbmfl": "政府部门",
+				// 	"typeCodeCkdwbj": "",
+				// 	"typeCodeQxfl": "",
+				// 	"cityLeaderName": "钟汰甬",
+				// 	"cityLeaderId": "",
+				// 	"dwzyLeaderName": "熊国玺",
+				// 	"dwzyLeaderMobile": "",
+				// 	"dwzyLeaderPhone": "",
+				// 	"dwzyLeaderFax": "",
+				// 	"contactDept": null,
+				// 	"contactUser": "",
+				// 	"contactUserMobile": "",
+				// 	"contactUserPhone": "",
+				// 	"contactUserFax": "",
+				// 	"abutmentDeptName": null,
+				// 	"abutmentDept": "647be5a846dc11e7bf81e8039a354752",
+				// 	"abutmentDeptUserId": "10bd5bcd482e11e7ab38184f32d2f4d4",
+				// 	"abutmentDeptUserName": null,
+				// 	"abutmentDeptUserMobile": "",
+				// 	"abutmentDeptUserPhone": "",
+				// 	"abutmentDeptUserFax": "",
+				// 	"remark": "",
+				// 	"systemLookFlag": null,
+				// 	"account": "贵阳市铁路建设办公室",
+				// 	"password": "0192023a7bbd73250516f069df18b500",
+				// 	"status": 2,
+				// 	"createUser": null,
+				// 	"createTime": null,
+				// 	"updateUser": null,
+				// 	"updateTime": null,
+				// 	"empName": null,
+				// 	"sort": null
+				// }, {
+				// 	"id": "add7f82351b211e7a94980fa5b097f37",
+				// 	"name": "贵阳市督办督查局",
+				// 	"alias": null,
+				// 	"typeCodeName": "市直部门",
+				// 	"typeCode": null,
+				// 	"typeCodeSzbmfl": "政府部门",
+				// 	"typeCodeCkdwbj": "",
+				// 	"typeCodeQxfl": "",
+				// 	"cityLeaderName": "陈少荣",
+				// 	"cityLeaderId": "14",
+				// 	"dwzyLeaderName": "杨忠德",
+				// 	"dwzyLeaderMobile": "87989845",
+				// 	"dwzyLeaderPhone": "",
+				// 	"dwzyLeaderFax": "",
+				// 	"contactDept": null,
+				// 	"contactUser": "陈昌隆",
+				// 	"contactUserMobile": "87987941",
+				// 	"contactUserPhone": "",
+				// 	"contactUserFax": "",
+				// 	"abutmentDeptName": null,
+				// 	"abutmentDept": "7475b5da46dc11e7bf81e8039a354752",
+				// 	"abutmentDeptUserId": "f83026f3482e11e7ab38184f32d2f4d4",
+				// 	"abutmentDeptUserName": null,
+				// 	"abutmentDeptUserMobile": "",
+				// 	"abutmentDeptUserPhone": "",
+				// 	"abutmentDeptUserFax": "",
+				// 	"remark": "",
+				// 	"systemLookFlag": null,
+				// 	"account": "贵阳市督办督查局",
+				// 	"password": "0192023a7bbd73250516f069df18b500",
+				// 	"status": 2,
+				// 	"createUser": null,
+				// 	"createTime": null,
+				// 	"updateUser": null,
+				// 	"updateTime": null,
+				// 	"empName": null,
+				// 	"sort": null
+				// }, {
+				// 	"id": "addeaee551b211e7a94980fa5b097f37",
+				// 	"name": "贵阳市发展改革委员会",
+				// 	"alias": null,
+				// 	"typeCodeName": "市直部门",
+				// 	"typeCode": null,
+				// 	"typeCodeSzbmfl": "政府部门",
+				// 	"typeCodeCkdwbj": "on",
+				// 	"typeCodeQxfl": "",
+				// 	"cityLeaderName": "陈少荣",
+				// 	"cityLeaderId": "14",
+				// 	"dwzyLeaderName": "（待定）",
+				// 	"dwzyLeaderMobile": "87987109",
+				// 	"dwzyLeaderPhone": "",
+				// 	"dwzyLeaderFax": "",
+				// 	"contactDept": null,
+				// 	"contactUser": "邓建华",
+				// 	"contactUserMobile": "87989074",
+				// 	"contactUserPhone": "",
+				// 	"contactUserFax": "87989566",
+				// 	"abutmentDeptName": null,
+				// 	"abutmentDept": "5cdf598746dc11e7bf81e8039a354752",
+				// 	"abutmentDeptUserId": "7c658c5a482c11e7ab38184f32d2f4d4",
+				// 	"abutmentDeptUserName": null,
+				// 	"abutmentDeptUserMobile": "",
+				// 	"abutmentDeptUserPhone": "",
+				// 	"abutmentDeptUserFax": "",
+				// 	"remark": "",
+				// 	"systemLookFlag": null,
+				// 	"account": "贵阳市发展改革委员会",
+				// 	"password": "0192023a7bbd73250516f069df18b500",
+				// 	"status": 2,
+				// 	"createUser": null,
+				// 	"createTime": null,
+				// 	"updateUser": null,
+				// 	"updateTime": null,
+				// 	"empName": null,
+				// 	"sort": null
+				// }, {
+				// 	"id": "ade53e9751b211e7a94980fa5b097f37",
+				// 	"name": "贵阳市教育局",
+				// 	"alias": null,
+				// 	"typeCodeName": "市直部门",
+				// 	"typeCode": null,
+				// 	"typeCodeSzbmfl": "政府部门",
+				// 	"typeCodeCkdwbj": "on",
+				// 	"typeCodeQxfl": "",
+				// 	"cityLeaderName": "陈少荣",
+				// 	"cityLeaderId": "14",
+				// 	"dwzyLeaderName": "周进",
+				// 	"dwzyLeaderMobile": "87989409",
+				// 	"dwzyLeaderPhone": "",
+				// 	"dwzyLeaderFax": "",
+				// 	"contactDept": null,
+				// 	"contactUser": "刘钊",
+				// 	"contactUserMobile": "87989411",
+				// 	"contactUserPhone": "",
+				// 	"contactUserFax": "",
+				// 	"abutmentDeptName": null,
+				// 	"abutmentDept": "d399686e482711e7ab38184f32d2f4d4",
+				// 	"abutmentDeptUserId": "3fb76bae482e11e7ab38184f32d2f4d4",
+				// 	"abutmentDeptUserName": null,
+				// 	"abutmentDeptUserMobile": "",
+				// 	"abutmentDeptUserPhone": "",
+				// 	"abutmentDeptUserFax": "",
+				// 	"remark": "",
+				// 	"systemLookFlag": null,
+				// 	"account": "贵阳市教育局",
+				// 	"password": "0192023a7bbd73250516f069df18b500",
+				// 	"status": 2,
+				// 	"createUser": null,
+				// 	"createTime": null,
+				// 	"updateUser": null,
+				// 	"updateTime": null,
+				// 	"empName": null,
+				// 	"sort": null
+				// }, {
+				// 	"id": "adeba73951b211e7a94980fa5b097f37",
+				// 	"name": "贵阳市民族宗教事务委员会",
+				// 	"alias": null,
+				// 	"typeCodeName": "市直部门",
+				// 	"typeCode": null,
+				// 	"typeCodeSzbmfl": "政府部门",
+				// 	"typeCodeCkdwbj": "",
+				// 	"typeCodeQxfl": "",
+				// 	"cityLeaderName": "王玉祥",
+				// 	"cityLeaderId": "17",
+				// 	"dwzyLeaderName": "李华",
+				// 	"dwzyLeaderMobile": "87989469",
+				// 	"dwzyLeaderPhone": "",
+				// 	"dwzyLeaderFax": "",
+				// 	"contactDept": null,
+				// 	"contactUser": "董西",
+				// 	"contactUserMobile": "87989476",
+				// 	"contactUserPhone": "",
+				// 	"contactUserFax": "87989421",
+				// 	"abutmentDeptName": null,
+				// 	"abutmentDept": "4fd2e54646dc11e7bf81e8039a354752",
+				// 	"abutmentDeptUserId": "9c6fb766482b11e7ab38184f32d2f4d4",
+				// 	"abutmentDeptUserName": null,
+				// 	"abutmentDeptUserMobile": "",
+				// 	"abutmentDeptUserPhone": "",
+				// 	"abutmentDeptUserFax": "",
+				// 	"remark": "",
+				// 	"systemLookFlag": null,
+				// 	"account": "贵阳市民族宗教事务委员会",
+				// 	"password": "0192023a7bbd73250516f069df18b500",
+				// 	"status": 2,
+				// 	"createUser": null,
+				// 	"createTime": null,
+				// 	"updateUser": null,
+				// 	"updateTime": null,
+				// 	"empName": null,
+				// 	"sort": null
+				// }],
+    //         page : 1,
+    //         total : 1,
+    //         records : 10
+    //     },
+    //     // jsonReader : {
+    //     //     root : 'rows',
+    //     //     page : 'page',
+    //     //     total : 'total',
+    //     //     records : 'records'
+    //     // },
+    //     prmNames : {
+    //         page : "page", // 表示请求页码的参数名称
+    //         rows : "rows" // 表示请求行数的参数名称
+    //     },
+    //     pager : '#pager',
+    //     height : 'auto',
+
+    // });
+});
+
+loadFile();
+function loadFile() {
+    fileUpload2 = new FileUpload({
+        "filePicker": "filePicker1",
+        "dndArea": "dndArea1",
+        "uploader": "uploader1",
+        "jxButton": "jxButton1",
+        "busType": "emgnc",
+        "token": $.cookie("_token")
+    });
+}
+var FileList = new Array();
+function successUpload(json) {
+	if (json.data && json.data.list) {
+		var file = json.data.list[0];
+		$('#attachmentName').val(file.submittedFileName);
+		$('#attachmentUrl').val(file.url);
+		$('#dndArea1').css('background-image', 'url(' + file.url + ')').text(file.submittedFileName);
+	}
+}
+
+// $("#docNum").change(function(){
+// 	var docNum= $("#docNum").val();
+// 	$.ajax({
+// 		url:"checkNum.do",
+// 		type:"post",
+// 		data:{"docNum":docNum},
+// 		success:function(msg){
+// 			if("可以使用"!=msg){
+// 				parent.layer.alert(msg);
+// 			$("#docNum").val("");
+// 			$("#docNum").focus();
+// 			}
+// 		}
+// 	});
+//   });
+	$('.btn-submits').valid({
+	    form: '#taskSendFileForm',
+	    showAllError: true,
+	    checkpassed: function () {
+            //parent.layer.confirm("您确定保存吗？",{icon: 3, title:'确认'},saveObj());
+            //parent.layer.confirm("您确定提交吗？",{btn: ['提交','取消'],shade: false },function(index) {
+                var postData = $("#taskSendFileForm").serializeObject();
+                // postData["attachments"] = fileList;
+                postData["docType"] ="send";
+                postData["appId"] = "${appId!''}";
+                postData["docTime"] = Date.parse(new Date($("#docTime").val()));
+                parent.layer.load(2, {shade: [0.4, '#000']});
+                ajaxHengyun({
+                    url : "${_gate_url}/api/admin/fastapplicationdoc/saveDoc",
+                    type : "post",
+                    dataType : "json",
+                    contentType : "application/json",
+                    data : JSON.stringify(postData),
+                    success : function(data) {
+                        //console.log(JSON.stringify(data));
+                        if (data == null || data == "") {
+                            console.log(JSON.stringify(data));
+                            parent.layer.alert("操作失败", {
+                                icon : 3,
+                                title : '提示'
+                            }, function(index) {
+                                parent.layer.closeAll();
+                            });
+                        } else {
+                            parent.layer.alert("操作成功", {
+                                icon : 3,
+                                title : '提示'
+                            }, function(index) {
+                                parent.layer.closeAll();
+                                window.location.href = "${_cp}/fast/${appId}/document/taskSendFile";
+                            });
+                        }
+                    },
+                    error : function() {
+                        parent.layer.closeAll();
+                    }
+                });
+
+          //  });
+	    }
+	});	
+
+    /*function saveObj() {
+
+    }*/
+</script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>交换共享系统</title>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+	<div class="main clearfix">
+		<div class="row">
+			<div class="current pull-left">
+				<h3 class="page-title">
+					<span>系统列表</span> &gt; <span class="page-title-scend">业务系统编辑</span>
+				</h3>
+			</div>
+			<div class="back pull-right">
+				<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+			</div>
+		</div>
+		<div class="view_container view_container_first row" ng-app="app" ng-controller="controller">
+			<div class="main_right pull-right">
+				<div id="secondPage" class="secondPage">
+					<div id="unit" class="view_item">
+						<form id="dataForm" action="" autocomplete="off">
+							<input type="hidden" name="id" value="${id}"/>
+							<table class="table default-table tab-border-no-layer">
+								<tbody>
+								<tr>
+									<th width="220"><span class="requiredSpan">*</span>现有信息化系统名称：</th>
+									<td>
+										<input type="text" name="sysName" id="sysName" class="form-control" datatype="*" nullmsg="请填写信息化系统名称"/>
+									</td>
+									<th width="200"><span class="requiredSpan">*</span>系统承建商：</th>
+									<td>
+										<input type="text" name="contractor" id="contractor" class="form-control" datatype="*" nullmsg="请填写系统承建商"/>
+									</td>
+								</tr>
+								<tr>
+									<th><span class="requiredSpan">*</span>承建商联系人：</th>
+									<td>
+										<input type="text" name="contName" id="contName" class="form-control" datatype="*" nullmsg="请填写承建商联系人"/>
+									</td>
+									<th><span class="requiredSpan">*</span>联系电话：</th>
+									<td>
+										<input type="text" name="contTel" id="contTel" class="form-control" datatype="m" nullmsg="请填写承建商联系电话" errormsg="请填写正确的联系电话"/>
+									</td>
+								</tr>
+								<tr>
+									<th>系统使用状态：</th>
+									<td>
+										<select name="status" id="status" class="form-control">
+											<option value="1">在用</option>
+											<option value="2">停用</option>
+											<option value="3">整改中</option>
+										</select>
+									</td>
+									<th><span class="requiredSpan">*</span>访问地址：</th>
+									<td>
+										<input type="text" name="url" id="url" class="form-control" datatype="url" nullmsg="请填写访问地址" errormsg="请填写正确格式的地址"/>
+									</td>
+								</tr>
+								<tr>
+									<th>用户体系（省电子政务网/自建）：</th>
+									<td>
+										<select name="userReft" id="userReft" class="form-control">
+											<option value="1">电子政务网</option>
+											<option value="2">自建</option>
+										</select>
+									</td>
+									<th>网络环境：</th>
+									<td>
+										<select name="network" id="network" class="form-control">
+											<option value="1">互联网</option>
+											<option value="2">电子政务外网</option>
+											<option value="3">电子政务内网</option>
+											<option value="4">电子政务专网</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th>是否需要key：</th>
+									<td>
+										<select name="hasKey" id="hasKey" class="form-control">
+											<option value="1">是</option>
+											<option value="2">否</option>
+										</select>
+									</td>
+									<th>是否需要VPN：</th>
+									<td>
+										<select name="hasVpn" id="hasVpn" class="form-control">
+											<option value="1">是</option>
+											<option value="2">否</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th>系统架构(BS/CS)：</th>
+									<td>
+										<select name="sysArch" id="sysArch" class="form-control">
+											<option value="1">BS</option>
+											<option value="2">CS</option>
+										</select>
+									</td>
+									<th>账号密码：</th>
+									<td>
+										<input type="text" name="password" id="password" class="form-control"/>
+									</td>
+								</tr>
+								<tr>
+									<th>开发语言及框架：</th>
+									<td>
+										<input type="text" name="langeFrwork" id="langeFrwork" class="form-control"/>
+									</td>
+									<th>是否有系统说明书：</th>
+									<td>
+										<select name="hasInstruction" id="hasInstruction" class="form-control">
+											<option value="1">是</option>
+											<option value="2">否</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th>系统运行环境：</th>
+									<td>
+										<input type="text" name="sysRunEnvent" id="sysRunEnvent" class="form-control"/>
+									</td>
+									<th>数据存储地：</th>
+									<td>
+										<input type="text" name="dataAddress" id="dataAddress" class="form-control"/>
+									</td>
+								</tr>
+								<tr>
+									<th>数据库类型：</th>
+									<td>
+										<select name="dbType" id="dbType" class="form-control">
+											<option value="2">MySQL</option>
+											<option value="3">SqlServer</option>
+											<option value="1">oracle</option>
+										</select>
+									</td>
+									<th>数据量：</th>
+									<td>
+										<input type="text" name="dataCount" id="dataCount" class="form-control" maxlength="9" datatype="integeNum" errormsg="请填写正确格式的数据量"/>
+									</td>
+								</tr>
+								<tr>
+									<th>是否有数据字典，能否提供：</th>
+									<td>
+										<select name="hasDict" id="hasDict" class="form-control">
+											<option value="1">是</option>
+											<option value="2">否</option>
+										</select>
+									</td>
+									<th>是否对外提供数据共享接口：</th>
+									<td>
+										<select name="shareChain" id="shareChain" class="form-control">
+											<option value="1">是</option>
+											<option value="2">否</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th>对其他单位的数据需求：<p class="text-right sizexz">(限2000字内)</p></th>
+									<td colspan="3">
+										<textarea name="dataDemand" id="dataDemand" rows="5" cols="" class="form-control"></textarea>
+									</td>
+								</tr>
+								<tr>
+									<th>系统包含主要数据：<p class="text-right sizexz">(限2000字内)</p></th>
+									<td colspan="3">
+										<textarea name="majorData" id="majorData" rows="5" cols="" class="form-control"></textarea>
+									</td>
+								</tr>
+								<tr>
+									<th>系统主要用途：<p class="text-right sizexz">(限2000字内)</p></th>
+									<td colspan="3">
+										<textarea name="sysPurpose" id="sysPurpose" rows="5" cols="" class="form-control"></textarea>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+							<div class="text-center">
+								<button class="btn btn-primary ">提交</button>
+								<button type="button" class="btn btn-primary" onclick="history.back()">取消</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/exchange/dataapi/system/updateSys",
+        },"#dataForm",{
+            attrName:"name",
+            prefix:"",
+            suffix:"",
+        });
+    })
+    getInfo("${id}");
+    function getInfo(id){//获取详情
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            url:  '${_gate_url}/api/exchange/dataapi/system/getById',
+            data:{id:id},
+            success:function(rows){
+                if(rows.data){
+                    $("#sysName").val(rows.data.sysName);
+                    $("#contractor").val(rows.data.contractor);
+                    $("#contName").val(rows.data.contName);
+                    $("#contTel").val(rows.data.contTel);
+                    $("#status").val(rows.data.status);
+                    $("#url").val(rows.data.url);
+                    $("#userReft").val(rows.data.userReft);
+                    $("#network").val(rows.data.network);
+                    $("#hasKey").val(rows.data.hasKey);
+                    $("#hasVpn").val(rows.data.hasVpn);
+                    $("#sysArch").val(rows.data.sysArch);
+                    $("#password").val(rows.data.password);
+                    $("#langeFrwork").val(rows.data.langeFrwork);
+                    $("#hasInstruction").val(rows.data.hasInstruction);
+                    $("#sysRunEnvent").val(rows.data.sysRunEnvent);
+                    $("#dataAddress").val(rows.data.dataAddress);
+                    $("#dbType").val(rows.data.dbType);
+                    $("#dataCount").val(rows.data.dataCount);
+                    $("#hasDict").val(rows.data.hasDict);
+                    $("#shareChain").val(rows.data.shareChain);
+                    $("#dataDemand").val(rows.data.dataDemand);
+                    $("#majorData").val(rows.data.majorData);
+                    $("#sysPurpose").val(rows.data.sysPurpose);
+				};
+            }
+        });
+    }
+
+    /*----------------------angular.js---------------------------------------*/
+    var app = angular.module('app', []);
+
+    app.controller('controller', function ($scope,$http,token) {
+        var urlPrev ='${_gate_url}';
+        $scope.submit = function () {
+            $('.btn-submit').click();
+        };
+        $scope.save = function () {
+            save();
+        }
+    }).service('token',function () {
+        this.getToken = function () {
+            return getToken();
+        }
+    });
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        ignoreHidden: true,
+        showAllError: true,
+        checkpassed: function () {
+            var appElement = document.querySelector('[ng-controller=controller]');
+            var $scope = angular.element(appElement).scope();
+            $scope.save();
+        }
+    });
+
+
+
+   /* /!*提交方法*!/
+    $('.btn-save').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        checkpassed: function () {
+            save();
+        }
+    });*/
+    function save(){
+        var gxqptDutiesDTO =$("#dataForm").serializeJSON();
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url:  '${_gate_url}/api/exchange/dataapi/system/updateSys',
+            data:JSON.stringify(gxqptDutiesDTO),
+            success:function(rows){
+                if (rows.data){
+                    parent.layer.msg("修改成功！",{time:1000});
+                    window.location.href="${_cp}/module/systemList?pageNo="+"${pageNo}";
+                }else{
+                    parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                }
+            }
+        });
+    };
+    $("#dataDemand,#majorData,#sysPurpose").bind('input porpertychange',function(){
+        var textareaVal = $(this).val();
+        if(textareaVal.length>1800){
+            $(this).val(textareaVal.substr(0,1800));
+        };
+        var thisTxt=$("#name").val();
+        $(this).siblings("p").html(thisTxt)
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<template>
+	<Layout>
+		<Content>
+			<Breadcrumb>
+				<BreadcrumbItem>培训管理</BreadcrumbItem>
+				<BreadcrumbItem>培训列表</BreadcrumbItem>
+			</Breadcrumb>
+			<Card>
+				<Form :model="trainData" ref="searchformData" inline :label-width="80">
+                    <FormItem label="培训类别" prop="type">
+                        <Select v-model="trainData.type">
+							<Option value="类别1">类别1</Option>
+							<Option value="类别2">类别2</Option>
+						</Select>
+                    </FormItem>
+                    <FormItem label="培训时间" prop="serviceDate">
+						<DatePicker type="daterange" v-model="trainData.serviceDate" show-week-numbers placement="bottom-end" placeholder="请选择服务时间" style="width: 200px"></DatePicker>
+					</FormItem>
+                    <FormItem label="培训名称" prop="name">
+                        <Input v-model="trainData.name"></Input>
+					</FormItem>
+                    <FormItem label="培训内容" prop="content">
+                        <Input v-model="trainData.content"></Input>
+					</FormItem>
+					<FormItem label="状态" prop="state">
+						<Select v-model="trainData.state">
+							<Option value="已提交">已提交</Option>
+							<Option value="未提交">未提交</Option>
+							<Option value="已申请">已申请</Option>
+							<Option value="申请中">申请中</Option>
+						</Select>
+					</FormItem>
+					<FormItem>
+						<Button type="info">查询</Button>
+						<Button type="info" @click="addItem">新增</Button>
+					</FormItem>
+				</Form>
+				<Table border ref="safetyEvalTable" :columns="safetyEvalCol" :data="safetyEvalData"></Table>
+				<div class="bottom-bar">
+					<Page :total="100" show-sizer show-elevator></Page>
+				</div>
+			</Card>
+		</Content>
+        <trainDetailModal :evalModal='trainDetail' :closeModal='closeTrainDetail'></trainDetailModal>
+        <pointModal :evalModal='point' :closeModal='closePointModal'></pointModal>
+        <addTrainItemModal :evalModal='addTrainItem' :closeModal='closeAddTrainItem'></addTrainItemModal>
+	</Layout>
+</template>
+<script>
+import trainDetailModal from "./trainModal/trainDetailModal.vue";
+import pointModal from "./trainModal/pointModal.vue";
+import addTrainItemModal from "./trainModal/addTrainItemModal.vue";
+export default {
+    components: {
+        trainDetailModal,
+        pointModal,
+        addTrainItemModal
+    },
+    created(){
+        console.log(document.querySelector('.ivu-modal-footer'));
+    },
+    data() {
+        return {
+            trainDetail: false,
+            point:false,
+            addTrainItem:false,
+            trainData:{},
+            safetyEvalCol: [{
+                title: '序号',
+                type: 'index',
+                width: 80,
+                align: 'center'
+                
+            }, {
+                title: '培训名称',
+                key: 'trainName'
+            }, {
+                title: '培训类别',
+                key: 'trainType'
+            }, {
+                title: '培训时间',
+                key: 'trainDate'
+            }, {
+                title: '状态',
+                key: 'state'
+            }, {
+                title: '培训评分',
+                key: 'trainPoint'
+            }, {
+                title: '培训反馈文件',
+                key: 'trainBackDoc',
+                render: (h, params) => {
+                    return h('div', [
+                        h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small'
+                            },
+                            style: {
+                                marginRight: '5px'
+                            },
+                            on: {
+                                click: () => {
+                                    console.log("下载地址");
+                                }
+                            }
+                        }, '下载'),
+                    ]);
+                }
+            }, {
+                title: '操作',
+                type: 'act',
+                width: 200,
+                align: 'center',
+                render: (h, params) => {
+                    return h('div', [
+                        h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small'
+                            },
+                            style: {
+                                marginRight: '5px'
+                            },
+                            on: {
+                                click: () => {
+                                     this.$router.push('trainDetail');
+                                    // this.trainDetail = true;
+                                }
+                            }
+                        }, '详情'),
+                        h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small'
+                            },
+                            style: {
+                                marginRight: '5px',
+                            },
+                            on: {
+                                click: () => {
+                                    this.point = true;
+                                }
+                            }
+                        }, '评分'),
+                        h('Button', {
+                            props: {
+                                type: 'primary',
+                                size: 'small'
+                            },
+                            on: {
+                                click: () => {
+                                    this.addTrainItem = true;
+                                }
+                            }
+                        }, '修改')
+                    ]);
+                }
+            }],
+            safetyEvalData: [{
+                trainType: '培训类型',
+                trainName: '培训名称',
+                trainDate: '2018/8/9-2018/8/10',
+                trainAddr:'培训地址',
+                trainContent:'培训内容',
+                state: '已完结',
+                rejectReason:'驳回理由',
+                point: '5分',
+                trainBackDoc:'反馈文件',
+                trainOpinion:'培训意见'
+            }, {
+                trainType: '培训类型',
+                trainName: '培训名称',
+                trainDate: '2018/8/9-2018/8/10',
+                trainAddr:'培训地址',
+                trainContent:'培训内容',
+                state: '已完结',
+                rejectReason:'驳回理由',
+                point: '5分',
+                trainBackDoc:'反馈文件',
+                trainOpinion:'培训意见'
+            }, {
+                trainType: '培训类型',
+                trainName: '培训名称',
+                trainDate: '2018/8/9-2018/8/10',
+                trainAddr:'培训地址',
+                trainContent:'培训内容',
+                state: '已完结',
+                rejectReason:'驳回理由',
+                point: '5分',
+                trainBackDoc:'反馈文件',
+                trainOpinion:'培训意见'
+            }, {
+                trainType: '培训类型',
+                trainName: '培训名称',
+                trainDate: '2018/8/9-2018/8/10',
+                trainAddr:'培训地址',
+                trainContent:'培训内容',
+                state: '已完结',
+                rejectReason:'驳回理由',
+                point: '5分',
+                trainBackDoc:'反馈文件',
+                trainOpinion:'培训意见'
+            }, {
+                trainType: '培训类型',
+                trainName: '培训名称',
+                trainDate: '2018/8/9-2018/8/10',
+                trainAddr:'培训地址',
+                trainContent:'培训内容',
+                state: '已完结',
+                rejectReason:'驳回理由',
+                point: '5分',
+                trainBackDoc:'反馈文件',
+                trainOpinion:'培训意见'
+            }, {
+                trainType: '培训类型',
+                trainName: '培训名称',
+                trainDate: '2018/8/9-2018/8/10',
+                trainAddr:'培训地址',
+                trainContent:'培训内容',
+                state: '已完结',
+                rejectReason:'驳回理由',
+                point: '5分',
+                trainBackDoc:'反馈文件',
+                trainOpinion:'培训意见'
+            }, {
+                trainType: '培训类型',
+                trainName: '培训名称',
+                trainDate: '2018/8/9-2018/8/10',
+                trainAddr:'培训地址',
+                trainContent:'培训内容',
+                state: '已完结',
+                rejectReason:'驳回理由',
+                point: '5分',
+                trainBackDoc:'反馈文件',
+                trainOpinion:'培训意见'
+            }],
+        }
+    },
+    methods: {
+        closeTrainDetail() {//关闭处理详情modal
+            console.log("关闭1");
+            this.trainDetail = false;
+        },
+        closePointModal(){//关闭评分modal
+            console.log("关闭3");
+            this.point = false;
+        },
+        closeAddTrainItem(){//关闭服务申请modal
+            this.addTrainItem = false;
+        },
+        addItem(){//新增
+            this.addTrainItem = true;
+        }
+    }
+}
+</script>
+<style lang="less" scoped="scoped">
+	.act-btn-group{
+		button{
+			margin: 0 12px;
+		}
+    }
+    .ivu-modal-footer{
+        display: none;
+    }
+</style>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Expires" content="0" />
+		<meta name="renderer" content="webkit" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/js/skin/layer.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/css/message/common.css" />
+		<link rel="stylesheet" type="text/css" href="${_static}/css/message/channel.css" />
+		<link rel="stylesheet" href="${_static}/css/core/module.css">
+		<script type="text/javascript" src="${_static}/js/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/jquery.combobox.js"></script>
+
+        <script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+        <script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+        <script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+		<script type="text/javascript" src="${_static}/js/com_base.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+	</head>
+	<style type="text/css">
+		.channel_checkContent {
+			    width: 68% !important;
+			    margin: 0 auto;
+			    padding: 0 !important;
+			    margin-left: 17% !important;
+			}
+			a:hover{
+				text-decoration: none !important;
+			}
+			@media screen and (max-device-width:1440px ) {
+				.channel_checkContent {
+					width: 82% !important;
+					margin: 0 auto !important;
+					margin-left: 10% !important;
+					padding-bottom: 40px !important;
+				}
+				.channel_checkContent>div{
+				width: 100% !important;
+				}
+			}
+			.channel_checkContent>div{
+				width: 88%;
+			}
+	</style>
+	<body>
+		<!--渠道编辑-->
+		<div id="channel_edit" class="panel-body panel-tabContent channel_check" ng-app="dict" ng-controller="controller" style="display: block;position: relative;padding-top: 3%;">
+			<form id="channel_editContent" class="form-inline form-inline-two channel_checkContent">
+				<div class="form-group" style="margin-top: 15px !important;">
+					<label for="recipient-name" class="control-label text-right" style="float: left;">&nbsp;<span>渠道类型</span>   :   </label>
+					<input type="text" class="form-control" id="channel_editType" style="width: 450px;float: right;" disabled="disabled">
+				</div>
+
+				<div class="form-group" style="margin-top: 15px !important;">
+					<label for="recipient-name" class="control-label text-right" style="float: left;">&nbsp;<span><i style="color: red">*</i>渠道名称</span>   :   </label>
+					<input type="text" class="form-control" id="channel_editName" ng-model="channel.name" style="width: 450px;float: right;" maxlength="60">
+					<i ></i>
+				</div>
+				<div class="form-group" style="margin-top: 15px !important;">
+					<label for="recipient-name" class="control-label text-right" style="float: left;"><i style="color: red">*</i><span>appId</span>  :   </label>
+					<input type="text" class="form-control form_app" id="edit_appId" style="width: 450px;float: right;" disabled="disabled" maxlength="64">
+				</div>
+				<div class="form-group" style="margin-top: 15px !important;">
+					<label for="recipient-name" class="control-label text-right" style="float: left;"><i style="color: red">*</i><span>appSecret</span>   :   </label>
+					<input type="text" class="form-control form_app" id="edit_appSecret" ng-model="channel.appSecret"  style="width: 450px;float: right;" maxlength="64">
+					<i ></i>
+				</div>
+				<div id="accessTokenDiv" class="form-group" style="margin-top: 15px !important;">
+					<label for="recipient-name" class="control-label text-right" style="float: left;"><i style="color: red">*</i><span>accessToken</span>    :   </label>
+					<input type="text" class="form-control" id="accessToken" style="width: 450px;float: right;" maxlength="64" >
+					<i ></i>
+				</div>
+				<div class="form-group" style="margin-top: 15px !important;">
+					<label for="recipient-name" class="control-label text-right"><span>描述</span>:   </label>
+					<textarea  id="edit_description" ng-model="channel.description" style="width: 450px;height:150px;float: right;" ></textarea>
+
+					<i ></i>
+				</div>
+			</form>
+		</div>
+		<!--渠道编辑-->
+		<div class="layer_bottom">
+			<a href="###" id="channel_cancel" style="background: #fff;color: #4898d5;">取消</a>
+			<a href="###" id="channel_add">确认</a>
+			
+		  </div>
+	</body>
+	<script type="text/javascript">
+
+        $(function(){
+            openValidator({
+                type:"POST",
+                dataType: 'json',
+                contentType : 'application/json',
+                url: "${_gate_url}/api/msgs/channel/update",
+            },"#channel_editContent",{
+                attrName:"ng-model",
+                prefix:"channel.",
+                suffix:"",
+            });
+        })
+
+        var dict = angular.module('dict', []);
+        dict.controller('controller', function ($scope,$http,token) {
+            var urlPrev ='${_gate_url}';
+            $scope.submit = function () {
+                $('.btn-submit').click();
+            };
+            $scope.save = function () {
+                saveObj();
+            }
+        }).service('token',function () {
+            this.token = function () {
+                return getToken();
+            }
+        });
+		window.onload=function(){
+			//编辑渠道渠道类型
+			ajaxHengyun({
+				type: 'post',
+				url: "${_gate_url}/api/msgs/channeltype/querySelect",
+				dataType: "json",
+				contentType: "application/json",
+				cache: false,
+				success: function(result) {
+					$("#channel_editType").combobox({
+						disabled: true,
+						editable: true, // 可编辑
+						panelHeight: 'auto',
+						valueField: 'id',
+						textField: 'name',
+						height: 34,
+						width:450,
+						multiple: false, // 单选复选
+						data: result.data.list,
+						onSelect: function(data) {
+							$("#channel_editType").attr("id_add",$(this).combobox('getValue')[0]);
+							$("#channel_editType").attr("name_add",$(this).combobox('getText'));
+                            //2是微博,控制accessToken
+                            showDiv($(this).combobox('getValues')[0]);
+                        },
+						onLoadSuccess: function(data) {
+							ajaxHengyun({
+								type: "get",
+								url: "${_gate_url}/api/msgs/channel/get",
+                                data:{id:"${id}"},
+								success: function(rows) {
+									$('#channel_edit').attr("nid","${id}");
+									$("#edit_appId").val(rows.data.appId);
+									$("#edit_appSecret").val(rows.data.appSecret);
+                                    $("#accessToken").val(rows.data.accessToken);
+									$("#edit_description").val(rows.data.description);//描述
+									$("#channel_editName").val(rows.data.name);//渠道名称
+									$("#channel_editType").combobox('setValue',types(rows.data.channelType));//渠道id
+                                    showDiv(rows.data.channelType);
+								}
+							});
+						}
+					});
+				}
+			});
+			//渠道类型转文字
+			function types(type){			
+				if(type==1||type=="1"){
+					return "微信";
+				}
+				if(type==2||type=="2"){
+					return "微博";
+				}
+				if(type==4||type=="4"){
+					return "公示平台";
+				}
+				if(type==5||type=="5"){
+					return "移动终端";
+				}
+			}
+			//2是微博,控制accessToken
+            function showDiv(zhi){
+                if(2==zhi)
+                    $("#accessTokenDiv").show();
+                else
+                    $("#accessTokenDiv").hide();
+            }
+			//验证
+			$(".form-control").blur(function(){
+				var name = $(this).siblings("label").find("span").html()
+				if($(this).val() == ""){
+					$(this).siblings("i").show().html(name+"不能为空")
+				}else{
+					$(this).siblings("i").html("")
+				}
+			});
+			$("#channel_cancel").click(function(){
+					layer.closeAll();
+					var index = parent.layer.getFrameIndex(window.name);
+					parent.layer.close(index);
+			});
+			$("#channel_add").click(function(){
+				var channelName=$("#channel_editType").combobox('getText');//渠道类型名称
+				var channetype_id=$("#channel_editType").combobox('getValue');//渠道类型id
+				var s1 = /^[0-9a-zA-Z]{6,64}$/
+                         var pp = /^[0-9a-zA-Z-.]{8,64}$/
+				if($(".form-control").siblings("i").html() !=""){
+					layer.alert("请将渠道信息填写完整")
+				}else if($("#channel_editName").val() == "" ||$("#edit_appSecret").val() == "" ){
+					layer.alert("请将渠道信息填写完整")
+				}else if(!s1.test($("#edit_appSecret").val())){
+					layer.alert("appSecret只能为字母或者数字且为6到64位")
+				}else if(!pp.test($("#accessToken").val())&&channetype_id==2){
+                             layer.alert("accessToken只能为字母或者数字且为8到64位")
+                         }else if($("#edit_description").val().length>300){
+                             layer.alert("描述最大长度只能输入300字")
+                         }else{
+                    var appElement = document.querySelector('[ng-controller=controller]');
+                    var $scope = angular.element(appElement).scope();
+					ajaxHengyun({
+					type: "post",
+					url: "${_gate_url}/api/msgs/channel/update",
+					dataType: 'json',								
+					contentType:"application/json",
+					data:JSON.stringify({
+						name:$("#channel_editName").val(),//渠道
+						appId:$("#edit_appId").val(),//appid
+						appSecret:$("#edit_appSecret").val(),//appsecret
+						channelType:channetype_id,//渠道id
+                        accessToken:$("#accessToken").val(),//accessToken
+						description:$("#edit_description").val(),//描述
+						id:$('#channel_edit').attr("nid")
+					}),
+					success: function(rows) {
+						if(rows.data) {		
+							parent.layer.msg("编辑成功！", {
+								icon: 6,
+								time: 1000
+							});
+                            parent.home.reloadJqgrid();
+                            layer.closeAll();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+						} else {
+							parent.layer.msg(rows.errmsg, {
+								time: 1000
+							});
+						}
+					}
+				});
+			   }
+			})
+		}
+	</script>
+</html>
+

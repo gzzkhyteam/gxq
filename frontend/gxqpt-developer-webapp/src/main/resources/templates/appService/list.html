@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>应用服务管理 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+<body>
+<div class="main-box clearfix">
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                应用管理 > <span class="active">列表</span>
+            </div>
+            <a href="${_cp}/module/appServiceCreate" class="button-icon pull-right">
+                <img src="${_static}/images/add_icon.png"/> 新增应用
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="main_item clearfix" ng-repeat="catygory in appList">
+                <h3 class="clearfix">
+                    <span class="left main_item_title">{{catygory.typeName}}</span>
+                </h3>
+                <div class="main_item_conter clearfix" ng-repeat="app in catygory.children">
+                    <div class="left">
+                        <img ng-src="{{app.logoUrl || '${_static}/images/default.png'}}" onError="app.logo='${_static}/images/default.png'"/>
+                    </div>
+                    <div class="right">
+                        <h3>{{app.name}}</h3>
+                        <p>{{app.desc}}</p>
+                    </div>
+                    <div class="main_item_conter_hover">
+                        <ul class="clearfix">
+                            <li class=""><a href="${_cp}/module/functionInApp?appId={{app.appId}}">功能管理</a></li>
+                            <li><a href="${_cp}/module/deployList?appId={{app.appId}}">部署管理</a></li>
+                            <li><a href="${_cp}/module/managerList?appId={{app.appId}}">维护管理员</a></li>
+                            <li><a ng-href="${_cp}/module/appServiceEdit?id={{app.id}}">修改</a></li>
+                            <li><a ng-href="${_cp}/module/appServiceView?id={{app.id}}">详情</a></li>
+                            <li><a ng-href="${_cp}/module/appDependManager?appId={{app.id}}">维护依赖</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+</body>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript">
+    var pageType = "appList";
+</script>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope,$http,dataJson) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $http.get(urlPrev + 'application/find',{
+             headers:getHeaders(),
+        }).success(function (res) {
+            $scope.appList = dataJson.get(res.data);
+        })
+        $(".main").on('mouseenter','.main_item_conter',function () {
+            $(this).find(".main_item_conter_hover").css("display", "block");
+        });
+        $(".main").on('mouseleave','.main_item_conter',function () {
+            $(this).find(".main_item_conter_hover").css("display", "none");
+        });
+    }).service('dataJson',function () {
+        this.get = function (oldData) {
+            var newData = [];
+            if(oldData.length){
+                $.each(oldData,function (index,value) {
+                    var appObj = {
+                        appId:value.appId,
+                        desc:value.desc,
+                        id:value.id,
+                        name:value.name,
+                        status:value.status,
+                        logoUrl:value.logoUrl
+                    };
+                    if(newData.length){
+                        flag = true;
+                        $.each(newData,function (index1,value1) {
+                            value1.type
+                            if(value.type == value1.type){
+                                value1.children.push(appObj);
+                                flag = false;
+                                return false;
+                            }
+                        })
+                        
+                        if(flag){
+                        	
+                        	
+                        	var orderIndex = getOrderNum(value.type);
+                        	
+                            var obj = {
+                            	orderIndex:orderIndex,
+                                type:value.type,
+                                typeName:value.typeName,
+                                children:[appObj]
+                            }
+                            newData.push(obj);
+                        }
+                    }else{
+                    	var orderIndex = getOrderNum(value.type);
+                    	
+                        var obj = {
+                        	orderIndex:orderIndex,
+                            type: value.type,
+                            typeName:value.typeName,
+                            children:[appObj]
+                        }
+                        newData.push(obj);
+                    }
+                })
+            }
+            return newData.sort(function (a1,a2){
+            	return a1.orderIndex - a2.orderIndex;
+            });
+        }
+    })
+    
+    function getOrderNum(type){
+    	
+    	var orderIndex = 100000000;
+    	switch (type){
+    		case "jryy":	orderIndex = 0;break;
+    		case "zcyy":	orderIndex = 2;break;
+    		case "zcpt":	orderIndex = 1;break;
+    		case "zcfw":	orderIndex = 3;break;
+    		case "zcfwmk":	orderIndex = 4;break;
+    		default : orderIndex = getHashCode(type,false);break;
+    	}
+    	return orderIndex;
+    }
+    
+    /**
+	 * 获取字符串的哈希值
+	 * @param {String} str
+	 * @param {Boolean} caseSensitive
+	 * @return {Number} hashCode
+	 */
+	function getHashCode (str,caseSensitive){
+	    if(!caseSensitive){
+	    	
+	    	if(str == null){
+	    		str = "null";
+	    	
+	    	}
+	    	
+	        str = str.toLowerCase();
+	    }
+	    // 1315423911=b'1001110011001111100011010100111'
+	    var hash  =   1315423911,i,ch;
+	    for (i = str.length - 1; i >= 0; i--) {
+	        ch = str.charCodeAt(i);
+	        hash ^= ((hash << 5) + ch + (hash >> 2));
+	    }
+	     
+	    return  (hash & 0x7FFFFFFF);
+	}
+    /*angularJS*/
+</script>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12 marginTop">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                    	<form autocomplete="off" id="dataForm" action="" method="post">
+							<input type="hidden" name="appId" value="${appId}">
+							<input type="hidden" name="parentId" value="${parentId}">
+                            <table class="table default-table table-title-left">
+                            	<tbody>
+                            		<tr>
+                            			<th width="130"><sub class="required">*</sub>资源名称</th>
+                            			<td><input class="form-control inp-form" name="name" dataType="*" nullmsg="资源名称不能为空！"/></td>
+                            			<th width="130">资源编码</th>
+                            			<td><input class="form-control inp-form" name="code" placeholder="格式：项目名_模块名_功能名" /></td>
+                            		</tr>
+                            		<tr>
+                            			<th><sub class="required">*</sub>资源类型</th>
+                            			<td>
+                            				<select id="type" name="type" class="form-control chosen-select set-form">
+			                                	<option value="1">菜单</option>
+			                                    <option value="2">菜单页面中的链接（按钮）</option>
+			                                    <option value="3">api 服务接口</option>
+			                                </select>
+                            			</td>
+                            			<th width="130">页面地址</th>
+                            			<td><input class="form-control inp-form" placeholder="就是前端的调整地址，当点击某个东西，会到一个新的界面。" name="url"/></td>
+                            		</tr>
+                            		<tr>
+                            			<th>打开方式</th>
+                            			<td>
+                            				<select id="target" name="target" class="form-control chosen-select set-form">
+			                                	<option value="_self">相同框架</option>
+			                                    <option value="_top">整页</option>
+			                                    <option value="_blank">新窗口</option>
+			                                    <option value="_paren">父窗口</option>
+			                                </select>
+                            			</td>
+                            			<th>状态</th>
+                            			<td>
+                            				<select id="status" name="status" class="form-control chosen-select set-form">
+			                                	<option value="1">启用</option>
+			                                    <option value="2">禁用</option>
+			                                </select>
+                            			</td>
+                            		</tr>
+                            		<tr>
+                            			<th width="130">菜单图标</th>
+                            			<td><input class="form-control inp-form" name="icon"/></td>
+                            			<th width="130">菜单分组</th>
+                            			<td><input class="form-control inp-form" name="group"/></td>
+                            		</tr>
+                            		<tr>
+                            		    <th>是否公有资源</th>
+                            			<td colspan="3">
+                            				<select id="publicIs" name="publicIs" class="form-control chosen-select set-form">
+			                                	<option value="true">是</option>
+			                                    <option value="false" selected>否</option>
+			                                </select>
+                            			</td>
+                            		</tr>
+                            		<tr>
+                            		    <th>后端验证资源集合</th>
+                            			<td colspan="3">
+                            				<input class="form-control inp-form" placeholder="页面地址是前端跳转地址，而后端验证地址是需要后端做权限判断的。多个地址请用分号(;)分割 。若不需要后端鉴权则可以不填写。" name="authUrls"/>
+                            			</td>
+                            		</tr>
+                            		<tr>
+                            			<th>功能描述</th>
+                            			<td colspan="3"><textarea rows="3" class="form-control textarea-form" name="desc"></textarea></td>
+                            		</tr>
+                            	</tbody>
+							</table>
+							<button type="button" class="btn-submit hidden"></button>
+                    	</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_validator.js"></script>
+
+<script type="text/javascript">
+	function save(){
+        $('.btn-submit').click();
+	}
+	$('.btn-submit').valid({
+		form: '#dataForm',
+		//showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+		//false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+		showAllError: true,
+		ignoreHidden: true,
+		checkpassed: function () {
+			saveObj();
+		}
+	});
+	/*提交*/
+	function saveObj(){
+		var data =$("#dataForm").serializeJSON();
+		var saveObjSettingVar = saveObjSetting(JSON.stringify(data));
+
+		ajaxHengyun(saveObjSettingVar);
+	};
+	
+	
+	$(function(){
+		
+		openValidator(saveObjSetting(null),"#dataForm");
+	})
+	function saveObjSetting(data){
+		
+		return {
+			type:"POST",
+			dataType: 'json',
+            contentType : 'application/json',
+			url: "${_gate_url}/api/admin/resource/save",
+			data: data,
+			success:function(rows){
+				if (rows.data){
+					var nodes={
+						"id":rows.data.id,
+						"parentId":rows.data.parentId,
+						"children":[],
+						"name":rows.data.name,
+					}
+					parent.home.addChildNode(nodes);
+				}else{
+					parent.layer.msg(rows.errmsg,{time:1000});
+				}
+			}
+		};
+	}
+</script>
+</body>
+</html>

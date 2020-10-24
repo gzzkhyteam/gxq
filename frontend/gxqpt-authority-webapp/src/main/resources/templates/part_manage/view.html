@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/sys_com/com.css"/>
+    <style type="text/css">
+        .table tbody tr td {
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <form id="myForm" action="" method="post">
+                            <table class="table default-table table-title-left">
+                                <tbody>
+                                <tr>
+                                    <th width="130">部门全称</th>
+                                    <td name="name"></td>
+                                    <th>部门简称</th>
+                                    <td name="shortName"></td>
+                                </tr>
+                                <tr>
+                                    <th>部门其他名称</th>
+                                    <td name="elseName"></td>
+                                    <th>排序权重</th>
+                                    <td name="sortvalue">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <!--<th><sub class="required">*</sub>部门管理员</th>-->
+                                    <!--<td><input class="form-control inp-form" name="orgadmin" value=""/></td>-->
+                                    <!--<td><select multiple class="form-control set-form" id="part-admin"></select></td>-->
+                                    <th>部门节点类型</th>
+                                    <td name="fornodetype">
+                                    </td>
+                                    <th>启用标记</th>
+                                    <td name="isenable">
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                </tr>
+                                <tr>
+                                    <th>电话</th>
+                                    <td name="telcode"></td>
+                                    <th>传真</th>
+                                    <td name="faxcode"></td>
+                                </tr>
+                                <tr>
+                                    <th>邮编</th>
+                                    <td name="zipcode"></td>
+                                    <th>状态</th>
+                                    <td name="status">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>部门介绍</th>
+                                    <td name="descrption"></textarea></td>
+                                    <th>部门职责</th>
+                                    <td name="orgduty"></textarea></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript">
+    var id = "${id}";
+    var systemCode = parent.home.systemCode;
+
+    getPart();
+
+    //获取部门的值
+    function getPart() {
+        ajaxHengyun({
+            type: 'GET',
+            // url: 'http://192.168.1.124:10003/api/admin/gxqpt/dpm/getDetails',
+            url: '${_gate_url}/api/admin/gxqpt/dpm/getDetails',
+            data: {systemCode: systemCode, id: id},
+            success: function (res) {
+                if(res.errcode!==0){
+                    return false;
+                }
+                res.data = dealElement(res.data);
+                res.data.name && $('[name="name"]').text(res.data.name);
+                res.data.shortName && $('[name="shortName"]').text(res.data.shortName);
+                res.data.elseName && $('[name="elseName"]').text(res.data.elseName);
+                (res.data.sortvalue || res.data.sortvalue == 0) && $('[name="sortvalue"]').text(res.data.sortvalue);
+                if(res.data.fornodetype == '0') $('[name="fornodetype"]').text('实体');
+                if(res.data.fornodetype == '1') $('[name="fornodetype"]').text('分类');
+                res.data.isenable && $('[name="isenable"]').text(res.data.isenable);
+                res.data.telcode && $('[name="telcode"]').text(res.data.telcode);
+                res.data.zipcode && $('[name="zipcode"]').text(res.data.zipcode);
+                res.data.faxcode && $('[name="faxcode"]').text(res.data.faxcode);
+                if (res.data.isenable == '1') $('[name="isenable"]').text('启用');
+                if (res.data.isenable == '0') $('[name="isenable"]').text('禁用');
+                $('[name="descrption"]').text(res.data.descrption != null ? res.data.descrption : "");
+                res.data.orgduty && $('[name="orgduty"]').text(res.data.orgduty);
+                if (res.data.status == '1') $('[name="status"]').text('正常');
+                if (res.data.status == '2') $('[name="status"]').text('待撤销');
+                if (res.data.status == '3') $('[name="status"]').text('已撤销');
+            }
+        })
+    }
+    function dealElement(obj){//格式化返回值
+        if ( obj === null || obj === undefined || obj === "" ) return obj;
+        for ( var key in obj ){
+            if ( obj[key] == null || obj[key] == 'null'){
+                obj[key]="";
+            }
+        }
+        return obj;
+    }
+</script>
+</body>
+
+</html>

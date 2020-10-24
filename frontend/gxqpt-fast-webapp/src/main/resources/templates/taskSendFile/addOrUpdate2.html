@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- begin 外部CSS引入 -->
+    <link rel="stylesheet" type="text/css"
+          href="${_css}/reset.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib}/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib}/font-awesome/css/font-awesome.min.css">
+    <!--
+    <link rel="stylesheet" type="text/css"
+        href="${_lib}/chosen/chosen.min.css">
+    -->
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib}/webuploader/webuploader.css">
+    <link rel="stylesheet" type="text/css"
+          href="${_lib}/jquery-step/jquery.step.css">
+
+    <link rel="stylesheet"
+          href="${_static}/themes/blue/css/ui.css">
+
+    <link rel="stylesheet" href="${_css}/app.css">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_js}/hengyun/hengyun_ajax.js"></script>
+    <!-- end 外部CSS引入 -->
+
+    <!-- begin 自定义样式 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        label.control-label {
+            text-align: right;
+        }
+
+        table.infoList tr th {
+            border: 1px solid #e1e6eb;
+            padding: 10px 12px;
+            vertical-align: middle;
+            width: 180px;
+            font-weight: normal;
+        }
+
+        table.infoListTab tr th {
+            width: auto;
+        }
+
+        .upuserhead{
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .uploader {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td input.form-control {
+            width: 100%;
+        }
+        table.infoList tbody tr td select.form-control {
+            width: 100%;
+        }
+        .infoList thead tr th, .infoList tbody tr td{
+			text-align:left;
+		}
+		table.dealInfoTab,
+		table.dealInfoTab tbody tr th,
+		table.dealInfoTab tbody tr td{
+			border:0;
+		}
+		table.dealInfoTab tbody tr th{
+			text-align:right;
+			vertical-align: middle;
+		}
+		input[type="radio"], input[type="checkbox"] {
+		    vertical-align: middle;
+		    margin: 0 6px 0 0;
+		}
+		span.agreeText{
+			margin-right:20px;
+		}
+    </style>
+    <!-- end 自定义样式 -->
+
+</head>
+
+<body>
+
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>
+                            收发文管理 &gt; <font color="#0099cc">发文处理 </font>
+                        </h5>
+                    </div>
+                </div>
+                <form action="doDoTask.do" method="post" >
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                        	<h5>基本信息</h5>
+                            <table class="table default-table infoList infoListTab">
+								<tr>
+									<th style="width:150px;">发文号</th>
+									<td colspan="3">
+
+									</td>
+									<th style="width:150px;">密级</th>
+									<td></td>
+								</tr>
+								<tr>
+									<th>事由</th>
+									<td colspan="5"></td>
+								</tr>
+								<tr>
+									<th>主办单位</th>
+									<td ></td>
+									<th>拟稿人</th>
+									<td ></td>
+									<th>日期</th>
+									<td ></td>
+								</tr>
+								<tr>
+									<th>发送单位</th>
+									<td colspan="5"></td>
+								</tr>
+								<tr>
+									<th>正文</th>
+									<td colspan="5"></td>
+								</tr>
+								<tr>
+									<th style="width:150px;">综合处审核人</th>
+									<td ></td>
+									<th style="width:150px;">审核意见</th>
+									<td colspan="3"></td>
+								</tr>
+								<tr>
+									<th style="width:150px;">分管领导</th>
+									<td ></td>
+									<th style="width:150px;">审核意见</th>
+									<td colspan="3"></td>
+								</tr>
+							</table>
+							<fieldset>
+								<h5>主要领导审核</h5>
+								<table class="table dealInfoTab">
+										<tbody>
+										<tr>
+											<th style="width:108px;">
+												<label class="control-label"> <span
+	                                            	class="text-danger">*</span> <span>审核结果</span> <span>：</span>
+	                                            </label>
+											</th>
+											<td>
+												<input type="radio" name="agree" value="true" checked/><span class="agreeText">同意</span>
+	                                            <input type="radio" name="agree" value="false" /><span>不同意</span>
+											</td>
+										</tr>
+										<tr>
+											<th>
+												<label class="control-label"> <span
+	                                            	class="text-danger">*</span> <span>审核意见</span> <span>：</span>
+	                                            </label>
+											</th>
+											<td>
+												<textarea class="form-control" name="remark" rows="5" style="width: 98%;" ></textarea>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</fieldset>
+                            <%-- <fieldset>
+                                <div class="col-sm-12">
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"> <span
+                                                    class="text-danger">*</span> <span>发文号</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <select
+                                                        class="form-control w153" name="documentT" disabled="disabled"
+                                                        onchange="selectCountry(this);" data-placeholder="请选择">
+                                                    <option value="" selected="selected"></option>
+                                                </select>                                           
+                                            </div>
+                                            <div class="form-control-wrap">
+                                                年<input class="form-control" style="width: 50px;" value='' name="documentYear" disabled="disabled">
+                                            </div>
+                                            <div class="form-control-wrap">
+                                                号<input class="form-control" style="width: 50px;" value='' name="documentNum" disabled="disabled">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w153"> <span
+                                                    class="text-danger">*</span> <span>密级</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">                                         
+                                                <select
+                                                        class="form-control w153" name="secretLevel"  disabled="disabled"
+                                                        onchange="selectCountry(this);" data-placeholder="请选择">                                 
+                                                 <option></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <ul>
+                                            <li class="col1">
+                                                <label class="view-lab1" >事由</label><span class="view-text" ></span>
+                                            </li>
+                                            <li class="col3">
+                                                <label class="view-lab1">主办单位</label><span class="view-text"></span>
+                                            </li>
+                                            <li class="col3">
+                                                <label class="view-lab1">拟稿人</label><span class="view-text"></span>
+                                            </li>
+                                            <li class="col3">
+                                                <label class="view-lab1">日期</label><span class="view-text"></span>
+                                            </li>
+                                            <li class="col1">
+                                                <label class="view-lab1">发送单位</label><span class="view-text"></span>
+                                            </li>
+                                            <li class="col2">
+                                                <label class="view-lab1">综合处领导意见</label>
+                                                <span class="view-text">
+
+													</span>
+                                            </li>
+                                            <li class="col2">
+                                                <label class="view-lab1">审核人</label><span class="view-text"></span>
+                                            </li>
+                                            <li class="col2">
+                                                <label class="view-lab1">分管领导意见</label><span class="view-text"></span>
+                                            </li>
+                                            <li class="col2">
+                                                <label class="view-lab1">审核人</label><span class="view-text"></span>
+                                            </li>
+                                            <div class="form-field">
+                                                <div class="form-group">
+                                                    <label class="control-label w153"> <span
+                                                            class="text-danger">*</span> <span>审核意见</span> <span>：</span>
+                                                    </label>
+                                                    <div class="form-control-wrap" >
+                                                        <input type="radio" name="agree" value="true" checked/><span>同意</span>
+                                                        <input type="radio" name="agree" value="false" /><span>不同意</span>
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                    <div class="form-control-wrap">
+                                                        <textarea class="form-control" name="remark" rows="5" style="width: 483px;margin: 10px 0 0 175px;" ></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <li class="col1">
+                                                <label class="view-lab1" >正文</label><span class="view-text"></span>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </fieldset> --%>
+                            <div class="clear"></div>
+                            <div class="text-center">
+                            	<h5></h5>
+                                <button class="btn btn-primary" type="submit">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </form>
+                <!-- end 页面内容主体 -->
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display: none;">
+
+</div>
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript"
+        src="${_lib}/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript"
+        src="${_lib}/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript"
+        src="${_lib}/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript"
+        src="${_lib}/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript"
+        src="${_lib}/webuploader/webuploader.min.js"></script>
+<script type="text/javascript"
+        src="${_lib}/jquery-step/jquery.step.js"></script>
+
+<script type="text/javascript"
+        src="${_static}/themes/blue/js/ui.js"></script>
+
+<script type="text/javascript" src="${_js}/app.js"></script>
+<!--end 外部JS引入 -->
+<script type="text/javascript"
+        src="${_js}/uploadfile.js"></script>
+<script type="text/javascript" src="${_js}/lj.js"></script>
+<!--begin 自定义JS -->
+
+
+</body>
+</html>

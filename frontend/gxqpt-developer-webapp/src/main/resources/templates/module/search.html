@@ -1,0 +1,52 @@
+<div class="input-group">
+    <input type="text" class="form-control" placeholder="输入关键字搜索" id="searchKey">
+    <span class="input-group-addon search_btn" id="search-btn">搜索</span>
+</div>
+<ul class="search_content_ul clearfix" id="searchExample"></ul>
+
+<script>
+$(function () {
+	var urlPrev = getUrlPrev('${_gate_url}');
+
+    //获取热卖产品
+    ajaxHengyun({
+		url: urlPrev + 'assignModule/assignModule/hotModule',
+		type: 'get',
+		data: {
+			top: 8
+		},
+		success: function (res){
+			setSearchExample(res.data);
+		}
+	});
+
+    function bindEvent() {
+    	$('#search-btn').on('click', function () {
+    		var key = $('#searchKey').val();
+    		if (key) {
+    			var url = '${_cp}/module/result?key=' + key;
+            	window.location.href = url;
+    		} else {
+    			window.location.reload()
+    		}
+    	});
+
+    	// 回车自动搜索
+    	$('#searchKey').keyup(function (e) {
+    		if (e.keyCode == 13) {
+    			$('#search-btn').trigger('click');
+    		}
+    	});
+    }
+    bindEvent();
+
+    function setSearchExample(appList){
+		for(var i in appList){
+			if(i >= 3){
+				return ;
+			}
+			$("#searchExample").append("<a href='${_cp}/module/result?key="+appList[i].name+"'><li>"+appList[i].name+"</li></a>");
+		}
+	}
+});
+</script>

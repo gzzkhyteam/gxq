@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+
+	<head>
+		<base href="<%=basePath%>">
+		<!--<title>短信平台</title>-->
+		<meta http-equiv="Expires" content="0" />
+		<meta name="renderer" content="webkit" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+		<link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+		<link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+		<link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+		<link rel="stylesheet" href="${_static}/css/core/module.css">
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="${_static}/js/app.js"></script>
+		<script type="text/javascript" src="${_static}/js/module.js"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<style type="text/css">
+			#right-box {
+				width: 100%;
+				height: calc(100% - 65px);
+				border: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="workspace-body">
+			<div class="console-container clearfix">
+				<div class="col-sm-12">
+					<!-- begin 标题 -->
+					<div class="console-title console-title-border clearfix">
+						<div class="pull-left">
+							<h5 class="page-title">
+	                    		快速开发系统 &gt; 快速开发平台 &gt; <span class="page-title-scend">应用列表</span>
+	                        </h5>
+						</div>
+						<div class="pull-right">
+						</div>
+					</div>
+				</div>
+				<!-- begin 页面内容主体 -->
+				<div class="main">
+					<div class="list-section">
+						<form action="" class="form-inline search-form">
+							<div class="form-field">
+								<div class="form-group">
+									<label class="control-label">
+			                                	<span class="text-danger"></span>
+			                                    <span>应用名称：</span>
+			                                </label>
+									<div class="form-control-wrap">
+										<input class="form-control search-name" placeholder="" />
+									</div>
+								</div>
+							</div>
+							<div class="form-field">
+								<div class="form-group">
+									<label class="control-label">
+			                                	<span class="text-danger"></span>
+			                                    <span>创建人：</span>
+			                                </label>
+									<select id="system-source" name="" class="form-control chosen-select selWid-form-search"></select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label">
+									<span class="text-danger"></span>
+									<span>业务类型：</span>
+								</label>
+								<select name="forType" class="form-control chosen-select selWid-form-search">
+									<option value="">全部</option>
+								</select>
+							</div>
+							<div class="form-field">
+								<div class="form-group">
+									<div class="form-control-wrap text-right">
+										<button type="button" class="btn btn-primary search-button" onclick="search()">
+			                                		<span class="glyphicon glyphicon-search"></span> 查询
+			                                    </button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div id="right-box" class="list-section">
+						<!--<div class="list-content">-->
+						<!--<div class="form-inline">-->
+						<!--<fieldset>-->
+						<div class="grid-section">
+							<table id="list">
+							</table>
+							<div id="pager"></div>
+						</div>
+						<!--</fieldset>-->
+						<!--</div>-->
+						<!--</div>-->
+					</div>
+				</div>
+				<!-- end 页面内容主体 -->
+			</div>
+		</div>
+		<script type="text/javascript">
+            var height = $("#right-box").height() - 80;
+            //获取体系来源
+			getSource()
+			function getSource() {
+				ajaxHengyun({
+					type:'GET',
+					url:'${_gate_url}/api/admin/system/getBySource',
+					// url:'http://192.168.1.124:9770/api/admin/system/getBySource',
+					success:function (res) {
+                        if(res || res.data){
+                            $.each(res.data, function (index, item) {
+                                var option = '<option value = ' + item+ '>' + item + '</option>';
+                                $('#system-source').append(option);
+                            })
+						}
+                    }
+				})
+            }
+			//获取体系列表
+            getSystem();
+			function getSystem() {
+                $("#list").jqGrid({
+                    mtype: 'POST',
+                    postData:{pageNo:1,pageSize:20, data: {}},
+                    url: '${_gate_url}/api/admin/system/findSystemList',
+                    datatype: "json",
+                    contentType : 'application/json',
+                    serializeGridData:function(postData){
+                        return JSON.stringify(postData);
+                    },
+                    colNames: ['体系编码', '体系名称', '体系来源'],
+                    colModel: [{
+                        name: 'code',
+                        index: 'code'
+                    }, {
+                        name: 'name',
+                        index: 'name',
+                    }, {
+                        name: 'source',
+                        index: 'source',
+                    }],
+                    jsonReader : {
+                        root:"data.list",
+                        page: "data.pageNum",
+                        total: "data.pages",
+                        records: "data.total"
+                    },
+                    pager: '#pager',
+                    height: height,
+                    onPaging:function(pgButton){
+                        var pageNo=$(".ui-pg-input").val();
+                        pageNo=parseInt(pageNo);
+                        var total=$("#sp_1_pager_toppager").text();
+                        total=parseInt(total);
+                        if(pgButton=="next"){
+                            if(pageNo>=total){
+                                return false;
+                            }else{
+                                pageNo+=1;
+                            }
+                        }else if(pgButton=="prev"){
+                            if(pageNo>1){
+                                pageNo-=1;
+                            }else{
+                                return false;
+                            }
+                        }else if(pgButton=="last"){
+                            pageNo=total;
+                        }else if(pgButton=="first"){
+                            pageNo=1;
+                        }
+                        var pageSize=$(".ui-pg-selbox").val();
+                        if(pageNo!=0){
+                            $("#list").setGridParam({postData: {pageNo:pageNo,pageSize:pageSize,systemCode:systemCode,
+                                    parentId: node.id,
+                                    forClass: '',
+                                    forType: '',
+                                    name: ''}}).trigger("reloadGrid");
+                            return false;
+                        }
+                    }
+                });
+            }
+            //模糊查询
+			function search() {
+				var systemSource = $('#system-source').val();
+				var name = $('.search-name').val();
+				$('#list').setGridParam({
+                    postData:{pageNo:1,pageSize:20,data:{name:name,systemSource:systemSource}}
+				},true).trigger('reloadGrid');
+            }
+		</script>
+	</body>
+
+</html>

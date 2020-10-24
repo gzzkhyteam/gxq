@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+    <script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row">
+            <div class="current pull-left">
+                <ul class="navsecond clearfix">
+                    <li class="pull-left">
+                        <script type="text/javascript" id="exchange_share_apply">
+                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "exchange_share_apply",
+                                btnHtml :'<a  href="${_cp}/module/shareMagApplyList" target="home">{{name}}</a>',
+                                htmlInsert: true
+                            });
+                        </script>
+                    </li>
+                    <li class="pull-left">
+                        <script type="text/javascript" id="exchange_api_manage">
+                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "exchange_api_manage",
+                                btnHtml :'<a class="active" href="${_cp}/module/shareMagApiList" target="home">{{name}}</a>',
+                                htmlInsert: true
+                            });
+                        </script>
+                    </li>
+                    <li class="pull-left">
+                        <script type="text/javascript" id="exchange_require_manage">
+                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "exchange_require_manage",
+                                btnHtml :'<a  href="${_cp}/module/shareMagDemandList" target="home">{{name}}</a>',
+                                htmlInsert: true
+                            });
+                        </script>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="main_container row">
+            <form action="" class="search-form" autocomplete="off">
+                <ul class="clearfix">
+                    <li class="pull-left">
+                        <label class="control-label">API名称：</label>
+                        <input id="apiName" name="apiName" class="" placeholder=""/>
+                    </li>
+                    <li class="pull-left">
+                        <label class="control-label">API状态：</label>
+                        <select id="apiStatus" name="apiStatus" class="chosen-select">
+                            <option value="">全部</option>
+                            <option value="1">启用</option>
+                            <option value="2">禁用</option>
+                        </select>
+                    </li>
+                    <li class="pull-left">
+                        <button type="button" class="btn btn-primary search-button">
+                            <span class="glyphicon glyphicon-search"></span> 查询
+                        </button>
+                    </li>
+                    <li class="pull-right marginAuto">
+                        <script type="text/javascript" id="exchange_create_api">
+                            resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                resource_code : "exchange_create_api",
+                                btnHtml :"<button type=\"button\" class=\"btn btn-primary pull-right autoCreate magRight10\" onclick=\"setCatalog()\">{{name}}</button>",
+                                htmlInsert: true
+                            });
+                        </script>
+                       <!-- <button type="button" class="btn btn-primary btn-create" onclick="setCatalog()">
+                            创建API
+                        </button>-->
+                    </li>
+                </ul>
+            </form>
+            <table id="apiList" class="default-table tab-title-top">
+                <thead>
+                <tr>
+                    <th width="60">序号</th>
+                    <th>API名称</th>
+                    <th width="160">API编号</th>
+                    <th width="100">API状态</th>
+                    <th>对应目录</th>
+                    <th width="120">创建时间</th>
+                    <th width="300">操作</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div class="text-center">
+                <ul class="pagination" id="pagination"></ul>
+                <p class="pull-right currentPage">共<span class="total">0</span>条数据，当前第<i id="pageNum" class="colorBlue">1</i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function setCatalog() {
+        window.location.href = "${_cp}/module/shareMagSetApiCatalog?pageType=api&apiId=&applyId=";
+    }
+
+    var apiName = "";
+    var apiStatus = "";
+    var unitId = "";
+
+    function initParam() {
+        apiName = $("input[name='apiName']").val();
+        apiStatus = $("select[name='apiStatus']").val();
+        unitId = $("select[name='unitId']").val();
+    }
+
+    function getParam() {
+        initParam();
+        parm = {
+            data: {apiName: apiName, apiStatus: apiStatus, unitId: unitId},
+            pageNo: 1,
+            pageSize: 10
+        }
+    }
+
+    getParam();
+    getList(parm);
+
+    /*获取系统列表*/
+    function getList(parm) {
+        ajaxHengyun({
+                type: "POST",
+                async: false,
+                dataType: 'json',
+                contentType: 'application/json',
+                url: '${_gate_url}/api/exchange/dataapi/api/find',
+                data: JSON.stringify(parm),
+                success: function (rows) {
+                    var html = ""
+                    if (rows.data) {
+                        rows.data.list.forEach(function (value, index) {
+                                value = dealElement(value);
+                                var apiStatus = value.apiStatus;
+                                if (apiStatus == 2) {
+                                    apiStatus = "<span class='fontColor'>禁用</span>";
+                                } else {
+                                    apiStatus = "启用";
+                                }
+                                var num = (rows.data.pageNum - 1) * 10 + index + 1;
+                                html += '<tr>';
+                                html += '<td>' + num + '</td>';
+                                html += '<td>' + value.apiName + '</td>';
+                                html += '<td>' + value.apiCode + '</td>';
+                                html += '<td>' + apiStatus + '</td>';
+                                html += '<td>' + value.dirName + '</td>';
+                                html += '<td>' + fmtDate(value.createTime) + '</td>';
+                                html += '<td>';
+                                //html += '<a href="${_cp}/module/shareMagView?id=' + value.id + '">详情</a>';
+                                var detailUrl = "${_cp}/module/shareMagView?id=" + value.id ;
+                                if (value.dataType == 2){
+                                    detailUrl = "${_cp}/module/generalUnstructuredApiView?id=" + value.id +"&catalogId="+value.dirId+"&canApply=1";
+                                }
+                                html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                    resource_code : "exchange_api_detail",
+                                    btnHtml :'<a class="ui-button" href="javascript:void(0);" onclick="forwardApiDetail(\''+value.id+'\',\''+value.dirId+'\',\''+value.dataType+'\')">{{name}}</a>',
+                                    htmlInsert: false
+                                });
+
+                                if (value.authStatus == 0) {
+                                   /* html += '<a href="${_cp}/module/shareMagSetApiCatalog?pageType=api&applyId=&apiId=' + value.id + '">修改</a>';
+                                    html += '<a href="avascript:void(0);" onclick="deleteApi(' + value.id + ')">删除</a>';*/
+                                    html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_api_update",
+                                        btnHtml :'<a class="ui-button" href="${_cp}/module/shareMagSetApiCatalog?pageType=api&applyId=&apiId=' + value.id + '">{{name}}</a>',
+                                        htmlInsert: true
+                                    });
+                                    html+=  resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_api_delete",
+                                        btnHtml :'<a class="ui-button" href="javascript:void(0);" onclick="deleteApi(\''+value.id+'\')">{{name}}</a>',
+                                        htmlInsert: true
+                                    });
+                                } else {
+                                    if (value.apiStatus == 1) {
+                                       // html += '<a href="avascript:void(0);" onclick="setStatus(' + value.id + ',2)">禁用</a>';
+                                        html+=  resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "exchange_api_disable",
+                                            btnHtml :'<a class="ui-button" href="javascript:void(0);" onclick="setStatus(\''+value.id+'\',2)">{{name}}</a>',
+                                            htmlInsert: true
+                                        });
+                                    } else {
+                                        //html += '<a href="avascript:void(0);" onclick="setStatus(' + value.id + ',1)">启用</a>';
+                                        html+=  resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                            resource_code : "exchange_api_enable",
+                                            btnHtml :'<a class="ui-button" href="javascript:void(0);" onclick="setStatus(\''+value.id+'\',1)">{{name}}</a>',
+                                            htmlInsert: true
+                                        });
+                                    }
+
+                                  /*  html += '<a href="${_cp}/module/usage?id=' + value.id + '">使用情况</a>';
+                                    html += '<a href="${_cp}/module/abnormal?id=' + value.id + '">异常情况</a>';
+                                    html += '<a href="${_cp}/module/authorizeHistory?id=' + value.id + '">授权记录</a>';*/
+                                    html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_api_usedetail",
+                                        btnHtml :'<a class="ui-button" href="${_cp}/module/usage?id=' + value.id + '">{{name}}</a>',
+                                        htmlInsert: false
+                                    });
+                                    html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_api_exception",
+                                        btnHtml :'<a class="ui-button" href="${_cp}/module/abnormal?id=' + value.id + '">{{name}}</a>',
+                                        htmlInsert: false
+                                    });
+                                    html+= resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "exchange_api_auth",
+                                        btnHtml :'<a class="ui-button" href="${_cp}/module/authorizeHistory?id=' + value.id + '">{{name}}</a>',
+                                        htmlInsert: false
+                                    });
+                                }
+                                html += '</td>';
+                                html += '</tr>';
+
+                            }
+                        );
+                        if(rows.data.list.length==0){
+                            html+="<tr><td class='text-center' colspan='7'>暂无数据</td></tr>"
+                            $(".pagination,.currentPage").css("display","none");
+                        } else {
+                            $(".pagination,.currentPage").css("display","block");
+                        };
+                        $("#apiList tbody").html(html);
+                        $('#totalPages').text(rows.data.pages);
+                        $('.total').text(rows.data.total);
+                        jqPaginator(rows.data);
+                        var height=document.getElementById("container").scrollHeight;
+                        $("#home", window.parent.document).height(height);
+                    }else{
+                        html+="<tr><td class='text-center' colspan='7'>暂无数据</td></tr>";
+                        $("#apiList tbody").html(html);
+                        $(".pagination,.currentPage").css("display","none");
+                        var height=document.getElementById("container").scrollHeight;
+                        $("#home", window.parent.document).height(height);
+                    }
+                }
+            }
+        )
+        ;
+    }
+    ;
+    $(".search-button").click(function () {
+        getParam();
+        getList(parm);
+    })
+    function forwardApiDetail(id,dirId,dataType) {
+        var detailUrl = "${_cp}/module/shareMagView?id=" + id ;
+        if (dataType == 2){
+            detailUrl = "${_cp}/module/generalUnstructuredApiView?id=" + id +"&catalogId="+dirId+"&canApply=1";
+        }
+        window.location.href = detailUrl;
+    }
+    //启用-停用
+    function setStatus(id, status) {
+        var confirmText = ''
+        if(status === 2) {
+            confirmText = '您确定禁用该API吗？'
+        }else{
+            confirmText = '您确定启用该API吗？'
+        }
+        parent.layer.confirm(confirmText    ,{
+            title:'温馨提示',
+            shade: [0.4,'#000'],
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            ajaxHengyun({
+                type: "POST",
+                url: '${_gate_url}/api/exchange/dataapi/api/setstatus',
+                data: {id: id, status: status},
+                success: function (rows) {
+                    if (rows.data) {
+                        parent.layer.msg("操作成功！", {time: 1000});
+                        getParam();
+                        if (parseInt($("#pageNum").text())) {
+                            parm.pageNo = parseInt($("#pageNum").text());
+                        }
+                        ;
+                        getList(parm);
+                    } else {
+                        parent.layer.msg(rows.errmsg + "，请重试！", {time: 3000});
+                    }
+                }
+            });
+        });
+    }
+
+    //删除
+    function deleteApi(id){
+        parent.layer.confirm("您确定要删除该条信息吗？",{
+            title:'温馨提示',
+            shade: [0.4,'#000'],
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            ajaxHengyun({
+                type: "POST",
+                url: '${_gate_url}/api/exchange/dataapi/api/delete',
+                data: {id: id},
+                success: function (rows) {
+                    if (rows.data) {
+                        parent.layer.msg("删除成功！", {time: 1000});
+                        getParam();
+                        getList(parm);
+                    } else {
+                        parent.layer.msg(rows.errmsg + "，请重试！", {time: 3000});
+                    }
+                }
+            });
+        });
+    }
+</script>
+</body>
+</html>

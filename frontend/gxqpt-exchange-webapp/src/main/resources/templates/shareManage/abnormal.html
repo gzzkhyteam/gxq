@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交换共享系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main clearfix">
+        <div class="row marginTop">
+            <div class="current pull-left">
+                <h3 class="page-title">
+                    <span>API管理</span> &gt; <span class="page-title-scend">异常情况</span>
+                </h3>
+            </div>
+            <div class="back pull-right">
+                <a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+            </div>
+        </div>
+        <div class="main_container row">
+            <form action="" class="search-form" autocomplete="off">
+                <ul class="clearfix">
+                    <li class="pull-left">
+                        <label class="control-label">异常情况：</label>
+                        <input name="failLog" class="" placeholder=""/>
+                    </li>
+                    <li class="pull-left">
+                        <label class="control-label">异常时间：</label>
+                        <input name="callDate" class="Wdate" placeholder=""/>
+                    </li>
+                    <li class="pull-left">
+                        <label class="control-label">处理状态：</label>
+                        <select id="type" name="hdleState" class="chosen-select">
+                            <option value="">全部</option>
+                            <option value="2">未处理</option>
+                            <option value="1">已处理</option>
+                            <option value="3">已忽略</option>
+                        </select>
+                    </li>
+                    <li class="pull-left">
+                        <button type="button" class="btn btn-primary search-button">
+                            <span class="glyphicon glyphicon-search"></span> 查询
+                        </button>
+                    </li>
+                </ul>
+            </form>
+            <table id="exceptionList" class="default-table tab-title-top">
+                <thead>
+                <tr>
+                    <th>异常情况</th>
+                    <th>异常时间</th>
+                    <th>异常来源</th>
+                    <th>处理状态</th>
+                    <th>处理人</th>
+                    <th width="100">操作</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div class="text-center">
+                <ul class="pagination" id="pagination"></ul>
+                <p class="pull-right currentPage">共<span class="total">0</span>条数据，当前第<i id="pageNum" class="colorBlue">1</i>页/共<i id="totalPages"  class="colorBlue">1</i>页</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var callDate = "";
+    var failLog = "";
+    var hdleState = "";
+    var apiId = "${id}";
+
+    function initParam() {
+        failLog = $("input[name='failLog']").val();
+        callDate = $("input[name='callDate']").val();
+        hdleState = $("select[name='hdleState']").val();
+    }
+
+    function getParam() {
+        initParam();
+        parm = {
+            data: {failLog: failLog, callDate: callDate, hdleState: hdleState, apiId: apiId},
+            pageNo: 1,
+            pageSize: 10
+        }
+    }
+
+    getParam();
+    getList(parm);
+
+    /*获取使用列表*/
+    function getList(parm) {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/exchange/dataapi/api/findapiuseexception',
+            data: JSON.stringify(parm),
+            success: function (rows) {
+                var html = ""
+                if (rows.data) {
+                    rows.data.list.forEach(function (value, index) {
+                        value = dealElement(value);
+                        var failType = value.failType;
+                        if (failType == 1) {
+                            failType = "系统错误";
+                        } else if (failType == 2) {
+                            failType = "访问参数错误";
+                        }else {
+                            failType = "";
+                        }
+                        var hdleState = value.hdleState;
+                        if (hdleState == 1) {
+                            hdleState = "已处理";
+                        } else if (hdleState == 3) {
+                            hdleState = "已忽略";
+                        } else {
+                            hdleState = "未处理";
+                        }
+                        html += '<tr>';
+                        html += '<td>' + value.failLog + '</td>';
+                        html += '<td>' + fmtDateTime(value.visitTime) + '</td>';
+                        html += '<td>' + failType + '</td>';
+                        html += '<td>' + hdleState + '</td>';
+                        html += '<td>' + value.hdleUser + '</td>';
+                        html += '<td>';
+                        if(value.hdleState == 2){
+                            html += '<a href="avascript:void(0);" onclick="dealPage(\'' + value.id + '\')">处理</a>';
+                            html += '<a href="avascript:void(0);" onclick="noHandle(\'' + value.id + '\')">忽略</a>';
+                        }
+                        html += '</td>';
+                        html += '</tr>';
+                    });
+                    if(rows.data.list.length==0){
+                        html+="<tr><td class='text-center' colspan='6'>暂无数据</td></tr>"
+                        $(".pagination,.currentPage").css("display","none");
+                    } else {
+                        $(".pagination,.currentPage").css("display","block");
+                    };
+                    $("#exceptionList tbody").html(html);
+                    $('#totalPages').text(rows.data.pages);
+                    $('.total').text(rows.data.total);
+                    jqPaginator(rows.data);
+                    var height=document.getElementById("container").scrollHeight;
+                    $("#home", window.parent.document).height(height);
+                }else{
+                    html+="<tr><td class='text-center' colspan='6'>暂无数据</td></tr>";
+                    $("#exceptionList tbody").html(html);
+                    $(".pagination,.currentPage").css("display","none");
+                    var height=document.getElementById("container").scrollHeight;
+                    $("#home", window.parent.document).height(height);
+                }
+            }
+        });
+    };
+    $(".search-button").click(function () {
+        getParam();
+        getList(parm);
+    })
+
+    function dealPage(id) {//处理
+        parent.layer.open({
+            id: 'dealPage',
+            type: 2,
+            anim: 6,
+            title: 'API异常处理',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['600px', '500px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/shareMagDealPage?id="+id,
+            btn: ['提交', '取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("dealPage");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+                getParam();
+                getList(parm);
+            },
+        });
+    }
+
+    //忽略
+    function noHandle(id) {
+        ajaxHengyun({
+            type: "POST",
+            url: '${_gate_url}/api/exchange/dataapi/api/updateexchdle',
+            data: {id: id},
+            success: function (rows) {
+                if (rows.data) {
+                    parent.layer.msg("操作成功！", {time: 1000});
+                    getParam();
+                    getList(parm);
+                } else {
+                    parent.layer.msg(rows.errmsg + "，请重试！", {time: 3000});
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

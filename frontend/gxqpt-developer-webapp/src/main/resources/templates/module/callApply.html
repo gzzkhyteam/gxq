@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+    <link rel="stylesheet" href="${_static}/css/com_base.css"/>
+    <link rel="stylesheet" href="${_static}/css/index.css"/>
+    <script type="text/javascript" src="${_static}/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/hengyun/jquery.cookie.js"></script>
+    <script type="text/javascript" src="${_static}/js/com_base.js"></script>
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-width: auto;
+            background: #fff;
+        }
+        .form-horizontal{
+            width: 100%;
+            padding: 30px 0 0;
+        }
+        .form-horizontal .form-group{
+            margin-left: 0;
+            margin-right: 0;
+        }
+    </style>
+</head>
+<body>
+    <form class="form-horizontal" id="dataForm" ng-app="app" ng-controller="controller" ng-cloak>
+        <div class="form-group">
+            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>功能类型</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" value="${type}" readonly dataType="*" nullmsg="功能类型不能为空">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>功能名称</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="fun.name" readonly dataType="*" nullmsg="功能名称不能为空">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>功能编码</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="fun.code" readonly dataType="*" nullmsg="功能编码不能为空">
+            </div>
+        </div>
+        <!--<div class="form-group">-->
+        <!--<label class="col-sm-2 control-label">申请人联系方式</label>-->
+        <!--<div class="col-sm-8">-->
+        <!--<input type="number" class="form-control" ng-model="fun.cpuCount">-->
+        <!--</div>-->
+        <!--</div>-->
+        <div class="form-group">
+            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>申请使用应用</label>
+            <div class="col-sm-8">
+                <!--<select class="form-control" dataType="*" nullmsg="申请人使用应用不能为空"></select>-->
+                <select class="form-control" ng-model="para.appId" ng-options="a.appId as a.name for a in appList"
+                        dataType="*" nullmsg="申请人使用应用不能为空"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>备注</label>
+            <div class="col-sm-8">
+                <textarea class="form-control" ng-model="para.applyDesc" dataType="*" nullmsg="备注不能为空"></textarea>
+            </div>
+        </div>
+        <button type="hidden" class="btn-submit"></button>
+    </form>
+</body>
+<script type="text/javascript">
+    function save(index) {
+        var appElement = document.querySelector('[ng-controller=controller]');
+        var $scope = angular.element(appElement).scope();
+        $scope.layerIndex = index;
+        $('.btn-submit').click();
+    }
+
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.para = {};
+        //初始化表单验证
+        $('.btn-submit').valid({
+            form: '#dataForm',
+            showAllError: true,
+            ignoreHidden: true,
+            checkpassed: function () {
+                $scope.save();
+            }
+        });
+        /*获取功能详情*/
+        $scope.getFunction = function () {
+            $http.get(urlPrev + '/serviceModuleApply/detail', {
+                params: {
+                    id: "${moduleId}"
+                },
+                headers: getHeaders(true),
+            }).success(function (res) {
+                $scope.fun = res.data;
+            });
+        }
+        $scope.getFunction();
+        //获取应用列表
+        $scope.getAppList = function () {
+            $http.get(urlPrev + 'application/findList?type=1',{
+                headers:getHeaders(true),
+            }).success(function (res) {
+                if(res.data && res.data.length){
+                    $scope.appList = res.data;
+                    $scope.para.appId = res.data[0].appId;
+                }
+            })
+        }
+        $scope.getAppList();
+        //申请功能
+        $scope.save = function () {
+            $scope.para.moduleId = '${moduleId}';
+            $http.post(urlPrev + 'assignModuleApply/save', $scope.para, {
+                headers: getHeaders(true),
+            }).success(function (res) {
+                if (res.errcode == 0) {
+                    
+                    parent.layer.msg('申请成功，可以去我的任务中查看审批情况！', {icon: 6});
+                    parent.layer.close($scope.layerIndex);    
+                }
+            })
+        }
+    })
+    /*angularJS*/
+</script>
+</html>

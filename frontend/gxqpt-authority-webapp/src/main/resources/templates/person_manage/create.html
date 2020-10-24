@@ -1,0 +1,500 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Expires" content="0"/>
+	<meta name="renderer" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link href="${_static}/js/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css" />
+    <link href="${_static}/js/lib/webuploader/upload.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+	<link rel="stylesheet" href="${_static}/css/core/module.css">
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12 marginTop">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline" ng-app="app" ng-controller="controller">
+                    	<form autocomplete="off" id="dataForm" action="" method="post">
+                            <table class="table default-table table-title-left">
+                            	<tbody>
+                            		<tr>
+                            			<th width="130"><sub class="required">*</sub>姓名</th>
+                            			<td><input id="name" class="form-control inp-form" name="name"  dataType="*1-64" nullmsg="姓名不能为空！" errormsg="请输入1到64个字符"/></td>
+                                        <th width="130" rowspan="3">头像</th>
+                                        <td rowspan="3">
+                                            <input id="photo" type="hidden" class="form-control inp-form" name="photo"/>
+                                            <img src="${_static}/images/nopic.jpg" id="nopic" class="nopic"/>
+                                            <div id="filePicker" class="filePicker photoFilePicker"></div>
+                                            <div id="uploader" class="uploader photoUploader">
+                                                <div class="queueList">
+                                                    <ul id="file_html" class="filelist">
+                                                    </ul>
+                                                    <div id="dndArea" class="placeholder dndArea" style="padding-top: 85px;">
+
+                                                        <p> </p>
+                                                    </div>
+                                                </div>
+                                                <div class="statusBar" style="display:none;">
+                                                    <div class="progress">
+                                                        <span class="text">0%</span> <span class="percentage"></span>
+                                                    </div>
+                                                    <div class="info"></div>
+                                                    <div class="btns">
+                                                        <div id="jxButton" class="jxButton"></div>
+                                                        <div class="uploadBtn">开始上传</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th width="130"><sub class="required">*</sub>登录账号</th>
+                                        <td><input id="nickname"   onpaste="return false;" class="form-control inp-form" name="nickname" dataType="*1-64" nullmsg="登录账号不能为空！" errormsg="请输入1到64位数字、字母、下划线、@、."/></td>
+                                    </tr>
+                                    <tr>
+                                        <th><sub class="required">*</sub>密码</th>
+                                        <td><input type="password" id="password" onpaste="return false;" class="form-control inp-form" name="password" dataType="*" nullmsg="密码不能为空！"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th>统一人员编号</th>
+                                        <td><input id="empNo" class="form-control inp-form" name="empNo"/></td>
+                                        <th><sub class="required">*</sub>所属部门</th>
+                                        <td>
+                                            <input id="systemCode" class="form-control inp-form" name="systemCode" value="${systemCode}" type="hidden"/>
+                                            <input id="mainorgid" class="form-control inp-form" name="mainorgid" type="hidden"/>
+                                            <input id="mainorgname" class="form-control inp-form" name="mainorgname" type="hidden"/>
+                                            <input id="maindeptid" class="form-control inp-form" name="maindeptid" type="hidden"/>
+                                            <input id="maindeptname" class="form-control inp-form" name="maindeptname" type="hidden"/>
+                                            <input id="maindeptIdName" class="form-control inp-form" name="maindeptIdName" dataType="*" nullmsg="部门不能为空！"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><sub class="required">*</sub>所属职务</th>
+                                        <td>
+                                            <input type="hidden" id="maindutyname" name="maindutyname">
+                                            <select id="mainduty" name="mainduty" dataType="*" nullmsg="所属职务不能为空！"  class="form-control  set-form" onchange="maindutynameVal(this)">
+                                            </select>
+                                        </td>
+                                        <th>职务级别</th>
+                                        <td>
+                                            <input id="dutylevel" type="hidden" name="dutylevel">
+                                            <input id="dutylevelName" readonly style="font-size: 12px" name="dutylevelName">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!--<th>是否单位管理员</th>
+                                        <td>
+                                            <select id="isorgadmin" name="isorgadmin" class="form-control  set-form">
+                                                <option value="0">否</option>
+                                                <option value="1">是</option>
+                                            </select>
+                                        </td>-->
+                                        <th><sub class="required">*</sub>所属岗位</th>
+                                        <td>
+                                            <input type="hidden" id="mainpostname" name="mainpostname">
+                                            <select id="mainpost" name="mainpost" dataType="*" nullmsg="所属岗位不能为空！" class="form-control  set-form" onchange="mainpostnameVal(this)">
+                                            </select>
+                                        </td>
+                                        <th>性别</th>
+                                        <td>
+                                            <select id="sex" name="sex" class="form-control  set-form">
+                                                <option value="1">男</option>
+                                                <option value="0">女</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                            		<tr>
+                                        <th>出生日期</th>
+                                        <td><input id="birthday" class="form-control inp-form Wdate" name="birthday"/></td>
+                            			<th>民族</th>
+                            			<td>
+                            				<select id="nation" name="nation" class="form-control  set-form">
+			                                </select>
+                            			</td>
+                                    </tr>
+                                    <tr>
+                                        <th>最高学历</th>
+                                        <td>
+                                            <select id="education" name="education" class="form-control  set-form">
+                                                <option value="-1">请选择</option>
+                                            </select>
+                                        </td>
+                                        <th><sub class="required">*</sub>办公电话</th>
+                                        <td><input dataType="*" nullmsg="办公电话不能为空！" id="officetel" class="form-control inp-form" name="officetel"/></td>
+                            		</tr>
+                            		<tr>
+                            			<th><sub class="required">*</sub>手机1</th>
+                            			<td><input id="mainmobile" class="form-control inp-form" dataType="*"  nullmsg="手机不能为空！"  name="mainmobile"/></td>
+                            			<th>手机2</th>
+                            			<td><input id="submobile" class="form-control inp-form" name="submobile"/></td>
+                            		</tr>
+									<tr>
+										<th>是否政协委员</th>
+										<td>
+											<select id="iscommittee" name="iscommittee" class="form-control  set-form">
+												<option value="0">否</option>
+												<option value="1">是</option>
+											</select>
+										</td>
+										<th>是否人大代表</th>
+										<td>
+											<select id="isdeputy" name="isdeputy" class="form-control  set-form">
+												<option value="0">否</option>
+												<option value="1">是</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>是否单位一把手</th>
+										<td>
+											<select id="isheader" name="isheader" class="form-control  set-form">
+												<option value="0">否</option>
+												<option value="1">是</option>
+											</select>
+										</td>
+										<th>是否单位领导</th>
+										<td>
+											<select id="isleader" name="isleader" class="form-control  set-form">
+												<option value="0">否</option>
+												<option value="1">是</option>
+											</select>
+										</td>
+									</tr>
+                            		<tr>
+                            			<th>启用标记</th>
+                            			<td>
+                            				<select id="isenable" name="isenable" class="form-control  set-form">
+			                                	<option value="1">是</option>
+                                                <option value="0">否</option>
+                                            </select>
+                            			</td>
+                            			<th>状态</th>
+                            			<td>
+                            				<select id="status" name="status" class="form-control  set-form">
+			                                	<option value="1">在职</option>
+                                                <option value="2">转职中</option>
+                                                <option value="3">离职</option>
+                                                <option value="4">退休</option>
+                                                <option value="5">驻村</option>
+                                                <option value="6">休假</option>
+                                                <option value="7">工勤人员</option>
+                                                <option value="8">其它人员</option>
+			                                </select>
+                            			</td>
+                            		</tr>
+                                    <tr>
+                                        <th>排序权重</th>
+                                        <td><input id="sortvalue" class="form-control" name="sortvalue" ignore="ignore" dataType="integeP" errormsg="请输入整数！"/> （值最小排前）</td>
+                                    </tr>
+                            		<tr>
+                            			<th>人员简介</th>
+                            			<td colspan="3"><textarea rows="3" id="descrption" dataType="*0-300" class="form-control textarea-form" name="descrption"></textarea></td>
+                            		</tr>
+                            		<tr>
+                            			<th>人员职责</th>
+                            			<td colspan="3"><textarea rows="3" id="userduty" dataType="*0-300" class="form-control textarea-form" name="userduty"></textarea></td>
+                            		</tr>
+                            	</tbody>
+							</table>
+							<button type="button" class="btn-submit hidden"></button>
+                    	</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js?v=1"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/webuploader/HYCoreFile.js"></script>
+<script src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/angular/angular.min-1-4-6.js"></script>
+<script type="text/javascript">
+
+    //表单验证开始
+    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/admin/emp/save",
+        },"#dataForm",{
+            attrName:"name",
+            prefix:"",
+            suffix:"",
+        });
+    })
+
+	var mainorgid="${mainorgid}";
+	var systemCode="${systemCode}";
+	/* 获取职务 */
+    function getDuties(dutiesData){
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/admin/duties/findDutiesList',
+            data:JSON.stringify(dutiesData),
+            datatype: "json",
+            contentType : 'application/json',
+            success: function (rows) {
+                if (rows.data) {
+                    var items = rows.data.list;
+                    var html="";
+                    items.forEach(function (value, index) {
+                        if(index==0){
+                            $("#maindutyname").val(value.name);
+                            $("#dutylevelName").val(value.level);
+                            $("#dutylevel").val(value.level);
+                        }
+                        html+='<option value="'+value.id+'" data-name="'+value.level+'">'+value.name+'</option>';
+                    });
+                    $("#mainduty").html(html);
+                };
+            }
+        })
+    }
+
+    /* 获取岗位 */
+    function getpostData(postData){
+        ajaxHengyun({
+            type: 'POST',
+            url: '${_gate_url}/api/admin/post/findPostList',
+            data:JSON.stringify(postData),
+            datatype: "json",
+            contentType : 'application/json',
+            success: function (rows) {
+                if (rows.data) {
+                    var items = rows.data.list;
+                    var html="";
+                    items.forEach(function (value, index) {
+                        if(index==0){
+                            $("#mainpostname").val(value.name);
+                        }
+                        html+='<option value="'+value.id+'" data-name="'+value.name+'">'+value.name+'</option>';
+                    });
+                    $("#mainpost").html(html);
+                };
+            }
+        })
+
+    }
+
+	/* 职务选择事件 */
+	function maindutynameVal(index){
+	    var maindutyname = $(index).find("option:selected").text();
+	    var dutiesLeve = $(index).find("option:selected").attr("data-name");
+        $("#dutylevelName").val(dutiesLeve);
+        $("#dutylevel").val(dutiesLeve);
+	    $("#maindutyname").val(maindutyname);
+	}
+
+
+    /* 岗位选择事件 */
+    function mainpostnameVal(index){
+        var mainpostname = $(index).find("option:selected").text();
+        $("#mainpostname").val(mainpostname);
+    }
+
+    /* 获取民族 */
+    ajaxHengyun({
+        type: 'GET',
+        async:false,
+        url: '${_gate_url}/api/admin/dictionary/getCodeList?code=NATION',
+        success: function (rows) {
+            if (rows.data) {
+                var items = rows.data;
+                var html="";
+                jQuery.each(items, function(key, val) {
+                    html+='<option value="'+val.name+'">'+val.name+'</option>';
+                });
+                $("#nation").html(html);
+            };
+        }
+    })
+    /* 获取学历 */
+    ajaxHengyun({
+        type: 'GET',
+        url: '${_gate_url}/api/admin/dictionary/getCodeList?code=EDUCATION',
+        success: function (rows) {
+            if (rows.data) {
+                var items = rows.data;
+                var html="";
+                jQuery.each(items, function(key, val) {
+                    html+='<option value="'+val.code+'">'+val.name+'</option>';
+                });
+                $("#education").append(html);
+            };
+        }
+    })
+
+	/* 弹出单位部门树 */
+	$("#maindeptIdName").click(function(){
+        layer.open({
+            id: 'setUnitDep',
+            type: 2,
+            anim:6,
+            title: '选择单位部门',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '80%'],
+            content: "${_cp}/power/setUnitDep?systemCode="+systemCode,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确认','<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.save(index);
+            }
+        });
+	});
+	/* 选中部门 */
+	function getUnitDep(index,unitDept){
+		$("#mainorgid").val(unitDept.mainorgid);
+		$("#mainorgname").val(unitDept.mainorgname);
+		$("#maindeptid").val(unitDept.maindeptid);
+		$("#maindeptname").val(unitDept.maindeptname);
+		$("#maindeptIdName").val(unitDept.mainorgname+"—"+unitDept.maindeptname);
+        $("#maindeptIdName").blur();
+        //获取职务
+        var dutiesData={
+            pageNo:1,pageSize:2000,
+            data: {
+                systemCode:systemCode,orgid:unitDept.mainorgid,isenable:'1'
+            }
+        };
+        getDuties(dutiesData);
+        //获取岗位
+        var  postData={pageNo:1,pageSize:2000,data:{
+                systemCode:systemCode,orgid:unitDept.mainorgid,isenable:'1'
+            }};
+        getpostData(postData);
+
+        layer.close(index);
+    };
+
+    var index;
+    function save(num){
+        index=num;
+        $('.btn-submit').click();
+    }
+   /* $('.btn-submit').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        checkpassed: function () {
+            saveObj();
+        }
+    });*/
+
+    /*----------------------angular.js---------------------------------------*/
+    var app = angular.module('app', []);
+
+    app.controller('controller', function ($scope,$http,token) {
+        var urlPrev ='${_gate_url}';
+        $scope.submit = function () {
+            $('.btn-submit').click();
+        };
+        $scope.save = function () {
+            saveObj();
+        }
+    }).service('token',function () {
+        this.getToken = function () {
+            return getToken();
+        }
+    });
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            var appElement = document.querySelector('[ng-controller=controller]');
+            var $scope = angular.element(appElement).scope();
+            $scope.save();
+        }
+    });
+
+    /*提交*/
+    function saveObj(){
+        var password = $("#password").val();
+        var nickname = $("#nickname").val();
+        if(!nikename(nickname)){
+            parent.layer.msg("登陆账号只能为1-64位字母、数字、下划线、@、.",{icon:6,time:1000});
+            return ;
+        }
+        if(!isPasswd(password)){
+            parent.layer.msg("密码只能为6-20位字符！",{icon:6,time:1000});
+            return ;
+        }
+        var gxqptDutiesDTO =$("#dataForm").serializeJSON();
+        ajaxHengyun({
+            type:"POST",
+            dataType: 'json',
+            contentType: 'application/json',
+            url: "${_gate_url}/api/admin/emp/save",
+            data:JSON.stringify(gxqptDutiesDTO),
+            success:function(rows){
+                if (rows.data){
+                    parent.home.reloadJqgrid();
+                    parent.layer.msg("新增人员成功！",{icon:6,time:1000});
+                    parent.layer.close(index);
+                }else{
+                    parent.layer.msg(rows.errmsg+"，请重试！",{time:3000});
+                }
+            }
+        });
+    };
+
+    /* 附件上传 begin */
+    var token = $.cookie("_token");
+    var folderId="-1";
+    var dataType="IMAGE";
+    loadFile();
+    function loadFile() {
+        fileUpload = new FileUpload({
+            "filePicker" : "filePicker",
+            "dndArea" : "dndArea",
+            "uploader" : "uploader",
+            "jxButton" : "jxButton",
+            "folderId":folderId,
+            "dataType":dataType,
+            "token":token,
+            "_isAdmin":true
+        });
+    }
+    function successUpload(json) {
+        var url = json.data.list[0].url;
+        $("#photo").val(url);
+        $("#nopic").attr("src",url);
+    };
+
+    //校验密码：只能输入6-20个字母、数字、下划线
+    function isPasswd(s){
+        var patrn=/^(\w){6,20}$/;
+        if (!patrn.exec(s)) return false
+        return true
+    }
+    function nikename(s){
+        var patrn=/^[0-9a-zA-Z@_.]{1,64}$/;
+        if (!patrn.exec(s)) return false
+        return true
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/module.css">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+        	<!--标题-->
+            <div class="col-sm-12">
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5 class="page-title">
+                    		云盘管理系统  &gt; <span class="page-title-scend">回收站</span>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <!--内容-->
+            <!--<div class="col-sm-12">
+            	<div class="list-section">
+            		<ul id="fireControl" class="tab-ul clearfix">
+		            	<li class="active" data-type="cloudDisk">云盘</li>
+		            	<li data-type="share">分享</li>
+            		</ul>
+            	</div>
+            </div>-->
+            <div id="cloudDisk" class="col-sm-12">
+                <div class="list-section">
+                    <form action="" class="form-inline search-form" autocomplete="off">
+                        <div class="form-field">
+                        	<div class="form-group">
+                        		<label class="control-label">
+                                	<span class="text-danger"></span>
+                                    <span>搜索：</span>
+                                </label>
+                                <div class="form-control-wrap">
+                                    <input name="submittedFileName" id="submittedFileName" class="form-control" placeholder=""/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                        	<div class="form-group">
+                                <div class="form-control-wrap text-right">
+                                	<button type="button" class="btn btn-primary search-button">
+                                		确定
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pull-right">
+	                        <div class="form-field">
+	                        	<div class="form-group">
+	                                <div class="form-control-wrap text-right">
+                                        <script type="text/javascript" id="file_recycle_all_recycle">
+                                            $(function () {
+                                                resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                    resource_code : "file_recycle_all_recycle",
+                                                    btnHtml :'<button type="button" class="btn btn-primary btn-undo" onclick="btnRecycleAll()"><span class="fa {{icon}}"></span> {{name}}</button>',
+                                                    htmlInsert: true,
+                                                });
+                                            })
+                                        </script>
+                                        <script type="text/javascript" id="file_recycle_clear_all">
+                                            $(function () {
+                                                resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                    resource_code : "file_recycle_clear_all",
+                                                    btnHtml :'<button type="button" class="btn btn-primary btn-clean" onclick="btnClean()"><span class="fa {{icon}}"></span> {{name}}</button>',
+                                                    htmlInsert: true,
+                                                });
+                                            })
+                                        </script>
+	                                	<!--<button type="button" class="btn btn-primary btn-undo" onclick="btnRecycleAll()">
+	                                		<span class="fa fa-undo"></span> 批量还原
+	                                    </button>
+	                                	<button type="button" class="btn btn-primary btn-clean" onclick="btnClean()">
+	                                		<span class="fa fa-trash-o"></span> 清空回收站
+	                                    </button>-->
+	                                </div>
+	                            </div>
+	                        </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline">
+                        	<table id="folderList"  class="table table-hover">
+                        		<caption>
+									<span>回收站</span>
+									<p id="tip_p">本页选中<span id="onfileNum">0</span>个文件/文件夹(共选中<span id="fileNum">0</span>个)
+                                        <script type="text/javascript" id="file_recycle_recycle">
+                                            $(function () {
+                                                resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                    resource_code : "file_recycle_recycle",
+                                                    btnHtml :'<button type="button" class="btn btn-primary btn-style" onclick="btnRecycleAuto()"><span class="fa {{icon}}"></span> {{name}}</button>',
+                                                    htmlInsert: true,
+                                                });
+                                            })
+                                        </script>
+
+                                        <script type="text/javascript" id="file_recycle_delete">
+                                            $(function () {
+                                                resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                    resource_code : "file_recycle_delete",
+                                                    btnHtml :'<button type="button" class="btn btn-primary btn-style" onclick="btnCleanAuto()"><span class="fa {{icon}}"></span> {{name}}</button>',
+                                                    htmlInsert: true,
+                                                });
+                                            })
+                                        </script>
+
+										<!--<button type="button" class="btn btn-primary btn-style" onclick="btnRecycleAuto()">
+											<span class="fa fa-undo"></span> 还原
+										</button>
+										<button type="button" class="btn btn-primary btn-style" onclick="btnCleanAuto()">
+											<span class="fa fa-trash-o"></span> 删除
+										</button>-->
+                                        <br/>
+									</p>
+								</caption>
+                        		<thead>
+                        			<tr>
+                        				<th width="20"><input type="checkbox" name="" id="checked_all" value="" /></th>
+                        				<th class="text-left">文件名</th>
+                        				<th width="60">大小</th>
+                        				<th width="150">所在文件夹</th>
+                        				<th width="150">更新日期</th>
+                        			</tr>
+                        		</thead>
+                        		<tbody>
+                        		</tbody>
+                        	</table>
+                            <div class="pagerDiv">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    var parm = {
+        pageNo:1,
+        pageSize: 20,
+        data:{isOneLevelDelete:true}
+    };
+    var ids = new Array();
+    $(function(){
+        getList(parm);
+        /* 选中当前行 */
+        $("body").on("click","#folderList tbody tr td",function(){
+            var choeckbox_int = $(this).find(".checkbox_int");
+            if($(choeckbox_int).length==0){
+                var choeckbox_set = $(this).parent().find(".checkbox_int");
+                var checked = $(choeckbox_set).prop("checked");
+                if(checked){
+                    $(choeckbox_set).removeProp("checked");
+                    $("#checked_all").removeProp("checked");
+                    var ret = jQuery.inArray($(choeckbox_set).attr("id"),ids);
+                    ids.splice(ret,1);
+                }else{
+                    $(choeckbox_set).prop("checked",true);
+                    var num=0;
+                    var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+                    $(choeckbox_list).each(function(index,element){
+                        var checked = $(element).prop("checked");
+                        if(checked){
+                            num+=1;
+                        }
+                    });
+                    if(num==$("#folderList tbody tr td .checkbox_int").length){
+                        $("#checked_all").prop("checked",true);
+                    };
+                    ids.push($(choeckbox_set).attr("id"));
+                }
+            }
+            $("#fileNum").text(ids.length);
+            $("#onfileNum").text(num);
+            if(ids.length>0){
+                $("#tip_p").css("visibility","visible");
+            }else{
+                $("#tip_p").css("visibility","hidden");
+            };
+        });
+        $("body").on("click",".checkbox_int",function (){
+            var num=0;
+            var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+            if($(this).prop("checked")){
+                ids.push($(this).attr("id"));
+            }else{
+                var ret = jQuery.inArray($(this).attr("id"),ids);
+                ids.splice(ret,1);
+            }
+            $(choeckbox_list).each(function(index,element){
+                var checked = $(element).prop("checked");
+                if(checked){
+                    num+=1;
+                }
+            });
+            if(num==$("#folderList tbody tr td .checkbox_int").length){
+                $("#checked_all").prop("checked",true);
+            }else{
+                $("#checked_all").removeProp("checked");
+            };
+            ids = removeRepeatArray(ids);
+            $("#fileNum").text(ids.length);
+            $("#onfileNum").text(num);
+            if(ids.length>0){
+                $("#tip_p").css("visibility","visible");
+            }else{
+                $("#tip_p").css("visibility","hidden");
+            };
+        });
+        /* 全选 */
+        $("body").on("click","#checked_all",function (){
+            var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+            var num=0;
+            $(choeckbox_list).each(function(index,element){
+                var checkedVal = $(element).prop("checked");
+               if(checkedVal){
+                   num+=1;
+               }
+            });
+            if(num!=choeckbox_list.length){
+                $(choeckbox_list).each(function(index,element){
+                    var checkedVal = $(element).prop("checked");
+                    if(!checkedVal){
+                        $(element).prop("checked",true);
+                        ids.push($(element).attr("id"));
+                        num+=1;
+                    }
+                });
+            }else{
+                $(choeckbox_list).each(function(index,element){
+                    $(element).removeProp("checked");
+                    var ret = jQuery.inArray($(element).attr("id"),ids);
+                    ids.splice(ret,1);
+                });
+                num=0;
+            };
+            ids = removeRepeatArray(ids);
+            $("#fileNum").text(ids.length);
+            $("#onfileNum").text(num);
+            if(ids.length>0){
+                $("#tip_p").css("visibility","visible");
+            }else{
+                $("#tip_p").css("visibility","hidden");
+            };
+        });
+        /* 单个删除 */
+        $("body").on("click",".tooltip_span i.delete",function (e){
+            e.stopPropagation();
+            var idElement = $(this).parent().parent().parent().find(".checkbox_int");
+            var id = $(idElement).attr('id');
+            var ids = new Array();
+            if(id){
+                ids.push(id);
+			};
+            remove(ids);
+        });
+        /* 单个还原 */
+        $("body").on("click",".tooltip_span i.undo",function (e){
+            e.stopPropagation();
+            var idElement = $(this).parent().parent().parent().find(".checkbox_int");
+            var id = $(idElement).attr('id');
+            var ids = new Array();
+            if(id){
+                ids.push(id);
+			};
+            recycle(ids);
+        });
+    });
+    /* 从服务器获取文件列表 */
+    function getList(parm){
+        ajaxHengyun({
+            type:"POST",
+            url: "${_gate_url}/api/file/filerecycle/page",
+            dataType: "json",//必须添加，所有地方都一样
+            contentType : 'application/json',   //必须添加，所有地方都一样
+            data:JSON.stringify(parm),
+            success:function(rows){
+                if (rows.data){
+                    fileList(rows.data.list);
+                    pagerList(rows.data);
+                }
+            }
+        });
+    }
+    /* 加载文件列表 */
+    function fileList(rows){
+        var html="";
+        if(rows.length!=0) {
+            rows.forEach(function (value, index) {
+                //保留一级删除目录
+               // if(value.dataType =="DIR"&&value.folderId ==-1||value.folderId ==-1){
+                // if(value.isOneLevelDelete ==true){
+                    var size=fomatFloat(value.size/1024, 2);
+                    if(size>921.6){
+                        size=fomatFloat(size/1024, 2);
+                        if(size>921.6){
+                            size=fomatFloat(size/1024, 2)+"G";
+                        }else{
+                            size=size+"M";
+                        }
+                    }else{
+                        size=size+"KB";
+                    };
+                    var date= new Date(value.createTime);
+                    var time=date.getFullYear()+"-";
+                    if(date.getMonth()+1<10){
+                        time+="0"+(date.getMonth()+1)+"-";
+                    }else{
+                        time+=(date.getMonth()+1)+"-";
+                    }
+                    if(date.getDate()<10){
+                        time+="0"+date.getDate();
+                    }else{
+                        time+=date.getDate();
+                    }
+                    html += '<tr>';
+                    if(ids.length!=0){
+                        var ret;
+                        ids.forEach(function (idsRow, index) {
+                            ret = jQuery.inArray(value.id.toString(),ids);
+                        });
+                        if(ret>=0){
+                            html+='<td><input type="checkbox" name="" id="'+value.id+'" data-dataType="'+value.dataType+'" data-url="'+value.url+'" class="checkbox_int" value="'+value.folderId+'" checked/></td>';
+                        }else{
+                            html+='<td><input type="checkbox" name="" id="'+value.id+'" data-dataType="'+value.dataType+'" data-url="'+value.url+'" class="checkbox_int" value="'+value.folderId+'" /></td>';
+                        }
+                    }else{
+                        html+='<td><input type="checkbox" name="" id="'+value.id+'" data-dataType="'+value.dataType+'" data-url="'+value.url+'" class="checkbox_int" value="'+value.folderId+'" /></td>';
+                    }
+                    html += '<td class="text-left"><i class="fa ' + value.icon + '"></i> <span class="folderName"><i>';
+                    if (value.submittedFileName) {
+                        html += value.submittedFileName;
+                    } else {
+                        html += value.filename;
+                    }
+                    html += '</i></span><span class="pull-right tooltip_span"><i class="fa fa-undo undo" title="还原"></i> <i class="fa fa-trash-o delete" title="删除")></i></span></td>';
+                    if (value.size) {
+                        html += '<td>' + size + '</td>';
+                    } else {
+                        html += '<td>—</td>';
+                    }
+                    html += '<td>';
+                    if(value.folderName){
+                        html +=value.folderName+ '</td>';
+                    }else{
+                        html += '—</td>';
+                    }
+                    html+='<td>'+time+'</td>';
+                    html += '</tr>';
+              //  }
+            });
+        }else{
+            html+='<tr>';
+            html+='<td colspan="5" class="tip_td">您的回收站为空噢～</td>';
+            html+='</tr>';
+            $("#checked_all").removeAttr("checked");
+        }
+		$("#folderList tbody").html(html);
+        var num=0;
+        var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+        $(choeckbox_list).each(function(index,element){
+            var checked = $(element).prop("checked");
+            if(checked){
+                num+=1;
+            }
+        });
+        $("#onfileNum").text(num);
+        if(num!=rows.length){
+            $("#checked_all").prop("checked",false);
+        }
+    }
+
+    /* 清空回收站方法 */
+    function btnClean(){
+        parent.layer.open({
+            type: 1,
+            title: '清空回收站',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['270px', '136px'],
+            content: "确认清空回收站？",
+            btn: ['<span class="glyphicon glyphicon-ok"></span>确定','<span class="glyphicon glyphicon-remove"></span>取消'],
+            yes: function (index, layero) {
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    url: "${_gate_url}/api/file/filerecycle/clear",
+                    success:function(rows){
+                        if (rows.data){
+                            var parm = {
+                                pageNo:1,
+                                pageSize: 20,
+                                data:{isOneLevelDelete:true}
+                            };
+                            getList(parm);
+                            parent.layer.closeAll();
+                        }else{
+                            parent.layer.closeAll();
+                            parent.layer.msg("清空回收站出错，请稍后重试！");
+                        }
+                    }
+                });
+            }
+        });
+	}
+    /* 批量还原文件方法 */
+    function btnRecycleAll(){
+        var ids = new Array();
+        // var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+        //只还原选中的
+        var choeckbox_list = $("#folderList tbody tr td input[type='checkbox']:checked");
+        $(choeckbox_list).each(function(index,element){
+			var id = $(element).attr("id");
+			if(id){
+				ids.push(id);
+			}
+        });
+        if(ids.length==0){
+            parent.layer.msg("请至少选择一条数据！");
+            return false;
+        }else{
+            recycle(ids,2);
+        };
+    };
+    /* 多个文件还原方法 */
+    function btnRecycleAuto(){
+        if(ids.length==0){
+            parent.layer.msg("请选择需要还原的文件！");
+            return false;
+		}else{
+            recycle(ids,1);
+		};
+    };
+    /* 还原文件方法 */
+    function recycle(ids,type){
+        var title="";
+        if(type==1){
+            title="确认还原选中的文件？";
+        }else if(type=2){
+            title="确认还原选中的文件？";
+        }
+        parent.layer.open({
+            type: 1,
+            title: '确认还原',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['270px', '136px'],
+            content: title,
+            btn: ['<span class="glyphicon glyphicon-ok"></span>确定','<span class="glyphicon glyphicon-remove"></span>取消'],
+            yes: function (index, layero) {
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    url: "${_gate_url}/api/file/filerecycle/recycle",
+                    data:{ids:ids},
+                    success:function(rows){
+                        if (rows.data){
+                            var parm = {
+                                pageNo:1,
+                                pageSize: 20,
+                                data:{isOneLevelDelete:true}
+                            };
+                            getList(parm);
+                            $("#tip_p").css("visibility","hidden");
+                            parent.layer.closeAll();
+                        }else{
+                            parent.layer.closeAll();
+                            parent.layer.msg("还原文件出错，请稍后重试！");
+                        }
+                    }
+                });
+            }
+        });
+    }
+    /* 多个文件删除方法 */
+    function btnCleanAuto(){
+        if(ids.length==0){
+            parent.layer.msg("请选择需要删除的文件！");
+            return false;
+        }else{
+            remove(ids);
+        };
+    };
+    /* 删除文件方法 */
+    function remove(ids){
+        parent.layer.open({
+            type: 1,
+            title: '彻底删除',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['390px', '136px'],
+            content: "文件删除后将无法恢复，您确认要彻底删除所选文件吗？",
+            btn: ['<span class="glyphicon glyphicon-ok"></span>确定','<span class="glyphicon glyphicon-remove"></span>取消'],
+            yes: function (index, layero) {
+                ajaxHengyun({
+                    type:"POST",
+                    dataType: 'json',
+                    url: "${_gate_url}/api/file/filerecycle/remove",
+                    data:{ids:ids},
+                    success:function(rows){
+                        if (rows.data){
+                            var parm = {
+                                pageNo:1,
+                                pageSize: 10,
+                                data:{isOneLevelDelete:true}
+                            };
+                            getList(parm);
+                            $("#tip_p").css("visibility","hidden");
+                            parent.layer.closeAll();
+                            parent.layer.msg("删除成功！",{icon: 6,time:1500})
+                        }else{
+                            parent.layer.closeAll();
+                            parent.layer.msg("删除文件出错，请稍后重试！");
+                        }
+                    }
+                });
+            }
+        });
+	}
+    /*查询*/
+    function getSearchData () {
+        parm.data.submittedFileName = $("#submittedFileName").val();
+    };
+    $(".search-button").click(function(){
+        var parmData={
+            pageNo:1,
+            pageSize: parm.pageSize,
+            data:{
+                submittedFileName:$("#submittedFileName").val(),
+                isOneLevelDelete:true
+            }
+        };
+        ajaxHengyun({
+            type:"POST",
+            url: "${_gate_url}/api/file/filerecycle/page",
+            data:JSON.stringify(parmData),
+            dataType:'json',
+            contentType:"application/json",
+            success:function(rows){
+                if (rows.data){
+                    fileList(rows.data.list);
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

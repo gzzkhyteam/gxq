@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>消息平台</title>-->
+    <meta http-equiv="Expires" content="0" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/common.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/message/news_about.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/viewCss/module/publisher.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+</head>
+<body>
+<div class="workspace-body">
+    <a class="ui-button btn_a" id="goEdit" href="/gxqpt-msgs/msgs/publisherList" >返回</a>
+    <div class="container">
+        <div class="header">
+            标题: <span class="title"></span>
+        </div>
+        <div class="content">
+            <ul>
+                <li>
+                    发布渠道：(<span style="color: green;">绿色</span>代表发布成功，<span style="color: orange;">橙色</span>代表未成功)
+                    <div class="channel">
+                    </div>
+                    <span class="sucess_span">发布成功：<i class="publish_sucess">0</i>个</span><span class="error_span">未成功：<i class="publish_fail">0</i>个</span>
+                </li>
+                <li>
+                    发送时间：<span class="send_time"></span>  &nbsp;&nbsp;&nbsp;
+                </li>
+                <li>
+                    附件：<span class="file"></span>
+                </li>
+                <li>
+                    <span>正文内容：</span>
+                    <div class="word_content">
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function timestampToTime(timestamp) {
+        var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        Y = date.getFullYear() + '-';
+        M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        D = date.getDate() + ' ';
+        return Y+M+D;
+    }
+    var token = $.cookie("_token");
+    var userId = $.cookie('_user_id');
+    $(function(){
+        getDetail();
+    });
+    function getDetail(){
+        ajaxHengyun({
+            type: 'get',
+            url: "${_gate_url}/api/msgs/message/detail",
+            data: {"msgId": "${id}"},
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded",
+            cache: false,
+            success: function(res) {
+                $(".title_second",parent.document).text("详情");
+                $('#goEdit').attr('href', '${_cp}/msgs/draftsEdit?id=' + res.data.msgId + '&type=1');//继续修改消息
+                $(".title").html(res.data.title);
+                $(".publish_sucess").html(res.data.successNum);//成功个数
+                $(".publish_fail").html(res.data.failNum);//失败个数
+                $(".sendJobTime").html(res.data.sendJobTime);
+                $(".send_time").html(res.data.sendTime);
+                $(".word_content").html(res.data.content);
+                //附件展示
+                if (res.data.fileUrl != null) {
+                    var returnValue = '<a class="fileDownLoad" href="${_gate_url}/api/file/p/file/down?id=' + res.data.fileId + '&userId=' + userId + '&token=' + token + '">'+res.data.fileName+'<i class="fa fa-download"></i> 下载 </a>';
+                    $(".file").html(returnValue);
+                }else{
+                    $(".file").html(" 无");
+                }
+                //成功、失败渠道绿色橘色控制颜色的显示，绿色是成功；橘色是失败
+                $(".channel").empty();
+                var channelList = res.data.status;
+                if(channelList!=null){
+                    for(var i=0;i<channelList.length;i++){
+                        var channel = channelList[i];
+                        $(".channel").append(
+                            '<li class="channel_type" style="background:#fff">'+'<span style="float:left;width:20%">'+"渠道类型："+'<span style="margin-right: 12%;width:25%">'+channel.name+'</span>'+'</span>'+"渠道 : "
+                        );
+                        var chaildList = channel.chaild;
+                        for(var j=0;j<chaildList.length;j++){
+                            var chaild = chaildList[j];
+                            var status = chaild.status;
+                            var name = chaild.name;
+                            if("success"==status){
+                                $(".channel_type").eq(i).append(
+                                    '<span>'+'<i style="color:green">'+name+'</i>'+'</span>'+'</li>'
+                                );
+                            }else if("error"==status){
+                                $(".channel_type").eq(i).append(
+                                    '<span>'+'<i style="color:orange">'+name+'</i>'+'</span>'+'</li>'
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    //接口类型转化为文字
+    function typeName(str) {
+        var typename ="";
+        if(str=='Blog'){
+            typename = "微博";
+        }else if(str=='Wechat'){
+            typename = "微信";
+        }
+        return typename;
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,150 @@
+// 带标记的线形图,例子查看运维系统-运维分析-共性模块监控第一个图
+// 使用时替换需要替换的字段即可，如两个data
+function symbolLine () {
+  return {
+    tooltip: {
+      formatter: '{b}：{c}'
+    },
+    xAxis: {
+      type: 'category',
+      name: '月份',
+      data: [12, 11]
+    },
+    yAxis: {
+      type: 'value',
+      name: '个数'
+    },
+    series: [{
+      type: 'line',
+      symbol: 'circle',
+      symbolSize: (value, params) => {
+        if (value > 999) {
+          return 40
+        }
+        if (value > 99 && value < 1000) {
+          return 30
+        }
+        if (value < 100) {
+          return 20
+        }
+      },
+      label: {
+        show: true,
+        position: 'inside'
+      },
+      data: [20, 100]
+    }]
+  }
+}
+
+// 带标签的柱形图，例子查看运维系统-运维分析-共性模块监控第二个图
+function symbolBar () {
+  return {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow',
+        label: {
+          show: true,
+          backgroundColor: '#333'
+        }
+      }
+    },
+    xAxis: {
+      type: 'category',
+      name: '月份'
+    },
+    yAxis: {
+      splitLine: {
+        show: true
+      }
+    },
+    series: [{
+      name: '模块使用量',
+      type: 'pictorialBar',
+      label: {
+        show: true,
+        position: 'top',
+        fontSize: 20,
+        color: '#000'
+      },
+      itemStyle: {
+        normal: {
+          color: '#0f375f'
+        }
+      },
+      symbol: 'rect',
+      symbolRepeat: true,
+      symbolSize: [10, 4],
+      symbolMargin: 1
+    }]
+  }
+}
+
+// 横向柱形图，例子查看运维系统-运维分析-共性模块监控第三个图
+function horizontalBar () {
+  return {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    xAxis: {
+      type: 'value',
+      boundaryGap: [0, 0.01],
+      name: '次数'
+    },
+    yAxis: {
+      type: 'category',
+      name: '模块名称',
+      axisLabel: {
+        show: false
+      }
+    },
+    series: [{
+      type: 'bar'
+    }]
+  }
+}
+
+// 带有区域阴影的线形图
+function areaLine () {
+  return {
+    tooltip: {
+      trigger: 'axis'
+    },
+    xAxis: {
+      name: '日期',
+      type: 'category',
+      boundaryGap: false,
+      data: [],
+      axisTick: {
+        show: false
+      }
+    },
+    yAxis: {
+      type: 'value',
+      boundaryGap: [0, '100%']
+    },
+    series: [{
+      type: 'line',
+      smooth: true,
+      symbol: 'none',
+      sampling: 'average',
+      itemStyle: {
+        normal: {
+          color: 'rgb(255, 70, 131)'
+        }
+      },
+      areaStyle: {
+        normal: {
+          color: 'rgba(255, 70, 131, 0.2)'
+        }
+      },
+      data: []
+    }]
+  }
+}
+
+export {symbolLine, symbolBar, horizontalBar, areaLine}

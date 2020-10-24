@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>交换共享系统</title>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+	<div class="main clearfix">
+		<div class="row">
+			<div class="current pull-left">
+				<h3 class="page-title">
+					<span>数据集管理</span> &gt; <span>数据集详情</span> &gt; <span class="page-title-scend">返回数据字段</span>
+				</h3>
+			</div>
+			<div class="back pull-right">
+				<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+			</div>
+		</div>
+		<div class="view_container view_container_first row">
+			<div class="main_right pull-right">
+				<div id="secondPage" class="secondPage">
+					<div class="layerDataApply minHeight360 clearfix">
+						<h3>选择要返回的数据字段</h3>
+						<ul id="fieldList" class="elementData  clearfix">
+						</ul>
+					</div>
+					<div class="text-center">
+						<button type="button" class="btn btn-primary" onclick="history.back()">上一步</button>
+						<button type="button" class="btn btn-primary" onclick="save()">下一步</button>
+						<button type="button" class="btn btn-primary" onclick="loadFirstPage()">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    function loadFirstPage(){
+        window.location.href='${_cp}/module/dataSetManageList?pageNo=${pageNo}';
+    };
+    getFieldInfo();
+    function getFieldInfo(){//获取字段信息
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/getBaseInfo",
+            data: {setId:"${id}"},
+            success: function (rows) {
+                if (rows.data) {
+                    var html="";
+                    var fields=rows.data.fieldList;
+                    var alFieldList=rows.data.alFieldList;
+                    for(var i in fields){
+                        var setSelectno=false;
+                        alFieldList.forEach(function(value,index){
+							if(value.fieldCode==fields[i].fieldCode){
+                                setSelectno=true;
+							}
+						});
+                        if(setSelectno){
+                            html+='<li class="pull-left clearfix">';
+                            html+='<input type="checkbox" name="unitIdsBox" class="hidden" value="'+fields[i].fieldCode+'" checked autocomplete="off"/>';
+                            html+='<span class="selectno checked"></span>';
+                            html+='<label class="pull-left">'+fields[i].fieldCode;
+                            if(fields[i].fieldName){
+                                html+='('+fields[i].fieldName+')';
+                            }
+                            html+='</label>';
+                            html+='</li>';
+                        }else{
+                            html+='<li class="pull-left clearfix">';
+                            html+='<input type="checkbox" name="unitIdsBox" class="hidden" value="'+fields[i].fieldCode+'" autocomplete="off"/>';
+                            html+='<span class="selectno"></span>';
+                            html+='<label class="pull-left">'+fields[i].fieldCode;
+                            if(fields[i].fieldName){
+                                html+='('+fields[i].fieldName+')';
+                            }
+                            html+='</label>';
+                            html+='</li>';
+                        }
+                    }
+                    $("#fieldList").append(html);
+                    updateIformHeight();
+                }
+            }
+        });
+    };
+    /*提交*/
+    function save(){
+		window.location.href="${_cp}/module/dataSetViewRelation?id=${id}&pageNo=${pageNo}";
+    };
+</script>
+</body>
+</html>

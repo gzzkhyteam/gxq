@@ -1,0 +1,132 @@
+<template>
+  <Layout>
+    <Content>
+      <Breadcrumb>
+        <BreadcrumbItem>运维分析</BreadcrumbItem>
+        <BreadcrumbItem>共性服务监控</BreadcrumbItem>
+      </Breadcrumb>
+      <Card>
+        <Row type="flex" justify="space-between">
+          <Col style="width: 49%">
+            <chart-card title="服务使用数量分析">
+              <chartLine ref="serviceChart1" el="serviceChart1" :lineOption="serviceChart1Option">
+                <div id="serviceChart1" style="height: 400px;"></div>
+              </chartLine>
+            </chart-card>
+          </Col>
+          <Col style="width: 49%">
+            <chart-card title="服务故障处理分析">
+              <chartBar ref="serviceChart2" el="serviceChart2" :barOption="serviceChart2Option">
+                <div id="serviceChart2" style="height: 400px;"></div>
+              </chartBar>
+            </chart-card>
+          </Col>
+        </Row>
+        <Row type="flex" justify="space-between">
+          <Col style="width: 49%">
+            <chart-card title="服务使用top10">
+              <chartBar ref="serviceChart3" el="serviceChart3" :barOption="serviceChart3Option">
+                <div id="serviceChart3" style="height: 400px;"></div>
+              </chartBar>
+            </chart-card>
+          </Col>
+          <Col style="width: 49%">
+            <chart-card title="服务使用率">
+              <chartLine ref="serviceChart4" el="serviceChart4" :lineOption="serviceChart4Option">
+                <div id="serviceChart4" style="height: 400px;"></div>
+              </chartLine>
+            </chart-card>
+          </Col>
+        </Row>
+      </Card>
+    </Content>
+  </Layout>
+</template>
+
+<script>
+import {mapState} from 'vuex'
+import api from '@/api/axiosApi'
+import operationApiList from '@/api/operationApiList'
+// echart图外层容器，包括卡片样式
+import chartCard from '@/view/home/chartCard.vue'
+import chartLine from './../echarts/ChartLine.vue'
+import chartBar from './../echarts/bar.vue'
+// echart图的一些共用的配置
+import {symbolLine, symbolBar, horizontalBar} from '@/assets/js/echartOption'
+
+export default {
+  components: {
+    chartCard,
+    chartLine,
+    chartBar
+  },
+  data () {
+    return {
+      serviceChart1Option: symbolLine(),
+      serviceChart2Option: symbolBar(),
+      serviceChart3Option: horizontalBar(),
+      serviceChart4Option: symbolLine()
+    }
+  },
+  computed: {
+    ...mapState(['userInfo'])
+  },
+  mounted() {
+    this.drawServiceChart1()
+    this.drawServiceChart2()
+    this.drawServiceChart3()
+    this.drawServiceChart4()
+  },
+  methods: {
+    // 服务使用数量分析
+    drawServiceChart1 () {
+      this.serviceChart1Option.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      this.serviceChart1Option.series[0].data = [10, 380, 100, 560, 1290, 1330, 1320]
+      this.$refs.serviceChart1.refresh()
+    },
+    // 服务故障处理分析
+    drawServiceChart2 () {
+      this.serviceChart2Option.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      this.serviceChart2Option.series[0].barWidth = 30
+      this.serviceChart2Option.series[0].symbolSize = ['100%', 4]
+      this.serviceChart2Option.series[0].data = [10, 380, 100, 560, 1290, 1330, 1320]
+      this.serviceChart2Option.series[0].name = '故障产生量'
+      this.serviceChart2Option.series.push({
+        name: '故障处理量',
+        type: 'pictorialBar',
+        barGap: 0.1,
+        barWidth: 30,
+        label: {
+          show: true,
+          position: 'top',
+          fontSize: 20,
+          color: '#000'
+        },
+        itemStyle: {
+          normal: {
+            color: '#0f375f'
+          }
+        },
+        symbol: 'rect',
+        symbolRepeat: true,
+        symbolSize: ['100%', 4],
+        symbolMargin: 0,
+        data: [10, 380, 100, 560, 1290, 1330, 1320]
+      })
+      this.$refs.serviceChart2.refresh()
+    },
+    // 服务使用top10
+    drawServiceChart3 () {
+      this.serviceChart3Option.yAxis.data = ['巴西','印尼','美国','印度','中国','世界人口(万)']
+      this.serviceChart3Option.series[0].data = [18203, 23489, 29034, 104970, 131744, 630230]
+      this.$refs.serviceChart3.refresh()
+    },
+    // 服务使用率
+    drawServiceChart4 () {
+      this.serviceChart4Option.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      this.serviceChart4Option.series[0].data = [10, 50, 22, 36, 89, 100, 43]
+      this.$refs.serviceChart4.refresh()
+    }
+  }
+}
+</script>

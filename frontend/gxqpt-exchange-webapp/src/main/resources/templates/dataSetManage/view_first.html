@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>交换共享系统</title>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+	<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+	<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+</head>
+<body>
+<div id="container" class="container">
+	<div class="main clearfix">
+		<div class="row">
+			<div class="current pull-left">
+				<h3 class="page-title">
+					<span>数据集管理</span> &gt; <span class="page-title-scend">数据集详情</span>
+				</h3>
+			</div>
+			<div class="back pull-right">
+				<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+			</div>
+		</div>
+		<div class="view_container view_container_first row">
+			<div class="main_right pull-right">
+				<div id="secondPage" class="secondPage">
+					<div id="unit" class="view_item">
+						<div class="stateOne">
+							<h3>数据集基本信息</h3>
+							<table class="table default-table tab-border-no-layer borderCollapse">
+								<tbody>
+								<tr>
+									<th width="145">数据集名称：</th>
+									<td id="setName" class="viewTd">
+									</td>
+								</tr>
+								<tr>
+									<th>数据集标识：</th>
+									<td id="setCode" class="viewTd">
+									</td>
+								</tr>
+								<tr>
+									<th>数据集创建类型：</th>
+									<td id="setDataType" class="viewTd">
+									</td>
+								</tr>
+								<tr class="apiType">
+									<th>API地址：</th>
+									<td id="apiUrl" class="viewTd">
+									</td>
+								</tr>
+								<tr class="apiType">
+									<th>API类型：</th>
+									<td id="apiDataType" class="viewTd">
+									</td>
+								</tr>
+								<tr class="dataBaseType">
+									<th>数据源名称：</th>
+									<td id="dbIdName" class="viewTd">
+									</td>
+								</tr>
+								<!--<tr class="comType">
+									<th>采集时间：</th>
+									<td>
+										<input type="text" name="" id="" class="form-control Wdate"/>
+									</td>
+								</tr>-->
+								<tr class="comType">
+									<th>更新方式：</th>
+									<td id="updateType" class="viewTd">
+									</td>
+								</tr>
+								<tr>
+									<th>更新频率：</th>
+									<td id="updateRate" class="viewTd">
+									</td>
+								</tr>
+								<tr>
+									<th>创建理由：</th>
+									<td id="reason" class="viewTd">
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+						<!--结构化及非结构化文件-->
+						<div class="stateTwo">
+							<h3>关联目录</h3>
+							<table class="table default-table tab-border-no-layer">
+								<tbody>
+								<tr>
+									<th width="145" class="text-left">关联目录名称：</th>
+									<td id="selCatalog" class="viewTd">&nbsp;
+									</td>
+								</tr>
+								</tbody>
+							</table>
+							<div class="marginTop">
+								<h3 class="tle">文件列表</h3>
+								<table id="fileList" class="default-table tab-title-top">
+									<thead>
+									<tr>
+										<th>序号</th>
+										<th>文件名称</th>
+										<th>文件编号</th>
+										<th width="100">操作</th>
+									</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!--API调用-->
+						<div class="stateThree">
+							<h3>返回数据字段</h3>
+							<ul id="fieldList" class="elementData  clearfix">
+							</ul>
+						</div>
+						<!--数据源读取-->
+						<div class="stateFour">
+							<div class="sqlSel">
+								<h3>SQL输入</h3>
+								<table class="table default-table tab-border-no-layer borderCollapse">
+									<tbody>
+									<tr>
+										<th width="145" class="text-left">数据表名：</th>
+										<td id="dataBasesqlName" class="viewTd"></td>
+									</tr>
+									<tr>
+										<th width="145" class="text-left">SQL语句：</th>
+										<td id="sqlCode" class="viewTd">&nbsp
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="fieldSel">
+								<h3>字段选择</h3>
+								<table class="table default-table tab-border-no-layer borderCollapse">
+									<tbody>
+									<tr>
+										<th width="145" class="text-left">数据表名：</th>
+										<td id="dataBaseName" class="viewTd"></td>
+									</tr>
+									<tr>
+										<th class="text-left">表说明：</th>
+										<td id="dataBaseDesc" class="viewTd"></td>
+									</tr>
+									<tr>
+										<th class="text-left">数据字段：</th>
+										<td id="dataBaseFiled" class="viewTd"></td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+						<div class="stateFive">
+							<h3>关联目录</h3>
+							<table class="table default-table tab-border-no-layer">
+								<tbody>
+								<tr>
+									<th width="145" class="text-left">关联目录名称：</th>
+									<td id="selCatalogSet" class="viewTd">&nbsp;
+									</td>
+								</tr>
+								</tbody>
+							</table>
+							<div class="catalogFieldContainer marginTop"></div>
+						</div>
+						<div class="text-center">
+							<button id="viewData" type="button" class="btn btn-primary" onclick="openDataView()">数据预览</button>
+							<button type="button" class="btn btn-primary" onclick="openFlow()">查看流程</button>
+							<!--<button type="button" class="btn btn-primary" onclick="nextPage()">下一步</button>-->
+							<button type="button" class="btn btn-primary" onclick="loadFirstPage()">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    function loadFirstPage(){
+        window.location.href='${_cp}/module/dataSetManageList?pageNo=${pageNo}';
+    }
+    function openFlow() {//查看流程
+        parent.layer.open({
+            id: 'applyDownload',
+            type: 2,
+            anim: 6,
+            title: '流程查看',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['820px', '450px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/dataSetFlow",
+            btn: ['关闭'],
+        });
+    }
+    function downLoadFolder(url, folderName){//文件下载
+        var urlDownload = "${_gate_url}/api/file/file/download?url=" + url + "&filename=" + folderName;
+        window.open(urlDownload);
+    }
+    function reloadxh(){//表格序号加载
+        var trList = $("#fileList tbody tr");
+        if(trList.length>0){
+            trList.each(function(index,value){
+                $(value).find(".xh").text(index+1);
+            });
+        }
+    };
+    var type=0;
+    var directorysList=[];
+    getTableField();
+    function getTableField(){//获取详情
+        ajaxHengyun({
+            type: "POST",
+            dataType: 'json',
+            url: "${_gate_url}/api/exchange/set/getBaseInfo",
+            data: {setId:"${id}"},
+            success: function (rows) {
+                if(rows.data){
+                    rows.data=dealElement(rows.data);
+                    //基本信息
+                    $("#setName").text(rows.data.setName);
+                    $("#setCode").text(rows.data.setCode);
+                    var status = rows.data.status;
+                    if(status != 3 || rows.data.setType == 1 || rows.data.setType == 2){
+						$("#viewData").css("display","none");
+					}
+                    var setType = "";
+                    type=rows.data.setType;
+                    directorysList=rows.data.directorys;
+                   // getCatalog();
+                    switch(rows.data.setType){
+                        case 1:
+                            setType = "非结构化文件";
+                            break;
+                        case 2:
+                            setType = "结构化文件";
+                            break;
+                        case 3:
+                            setType = "API调用";
+                            break;
+                        case 4:
+                            setType = "数据库读取";
+                            break;
+                        default:
+                            setType = "";
+                    };
+                    $("#setDataType").text(setType);
+                    $("#apiUrl").text(rows.data.apiUrl);
+                    var apiDataType = "";
+                    switch(rows.data.apiDataType){
+                        case 1:
+                            apiDataType = "JSON";
+                            break;
+                        case 2:
+                            apiDataType = "XML";
+                            break;
+                        default:
+                            apiDataType = "";
+                    };
+                    $("#apiDataType").text(apiDataType);
+                    $("#dbId").text(rows.data.dbId);
+                    $("#dbIdName").text(rows.data.dbName);
+                    var updateType = "";
+                    switch(rows.data.updateType){
+                        case 1:
+                            updateType = "增量更新";
+                            break;
+                        case 2:
+                            updateType = "全量更新";
+                            break;
+                        default:
+                            updateType = "";
+                    };
+                    $("#updateType").text(updateType);
+                    var updateRate = "";
+                    switch(rows.data.updateRate){
+                        case 1:
+                            updateRate = "一次性";
+                            break;
+                        case 2:
+                            updateRate = "实时";
+                            break;
+                        case 3:
+                            updateRate = "天";
+                            break;
+                        case 4:
+                            updateRate = "周";
+                            break;
+                        case 5:
+                            updateRate = "月";
+                            break;
+                        case 6:
+                            updateRate = "年";
+                            break;
+                        default:
+                            updateRate = "";
+                    };
+                    $("#updateRate").text(updateRate);
+                    $("#reason").text(rows.data.reason);
+                    if (type == "1" || type == "2") {
+                        var directorys=rows.data.directorys;
+                        if(directorys.length>0){
+                            var directorysArray = [];
+                            for(var i in directorys){
+                                directorysArray.push(directorys[i].dirName);
+							};
+                            $("#selCatalog").html(directorysArray.join(","));
+						}
+                        $(".apiType,.dataBaseType,.comType").css("display", "none");
+                        $(".stateTwo").css("display", "block");
+                        //文件列表
+                        var filesList=rows.data.files;
+                        var html="";
+                        var file={};
+                        for(var i in filesList){
+                            file.filePath=filesList[i].filePath;
+                            file.oldName=filesList[i].oldName;
+                            file.busId=filesList[i].busId;
+                            html+='<tr>';
+                            html+='<td class="xh">'+i+'</td>';
+                            html+='<td>'+filesList[i].oldName+'</td>';
+                            html+='<td>'+filesList[i].busId+'</td>';
+                            html+='<td>';
+                            html+='<a href="javascript:void(0);" onclick="downLoadFolder(\''+filesList[i].filePath+'\',\''+filesList[i].oldName+'\')">下载</a>';
+                            html+='</td>';
+                            html+='</tr>';
+                            var uploadFileNameText=$("#uploadFileName").text();
+                            if(!uploadFileNameText){
+                                $("#uploadFileName").text(filesList[i].oldName);
+                            }else{
+                                $("#uploadFileName").text(uploadFileNameText+'，'+filesList[i].oldName);
+                            }
+                        };
+                        $("#fileList tbody").append(html);
+                    } else if (type == "3") {
+                        $(".apiType,.comType").css("display", "table-row");
+                        $(".dataBaseType,.stateTwo,.stateFour").css("display", "none");
+                        $(".stateThree,.stateFive").css("display", "block");
+                        //Api返回字段
+                        var fieldHtml="";
+                        var fields=rows.data.fieldList;
+                        var alFieldList=rows.data.alFieldList;
+                        for(var i in fields){
+                            var setSelectno=false;
+                            alFieldList.forEach(function(value,index){
+                                if(value.fieldCode==fields[i].fieldCode){
+                                    setSelectno=true;
+                                }
+                            });
+                            if(setSelectno){
+                                fieldHtml+='<li class="pull-left clearfix">';
+                                fieldHtml+='<input type="checkbox" name="unitIdsBox" class="hidden" value="'+fields[i].fieldCode+'" checked autocomplete="off" autocomplete="off"/>';
+                                fieldHtml+='<span class="selectno checked"></span>';
+                                fieldHtml+='<label class="pull-left">'+fields[i].fieldCode;
+                                if(fields[i].fieldName){
+                                    fieldHtml+='('+fields[i].fieldName+')';
+                                }
+                                fieldHtml+='</label>';
+                                fieldHtml+='</li>';
+                            }
+                        }
+                        $("#fieldList").append(fieldHtml);
+                    } else if (type == "4"){
+                        $(".dataBaseType,.comType").css("display", "table-row");
+                        $(".apiType").css("display", "none");
+                        $(".stateFour,.stateFive").css("display", "block");
+                        if(rows.data.sqlCode){
+                            $(".sqlSel").css("display","block");
+                            $("#sqlCode").text(rows.data.sqlCode);
+                            $("#dataBasesqlName").text(rows.data.tableCode);
+                        }else{
+                            $(".fieldSel").css("display","block");
+                            var tables=rows.data.allTable;
+                            if(rows.data.tableCode){
+                                $("#dataBaseName").text(rows.data.tableCode);
+                                for(var i in tables){
+                                    if(rows.data.tableCode==tables[i].tableName){
+                                        $("#dataBaseDesc").text(tables[i].comment);
+									}
+								};
+                                var dataBaseFieldVal=$("#dataBaseFiled").text();
+                                var alSetFieldList=rows.data.alFieldList;
+                                alSetFieldList.forEach(function(value,index){
+                                    if(dataBaseFieldVal){
+                                    	dataBaseFieldVal+="，";
+									}
+                                    dataBaseFieldVal+=value.fieldCode;
+                                    if(value.fieldName){
+                                        dataBaseFieldVal+='('+value.fieldName+')';
+                                    }
+                                    $("#dataBaseFiled").text(dataBaseFieldVal);
+                                });
+							}else{
+                                $("#dataBaseName").text("未选择数据表");
+							}
+						};
+
+
+                    }
+                    if(type == "3" || type == "4"){
+                        var fields=rows.data.alFieldList;
+                        var relatedDirectory=rows.data.relatedDirectory;
+                        var catalogName=[];
+                        var dataSethtml="";
+                        relatedDirectory.forEach(function(value,index){
+                            catalogName.push(value.name);
+                            dataSethtml+='<h3>目录（'+value.name+'）关联字段</h3>';
+                            dataSethtml+='<table class="default-table tab-title-top catalogFieldTable" data-id="'+value.directoryId+'" data-name="'+value.name+'">';
+                            dataSethtml+='<thead>';
+                            dataSethtml+='<tr>';
+                            dataSethtml+='<th>目录字段名称</th>';
+                            dataSethtml+='<th>目录字段标识</th>';
+                            dataSethtml+='<th>数据集字段名称</th>';
+                            dataSethtml+='</tr>';
+                            dataSethtml+='</thead>';
+                            dataSethtml+='<tbody>';
+                            if(value.list.length>0){
+                                value.list.forEach(function(row,num){
+                                    dataSethtml+='<tr>';
+                                    dataSethtml+='<td class="fieldName">'+row.fieldName+'</td>';
+                                    dataSethtml+='<td class="fieldCode" data-id="'+row.id+'" data-type="'+row.fieldType+'">'+row.fieldCode+'</td>';
+                                    dataSethtml+='<td>';
+                                    for(var i in fields){
+                                        if(fields[i].fieldCode==row.setField){
+                                            dataSethtml+=fields[i].fieldCode;
+                                        }
+                                    }
+                                    dataSethtml+='</td>';
+                                    dataSethtml+='</tr>';
+                                });
+                            }else{
+                                dataSethtml+='<tr>';
+                                dataSethtml+='<td colspan="3" class="text-center">无关联字段</td>';
+                                dataSethtml+='</tr>';
+                            }
+                            dataSethtml+='</tbody>';
+                            dataSethtml+='</table>';
+                        });
+                        if(catalogName.join(",")!=""){
+                            $("#selCatalogSet").text(catalogName.join(","));
+                        }
+                        $(".catalogFieldContainer").html(dataSethtml);
+					}
+                    reloadxh();
+                    updateIformHeight();
+                }
+            }
+        });
+    };
+    /*function nextPage() {//下一步
+        if (type) {
+            if (type == "1" || type == "2") {
+                window.location.href = "${_cp}/module/dataSetViewSecond?id=${id}&type=&pageNo=${pageNo}";
+            } else if (type == "3") {
+                window.location.href = "${_cp}/module/dataSetViewApi?id=${id}&pageNo=${pageNo}";
+            } else {
+                window.location.href = "${_cp}/module/dataSetViewDataBaseOne?id=${id}&pageNo=${pageNo}";
+            }
+        }
+    }*/
+
+    function openDataView() {//预览数据
+        parent.layer.open({
+            id: 'applyDownload',
+            type: 2,
+            anim: 6,
+            title: '数据预览',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['830px', '450px'],
+            shade: [0.9, '#000'],
+            content: "${_cp}/module/shareManageDataView?setId=${id}&type=3",
+            btn: ['关闭'],
+        });
+    }
+
+</script>
+</body>
+</html>

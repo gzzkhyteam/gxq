@@ -1,0 +1,335 @@
+<template>
+	<div class="wAuto">
+		<Layout>
+			<Content>
+				<Breadcrumb>
+					<BreadcrumbItem>故障管理</BreadcrumbItem>
+					<BreadcrumbItem>故障台账</BreadcrumbItem>
+				</Breadcrumb>
+				<Card>
+					<Form ref="formValidate" v-model="searchData" inline :label-width="90">
+						<FormItem label="故障名称">
+							<Input class="queryItem" type="text" v-model="searchData.faultName"> </Input>
+						</FormItem>
+						<FormItem label="故障类别">
+							<Select class="queryItem" v-model="searchData.faultType">
+								<Option value="">全部</Option>
+								<Option value="1">SA变更</Option>
+								<Option value="2">硬件故障</Option>
+								<Option value="3">业务程序故障</Option>
+								<Option value="4">程序BUG</Option>
+							</Select>
+						</FormItem>
+						<FormItem label="故障级别">
+							<Select class="queryItem" v-model="searchData.faultLevel">
+								<Option value="">全部</Option>
+								<Option value="1">一级</Option>
+								<Option value="2">二级</Option>
+								<Option value="3">三级</Option>
+							</Select>
+						</FormItem>
+						<FormItem label="产生时间">
+							<DatePicker class="queryItem" @on-change="changeTime" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="请选择日期"></DatePicker>
+						</FormItem>
+						<FormItem label="故障状态">
+							<Select class="queryItem" v-model="searchData.status">
+								<Option value="">全部</Option>
+								<Option value="1">处理中</Option>
+								<Option value="2">已完结</Option>
+							</Select>
+						</FormItem>
+						<FormItem label="是否属实">
+							<Select class="queryItem" v-model="searchData.isTrue">
+								<Option value="">全部</Option>
+								<Option value="1">是</Option>
+								<Option value="2">否</Option>
+							</Select>
+						</FormItem>
+						<FormItem label="故障主机">
+							<Input class="queryItem" type="text" v-model="searchData.faultHost"> </Input>
+						</FormItem>
+						<FormItem label="系统名称">
+							<Select class="queryItem" v-model="searchData.systemId">
+								<Option value="">全部</Option>
+								<Option v-for="item in systemList" :value="item.appId" :key="item.appId">{{item.name}}</Option>
+							</Select>
+						</FormItem>
+						<FormItem>
+							<Button type="info" @click="seachfun">查询</Button>
+						</FormItem>
+					</Form>
+					<hy-table ref="selection" :data="data" :columns="columns" :total="pageOption.total" :page-size="pageOption.pageSize" @on-change="pageChange" @on-page-size-change="changePageSize" show-sizer show-elevator/>
+				</Card>
+			</Content>
+			<Modal v-model="modal" title="详情" class-name="vertical-center-modal" width="60%">
+				<ledger-view :dataView="dataView"></ledger-view>
+				<div slot="footer">
+					<Button type="text" @click="closeModal">关闭</Button>
+				</div>
+			</Modal>
+			<Modal v-model="dealModal" title="处理报告" class-name="vertical-center-modal" width="60%">
+				<ledger-dealview :dataView="dataView"></ledger-dealview>
+				<div slot="footer">
+					<Button type="text" @click="closeDealModal">关闭</Button>
+				</div>
+			</Modal>
+		</Layout>></h3>
+
+	</div>
+</template>
+
+<script>
+	import ledgerView from './view'
+	import ledgerDealview from './dealView'
+	import api from '@/api/axiosApi'
+	import operationApiList from '@/api/operationApiList'
+	export default {
+		data() {
+			return {
+				modal: false,
+				dealModal: false,
+				systemList: [], //系统名称列表
+				searchData: { //查询参数对象
+					"endTime": "",
+					"faultHost": "",
+					"faultInfo": "",
+					"faultLevel": "",
+					"faultName": "",
+					"faultType": "",
+					"isTrue": "",
+					"startTime": "",
+					"status": "",
+					"systemId": ""
+				},
+				columns: [{
+						type: 'index',
+						width: 60,
+						align: 'center'
+					},
+					{
+						title: '故障名称',
+						key: 'faultName'
+					},
+					{
+						title: '故障类别',
+						key: 'faultType'
+					},
+					{
+						title: '故障级别',
+						key: 'faultLevel'
+					},
+					{
+						title: '系统名称',
+						key: 'systemName'
+					},
+					{
+						title: '故障主机',
+						key: 'faultHost'
+					},
+					{
+						title: '故障状态',
+						key: 'status',
+						render: (h, params) => {
+							var statusText;
+							switch(params.row.status) {
+								case 1:
+									statusText = "未处理";
+									break;
+								case 2:
+									statusText = "已处理";
+									break;
+								case 3:
+									statusText = "已完结";
+									break;
+								default:
+									statusText = "";
+									break;
+							};
+							return h('span', statusText);
+						}
+					},
+					{
+						title: '产生时间',
+						key: 'happenTime',
+						width: 160
+					},
+					{
+						title: '是否属实',
+						key: 'isTrue',
+						render: (h, params) => {
+							var isTrueText;
+							switch(params.row.isTrue) {
+								case '1':
+									isTrueText = "属实";
+									break;
+								case '2':
+									isTrueText = "不属实";
+									break;
+								default:
+									isTrueText = "";
+									break;
+							};
+							return h('span', isTrueText);
+						}
+					},
+					{
+						title: '操作',
+						key: 'act',
+						align: 'center',
+						width: 160,
+						render: (h, params) => {
+							const detail = h('Button', {
+								props: {
+									type: 'primary',
+									size: 'small'
+								},
+						        style: {
+						          	marginRight: '8px'
+						        },
+								on: {
+									click: () => {
+										var ledgerId = params.row.id;
+										this.faultGetById(ledgerId);
+									}
+								}
+							}, '详情');
+							const dealDetail = h('Button', {
+								props: {
+									type: 'primary',
+									size: 'small'
+								},
+						        style: {
+						          	marginRight: '8px'
+						        },
+								on: {
+									click: () => {
+										var ledgerId = params.row.id;
+										this.dealViewGetById(ledgerId);
+									}
+								}
+							}, '处理报告');
+							if(params.row.status == 1) {
+								return h('div', [detail]);
+							} else {
+								return h('div', [dealDetail, detail]);
+							}
+						}
+					},
+				],
+				data: [],
+				pageOption: { //分页参数
+					current: 1,
+					total: 0,
+					pageSize: 20
+				},
+				dataView: {}, //详情数据
+			}
+		},
+		components: {
+			ledgerView,
+			ledgerDealview
+		},
+		mounted() {
+			this.getSystemList(); //获取系统列表
+			this.faultPage(); //获取故障台账列表
+		},
+		methods: {
+			closeModal() { //关闭modal窗口
+				this.modal = false;
+			},
+			closeDealModal() { //关闭dealModal窗口
+				this.dealModal = false;
+			},
+			getSystemList() { //获取系统列表
+				const vm = this
+				api(operationApiList.findAppIdList).then(res => {
+					if(res.data.errcode === 0) {
+						vm.systemList = res.data.data
+					}
+				}, (error) => {
+					console.log(error)
+				})
+			},
+			seachfun() { //查询
+				this.faultPage(); //获取故障台账列表
+			},
+			changeTime(val) { //选择时间
+				if(val[0] && val[1]) {
+					var startTime = val[0].replace(/\//g, "-");
+					var endTime = val[1].replace(/\//g, "-");
+					this.searchData.startTime = startTime + " 00:00:00";
+					this.searchData.endTime = endTime + " 23:59:59";
+				} else {
+					this.searchData.startTime = "";
+					this.searchData.endTime = "";
+				}
+			},
+			faultPage() { //获取故障台账列表
+				const vm = this;
+				let searchString = (JSON.stringify(vm.searchData)).replace(/\ +/g, "");
+				let searchJson = JSON.parse(searchString);
+				var formData = {
+					"data": searchJson,
+					"pageNo": this.pageOption.current,
+					"pageSize": this.pageOption.pageSize
+				};
+				api(operationApiList.faultPage, formData).then(res => {
+					if(res.data.errcode === 0) {
+						vm.data = res.data.data.list;
+						if(vm.data.length > 0) {
+							vm.pageOption.pageSize = res.data.data.pageSize;
+							vm.pageOption.total = res.data.data.total;
+							vm.pageOption.current = res.data.data.pageNum;
+						};
+					}
+				}, (error) => {
+					console.log(error)
+				})
+			},
+			pageChange(num) { //页码改变的回调
+				this.pageOption.current = num;
+				this.getWarnLedgerList();
+			},
+			changePageSize(num) { //切换每页条数时的回调
+				this.pageOption.pageSize = num;
+				this.getWarnLedgerList();
+			},
+			faultGetById(ledgerId) { //根据Id查询详情信息
+				this.modal = true;
+				api(operationApiList.faultGetById, {
+					"id": ledgerId
+				}).then((res) => {
+					if(res.status == 200 && res.data.data) {
+						this.dataView = res.data.data;
+					}
+				}, (err) => {
+					//dong something...
+				})
+			},
+			dealViewGetById(ledgerId) { //根据Id查询详情信息
+				this.dealModal = true;
+				api(operationApiList.faultGetById, {
+					"id": ledgerId
+				}).then((res) => {
+					if(res.status == 200 && res.data.data) {
+						this.dataView = res.data.data;
+					}
+				}, (err) => {})
+			}
+		}
+	}
+</script>
+
+<style type="text/css" scoped>
+	.wAuto {
+		width: 100%;
+	}
+	
+	.queryItem {
+		width: 200px;
+	}
+	
+	.flow {
+		margin-top: 20px;
+	}
+</style>

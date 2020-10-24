@@ -1,0 +1,443 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <base href="${_cp}/">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>大屏展示</title>
+    <link rel="stylesheet" href="${_static}/platform_bg/nui/css/nui.css"/>
+    <link rel="stylesheet" href="${_static}/platform_bg/css/index.css"/>
+    <link rel="stylesheet" href="${_static}/css/base.css"/>
+    <link rel="stylesheet" href="${_static}/css/operate.css"/>
+    <script src="${_static}/js/jquery-1.11.1.min.js"></script>
+    <script src="${_static}/platform_bg/js/banner.js"></script>
+    <script src="${_static}/v2/js/operate.js"></script>
+    <script src="${_static}/js/echarts.js"></script>
+    <script src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script src="${_static}/js/hengyun/jquery.cookie.js"></script>
+    <style>
+        /*html,
+        body {
+            height: 1080px;
+            width: 1920px;
+            position: relative;
+        }*/
+        .py_big_head {
+            background: url(${_static}/v1/img/logo.png) no-repeat;
+            -webkit-background-size: 100% 100%;
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+
+<body>
+<div class="content">
+    <div id="index" class="section platform_bg" style="overflow: hidden;">
+        <div class="banner-img"></div>
+        <canvas id="canvas"></canvas>
+    </div>
+</div>
+<!-- 内容区-->
+<div class="py_big_con clearfix">
+    <div class="big_head header_yyjk">
+        <div class="date_">
+            <div class="date"></div>
+        </div>
+        <div class="nav">
+           <ul class="py_ul_l clearfix">
+                <li>
+                    <a href="${_cp}/module/v3/main">
+                        数聚高新
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v3/share">
+                        共享交换
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v3/appIntegrate">
+                        应用集成
+                    </a>
+                </li>
+                <li>
+                    <a href="${_cp}/module/v3/operate">
+                        运维监控
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v3/jbtz">
+                        降本提质
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v3/supervision">
+                        预警监管
+                    </a>
+                </li>
+            </ul>
+            <a href="javascript:void(0);" class="py_big_head clearfix"></a>
+            <!--   <ul class="py_ul_r clearfix">
+                <li>
+                    <a href="#">
+                        运营监控
+                    </a>
+                </li>
+                <li ></li>
+                <li>
+                    <a href="#">
+                        降本提质
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="#">
+                        统一监管
+                    </a>
+                </li>
+            </ul>-->
+        </div>
+        <div class="location clearfix data_display">
+            <ul class="data_display_ul">
+                <li>
+                    <div class="data_display_ul_li">
+                        <div>
+                            <span>2</span>
+                            <br/>
+                            <p>实例</p>
+                        </div>
+                        <div>
+                            <span class="data_li_error">35</span>
+                            <br/>
+                            <p>警告数</p>
+                        </div>
+                    </div>
+                    <p>数据库</p>
+                </li>
+                <li>
+                    <div class="data_display_ul_li">
+                        <div>
+                            <span>19</span>
+                            <br/>
+                            <p>设备数</p>
+                        </div>
+                        <div>
+                            <span class="data_li_error">23</span>
+                            <br/>
+                            <p>警告数</p>
+                        </div>
+                    </div>
+                    <p>应用服务器</p>
+                </li>
+                <li>
+                    <div class="data_display_ul_li">
+                        <div>
+                            <span>2</span>
+                            <br/>
+                            <p>设备数</p>
+                        </div>
+                        <div>
+                            <span class="data_li_error">20</span>
+                            <br/>
+                            <p>警告数</p>
+                        </div>
+                    </div>
+                    <p>存储服务器</p>
+                </li>
+                <li>
+                    <div class="data_display_ul_li">
+                        <div>
+                            <span>1</span>
+                            <br/>
+                            <p>设备数</p>
+                        </div>
+                        <div>
+                            <span class="data_li_error">8</span>
+                            <br/>
+                            <p>警告数</p>
+                        </div>
+                    </div>
+                    <p>虚拟化平台</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="py_bug_con">
+        <div class="py_big_content">
+            <div class="py_big_l">
+                <div class="web_image">
+                    <h2>网络拓扑图</h2>
+                    <a href="javascript:void(0);">
+                        <div id="py_big_l_pub">
+
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="py_big_m">
+                <div class="eq_status">
+                    <h2>设备状态</h2>
+                    <div class="eq_status_main">
+                        <ul>
+                            <li>
+                                <span>正常</span>
+                                <br/>
+                                <p>22</p>
+                            </li>
+                            <li>
+                                <span>警告</span>
+                                <br/>
+                                <p>86</p>
+                            </li>
+                            <li>
+                                <span>故障</span>
+                                <br/>
+                                <p>123</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="top_10">
+                    <h2>TOP10宿主机利用率</h2>
+                    <div>
+                        <table id="host_top">
+                            <tr>
+                                <th>排名</th>
+                                <th>宿主机名</th>
+                                <th>cpu利用率</th>
+                                <th>内存利用率</th>
+                                <th>磁盘利用率</th>
+                                <th>带宽利用率</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>宿主机名1</td>
+                                <td>80</td>
+                                <td>90</td>
+                                <td>85%</td>
+                                <td>37%</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>宿主机名2</td>
+                                <td>0</td>
+                                <td>10</td>
+                                <td>64%</td>
+                                <td>35%</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>宿主机名3</td>
+                                <td>7</td>
+                                <td>100</td>
+                                <td>54%</td>
+                                <td>34%</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>宿主机名4</td>
+                                <td>80</td>
+                                <td>90</td>
+                                <td>85%</td>
+                                <td>35%</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>宿主机名5</td>
+                                <td>80</td>
+                                <td>90</td>
+                                <td>85%</td>
+                                <td>35%</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>宿主机名6</td>
+                                <td>80</td>
+                                <td>90</td>
+                                <td>85%</td>
+                                <td>32%</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>宿主机名7</td>
+                                <td>80</td>
+                                <td>90</td>
+                                <td>85%</td>
+                                <td>35%</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>宿主机名8</td>
+                                <td>80</td>
+                                <td>90</td>
+                                <td>85%</td>
+                                <td>35%</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>宿主机名9</td>
+                                <td>80</td>
+                                <td>90</td>
+                                <td>85%</td>
+                                <td>35%</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>宿主机名10</td>
+                                <td>80</td>
+                                <td>90</td>
+                                <td>85%</td>
+                                <td>35%</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="py_big_r">
+                <div class="eq_status">
+                    <h2>警告处理状态</h2>
+                    <div class="eq_status_main_2">
+                        <ul>
+                            <li>
+                                <span>待解决</span>
+                                <br/>
+                                <p>6</p>
+                            </li>
+                            <li>
+                                <span>解决中</span>
+                                <br/>
+                                <p>80</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="top_10">
+                    <h2></h2>
+                    <div class="error_deal">
+                        <div id="error_deal_1" ></div>
+                        <div id="error_deal_2" ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="py_big_footer">
+            <ul class="py_big_footer_con">
+                <li>
+                    <div id="footer_con_1"></div>
+                    <div class="con_right color_red" id="footer_con_1_title">1355核/0</div>
+                </li>
+                <li>
+                    <div id="footer_con_2"></div>
+                    <div class="con_right color_blue" id="footer_con_2_title">4340TB/77.2%</div>
+                </li>
+                <li>
+                    <div id="footer_con_3"></div>
+                    <div class="con_right color_gray" id="footer_con_3_title">2587GB/60.3%</div>
+                </li>
+                <li>
+                    <div id="footer_con_4"></div>
+                    <div class="con_right color_yellow" id="footer_con_4_title">1MBps/60.3%</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    var gateUrl = "${_gate_url}";
+    
+
+    function refresh() {
+        /*资源占比曲线*/
+        ajaxHengyun({
+            url: gateUrl + "/api/admin/hostRuning/info",
+            success: function (r) {
+            	
+                if (r.data) {
+                    //CPU
+                    console.log(r.data.disk);
+                    console.log(r.data.total);
+                    footer_con_1(getRatiosArray(r.data.cpu, r.data.total[0]));
+                    //磁盘
+                    
+                    footer_con_2(getRatiosArray(r.data.disk, r.data.total[1]));
+                    //内存
+                    footer_con_3(getRatiosArray(r.data.mem, r.data.total[2]));
+                    //带宽
+                    footer_con_4(getRatiosArray(r.data.bandwidth, r.data.total[3]));
+
+                    //设置各个title
+                    var ratios = [];
+                    ratios.push(r.data.cpu[r.data.cpu.length - 1]);
+                    ratios.push(r.data.disk[r.data.disk.length - 1]);
+                    ratios.push(r.data.mem[r.data.mem.length - 1]);
+                    ratios.push(r.data.bandwidth[r.data.bandwidth.length - 1]);
+                    setTotal(getIntArray(r.data.total), getFloatArray(ratios));
+                }
+            },
+            error: function (r) {
+                
+            }
+        });
+    }
+    $(function(){
+    	error_deal_1();
+	    /*实时调用情况*/
+	    refresh();
+	    
+	    
+	    /*TOP10宿主机利用率*/
+	    ajaxHengyun({
+	        url: gateUrl + "/api/admin/hostRuning/getHostLoadTop",
+	        success: function (r) {
+	            if (r.data) {
+	                setTop10(r.data);
+	            }else{
+                    setTop10([]);
+                }
+	        },
+	        error: function (r) {
+	        }
+	    });
+	    /*应用系统访问次数TOP10*/
+	    ajaxHengyun({
+	        // url: gateUrl + "/api/developer/moduleUse/findDayData",
+	        url: gateUrl + "/api/developer/app/findApplicationVisitCount",
+	        success: function (r) {
+	            if (r.data) {
+	                error_deal_2(r.data);
+	            }else {
+                    error_deal_2([]);
+                }
+	        },
+	        error: function (r) {
+	        }
+	    });
+	    
+	        /*调用应用占比*/
+    	ajaxHengyun({
+  	      // url: gateUrl + "/api/developer/moduleUse/findDayData",
+   	     url: gateUrl + "/api/developer/app/findConsumerAppApplicationVisitCount",
+    	    success: function (r) {
+      	      if (r.data) {
+      	          error_deal_1(r.data);
+      	      }
+     	   },
+   	 	    error: function (r) {
+      	     
+      	  }
+    	});
+	        
+    	py_big_l_pub();
+    	window.setInterval(refresh, 3000);
+    });
+</script>
+</body>
+
+</html>

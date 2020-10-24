@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/font-awesome/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/My97DatePicker/skin/WdatePicker.css">
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+		<style>
+			.fileDownload i{
+				color: #56b4ec;
+				margin-left: 9px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>共享管理</span> &gt; <span>需求申请</span> &gt; <span class="page-title-scend">处理详情</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="history.back()">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div id="unit" class="view_item">
+								<h3>详细信息</h3>
+								<table class="table default-table tab-border-no">
+									<tbody>
+										<tr>
+											<th width="150">单位名称：</th>
+											<td id="unitName"> </td>
+											<th width="150">单位类型：</th>
+											<td id="unitType"> </td>
+										</tr>
+										<tr>
+											<th>联系人姓名：</th>
+											<td id="contName"> </td>
+											<th>联系人电话：</th>
+											<td id="contTel"> </td>
+										</tr>
+										<tr>
+											<th>联系人邮箱：</th>
+											<td id="contEmail"> </td>
+											<th>统一社会信用代码：</th>
+											<td id="creditCode"> </td>
+										</tr>
+										<tr>
+											<th>需求内容：</th>
+											<td colspan="3" id="content"> </td>
+										</tr>
+										<tr>
+											<th>用途：</th>
+											<td colspan="3" id="purpose"> </td>
+										</tr>
+										<tr>
+											<th>处理部门：</th>
+											<td colspan="3" id="orgName"> </td>
+										</tr>
+										<tr class="hdPart">
+											<th>API预计封装时间：</th>
+											<td colspan="3" id="estimateTime"> </td>
+										</tr>
+										<tr class="hdPart">
+											<th>处理结果：</th>
+											<td colspan="3" id="status"> </td>
+										</tr>
+										<tr class="hdPart">
+											<th>处理意见：</th>
+											<td colspan="3" id="hdContent"> </td>
+										</tr>
+										<tr>
+											<th>附件：</th>
+											<td colspan="3">
+												<span id="fileName" class="pull-left" style="width: 100%; line-height: 38px;"></span>
+												<!--<a href="javascript:void(0);" class="pull-right btn btn-primary" >下载</a>-->
+											</td>
+										</tr>
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+            var id = "${id}";
+            getInfo(id);
+
+            function getInfo(id) {//获取详情
+                ajaxHengyun({
+                    type:"POST",
+
+                    dataType: 'json',
+                    url: '${_gate_url}/api/exchange/dataapi/demand/hddetail',
+                    data: {id: id},
+                    success: function (rows) {
+                        var rowData=dealElement(rows.data);
+                        if (rowData) {
+                            $("#unitName").text(rowData.unitName);
+                            $("#unitType").text(rowData.unitType);
+                            $("#contName").text(rowData.contName);
+                            $("#contTel").text(rowData.contTel);
+                            $("#contEmail").text(rowData.contEmail);
+                            $("#creditCode").text(rowData.creditCode);
+                            $("#content").text(rowData.content);
+                            $("#purpose").text(rowData.purpose);
+                            $("#orgName").text(rowData.orgName);
+                            var files = rows.data.fileList;
+                            if(files.length>0){
+                                var filesName=[];
+                                for(var i in files){
+                                    var filesHtml='<a class="fileDownload" href="javascript:" onclick="downLoadFolder(\''+files[i].filePath+'\',\''+files[i].oldName+'\')">'+files[i].oldName+'<i class="fa fa-download"></i></a>'
+                                    filesName.push(filesHtml);
+								}
+								$("#fileName").html(filesName.join(","));
+							}else{
+                                $("#fileName").html("无附件信息");
+							}
+                            var status = rows.data.status;
+                            if(status !=1){
+                                var statusText = "";
+                                if(status == 2){
+                                    statusText = "已驳回";
+								}else if(status == 3){
+                                    statusText = "通过";
+								}else if(status == 4){
+                                    statusText = "通过";
+								}
+                                $("#status").text(statusText);
+                                $("#hdContent").text(rows.data.hdContent);
+                                $("#estimateTime").text(fmtDate(rows.data.estimateTime));
+                            }else {
+                                $(".hdPart").css("display","none");
+							}
+                        };
+                        updateIformHeight();
+                    }
+                });
+            };
+            /* 下载文件 */
+            function downLoadFolder(url,filename){
+                var urlDownload="${_gate_url}/api/file/file/download?url="+url+"&filename="+filename;
+                window.open(urlDownload);
+            }
+		</script>
+	</body>
+</html>

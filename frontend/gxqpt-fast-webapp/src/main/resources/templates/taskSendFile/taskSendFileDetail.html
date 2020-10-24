@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- begin 外部CSS引入 -->
+    <link href="${_js}/lib/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="${_js}/lib/webuploader/upload.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="${_cp}/static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/chosen/bootstrap-chosen.css">
+    <link rel="stylesheet" type="text/css" href="${_lib}/jquery-step/jquery.step.css">
+    <link rel="stylesheet" href="${_cp}/static/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_cp}/static/css/app.css">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_js}/hengyun/hengyun_ajax.js"></script>
+    <!-- end 外部CSS引入 -->
+
+    <!-- begin 自定义样式 -->
+    <style type="text/css">
+        .row {
+            margin: 0 0;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .console-title {
+            min-height: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .list-section {
+            padding-bottom: 24px;
+            background: #fff;
+        }
+
+        .list-content {
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .list-content h5 {
+            margin: 0 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0099cc;
+        }
+
+        .list-content h4 {
+            font-size: 12px;
+            line-height: 12px;
+            font-family: "微软雅黑";
+            vertical-align: middle;
+        }
+
+        label.control-label {
+            text-align: right;
+        }
+
+        table.infoList tr th {
+            border: 1px solid #e1e6eb;
+            padding: 10px 12px;
+            vertical-align: middle;
+            width: 180px;
+            font-weight: normal;
+        }
+
+        table.infoListTab tr th {
+            width: auto;
+        }
+
+        .upuserhead {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .uploader {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td input.form-control {
+            width: 100%;
+        }
+
+        table.infoList tbody tr td select.form-control {
+            width: 100%;
+        }
+
+        .view-text {
+            height: auto !important;
+            line-height: initial !important;
+            width: calc(100% - 127px) !important;
+        }
+
+        .view-lab1 {
+            min-height: 48px !important;
+        }
+
+        .col3, .col2, .col1 {
+            height: auto !important;
+            min-height: 48px;
+        }
+
+        .show-file {
+            border: none !important;
+        }
+
+        .show-file li {
+            float: left;
+            width: 150px !important;
+            height: 150px !important;
+            margin-right: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            text-align: center;
+            border: 1px solid #ccc !important;
+        }
+
+        .show-file .title {
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            color: #f5f5f5;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .show-file .file-panel {
+            height: 30px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .show-file a {
+            color: #f5f5f5 !important;
+            font-size: 13px !important;
+            padding-right: 10px;
+            line-height: 30px;
+        }
+    </style>
+    <!-- end 自定义样式 -->
+
+</head>
+
+<body>
+
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- begin 标题 -->
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5>
+                            收发文管理 > <font color="#0099cc">发文详情 </font>
+                        </h5>
+                    </div>
+                </div>
+                <!-- begin 页面内容主体 -->
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline view-info">
+                            <fieldset>
+                                <div class="col-sm-12">
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w84"> <span
+                                                    class="text-danger">*</span> <span>发文号</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                               <span class="form-control" id ="docNum" style="width: 50px" readonly="readonly"></span>
+                                                <!--<select
+                                                        class="form-control w84" name="documentT" readonly="readonly"
+                                                        onchange="selectCountry(this);" data-placeholder="请选择">
+                                                    <option value="xxx1" selected="selected" id="docNum"></option>
+
+                                                </select>-->
+                                            </div>
+                                            <div class="form-control-wrap">
+                                                发文时间:<span class="form-control" style="width: 50px;" value=''
+                                                        name="createTime" readonly="readonly" id="createTime">
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <div class="form-group">
+                                            <label class="control-label w84"> <span
+                                                    class="text-danger">*</span> <span>密级</span> <span>：</span>
+                                            </label>
+                                            <div class="form-control-wrap">
+                                                <span class="form-control" id ="rank" style="width: 50px" readonly="readonly"></span>
+                                               <!-- <select
+                                                        class="form-control w84" name="secretLevel" readonly="readonly"
+                                                        onchange="selectCountry(this);" data-placeholder="请选择">
+                                                </select>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <ul>
+                                            <li class="col1">
+                                                <label class="view-lab1">事由</label><span class="view-text"
+                                                                                         style="word-break:break-all; "
+                                                                                         id="desc"></span>
+                                            </li>
+                                            <li class="col3">
+                                                <label class="view-lab1">主办单位</label><span class="view-text"
+                                                                                           id="docUnit"></span>
+                                            </li>
+                                            <li class="col3">
+                                                <label class="view-lab1">拟稿人</label><span class="view-text"
+                                                                                          id="createUserName"></span>
+                                            </li>
+                                            <li class="col3">
+                                                <label class="view-lab1">日期</label><span class="view-text" id="docTime"></span>
+                                            </li>
+                                            <li class="col1">
+                                                <label class="view-lab1">发送单位</label><span class="view-text"></span>
+                                            </li>
+
+                                            <li class="col1">
+                                                <label class="view-lab1">正文</label><span class="view-text"
+                                                                                         style="word-break:break-all; " id="content"></span>
+                                            </li>
+                                            <li class="col3">
+                                                <label class="view-lab1">环节名称</label><span class="view-text" id="linkStatus"></span>
+                                            </li>
+                                            <li class="col3">
+                                                <label class="view-lab1">处理人</label><span class="view-text"></span>
+                                            </li>
+                                            <li class="col3">
+                                                <label class="view-lab1">审核结果</label><span class="view-text" id="handleStatus"></span>
+                                            </li>
+                                            <li class="col1">
+                                                <label class="view-lab1">审核意见</label><span class="view-text" ></span>
+                                            </li>
+
+                                            <li class="col1">
+                                                <label class="view-lab1">附件</label>
+                                                <div class="view-text">
+                                                    <ul class="show-file">
+                                                        <li><p class="title"></p>
+                                                            <p class="imgWrap">
+                                                                <img width="110px;" height="110px;"
+                                                                     src=""/>
+                                                            </p>
+                                                            <div class="file-panel text-right"
+                                                                 style="height: 30px; display: none;">
+                                                                <a href="javascript:void(0)" class="downFile"
+                                                                   onclick="downFile();">点击下载</a>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </fieldset>
+                            <div class="clear"></div>
+                            <div class="text-center">
+                                <button class="btn btn-primary" onclick="guanBi()">返回</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end 页面内容主体 -->
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display: none;">
+
+</div>
+
+<!--begin 外部JS引入 -->
+<script type="text/javascript" src="${_lib}/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_lib}/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_lib}/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_lib}/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_lib}/jquery-step/jquery.step.js"></script>
+<script type="text/javascript" src="${_cp}/static/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_js}/lib/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="${_js}/lib/webuploader/HYCore.js"></script>
+<script type="text/javascript" src="${_js}/app.js"></script>
+<!--end 外部JS引入 -->
+<script type="text/javascript" src="${_js}/lj.js"></script>
+
+<script type="text/javascript">
+    var _GATE_URL = "${_gate_url}";
+</script>
+
+<!--begin 自定义JS -->
+
+<script type="text/javascript">
+    function guanBi() {
+        window.location.href = "${_cp}/fast/45kj6313/taskSendFile";
+    }
+    var taskSenFileId = '${taskSenFileId}';
+    getDetailById(taskSenFileId);
+
+    function getDetailById(id) {
+        ajaxHengyun({
+            type: 'GET',
+            url: '${_gate_url}/api/developer/fastapplicationdoc/taskDetail?id=' + id,
+            success: function (res) {
+                var data = res.data;
+                $('#createTime').text(data.createTime);
+                $('#docNum').text(data.docNum);
+                $('#rank').text(data.rank);
+                $('#desc').text(data.desc);
+                $('#docUnit').text(data.docUnit);
+                $('#createUserName').text(data.createUserName);
+                $('#docTime').text(data.docTime);
+                $('#title').text(data.title);
+                $('#content').text(data.content);
+                $('#linkStatus').text(data.linkStatus);
+               if(data.handleStatus == "finished") {
+
+                   $("#handleStatus").text("已办理");
+               }else{
+                        $("#handleStatus").text("处理中");
+                }
+            }
+        });
+    }
+
+    $(function () {
+        $(".show-file li").each(function () {
+            $(this).hover(function () {
+                $(this).find(".file-panel").slideDown();
+            }, function () {
+                $(this).find(".file-panel").slideUp();
+            })
+        })
+        $(".col1").each(function () {
+            $(this).find(".view-lab1").css({
+                height: $(this).find(".view-text").outerHeight(),
+                lineHeight: $(this).find(".view-text").outerHeight() + 'px'
+            })
+        });
+    });
+</script>
+</body>
+</html>

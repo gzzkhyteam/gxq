@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交换共享系统</title>
+		<link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/com.css"/>
+		<link rel="stylesheet" type="text/css" href="${_static}/css/index.css"/>
+	</head>
+	<body>
+		<div id="container" class="container">
+			<div class="main clearfix">
+				<div class="row">
+					<div class="current pull-left">
+						<h3 class="page-title">
+							<span>整体概览</span> &gt; <span class="page-title-scend">详情</span>
+						</h3>
+					</div>
+					<div class="back pull-right">
+						<a class="btn_back" href="javascript:void(0);" onclick="toBack()">返回上一页</a>
+					</div>
+				</div>
+				<div class="view_container view_container_first row">
+					<div class="main_right pull-right">
+						<div id="secondPage" class="secondPage">
+							<div id="unit" class="view_item">
+								<h3 id="dirNmae" class="tle"></h3>
+								<table class="table default-table tab-border-no-layer borderCollapse">
+									<tbody>
+									<tr>
+										<th width="120">主题分类：</th>
+										<td id="theme"  class="viewTd"></td>
+										<th width="120">行业分类：</th>
+										<td id="industry" class="viewTd"></td>
+									</tr>
+									<tr>
+										<th>服务分类：</th>
+										<td id="service" class="viewTd"></td>
+										<th>更新时间：</th>
+										<td id="updateTime" class="viewTd"></td>
+									</tr>
+									<tr>
+										<th>下载量：</th>
+										<td id="downCount" class="viewTd"></td>
+										<th>访问量：</th>
+										<td id="seeCount" class="viewTd"></td>
+									</tr>
+									<tr>
+										<th>数据提供单位：</th>
+										<td colspan="3"  id="unitId" class="viewTd"></td>
+									</tr>
+									<tr>
+										<th>单位描述：</th>
+										<td colspan="3"  class="viewTd"></td>
+									</tr>
+									</tbody>
+								</table>
+								<h3 class="tle">相关文件列表
+									<div class="pull-right">
+										<button id="applyDownload" type="button" class="btn btn-primary btn-applyDownload" onclick="applyDownload()">申请下载</button>
+										<button id="downloadBtn" type="button" class="btn btn-primary" onclick="downloadPackage()">批量下载</button>
+									</div>
+								</h3>
+								<table id="fileList" class="default-table tab-title-top">
+									<thead>
+									<tr>
+										<th width="60">序号</th>
+										<th>文件名称</th>
+										<th width="200">文件编号</th>
+										<th width="100">操作</th>
+									</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+		<script src="${_static}/js/com.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+            $(function(){
+                $("#downloadBtn").css('display','none');
+            });
+			var setId='';
+            var isOwnerDir ="";
+            var ids=[];
+            var openWay;//是否开放 1,开放；2，不开放'
+            var shareWay; //1,共享；2，有条件共享；3，不共享',
+            var unitId;//当前登录单位Id
+            var dirUitId;//目录所属单位Id
+            var canApply = '2'; //不可下载 1：可以下载
+            var shareUnit; //是否共享单位 1：是，0：否
+            getCatalogInfo("${id}");
+            function getCatalogInfo(id){
+                ajaxHengyun({
+                    type:"GET",
+					async:false,
+                    dataType: 'json',
+                    url:  '${_gate_url}/api/exchange/directory/get',
+                    data:{id:id},
+                    success:function(rows){
+                        if(rows.data){
+                            var rowsObject = dealElement(rows.data);
+                            openWay = rowsObject.openWay;
+                            shareWay = rowsObject.shareWay;
+                            unitId = rowsObject.loginUnitId;
+                            dirUitId = rowsObject.unitId;
+                            shareUnit = rowsObject.shareUnit;
+                            isOwnerDir = rowsObject.isOwner;
+                            if ((openWay == 2 && shareWay == 3) //不开放不共享
+                                || (openWay == 1)  //开放
+                                || (openWay == 2 && shareWay == 1) //不开放无条件共享
+                                || (openWay == 2 && shareWay == 2 && shareUnit == 1) //不开放有条件共享，
+                                || (unitId == dirUitId) //登录单位Id与目录单位Id相等
+								|| (isOwnerDir == 1)//已经申请过该API
+                            ) {
+                               $("#applyDownload").css('display','none');
+                            }
+                            //判断是否可以下载
+							if(openWay == 1 //开放
+								|| (openWay == 2 && shareWay ==1)//不开放无条件共享
+								||(isOwnerDir == 1)//已经申请过该API
+
+							){
+                                canApply =1;
+
+							}
+							if(canApply == 1){
+                                $("#downloadBtn").css('display','block');
+							}
+                            var themeName="";
+                            var dirName=rowsObject.dirName;
+                            $("#dirNmae").text(dirName);
+                            if(rowsObject.themeOneName!=""){
+                                themeName+=rowsObject.themeOneName;
+                                if(rowsObject.themeTwoName!=""){
+                                    themeName+=">"+rowsObject.themeTwoName;
+                                    if(rowsObject.themeThreeName!=""){
+                                        themeName+=">"+rowsObject.themeThreeName;
+                                    }
+                                }
+                            }
+                            $("#theme").text(themeName);
+                            var industryName="";
+                            if(rowsObject.industryOneName!=""){
+                                industryName+=rowsObject.industryOneName;
+                                if(rowsObject.industryTwoName!=""){
+                                    industryName+=">"+rowsObject.industryTwoName;
+                                    if(rowsObject.industryThreeName!=""){
+                                        industryName+=">"+rowsObject.industryThreeName;
+                                    }
+                                }
+                            }
+                            $("#industry").text(industryName);
+                            var serviceName="";
+                            if(rowsObject.serviceOneName!=""){
+                                serviceName+=rowsObject.serviceOneName;
+                                if(rowsObject.serviceTwoName!=""){
+                                    serviceName+=">"+rowsObject.serviceTwoName;
+                                    if(rowsObject.serviceThreeName!=""){
+                                        serviceName+=">"+rowsObject.serviceThreeName;
+                                    }
+                                }
+                            }
+                            $("#service").text(serviceName);
+                            $("#updateTime").text(fmtDate(rowsObject.updateTime));
+                            $("#downCount").text(rowsObject.downCount);
+                            $("#seeCount").text(rowsObject.seeCount);
+                            $("#unitId").text(rowsObject.unitId);
+                            setId=rowsObject.setId;
+
+
+                            getDataSetView(rowsObject.setId);
+                        }
+                    }
+                });
+            }
+            function getDataSetView(setId){//获取详情
+                ajaxHengyun({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "${_gate_url}/api/exchange/set/getBaseInfo",
+                    data: {setId:setId},
+                    success: function (rows) {
+                        if(rows.data){
+                            directorysList=rows.data.directorys;
+                            var filesList=rows.data.files;
+                            var html="";
+                            var file={};
+                            for(var i in filesList){
+                                file.filePath=filesList[i].filePath;
+                                file.oldName=filesList[i].oldName;
+                                file.busId=filesList[i].busId;
+                                html+='<tr>';
+                                html+='<td class="xh">'+i+'</td>';
+                                html+='<td>'+filesList[i].oldName+'</td>';
+                                html+='<td>'+filesList[i].busId+'</td>';
+                                if(canApply == 1){
+                                html+='<td>';
+                                html+='<a href="javascript:void(0);" onclick="downLoadFolder(\''+filesList[i].filePath+'\',\''+filesList[i].oldName+'\')">下载</a>';
+                                html+='</td>';
+                                ids.push(filesList[i].busId);
+                                }else {
+                                    html+='<td></td>';
+								}
+                                html+='</tr>';
+                            };
+
+                        }else{
+                                $("#applyDownload").css('display','none');
+
+						};
+                        $("#fileList tbody").append(html);
+                        reloadxh();
+                        updateIformHeight();
+                    }
+                });
+            };
+            function reloadxh(){//表格序号加载
+                var trList = $("#fileList tbody tr");
+                if(trList.length>0){
+                    trList.each(function(index,value){
+                        $(value).find(".xh").text(index+1);
+                    });
+                }
+            };
+            function applyDownload(){
+                window.location.href="${_cp}/module/generalApplyDownload?catalogId=${id}";
+            }
+            //单个文件下载
+            function downLoadFolder(url,filename){
+                var urlDownload="${_gate_url}/api/file/file/download?url="+url+"&filename="+filename;
+                window.open(urlDownload);
+            }
+            /* 批量下载文件 */
+            function downloadPackage(){
+				var urlDownload="${_gate_url}/api/file/file/downloadpackage?ids[]="+ids;
+				window.open(urlDownload);
+            };
+            function toBack(){
+                window.location.href="${_cp}/module/generalList?unitId=${unitId}";
+            };
+		</script>
+	</body>
+</html>

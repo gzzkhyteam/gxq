@@ -1,0 +1,124 @@
+<template>
+	<Layout>
+		<Content>
+			<Breadcrumb>
+				<BreadcrumbItem>国信优易</BreadcrumbItem>
+				<BreadcrumbItem>主机信息</BreadcrumbItem>
+			</Breadcrumb>
+			<Card>
+				<Form :model="serverData" ref="searchformData" inline :label-width="80">
+                    <FormItem label="主机IP：" prop="ip">
+                        <Input v-model="serverData.ip"></Input>
+                    </FormItem>
+					<FormItem label="型号：" prop="type">
+                        <Input v-model="serverData.type"></Input>
+					</FormItem>
+                    <FormItem label="处理器数量：" prop="operatingSystem">
+						<Input v-model="serverData.type"></Input>
+					</FormItem>
+                    <FormItem label="内存大小：" prop="date">
+                        <Input v-model="serverData.type"></Input>
+					</FormItem>
+                    <FormItem label="网卡数量：" prop="date">
+                        <Input v-model="serverData.type"></Input>
+					</FormItem>
+					<FormItem>
+						<Button type="info" @click="search">查询</Button>
+					</FormItem>
+				</Form>
+                <hy-table
+                    highlight-row
+                    :columns="safetyEvalCol"
+                    :data="safetyEvalData"
+                    :total="40"
+                    :pageSize="10"
+                    :border='border'
+                    pageType="small"
+                    show-elevator
+                    show-sizer
+                    class="access-list"
+                    @on-page-change="getList" />
+			</Card>
+		</Content>
+	</Layout>
+</template>
+<script>
+export default {
+    data() {
+        return {
+            serverData:{},
+            border:true,
+            safetyEvalCol: [{
+                title: '序号',
+                type: 'index',
+                width: 80,
+                align: 'center'
+            }, {
+                title: '主机IP',
+                key: 'ip'
+            }, {
+                title: '所属集群',
+                key: 'cluster'
+            }, {
+                title: '型号',
+                key: 'type'
+            }, {
+                title: '处理器类型',
+                key: 'cpuType'
+            }, {
+                title: '处理器数量',
+                key: 'cpuNum'
+            }, {
+                title: '网卡数量',
+                key: 'networkNum'
+            }, {
+                title: '内存',
+                key: 'memory'
+            }, {
+                title: '磁盘',
+                key: 'card'
+            }],
+            safetyEvalData: [{
+                ip: '192.168.1.1',
+                cluster: '集群1',
+                type:'Huawei Technologies Co., Ltd. Tecal RH2285H V2-12L',
+                cpuType: 'Intel(R) Xeon(R) CPU E5-2420 v2 @ 2.20GHz',
+                cpuNum: '1',
+                networkNum: '2',
+                memory: '4G',
+                card: '1T',
+            }],
+        }
+    },
+    methods: {
+        search(){
+            console.log("查看");
+        },
+        // 从服务端获取列表数据
+        getList (pageNo, pageSize) {
+            console.log(pageNo)
+            console.log(pageSize)
+        },
+    }
+}
+</script>
+<style lang="less">
+	.act-btn-group{
+		button{
+			margin: 0 12px;
+		}
+    }
+    .ivu-modal-footer{
+        display: none;
+    }
+    .access-list{
+        span.handle{
+            margin: 0 5px;
+            display: inline-block;
+            cursor: pointer;
+            &:hover{
+            color: #57a3f3;
+            }
+        }
+    }
+</style>

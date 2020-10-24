@@ -1,0 +1,54 @@
+<!-- 线图 -->
+<template>
+  <div>
+    <slot></slot>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    lineOption: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
+    id: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      default: ''
+    }
+  },
+  mounted () {
+    this.initEchart()
+  },
+  methods: {
+    initEchart () {
+      const vm = this
+      const option = {
+        title: {
+          text: vm.title
+        },
+        xAxis: {
+          type: 'category',
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [{
+          data: [820, 600, 570, 409, 322, 310, 200],
+          type: 'line'
+        }],
+        ...vm.lineOption
+      }
+      const line = vm.$echarts.init(document.getElementById(vm.id))
+      line.setOption(option)
+    }
+  }
+}
+</script>

@@ -1,0 +1,16 @@
+package com.hengyunsoft.test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hengyunsoft.platform.commons.sec.impl.BitEncryptUserToken;
+
+public class UserTokenUtil {
+
+	public static void main(String[] args) throws Exception {
+		
+		BitEncryptUserToken token = new BitEncryptUserToken(new ObjectMapper());
+		
+		Object obj = token.uncoder("8fROrrHr6UB3DyxyBX6XrdBoze6iNeL7JJVAT.NzPM8qNTlCJHx7n6pe09ZHzj6l4U6IxonEhKPKzhN5vGtVp9NDJlHopshGJSH1ryhCdmvDVafKdU8WHhvjvQXuhojUhYd2nJfyvsVtnhpWtuZ3nl69Fufxl5nkHknzlbtwbFxPlbnz4w0CXg2LzGZJl00o0zhChcJEjLPEpcNfDDH7zzLOzxD7pYlWTvzHh_jddo0tXdTHhQFvjapgpzXYRIzBXPRbRyHz0cDRHxfTRWFOLnrT2SVuvs6e6xzTdUb_fR5qlc61FlngjjlNrh490iNfJVNB2nT7Zcpzr.X064zthu01Z0pVRwnzDdnVrXbqVqBcrapcXgfufRzFVN8vz4jrXzrUDNv_nsZITPxIxRjpv0JERpnIlq2aVIJcxuB5ZdBKTiRlJH80N3rQxYdMH.vLdnTEhVRQ4UFUJoTqpCLvH6LXHsbkrd5OZS4dTat5hpjDBUJiDzjC8klFDFtuvL61LpbcFRL7DmvUjhdkNerdH76TFCV3toBo0O5fFJHXpRfjVpJxD8xu8hL0nkbVfIP7rgvOp3bqzP0yVa8a2urW08dZFtxTpcRk49aw92e6m0AxIMe5Y5upduppn_jybBldfkfg5Mpw8TjDlx61Fgf0zzndDudnllHvjFLqrgBknIhunrpfJvrjr6jprunfbXhnbrZpnMhn8GBsbt5P2rxRf76Px.hy8kLr49_.9TG.V.ywZq44uT7gFnlZyw4ew_y.9mG_d8475ly41uwnlvkozyGFyUnzm5..5.N2._RI.7y_N.z_.1km5oo_lo_iooXP60JYrZD521.GYE2._PKx4BXiCQ");
+		
+		System.out.println(obj);
+	}
+}

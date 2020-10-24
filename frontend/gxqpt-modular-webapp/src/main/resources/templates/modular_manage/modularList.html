@@ -1,0 +1,510 @@
+<!doctype html>
+<html>
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <link rel="stylesheet" href="${_static}/css/core/modularList.css">
+    <link rel="stylesheet" href="${_static}/css/core/paging.css">
+    <link rel="stylesheet" href="${_static}/css/bootstrap/mybootstrap.min.css">
+</head>
+<style>
+    .console-container {
+        height: auto !important;
+    }
+
+    .main-center {
+        height: auto !important;
+    }
+
+    .htitle{
+        margin-top: 0;
+    }
+</style>
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix" style="margin: 0px;">
+        <div class="col-sm-12">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        模块监控系统 &gt;<span class="page-title-scend">模块管理</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="searchbox">
+                <form id="dataForm" action="" method="post" autocomplete="off">
+                    <div style="width: 100%; text-align:center; margin-left: auto;margin-right: auto;">
+                        <input type="text" id="mateParam" name="mateParam" placeholder="请输入关键字">
+                        <button type="button" class="btn btn-primary search-button" onclick="search()">搜索</button>
+                        <button type="button" class="btn btn-primary search-button" onclick="reset()">重置</button>
+                        <button type="button" class="btn btn-primary search-button pull-right" onclick="createPage()">模块发布</button>
+                    </div>
+                    <div style=" width: 60px; padding-left: 79%;">
+                    </div>
+                </form>
+            </div>
+            <div class="clearfix maincontent">
+                <div class="main-left pull-left">
+                    <div class="upsort upsortmin">
+                        <span>下载量最多的CategoryTop10</span>
+                        <table id="findCategoryTop10"></table>
+                    </div>
+                    <div class="upsort" style="height: 460px;">
+                        <span>使用最多的模块Top10</span>
+                        <div>
+                            <ul id="findModularDownloadTop10"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="main-center pull-left">
+                    <h3 class="htitle">我的模块</h3>
+                    <ul id="modularList"></ul>
+                    <!--分页信息-->
+                    <div class="pagebox clearfix" style="margin-left: auto;margin-right: auto;"></div>
+                </div>
+                <div class="main-right pull-right">
+                    <div class="upsort upsortmin">
+                        <span>模块最多的库</span>
+                        <div>
+                            <ul id="findModularRepertoriesTop"></ul>
+                        </div>
+                    </div>
+                    <div class="upsort">
+                        <span>Tag使用词云图</span>
+                        <div id="tagcloud" style="width: 200px;height: 420px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${_static}/js/app.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript" src="${_static}/js/paging.js"></script>
+<script type="text/javascript" src='${_static}/js/lib/echarts/echarts.simple.js'></script>
+<script type="text/javascript" src="${_static}/js/lib/echarts/echarts-wordcloud.js"></script>
+<script type="text/javascript">
+
+    var modularType = "${modularType!}";//获取模块类别
+    var modularTag = "${modularTag!}";//获取模块标签
+    var mateParam = "";
+    var groupId = "${groupId!}";//获取groupId
+    var artifactId = "${artifactId!}";//获取artifactId
+    var repName = "${repName!}";//获取仓库名称
+    var pagesize;//初始每页数量
+    var total;//初始数据总条数
+    var current;//初始当前页码
+    var clickpage;//点击页码后传入后台的页码
+    var clicksize = 4;//点击页码后传入后台的每页数量
+    //获取模块列表
+    getModularList();
+
+    function getModularList() {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            url: "${_gate_url}/api/modular/modular/page",
+            datatype: "json",
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "pageSize": clicksize,
+                "pageNo": clickpage,
+                "data": {
+                    "modularType": modularType,
+                    "modularTag": modularTag,
+                    "mateParam": mateParam,
+                    "groupId": groupId,
+                    "artifactId": artifactId,
+                    "repName": repName
+                }
+            }),
+            success: function (rows) {
+                modularType = "";
+                modularTag = "";
+                mateParam = "";
+                groupId = "";
+                artifactId = "";
+                if (rows.data.list) {
+                    var html = "";
+                    rows.data.list.forEach(function (value, index) {
+                        html += "<li class=\"clearfix\">\n" +
+                            "                            <span class=\"imgspan pull-left\"><img src=\"${_static}/images/sys_com/u42.png\" alt=\"\"></span>\n" +
+                            "                            <div class=\"pull-right textdiv\">\n" +
+                            "                                <div class=\"clearfix positionrea\">\n" +
+                            "                                    <div class=\"pull-left text-littlediv\">\n" +
+                            "                                        <span>" + value.repName + "</span>\n" +
+                            "                                        <span><a href=\"${_cp}/modular/jumpManageModularDetails?id=" + value.id + "\">" + value.modularName + "</a></span>\n<span>";
+                        value.mclist.forEach(function (value, index) {//类别
+                            html += '<a href="javascript:" onclick="findModsByCategory(\'' + value.id + '\',\''+value.name+'\')">' + value.name + '&nbsp;</a>';
+                        });
+                        html += "</span>\n<span>";
+                        value.mtlist.forEach(function (value, index) {//标签
+                            html += '<a href="javascript:" onclick="findModsByTag(\'' + value.id + '\',\''+value.name+'\')">' + value.name + '&nbsp;</a>';
+                        });
+                        html += "                                 </span>\n</div>\n" +
+                            "                                    <textarea\n" +
+                            "                                            class=\"pull-left text-p\" readonly=\"readonly\">" + value.description + "</textarea>\n" +
+                            "<div class=\"pull-right btnbox\">" +
+                            "<button type=\"button\" class=\"btn btn-primary search-button\" onclick=\"editPage('" + value.id + "')\">更新</button>\n" +
+                            "</div>" +
+                            "                                </div>\n" +
+                            "                                <div class=\"clearfix\">\n" +
+                            "                                    <div class=\"text-littlediv2\">\n" +
+                            "                                        <span> <a href='javascript:' onclick='findModsByGroupId(\"" + value.groupId + "\")'>" + value.groupId + "</a></span>\n" +
+                            ">" +
+                            "                                        <span><a href='javascript:' onclick='findModsByArtifactId(\"" + value.artifactId + "\")'>" + value.artifactId + "</a></span>\n" +
+                            "                                    </div>\n" +
+                            "                                    <p class=\"clearfix\">\n" +
+                            "                                        <span>发布时间：<span>" + formatterTime(value.createTime) + "</span></span>\n" +
+                            "                                        <span class=\"margin-left\">下载次数：<span>" + value.downloadCount + "</span></span>\n" +
+                            "                                    </p>\n" +
+                            "                                </div>\n" +
+                            "                            </div>\n" +
+                            "                        </li>";
+                    });
+                    $("#modularList").html(html);
+                    pagesize = rows.data.pageSize;
+                    total = rows.data.total;
+                    current = rows.data.pageNum;
+                }
+            }
+        });
+    }
+
+    //分页
+    $('.pagebox').Paging({
+        pagesize: pagesize,
+        count: total,
+        current: current,
+        toolbar: true,
+        callback: function (page, size, count) {//点击页码后的回调函数
+            clickpage = page;
+            clicksize = size;
+            getModularList();
+        }
+    });
+
+
+    //条件查询
+    function search() {
+        mateParam = $("#mateParam").val();
+        if (mateParam != ''){
+            $(".htitle").text(mateParam);
+        }else{
+            $(".htitle").text('我的模块');
+        }
+        getModularList();
+    }
+
+    //重置查询
+    function reset() {
+        mateParam = $("#mateParam").val('');
+    }
+
+    //获取下载量最多的CategoryTop10
+    findCategoryTop10();
+
+    function findCategoryTop10() {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            url: "${_gate_url}/api/modular/analysis/category/down/top10",
+            datatype: 'json',
+            success: function (rows) {
+                if (rows.data) {
+                    var html = "";
+                    rows.data.forEach(function (value, index) {
+                        html += "<tr>\n" +
+                            '                                    <td class=\"upsort-title\" width=\"100px\"><a href="javascript:" onclick="findModsByCategory(\'' + value.id + '\',\''+value.name+'\')">' + value.name + '</a></td>\n' +
+                            "                                    <td width=\"130px\">下载次数：" + value.downloadCount + "</td>\n" +
+                            "                                </tr>";
+                    });
+                    $("#findCategoryTop10").html(html);
+                }
+            }
+        });
+    }
+
+    //查询使用量最多的模块Top10
+    findModularDownloadTop10();
+
+    function findModularDownloadTop10() {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            url: "${_gate_url}/api/modular/analysis/modular/down/top10",
+            datatype: 'json',
+            success: function (rows) {
+                if (rows.data) {
+                    var html = "";
+                    rows.data.forEach(function (value, index) {
+                        html += "<li>\n" +
+                            "                                <span class=\"upsort-title\"><a href=\"${_cp}/modular/jumpSearchModularDetails?id=" + value.id + "\">" + value.modularName + "</a></span>\n" +
+                            "                                <div class=\"part-progress\">\n" +
+                            "                                    <div class=\"progress progress-striped fl\" style=\"width: 200px;height:12px;margin-bottom: 0px;\">\n" +
+                            "                                        <div class=\"progress-bar progress-bar-info\" role=\"progressbar\"\n" +
+                            "                                             aria-valuenow=\"60\" aria-valuemin=\"0\" aria-valuemax=\"100\"\n" +
+                            "                                        >\n" +
+                            "                                            " + value.downloadCount + "\n" +
+                            "\n" +
+                            "                                        </div>\n" +
+                            "\n" +
+                            "                                    </div>\n" +
+                            "\n" +
+                            "                                    <div class=\"clear\"></div>\n" +
+                            "                                </div>\n" +
+                            "                            </li>";
+                    });
+                    $("#findModularDownloadTop10").html(html);
+                    var total;
+                    $("#findModularDownloadTop10 li").each(function (index) {
+                        if (index == 0) {
+                            total = $(this).find('.progress-bar').text();
+                        }
+                        var num = $(this).find('.progress-bar').text();
+                        var baifenbi = GetPercent(num, total);
+                        $(this).find('.progress-bar').css("width", baifenbi);
+                    })
+                }
+            }
+        });
+    }
+
+    //模块数量最多的库排行
+    findModularRepertoriesTop();
+
+    function findModularRepertoriesTop() {
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            url: "${_gate_url}/api/modular/analysis/repository/top10",
+            datatype: 'json',
+            success: function (rows) {
+                if (rows.data) {
+                    var html = "";
+                    rows.data.forEach(function (value, index) {
+                        html += "<li>\n" +
+                            "                                <span class=\"upsort-title\"><a href='javascript:' onclick='findModsByRepName(\"" + value.repName + "\")'>" + value.repName + "</a></span>\n" +
+                            "                                <div class=\"part-progress\">\n" +
+                            "                                    <div class=\"progress progress-striped fl\" style=\"width: 200px;height:12px;margin-bottom: 0px;\">\n" +
+                            "                                        <div class=\"progress-bar progress-bar-info\" role=\"progressbar\"\n" +
+                            "                                             aria-valuenow=\"60\" aria-valuemin=\"0\" aria-valuemax=\"100\"\n" +
+                            "                                        >\n" +
+                            "                                            " + value.modularCount + "\n" +
+                            "\n" +
+                            "                                        </div>\n" +
+                            "\n" +
+                            "                                    </div>\n" +
+                            "\n" +
+                            "                                    <div class=\"clear\"></div>\n" +
+                            "                                </div>\n" +
+                            "                            </li>";
+                    });
+                    $("#findModularRepertoriesTop").html(html);
+                    var total;
+                    $("#findModularRepertoriesTop li").each(function (index) {
+                        if (index == 0) {
+                            total = $(this).find('.progress-bar').text();
+                        }
+                        var num = $(this).find('.progress-bar').text();
+                        var baifenbi = GetPercent(num, total);
+                        $(this).find('.progress-bar').css("width", baifenbi);
+                    })
+                }
+            }
+        });
+    }
+
+    //点击分类查询该类别下的所有模块列表信息
+    function findModsByCategory(id,value) {
+        modularType = id;
+        $(".htitle").text(value);
+        getModularList();
+    }
+
+    //点击标签查询该标签下的所有模块列表信息
+    function findModsByTag(id,value) {
+        modularTag = id;
+        $(".htitle").text(value);
+        getModularList();
+    }
+
+    function findModsByGroupId(gId) {
+        groupId = gId;
+        $(".htitle").text(gId);
+        getModularList();
+    }
+
+    function findModsByArtifactId(aId) {
+        artifactId = aId;
+        $(".htitle").text(aId);
+        getModularList();
+    }
+
+    //点击仓库精确查询模块列表信息
+    function findModsByRepName(rName) {
+        repName = rName;
+        $(".htitle").text(rName);
+        getModularList();
+    }
+
+    //获取右侧的标签使用词云图
+    getTagcloud();
+
+    function getTagcloud() {
+        var chart = echarts.init(document.getElementById('tagcloud'));
+        var option = {
+            tooltip: {},
+            series: [{
+                type: 'wordCloud',
+                gridSize: 2,
+                sizeRange: [12, 20],
+                rotationRange: [-45, -90],
+                shape: 'pentagon',
+                width: 200,
+                height: 300,
+                drawOutOfBound: true,
+                textStyle: {
+                    normal: {
+                        color: function () {
+                            return 'rgb(' + [
+                                Math.round(Math.random() * 160),
+                                Math.round(Math.random() * 160),
+                                Math.round(Math.random() * 160)
+                            ].join(',') + ')';
+                        }
+                    },
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowColor: '#333'
+                    }
+                },
+                data: [
+                    {
+                        name: 'NCAA baseball tournament',
+                        value: 273
+                    },
+                    {
+                        name: 'Point Break',
+                        value: 265
+                    }
+                ]
+            }]
+        };
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            url: "${_gate_url}/api/modular/tag/findTagDef",
+            success: function (rows) {
+                if (rows.data) {
+                    function findTag(name, value) {
+                        this.name = name;
+                        this.value = value;
+                    }
+                    //先解析json数据进行分层
+                    var refreshdata = new Array();
+                    //先解析json数据进行分层
+                    $.each(rows.data, function (key, val) {
+                        var tag = new findTag(val.name, val.id);
+                        refreshdata.push(tag);
+                    });
+                    //初始化全量数据框架
+                    chart.setOption(option);
+                    chart.setOption({
+                        series: [{
+                            data:
+                            refreshdata
+                        }]
+                    });
+                } else {
+                    layer.msg("数据加载失败，请稍后重试！", {icon:5, time: 2000});
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+            }
+        });
+        chart.on('click', function (handler,context){
+            modularTag=handler.value;
+            $(".htitle").text(handler.name);
+            getModularList();
+        });
+    }
+
+    /* 弹出新增发布页面 */
+    function createPage() {
+        parent.layer.open({
+            id: 'upload',
+            type: 2,
+            anim: 6,
+            title: '模块发布',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '90%'],
+            content: "${_cp}/modular/modularCreate",
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确定', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("upload");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    }
+
+    //计算两个整数的百分比值
+    function GetPercent(num, total) {
+        num = parseFloat(num);
+        total = parseFloat(total);
+        if (isNaN(num) || isNaN(total)) {
+            return "-";
+        }
+        return total <= 0 ? "0%" : (Math.round(num / total * 10000) / 100.00 + "%");
+    }
+
+    /* 弹出修改页面 */
+    function editPage(id) {
+        parent.layer.open({
+            id: 'update',
+            type: 2,
+            anim: 6,
+            title: '模块更新',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['80%', '80%'],
+            content: "${_cp}/modular/modularEdit?id=" + id,
+            btn: ['<span class="glyphicon glyphicon-ok"></span> 确定', '<span class="glyphicon glyphicon-remove"></span> 取消'],
+            yes: function (index, layero) {
+                var html = layero.context;
+                var Id = html.getElementById("update");
+                var iframe = $(Id).find("iframe").attr("name");
+                var rowData = parent[iframe].save(index);
+            }
+        });
+    }
+</script>
+</body>
+</html>

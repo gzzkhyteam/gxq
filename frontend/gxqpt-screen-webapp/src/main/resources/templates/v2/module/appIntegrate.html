@@ -1,0 +1,496 @@
+<!DOCTYPE>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>应用集成</title>
+		<link rel="stylesheet" href="${_static}/v2/platform_bg/nui/css/nui.css" />
+		<link rel="stylesheet" href="${_static}/v2/platform_bg/css/index.css" />
+		<link rel="stylesheet" href="${_static}/v2/css_base/base.css" />
+		<link rel="stylesheet" href="${_static}/v2/css_base/index.css" />
+		<link rel="stylesheet" href="${_static}/v2/css_base/style.css" />
+		<style type="text/css">
+			.plot {
+				float: left;
+			}
+			
+			.plot_one,
+			.plot_three,
+			.plot_four,
+			.plot_six {
+				width: 28%;
+			}
+			
+			.plot_tow {
+				width: 44%;
+			}
+			
+			.charts-box {
+				width: 100%;
+				height: 50%;
+			}
+			
+			.charts-box1 .plot_bj {
+				height: 800px;
+			}
+			
+			.charts-box2 .plot_bj {
+				height: 200px;
+			}
+			/*左边菜单栏*/
+			
+			.left-bar {
+				width: 290px;
+				margin-left: -45px;
+				margin-top: -75px;
+				float: left;
+				position: relative;
+				z-index: 99;
+			}
+			
+			.left-bar .box-item {
+				width: 100%;
+				height: 60px;
+				border-radius: 8px;
+				background: url(${_static}/v2/images/appIntegrate/jhgx_01.png) no-repeat left top/100% 100%;
+				margin: 3px 0;
+				cursor: pointer;
+			}
+			
+			.left-bar .box-item:hover,
+			.left-bar .box-item.active{
+				background: url(${_static}/v2/images/appIntegrate/jhgx_02.png) no-repeat left top/100% 100%;
+			}
+			
+			.left-bar .box-item:hover .text-name,
+			.left-bar .box-item.active .text-name{
+				color: #13F0F8;
+			}
+			
+			.left-bar .icon,
+			.left-bar .text-name {
+				float: left;
+			}
+			
+			.left-bar .icon {
+				margin-left: 30px;
+				width: 50px;
+				height: 100%;
+			}
+			
+			.left-bar .text-name {
+				width: calc(100% - 90px);
+				height: 100%;
+				color: #A4CDE4;
+				text-align: center;
+				line-height: 60px;
+				font-size: 14px;
+			}
+			
+			.left-bar .box-item:nth-child(1) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_0_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(1):hover .icon,
+			.left-bar .box-item:nth-child(1).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_0_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(2) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_1_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(2):hover .icon,
+			.left-bar .box-item:nth-child(2).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_1_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(3) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_2_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(3):hover .icon,
+			.left-bar .box-item:nth-child(3).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_2_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(4) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_3_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(4):hover .icon,
+			.left-bar .box-item:nth-child(4).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_3_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(5) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_4_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(5):hover .icon,
+			.left-bar .box-item:nth-child(5).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_4_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(6) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_5_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(6):hover .icon,
+			.left-bar .box-item:nth-child(6).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_5_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(7) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_6_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(7):hover .icon,
+			.left-bar .box-item:nth-child(7).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_6_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(8) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_7_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(8):hover .icon,
+			.left-bar .box-item:nth-child(8).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_7_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(9) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_8_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(9):hover .icon,
+			.left-bar .box-item:nth-child(9).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_8_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(10) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_9_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(10):hover .icon,
+			.left-bar .box-item:nth-child(10).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_9_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(11) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_10_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(11):hover .icon,
+			.left-bar .box-item:nth-child(11).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_10_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(12) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_11_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(12):hover .icon,
+			.left-bar .box-item:nth-child(12).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_11_02.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(13) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_12_01.png) no-repeat left center;
+			}
+			
+			.left-bar .box-item:nth-child(13):hover .icon,
+			.left-bar .box-item:nth-child(13).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_12_02.png) no-repeat left center;
+			}
+            .left-bar .box-item:nth-child(14) .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_13_01.png) no-repeat left center;
+			}
+
+			.left-bar .box-item:nth-child(14):hover .icon,
+			.left-bar .box-item:nth-child(14).active .icon {
+				background: url(${_static}/v2/images/appIntegrate/jhgx_13_02.png) no-repeat left center;
+			}
+			/*左边菜单栏*/
+			
+			.right-box {
+				height: 746px;
+				width: calc(100% - 280px);
+				float: left;
+				margin-left: 35px;
+			}
+            .txtl{
+               text-align: left ;
+            }
+            .txtr{
+                text-align: right;
+            }
+            .txtc{
+                text-align: center;
+            }
+			.nav {
+				margin-top: 70px;
+			}
+			.num-group {
+				margin-top: 0;
+			}
+			.big_head {
+				height: 170px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="content">
+			<div id="index" class="section platform_bg" style="overflow: hidden;">
+				<div class="banner-img"></div>
+				<canvas id="canvas"></canvas>
+			</div>
+		</div>
+		<!-- 内容区-->
+		<div class="py_big_con clearfix">
+
+			<div class="big_head">
+				<div class="nav">
+					<ul class="py_ul_l clearfix">
+						<li>
+							<a class="nav_left" href="${_cp}/module/v2/main">
+								数聚高新
+							</a>
+						</li>
+						<li>
+							<a class="nav_right" href="${_cp}/module/v2/operate">
+								运维监控
+							</a>
+						</li>
+						<!--<li>
+							<a class="nav_right" href="${_cp}/module/v2/share">
+								共享交换
+							</a>
+						</li>-->
+					</ul>
+					 <!--<ul class="py_ul_l clearfix">
+                <li>
+                    <a href="${_cp}/module/v2/index">
+                        整体概览
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v2/share">
+                        共享交换
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v2/appIntegrate">
+                        应用集成
+                    </a>
+                </li>
+                <li>
+                    <a href="${_cp}/module/v2/operate">
+                        运维监控
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v2/jbtz">
+                        降本提质
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/v2/supervision">
+                        统一监管
+                    </a>
+                </li>
+            </ul>-->
+            <a href="javascript:void(0);" class="py_big_head clearfix"><img src="${_static}/v2/img/xuanz_03.png"></a>
+				</div>
+				<ul class="num-group">
+					<li class="num-item">
+						<div class="title">支撑平台</div>
+						<div class="icon_number" id="app_num">
+							<div class="unit">个</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">支撑应用</div>
+						<div class="icon_number" id="service_num">
+							<div class="unit">个</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">支撑服务</div>
+						<div class="icon_number" id="app_zcfw">
+							<div class="unit">个</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">支撑模块</div>
+						<div class="icon_number" id="app_zcmk">
+							<div class="unit">个</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="main_box clearfix">
+				<div class="left-bar" id="incomeApplication">
+				</div>
+				<div class="right-box">
+					<div class="width-60" style="height: 100%;">
+						<div class="charts-box charts-box1" style="height: 65%;position: absolute;width: 70%;margin-top: -50px;left:110px;z-index: 0">
+							<div class="plot_title" style="margin-left:245px !important;position: absolute;margin-top: 45px;">
+								<span>关系图</span>
+							</div>
+							<div class="plot_bj">
+								<div id="relationship" style="height: 92%; margin-top: 2%;"></div>
+							</div>
+						</div>
+						<div class="charts-box charts-box2" style="margin-top:60%;height: 200px;">
+							<div class="plot_title">
+								<span>组件各类别占比情况</span>
+							</div>
+							<div class="plot_bj">
+								<div id="assembly" style="height: 100%;"></div>
+							</div>
+						</div>
+					</div>
+					<div class="width-40" style="height: 100%;position: relative;z-index: 99;">
+						<div class="charts-box">
+							<div class="plot_title">
+								<span>应用使用情况</span>
+							</div>
+							<div class="plot_bj">
+								<div id="app" style="height: 100%;"></div>
+							</div>
+						</div>
+						<div class="charts-box">
+							<div class="plot_title ml_11" style="margin-left: 0 !important;">
+								<span>组件使用实时情况</span>
+							</div>
+							<table class="table_list table-head" cellspacing="0" style="margin-top: 12px;">
+								<thead>
+									<tr>
+										<th width="58">序号</th>
+										<th>部门</th>
+										<th width="140" class="txtc">使用组件名称</th>
+										<th width="160" class="txtc">时间</th>
+									</tr>
+								</thead>
+							</table>
+							<div class="roll-box" id="rollModuleUseInfo">
+															
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--main_box -->
+		</div>
+		<script src="${_static}/v2/js/jquery-1.11.1.min.js"></script>
+		<script src="${_static}/v2/js/echarts.js"></script>
+		<script src="${_static}/v2/platform_bg/js/banner.js"></script>
+		<script src="${_static}/v2/js/base.js"></script>
+		<script src="${_static}/v2/js/hengyun/hengyun_ajax.js"></script>
+        <script src="${_static}/v2/js/hengyun/jquery.cookie.js"></script>
+        <script src="${_static}/v2/js/appIntegrate.js"></script>
+
+        <script type="text/javascript">
+        gateUrl = "${_gate_url}";
+		/*应用和服务数量*/
+        ajaxHengyun({
+            url: gateUrl + "/api/developer/module/getServiceModuleCount",
+            success: function (r) {
+                buildI("#app_num", r.data.zcpt);
+                buildI("#service_num", r.data.zcyy);
+                buildI("#app_zcfw", r.data.zcfw);
+                buildI("#app_zcmk", r.data.zcmk);
+            },
+            error: function (r) {
+                
+            }
+        });
+
+        $(function () {
+           getAllIncomeApplication();
+        });
+
+        function getAllIncomeApplication(){
+            ajaxHengyun({
+                 url: gateUrl + "/api/developer/app/findAllIncomeApplication",
+                   data:{top:10},
+                success: function (data) {
+                     var r = data.data;
+                     var html = "<div class=\"box-item active\" onclick=\"initData('')\" >" +
+                         "<div class=\"icon\"></div>" +
+                         "<div class=\"text-name\">" +
+                         "全部" +
+                         "</div>" +
+                         "</div>";
+                     $.each(r,function (index, item) {
+                         html+="<div class=\"box-item\" onclick=\"initData('"+item.appId+"')\" >" +
+                                     "<div class=\"icon\"></div>" +
+                                     "<div class=\"text-name\">"+item.appName+"</div>" +
+                               "</div>";
+                     });
+                     $("#incomeApplication").html(html);
+                },error: function (r) {
+                    
+                }
+            });
+        }
+        function initData(appId) {
+            getAssembly(appId);
+            getRelationship(appId);
+        }
+        
+        
+        $(function (){
+        	addRoll(true);
+        	// addRoll(true);
+           window.setInterval(addRoll,30000);
+        })
+        
+		
+
+        function addRoll(noRemove){
+        	
+        	// if(!noRemove){
+        	// 	$("#rollModuleUseInfo table:first-child").remove();
+        	// }
+        	ajaxHengyun({
+        		
+        		url: gateUrl + "/api/developer/module/getdeptUseModulesInfo",
+        		success: function(r){
+                    $("#rollModuleUseInfo").html('');
+        			$("#rollModuleUseInfo").append(builderRollModuleUseInfo(r.data));
+        			$("#rollModuleUseInfo").append(builderRollModuleUseInfo(r.data));
+                    var rate = $(".table-rolling").height()/30;
+                    $(".table-rolling").css('animation-duration',rate+'s');
+
+        		} 
+        	});
+        }
+        function builderRollModuleUseInfo(listData){
+            var rollModuleUseInfoRow = 0;
+        	
+        	var html = '<table class="table_list table-rolling" cellspacing="0"><tbody>';
+        	for(var i in listData){
+        		
+        		
+        		html += '<tr><td width="58" class="txtc">'+(++rollModuleUseInfoRow)+'</td><td>'+listData[i].deptName+'</td><td width="140">'+listData[i].moduleName+'</td><td width="160">'+listData[i].time+'</td></tr>';
+        	}
+        	
+        	return html+'</tbody></table>';
+        }
+        
+        //将右边选中的菜单高亮
+        $('.left-bar').on('click','.box-item',function (){
+        	$(this).addClass('active').siblings().removeClass('active');
+        })
+	</script>
+
+	</body>
+
+</html>

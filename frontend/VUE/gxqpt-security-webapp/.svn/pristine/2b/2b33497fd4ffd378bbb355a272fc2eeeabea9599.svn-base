@@ -1,0 +1,254 @@
+<template>
+  <Layout>
+    <Content>
+      <Breadcrumb>
+        <BreadcrumbItem>运维分析</BreadcrumbItem>
+        <BreadcrumbItem>运维评价</BreadcrumbItem>
+      </Breadcrumb>
+      <Card>
+        <Form
+          ref="formValidate"
+          inline
+          :label-width="100"
+          :model="searchCondition">
+          <FormItem label="人员名称：">
+            <div class="ivu-form-item-content" @click="openTreeModal">
+              <div class="ivu-input-wrapper ivu-input-type">
+                <i class="ivu-icon ivu-icon-load-c ivu-load-loop ivu-input-icon ivu-input-icon-validate"></i>
+                <div class="ivu-input" style="width: 120px;">{{personInfo.title}}</div>
+              </div>
+            </div>
+          </FormItem>
+          <FormItem label="时间：">
+            <Select v-model="searchCondition.time" style="width:200px">
+              <Option v-for="item in timeList" :value="item" :key="item">{{item}}</Option>
+            </Select>
+          </FormItem>
+        </Form>
+        <Row>
+          <Col span="4">
+            <Gauge el="operationRate" ref="operationRate" :gaugeOption="operationScoreOption" title="运维评分">
+              <div id="operationRate"></div>
+            </Gauge>
+          </Col>
+          <Col span="4" :offset="1">
+            <Gauge el="appRate" ref="appRate" :gaugeOption="applicationScoreOption" title="应用评分">
+              <div id="appRate"></div>
+            </Gauge>
+          </Col>
+          <Col span="4" :offset="1">
+            <Gauge el="serviceRate" ref="serviceRate" :gaugeOption="serviceScoreOption" title="服务评分">
+              <div id="serviceRate"></div>
+            </Gauge>
+          </Col>
+          <Col span="4" :offset="1">
+            <Gauge el="trainingRate" ref="trainingRate" :gaugeOption="trainScoreOption" title="培训评分">
+              <div id="trainingRate"></div>
+            </Gauge>
+          </Col>
+          <Col span="4" :offset="1">
+            <Gauge el="referRate" ref="referRate" :gaugeOption="consultationScoreOption" title="咨询评分">
+              <div id="referRate"></div>
+            </Gauge>
+          </Col>
+        </Row>
+        <Row style="margin-top: 90px;">
+          <Col span="10" :offset="1">
+            <ChartLine el="historyRate" ref="historyRate" :lineOption="lineOption" title="历史评分分析">
+              <div id="historyRate"></div>
+            </ChartLine>
+          </Col>
+          <Col span="10" :offset="1">
+            <Radar el="structureRate" ref="structureRate" :radarOption="radarOption" title="评分结构分析">
+              <div id="structureRate"></div>
+            </Radar>
+          </Col>
+        </Row>
+      </Card>
+      <!-- 选择人员的树形弹窗 -->
+      <personTreeModal ref="getPerson" :multiple="false" @on-ok="selectPerson" />
+    </Content>
+  </Layout>
+</template>
+
+<script>
+import api from '@/api/axiosApi'
+import operationApiList from '@/api/operationApiList'
+// 仪表盘
+import Gauge from './../echarts/Gauge.vue'
+// 折线
+import ChartLine from './../echarts/ChartLine.vue'
+// 雷达图
+import Radar from './../echarts/Radar.vue'
+import personTreeModal from './../trainMgr/trainModal/personTreeModal.vue'
+const searchKey = {
+  '当天': 'dayList',
+  '本周': 'weekList',
+  '本月': 'monthList',
+  '本年': 'yearList'
+}
+const timeList = ['当天', '本周', '本月', '本年']
+
+const gaugeOption = {
+  tooltip: {
+    formatter: 9999
+  },
+  series: [{
+    name: '',
+    type: 'gauge',
+    detail: {formatter:'{value}'},
+    // data: [{value: 50, name: '完成率'}]
+  }]
+}
+
+const lineOption = {
+  xAxis: {
+    type: 'category',
+    // data: ['1', '2', '3', '4', '5', '6', '7']
+  },
+  series: [{
+    // data: [820, 600, 570, 409, 322, 310, 200],
+    type: 'line'
+  }]
+}
+
+const radarOption = {
+  radar: {
+    name: {
+      textStyle: {
+        color: '#fff',
+        backgroundColor: '#999',
+        borderRadius: 3,
+        padding: [3, 5]
+      }
+    },
+    indicator: [
+      { name: '运维评分'},
+      { name: '应用评分'},
+      { name: '服务评分'},
+      { name: '培训评分'},
+      { name: '咨询评分'}
+    ]
+  },
+  series: [{
+    type: 'radar',
+    // data : [{
+    //   value : [4300, 10000, 28000, 35000, 50000, 19000]
+    // }]
+  }]
+}
+
+export default {
+  components: {
+    Gauge,
+    ChartLine,
+    Radar,
+    personTreeModal
+  },
+  data () {
+    return {
+      operationScoreOption: {
+        ...gaugeOption
+      },
+      applicationScoreOption: {
+        ...gaugeOption
+      },
+      serviceScoreOption: {
+        ...gaugeOption
+      },
+      trainScoreOption: {
+        ...gaugeOption
+      },
+      consultationScoreOption: {
+        ...gaugeOption
+      },
+      lineOption,
+      radarOption,
+      timeList,
+      searchCondition: {
+        // 时间
+        time: '当天',
+        // 人员名称
+        userId: '1'
+      },
+      personInfo: {
+        title: '',
+        id: ''
+      }
+    }
+  },
+  mounted() {
+    this.search()
+  },
+  methods: {
+    search () {
+      const vm = this
+      api(operationApiList.operationAnalysis, {
+        ...vm.searchCondition
+      }).then(res => {
+        if (res.data.errcode === 0) {
+          const {operationScore, applicationScore, serviceScore, trainScore, consultationScore, map} = res.data.data
+
+          // 运维评分
+          vm.operationScoreOption.series[0].data = [{
+            value: Number(operationScore)
+          }]
+          // 应用评分
+          vm.applicationScoreOption.series[0].data = [{
+            value: Number(applicationScore)
+          }]
+          // 服务评分
+          vm.serviceScoreOption.series[0].data = [{
+            value: Number(serviceScore)
+          }]
+          // 培训评分
+          vm.trainScoreOption.series[0].data = [{
+            value: Number(trainScore)
+          }]
+          // 咨询评分
+          vm.consultationScoreOption.series[0].data = [{
+            value: Number(consultationScore)
+          }]
+          // 历史评分分析
+          vm.lineOption.xAxis.data = map[searchKey[vm.searchCondition.time]]
+          vm.lineOption.series[0].data = map.data
+          // 评分结构分析
+          vm.radarOption.series[0].data = [{
+            value:[Number(operationScore),
+              Number(applicationScore),
+              Number(serviceScore),
+              Number(trainScore),
+              Number(consultationScore)
+            ],
+            name: '评分结构'
+          }]
+
+          vm.$refs.operationRate.refresh()
+          vm.$refs.appRate.refresh()
+          vm.$refs.serviceRate.refresh()
+          vm.$refs.trainingRate.refresh()
+          vm.$refs.referRate.refresh()
+          vm.$refs.historyRate.refresh()
+          vm.$refs.structureRate.refresh()
+        }
+      },(error) => {console.log(error)})
+    },
+    // 选择人员回调
+    selectPerson(list) {
+      const vm = this
+      vm.searchCondition.userId = list.length > 0 ? list[0].id : ''
+      vm.personInfo = list.length > 0 ? list[0] : {}
+    },
+    // 打开树形结构，选择人员
+    openTreeModal() {
+      this.$refs.getPerson.open()
+    }
+  }
+}
+</script>
+
+<style lang='less' scoped>
+#operationRate, #appRate, #serviceRate, #trainingRate, #referRate, #historyRate, #structureRate{
+  height: 320px;
+}
+</style>

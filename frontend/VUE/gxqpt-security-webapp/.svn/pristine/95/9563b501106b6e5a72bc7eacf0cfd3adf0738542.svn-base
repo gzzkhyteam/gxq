@@ -1,0 +1,108 @@
+<template>
+    <Card :bordered="false">
+        <p slot="title">服务详情</p>
+        <a href="#" slot="extra" @click="goback">
+            <Icon type="chevron-left"></Icon>
+            返回上一级
+        </a>
+        <div style="text-align:center">
+            <Form ref="evalData" :model="evalData" :rules="ruleValidate" :label-width="70" class="clearfix">
+                <Row :gutter="40">
+                    <Col span="12">
+                        <FormItem label="服务类别" prop="results">
+                            <Select v-model="evalData.type" :disabled='changeDisabled'>
+                                <Option value="同意">同意</Option>
+                                <Option value="不同意">不同意</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col span="12">
+                        <FormItem label="服务对象" prop="classify">
+                            <Select v-model="evalData.classify" :disabled='changeDisabled'>
+                                <Option value="同意">同意</Option>
+                                <Option value="不同意">不同意</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col span="12">
+                        <FormItem label="服务分类" prop="obj">
+                            <Select v-model="evalData.obj" :disabled='changeDisabled'>
+                                <Option value="同意">同意</Option>
+                                <Option value="不同意">不同意</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col span="12">
+                        <FormItem label="服务名称" prop="name">
+                            <Select v-model="evalData.name" :disabled='changeDisabled'>
+                                <Option value="同意">同意</Option>
+                                <Option value="不同意">不同意</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col span="24">
+                        <FormItem label="服务简介" label-position="left" prop="Introduction">
+                            <Input v-model="evalData.Introduction" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :disabled='changeDisabled'></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span="24">
+                        <FormItem label="服务时间" prop="serviceDate">
+                            <DatePicker type="daterange" v-model="evalData.serviceDate" show-week-numbers placement="bottom-end" placeholder="请选择服务时间" style="float: left" :disabled='changeDisabled'></DatePicker>
+                        </FormItem>
+                    </Col>
+                    <Col span="13">
+                        <FormItem label="涉及系统" prop="systemList">
+                            <Select v-model="evalData.systemList" multiple :disabled='changeDisabled'>
+                                <Option value="同意">同意</Option>
+                                <Option value="不同意">不同意</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col span="13">
+                        <FormItem label="服务成果" label-position="left" prop="results">
+                            <Input v-model="evalData.results" :disabled='changeDisabled'</Input>
+                        </FormItem>
+                    </Col>
+                </Row>
+            </Form>
+        </div>
+    </Card>
+</template>
+
+<script>
+export default {
+    props:{
+        show: {
+            type: Boolean,
+            default: true
+        },
+        changeDisabled: {
+            type: Boolean,
+            default: true
+        },
+    },
+    created(){
+        console.log(this.changeDisabled);
+    },
+    data(){
+        return{
+            evalData:{},
+            ruleValidate:{},
+        }
+    },
+    methods:{
+        goback(){
+            this.$router.go(-1);
+        }
+    }
+}
+</script>
+
+<style scoped>
+.ivu-form-item >>> .ivu-form-item-content{
+    height:auto;
+}
+.ivu-input-wrapper >>> textarea{
+    resize: none;
+}
+</style>

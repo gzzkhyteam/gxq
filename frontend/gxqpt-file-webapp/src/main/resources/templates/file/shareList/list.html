@@ -1,0 +1,343 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/module.css">
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+	<style type="text/css">
+		#folderList{width: 100%;}
+		#folderList th{padding: 8px 3px;}
+        .table > tbody > tr > td span.shareName{cursor: pointer;}
+	</style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container">
+        <div class="row">
+        	<!--标题-->
+            <div class="col-sm-12">
+                <div class="console-title console-title-border clearfix">
+                    <div class="pull-left">
+                        <h5 class="page-title">
+                    		云盘管理系统  &gt; <span class="page-title-scend">我的分享</span>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <!--内容-->
+            <div id="cloudDisk" class="col-sm-12">
+                <div class="list-section">
+                    <div class="list-content">
+                        <div class="form-inline">
+                        	<table id="folderList" class="table table-hover">
+                        		<caption>
+									<span>分享文件列表</span>
+                                    <p id="tip_p">本页选中<span id="onfileNum">0</span>个文件/文件夹(共选中<span id="fileNum">0</span>个)
+                                        <script type="text/javascript" id="file_share_un_share">
+                                            $(function () {
+                                                resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                                    resource_code : "file_share_un_share",
+                                                    btnHtml :'<button type="button" class="btn btn-primary btn-upload" onclick="btnCleanAuto()"><span class="fa {{icon}}"></span> {{name}}</button>',
+                                                    htmlInsert: true
+                                                });
+                                            })
+                                        </script>
+										<!--<button type="button" class="btn btn-primary btn-style" onclick="btnCleanAuto()">
+											<span class="fa fa-ban"></span> 取消分享
+										</button>-->
+									</p>
+								</caption>
+                        		<thead>
+                        			<tr>
+                        				<th width="20"><input type="checkbox" name="" id="checked_all" value="" /></th>
+                        				<th class="text-left">分享文件</th>
+                        				<th width="80">浏览次数</th>
+                        				<!--<th width="80">保存次数</th>
+                        				<th width="80">下载次数</th>-->
+                        				<th width="120">分享时间</th>
+                        				<th width="120">连接地址</th>
+                        				<th  width="80">提取密码</th>
+                        			</tr>
+                        		</thead>
+                        		<tbody>
+                        		</tbody>
+                        	</table>
+                            <div class="pagerDiv">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/themes/blue/js/ui.js"></script>
+<script type="text/javascript" src="${_static}/js/module.js"></script>
+<script type="text/javascript">
+    var parm = {
+        pageNo:1,
+        pageSize: 20,
+    };
+    var ids = new Array();
+	$(function(){
+        getList(parm);
+        /* 选中当前行 */
+        $("body").on("click","#folderList tbody tr td",function(){
+            var choeckbox_int = $(this).find(".checkbox_int");
+            if($(choeckbox_int).length==0){
+                var choeckbox_set = $(this).parent().find(".checkbox_int");
+                var checked = $(choeckbox_set).prop("checked");
+                if(checked){
+                    $(choeckbox_set).removeProp("checked");
+                    $("#checked_all").removeProp("checked");
+                    var ret = jQuery.inArray($(choeckbox_set).attr("id"),ids);
+                    ids.splice(ret,1);
+                    var ret = jQuery.inArray($(choeckbox_set).attr("id"),dirArray);
+                    dirArray.splice(ret,1);
+                }else{
+                    $(choeckbox_set).prop("checked",true);
+                    var num=0;
+                    var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+                    $(choeckbox_list).each(function(index,element){
+                        var checked = $(element).prop("checked");
+                        if(checked){
+                            num+=1;
+                        }
+                    });
+                    if(num==$("#folderList tbody tr td .checkbox_int").length){
+                        $("#checked_all").prop("checked",true);
+                    };
+                    ids.push($(choeckbox_set).attr("id"));
+                    var dataType = $(choeckbox_set).attr("data-datatype");
+                    if(dataType=="DIR"){
+                        dirArray.push($(choeckbox_set).attr("id"));
+                    }
+                }
+            }
+            $("#fileNum").text(ids.length);
+            if(ids.length>0){
+                $("#tip_p").css("visibility","visible");
+            }else{
+                $("#tip_p").css("visibility","hidden");
+            };
+        });
+        $("body").on("click",".checkbox_int",function (){
+            var num=0;
+            var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+            if($(this).prop("checked")){
+                ids.push($(this).attr("id"));
+            }else{
+                var ret = jQuery.inArray($(this).attr("id"),ids);
+                ids.splice(ret,1);
+            }
+            $(choeckbox_list).each(function(index,element){
+                var checked = $(element).prop("checked");
+                if(checked){
+                    num+=1;
+                }
+            });
+            if(num==$("#folderList tbody tr td .checkbox_int").length){
+                $("#checked_all").prop("checked",true);
+            }else{
+                $("#checked_all").removeProp("checked");
+            };
+            ids = removeRepeatArray(ids);
+            $("#fileNum").text(ids.length);
+            $("#onfileNum").text(num);
+            if(ids.length>0){
+                $("#tip_p").css("visibility","visible");
+            }else{
+                $("#tip_p").css("visibility","hidden");
+            };
+        });
+        /* 全选 */
+        $("body").on("click","#checked_all",function (){
+            var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+            var num=0;
+            $(choeckbox_list).each(function(index,element){
+                var checkedVal = $(element).prop("checked");
+                if(checkedVal){
+                    num+=1;
+                }
+            });
+            if(num!=choeckbox_list.length){
+                $(choeckbox_list).each(function(index,element){
+                    var checkedVal = $(element).prop("checked");
+                    if(!checkedVal){
+                        $(element).prop("checked",true);
+                        ids.push($(element).attr("id"));
+                        num+=1;
+                    }
+                });
+            }else{
+                $(choeckbox_list).each(function(index,element){
+                    $(element).removeProp("checked");
+                    var ret = jQuery.inArray($(element).attr("id"),ids);
+                    ids.splice(ret,1);
+                });
+                num=0;
+            };
+            ids = removeRepeatArray(ids);
+            $("#fileNum").text(ids.length);
+            $("#onfileNum").text(num);
+            if(ids.length>0){
+                $("#tip_p").css("visibility","visible");
+            }else{
+                $("#tip_p").css("visibility","hidden");
+            };
+        });
+        /* 进入分享 */
+        $("body").on("click","span.shareName",function (e){
+            e.stopPropagation();
+            var idElement= $(this).parent().parent().find(".checkbox_int");
+            var id = $(idElement).val();
+            var folderName="分享文件(夹)-"+$(this).text()+"详情";
+            window.location.href="${_cp}/file/shareView?id="+id+"&folderName="+encodeURIComponent(folderName);
+        });
+        /* 取消单个分享 */
+        $("body").on("click",".tooltip_span i.shareBan",function (e){
+            e.stopPropagation();
+            var idElement = $(this).parent().parent().parent().find(".checkbox_int");
+            var id = $(idElement).val();
+            var ids = new Array();
+            if(id){
+                ids.push(id);
+            };
+            remove(ids);
+        });
+	});
+    /* 从服务器获取文件列表 */
+    function getList(parm){
+        ajaxHengyun({
+            type:"POST",
+
+
+            url: "${_gate_url}/api/file/share/my/page",
+            data:JSON.stringify(parm),
+            dataType: "json",//必须添加，所有地方都一样
+            contentType : 'application/json',   //必须添加，所有地方都一样
+            success:function(rows){
+                if (rows.data){
+                    fileList(rows.data.list);
+                    pagerList(rows.data);
+                }
+            }
+        });
+    }
+    /* 加载文件列表 */
+    function fileList(rows){
+        var html="";
+        if(rows.length!=0) {
+            rows.forEach(function (value, index) {
+                var getTiem=new Date(value.createTime);
+                var month = getTiem.getMonth();
+                var shareTime=getTiem.getFullYear()+"-"+(month+1)+"-"+getTiem.getDate();
+                html += '<tr>';
+                if(ids.length!=0){
+                    var ret;
+                    ids.forEach(function (idsRow, index) {
+                        ret = jQuery.inArray(value.id.toString(),ids);
+                    });
+                    if(ret>=0){
+                        html+='<td><input type="checkbox" name="" id="'+value.id+'" data-dataType="'+value.dataType+'" class="checkbox_int" value="'+value.id+'" checked/></td>';
+                    }else{
+                        html+='<td><input type="checkbox" name="" id="'+value.id+'" data-dataType="'+value.dataType+'" class="checkbox_int" value="'+value.id+'" /></td>';
+                    }
+                }else{
+                    html+='<td><input type="checkbox" name="" id="'+value.id+'" data-dataType="'+value.dataType+'" class="checkbox_int" value="'+value.id+'" /></td>';
+                }
+                html+='<td class="text-left" title="'+value.shareName+'">';
+                html+='<i class="fa '+value.icon+'"></i>';
+                html+='<span class="shareName" data-url="'+value.url+'">'+value.shareName+'</span>';
+                html+='<span class="pull-right tooltip_span">';
+                html+='<i class="fa fa-ban shareBan" title="取消分享"></i>';
+                html+='</span>';
+                html+='</td>';
+                html+='<td>'+value.browsTimes+'</td>';
+                /*html+='<td>'+value.saveTimes+'</td>';
+                html+='<td>'+value.downloadTimes+'</td>';*/
+                html+='<td>'+shareTime+'</td>';
+                html+='<td>'+value.url+'</td>';
+                if(value.sharePassword){
+                    html+='<td>'+value.sharePassword+'</td></tr>';
+                }else{
+                    html+='<td>—</td></tr>';
+                }
+            });
+        }else{
+            html+='<tr>';
+            html+='<td colspan="8" class="tip_td">您还没有分享文件哦～</td>';
+            html+='</tr>';
+            $("#checked_all").removeAttr("checked");
+        }
+        $("#folderList tbody").html(html);
+        var num=0;
+        var choeckbox_list = $("#folderList tbody tr td .checkbox_int");
+        $(choeckbox_list).each(function(index,element){
+            var checked = $(element).prop("checked");
+            if(checked){
+                num+=1;
+            }
+        });
+        $("#onfileNum").text(num);
+        if(num!=rows.length){
+            $("#checked_all").prop("checked",false);
+        }
+    }
+    /* 取消多个分享 */
+    function btnCleanAuto(){
+        if(ids.length==0){
+            parent.layer.msg("请选择需要取消分享的文件！");
+            return false;
+        }else{
+            remove(ids);
+        };
+    };
+    /* 删除分享方法 */
+    function remove(ids){
+        parent.layer.open({
+            type: 1,
+            title: '确认取消分享',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['410px', '136px'],
+            content: "取消分享后，该条分享记录将被删除，你确认要取消分享吗？",
+            btn: ['<span class="glyphicon glyphicon-ok"></span>确定','<span class="glyphicon glyphicon-remove"></span>取消'],
+            yes: function (index, layero) {
+                ajaxHengyun({
+                    type:"POST",
+
+                    
+                    dataType: 'json',
+                    url: "${_gate_url}/api/file/share/delete",
+                    data:{ids:ids},
+                    success:function(rows){
+                        if (rows.data){
+                            getList(parm);
+                            parent.layer.closeAll();
+                        }else{
+                            parent.layer.closeAll();
+                            parent.layer.msg("取消分享出错，请稍后重试！");
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>

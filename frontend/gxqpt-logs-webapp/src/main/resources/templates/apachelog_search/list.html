@@ -1,0 +1,622 @@
+<!doctype html>
+<html>
+<head>
+    <base href="<%=basePath%>">
+    <!--<title>短信平台</title>-->
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js"  charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_resource.js"></script>
+    <style type="text/css">
+        #right-box {
+            width: 100%;
+            height: calc(100% - 210px);
+            border: 0;
+        }
+        .cbox {
+            display: inline;
+        }
+        #breadcrumb {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body">
+    <div class="console-container clearfix">
+        <div class="col-sm-12" id="breadcrumb">
+            <!-- begin 标题 -->
+            <div class="console-title console-title-border clearfix">
+                <div class="pull-left">
+                    <h5 class="page-title">
+                        日志管理系统 &gt;日志检索&gt;<span class="page-title-scend">Apache日志检索</span>
+                    </h5>
+                </div>
+                <div class="pull-right">
+                </div>
+            </div>
+        </div>
+        <!-- begin 页面内容主体 -->
+        <div class="main">
+            <div class="list-section">
+                <form action="" class="form-inline search-form">
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>日志记录时间：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input id="logTimeStart" name="logTimeStart" class="Wdate"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'#F{$dp.$D(\'logTimeEnd\')}'})"/>
+                            </div>
+                            <span>~</span>
+                            <div class="form-control-wrap">
+                                <input id="logTimeEnd" name="logTimeEnd" class="Wdate"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'logTimeStart\')}',startDate:'#F{$dp.$D(\'logTimeStart\',{d:+1})}'})"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>URL：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input id="requestUrl" class="form-control" name="requestUrl"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>响应时间：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input id="timeConsumStart" name="timeConsumStart" class="form-control" />
+                            </div>
+                            <span>~</span>
+                            <div class="form-control-wrap">
+                                <input id="timeConsumEnd" name="timeConsumEnd"  class="form-control" />
+                            </div>
+                            <span>秒</span>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="text-danger"></span>
+                                <span>客户端IP：</span>
+                            </label>
+                            <div class="form-control-wrap">
+                                <input id="remoteIp" class="form-control"  name="remoteIp"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <div class="form-control-wrap text-right">
+                                <!--未加按钮权限-->
+                                <!--<button type="button" class="btn btn-primary search-button" onclick="search()">
+                                    <span class="glyphicon glyphicon-search"></span> 查询
+                                </button>-->
+                                <!--加了按钮权限-->
+                                <script type="text/javascript" id="logs_structapache_query">
+                                    resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "logs_structapache_query",
+                                        btnHtml :"<button type=\"button\" class=\"btn btn-primary search-button\" onclick=\"search()\">查询</button>",
+                                        htmlInsert: true
+                                    });
+                                 </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-group">
+                            <div class="form-control-wrap text-right">
+                                <!--未加按钮权限-->
+                                <!--<button type="button" class="btn btn-primary search-button" onclick="reset()">
+                                    <span class="glyphicon glyphicon-refresh"></span> 重置
+                                </button>-->
+                                <!--加了按钮权限-->
+                                <script type="text/javascript" id="logs_structapp_reset">
+                                    resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+                                        resource_code : "logs_structapache_reset",
+                                        btnHtml :"<button type=\"button\" class=\"btn btn-primary search-button\" onclick=\"reset()\">重置</button>",
+                                        htmlInsert: true
+                                    });
+                                 </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:20px;height: 90px;">
+
+                        <div id="system" style="height:30px;font-size: 13px;width: 100%">
+
+                        </div>
+                        <div style="float: left;width: 100%;font-size: 13px;">
+                            <div style="float: left;margin-top: 5px;"> 日志级别：</div>
+                            <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px;"> <input type="checkbox" name="status" value="200"  style="margin-right:5px;"/>200</div>
+                            <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px;"> <input type="checkbox" name="status" value="302"  style="margin-right:5px;"/>302</div>
+                            <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px;"> <input type="checkbox" name="status" value="400"  style="margin-right:5px;"/>400</div>
+                            <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px;"> <input type="checkbox" name="status" value="404"  style="margin-right:5px;"/>404</div>
+                            <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px;"> <input type="checkbox" name="status" value="500"  style="margin-right:5px;"/>500</div>
+                            <div style="float: left;width: 13%;margin-left: 5px;margin-top: 5px;"> <input type="checkbox" name="status" value="505"  style="margin-right:5px;"/>505</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="right-box" class="list-section" style="float: left;">
+                <div class="grid-section">
+                    <table id="list"></table>
+                    <div id="pager"></div>
+                </div>
+            </div>
+        </div>
+        <!-- end 页面内容主体 -->
+    </div>
+</div>
+<script type="text/javascript">
+    var tableObj = null;//jqgrid表对象
+    var fileListArray = [];//文档列表
+    var checkName = [];
+    var ids = new Array();
+    var id = "";
+    var token = $.cookie("_token");
+    var userId = $.cookie('_user_id');
+    var systemArr = [];
+    // 判断是在哪个系统打开的此页面
+    var fromPage = getQuery('fromPage');
+
+    /* 获取应用系统*/
+    getSystemList();
+
+    function getSystemList() {
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            url: "${_gate_url}/api/developer/application/findList",
+            data:{type:1},
+            success: function (rows) {
+                if (rows.data) {
+                    $('#system').append('<div style="float: left;margin-top: 5px">应用系统：</div>');
+                    var arr = rows.data;
+                    for(var i=0;i<arr.length;i++){
+                        var appId = arr[i].appId;
+                        var name = arr[i].name;
+                        if(i>5&&i%6==0){
+                            $('#system').append('<div class="x" style="float: left;width: 100%"></div>');
+                            $('#system').append('<div style="float: left;width: 65px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>');
+
+                        }
+                        $('#system').append('<div style="float: left;width: 15%;margin-left: 5px;margin-top: 5px"> <input type="checkbox" name="system" value='+appId+'  style="margin-right:5px;"/>'+name+'&nbsp;&nbsp;&nbsp;</div>');
+                    }
+                }
+            }
+        });
+    }
+    /* 获取应用系统*/
+    getSystemListAll();
+
+    function getSystemListAll() {
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            url: "${_gate_url}/api/developer/application/findAllList",
+            success: function (rows) {
+                if (rows.data) {
+                    var arr = rows.data;
+                    for(var i=0;i<arr.length;i++){
+                        var appId = arr[i].appId;
+                        var name = arr[i].name;
+                        var obj = new Object();
+                        obj.name=name;
+                        obj.value=appId;
+                        systemArr.push(obj);
+                    }
+                }
+            }
+        });
+    }
+
+    //获取文档列表
+    getdocumentList();
+
+    function getdocumentList() {
+        var height = $("#right-box").height() - 80;
+        tableObj = $("#list").jqGrid({
+            mtype: 'POST',
+            postData: {"pageNo": 1, "pageSize": 10},
+            url: '${_gate_url}/api/logs/log/pageQueryApache',
+            datatype: "json",
+            contentType: 'application/json',
+            serializeGridData: function (postData) {
+                return JSON.stringify(postData);
+            },
+            colNames: ['日志时间', '应用系统', '客户端IP', 'URL', '状态', '响应时间(秒)','操作'],
+            colModel: [{
+                name: 'logTime',
+                index: 'logTime',
+                sortable:false,
+                formatter: formatterCreateTime
+            }, {
+                name: 'appId',
+                index: 'appId',
+                sortable:false,
+                formatter: formatterAppId
+            },{
+                name: 'remoteIp',
+                index: 'remoteIp',
+                sortable:false
+            }, {
+                name: 'requestUrl',
+                index: 'requestUrl',
+                sortable:false,
+                width:'250'
+            }, {
+                name: 'status',
+                index: 'status',
+                sortable:false
+            },{
+                name: 'timeConsum',
+                index: 'timeConsum',
+                sortable:false
+            }, {
+                name: 'act',
+                index: 'act',
+                title: false,
+                width: '100',
+                align: 'center',
+                sortable:false,
+                formatter: formatterAct
+            }],
+            jsonReader: {
+                root: "data.list",
+                page: "data.pageNum",
+                total: "data.pages",
+                records: "data.total"
+            },
+            pager: '#pager',
+            height: height,
+            multiselect: true,
+            loadComplete: function () {
+                var rowIds = $("#list").jqGrid('getDataIDs');
+                if (fileListArray.length > 0) {
+                    for (var k = 0; k < rowIds.length; k++) {
+                        var curRowData = $("#list").jqGrid('getRowData', rowIds[k]);
+                        var curChk = $("#list tr[id=" + rowIds[k] + "]").find(":checkbox");
+                        $.each(fileListArray, function (i, data) {
+                            if (rowIds[k] == data) {
+                                curChk.attr('checked', 'true');
+                                $("#list").jqGrid('setSelection', data);
+                            }
+                        });
+                    }
+                }
+            },
+            beforeSelectRow: function (rowid, e) {//多选
+                if (e.type == 'click') {
+                    i = $.jgrid.getCellIndex($(e.target).closest('td')[0])
+                        cm = $("#list").jqGrid('getGridParam', 'colModel');
+                    return (cm[i].name == 'cb'); //当点击的单元格的名字为cb时，才触发选择行事件
+                }
+                return false;
+            },
+            onSelectAll: function (aRowids, status) {
+                if (status) {
+                    for (var i = 0; i < aRowids.length; i++) {
+                        var curRowData = $("#list").jqGrid('getRowData', aRowids[i]);
+                        fileListArray.push(aRowids[i]);
+                        fileListArray = removeDuplicatedItem(fileListArray);
+                    }
+                } else {
+                    for (var i = 0; i < aRowids.length; i++) {
+                        var ret = jQuery.inArray(aRowids[i], fileListArray);
+                        fileListArray.splice(ret, 1);
+                        checkName.splice(ret, 1);
+                    }
+                }
+            },
+            onSelectRow: function (id, check) {
+                if (check) {
+                    var curRowData = $("#list").jqGrid('getRowData', id);
+                    fileListArray.push(id);
+                    fileListArray = removeDuplicatedItem(fileListArray);
+                } else {
+                    var ret = $.inArray(id, fileListArray);
+                    fileListArray.splice(ret, 1);
+                    checkName.splice(ret, 1);
+                }
+            },
+            onPaging: function (pgButton) {
+                var pageNo = $(".ui-pg-input").val();
+                pageNo = parseInt(pageNo);
+                var total = ($("#sp_1_pager_toppager").text()).replace(/,/g,'');
+                total = parseInt(total);
+                if (pgButton == "next") {
+                    if (pageNo >= total) {
+                        return false;
+                    } else {
+                        pageNo += 1;
+                    }
+                } else if (pgButton == "prev") {
+                    if (pageNo > 1) {
+                        pageNo -= 1;
+                    } else {
+                        return false;
+                    }
+                } else if (pgButton == "last") {
+                    pageNo = total;
+                } else if (pgButton == "first") {
+                    pageNo = 1;
+                }
+                var pageSize = $(".ui-pg-selbox").val();
+                if (pageNo != 0) {
+                    $("#list").setGridParam({postData: {pageNo: pageNo, pageSize: pageSize}}).trigger("reloadGrid");
+                    return false;
+                }
+            }
+        });
+    }
+
+    //上传时间格式化
+    function formatterCreateTime(cellvalue, options, rawObject) {
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        };
+        if(cellvalue && cellvalue.indexOf("-")>=0){
+            cellvalue=cellvalue.replace(/-/g, "/");
+        }
+        return new Date(cellvalue).Format("yyyy-MM-dd hh:mm:ss");
+    }
+
+    //操作列
+    function formatterAct(cellvalue, options, rawObject) {
+        var returnValue = "";
+        id = rawObject.id;
+        var documentId = rawObject.documentId;
+        var parsedStatus = rawObject.parsedStatus;
+
+        <!--未做权限控制-->
+       /* returnValue += '<a class="ui-button" href="javascript:" onclick="viewPage(\''+id+'\',\''+documentId+'\',\''+userId+ '\',\''+token+'\')">';
+        returnValue += '详情</a>';
+        returnValue += '<span class="oper-separator"></span>';
+        returnValue += '<a class="ui-button" href="javascript:void(0);" onclick="deletePage(\''+id+'\')">';
+        returnValue += '删除</a>';*/
+
+        <!--做权限控制-->
+         returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+             resource_code : "logs_structapache_detail",
+             btnHtml :"<a class=\"ui-button\" href=\"javascript:void(0);\" onclick=\"viewPage('"+id+"','"+documentId+"','"+userId+"','"+token+"')\">详情</a>",
+             htmlInsert: false
+         });
+         returnValue += resourceJs.init("${_gate_url!''}","${_app_id!''}","${l_u_i_s.id!''}").containButton({
+             resource_code : "logs_structapache_delete",
+             btnHtml :"<span class=\"oper-separator\"></span><a class=\"ui-button\" href=\"javascript:void(0);\" onclick=\"deletePage('"+id+"')\">删除</a>",
+             htmlInsert: false
+         });
+        return returnValue;
+    }
+
+    //模糊查询
+    function search() {
+        var logTimeStart = $("#logTimeStart").val();
+        if (logTimeStart != "") {
+            logTimeStart = logTimeStart + " 00:00:00";
+        }
+        var logTimeEnd = $("#logTimeEnd").val();
+        if (logTimeEnd != "") {
+            logTimeEnd = logTimeEnd + " 23:59:59";
+        }
+        var requestUrl = $('#requestUrl').val();
+        var remoteIp = $('#remoteIp').val();
+        var timeConsumStart = $('#timeConsumStart').val();
+        var timeConsumEnd = $('#timeConsumEnd').val();
+
+        //状态
+        var status="";
+        if($("input:checkbox[name='status']:checked").val()!=undefined){
+            var i=0;
+            $("input:checkbox[name='status']:checked").each(function(){
+                if(i==0){
+                    status= $(this).val();
+                    i++;
+                }else{
+                    status=status+","+$(this).val();
+                }
+            })
+        }
+        //应用系统
+        var system="";
+        if($("input:checkbox[name='system']:checked").val()!=undefined){
+            var i=0;
+            $("input:checkbox[name='system']:checked").each(function(){
+                if(i==0){
+                    system= $(this).val();
+                    i++;
+                }else{
+                    system=system+","+$(this).val();
+                }
+            })
+        }
+        tableObj.setGridParam({
+            postData: {
+                pageNo: 1, pageSize: 20,data:{
+                    logTimeStart:logTimeStart,
+                    logTimeEnd:logTimeEnd,
+                    requestUrl:requestUrl,
+                    status:status,
+                    remoteIp:remoteIp,
+                    timeConsumStart:timeConsumStart,
+                    timeConsumEnd:timeConsumEnd,
+                    appId:system
+                }
+            }
+        }, true).trigger('reloadGrid');
+    }
+
+    //刷新表格
+    function reloadJqgrid() {
+        var p=$("#list").jqGrid('getGridParam','page');//获取当前页
+        var pageSize = $(".ui-pg-selbox").val();
+        var logTimeStart = $("#logTimeStart").val();
+        if (logTimeStart != "") {
+            logTimeStart = logTimeStart + " 00:00:00";
+        }
+        var logTimeEnd = $("#logTimeEnd").val();
+        if (logTimeEnd != "") {
+            logTimeEnd = logTimeEnd + " 23:59:59";
+        }
+        var requestUrl = $('#requestUrl').val();
+        var remoteIp = $('#remoteIp').val();
+        var timeConsumStart = $('#timeConsumStart').val();
+        var timeConsumEnd = $('#timeConsumEnd').val();
+
+        //状态
+        var status="";
+        if($("input:checkbox[name='status']:checked").val()!=undefined){
+            var i=0;
+            $("input:checkbox[name='status']:checked").each(function(){
+                if(i==0){
+                    status= $(this).val();
+                    i++;
+                }else{
+                    status=status+","+$(this).val();
+                }
+            })
+        }
+        //应用系统
+        var system="";
+        if($("input:checkbox[name='system']:checked").val()!=undefined){
+            var i=0;
+            $("input:checkbox[name='system']:checked").each(function(){
+                if(i==0){
+                    system= $(this).val();
+                    i++;
+                }else{
+                    system=system+","+$(this).val();
+                }
+            })
+        }
+        $("#list").setGridParam({
+            postData: {pageNo: p,pageSize:pageSize,data:{
+                    logTimeStart:logTimeStart,
+                    logTimeEnd:logTimeEnd,
+                    requestUrl:requestUrl,
+                    status:status,
+                    remoteIp:remoteIp,
+                    timeConsumStart:timeConsumStart,
+                    timeConsumEnd:timeConsumEnd,
+                    appId:system
+                }
+            }
+        }, true).trigger('reloadGrid');
+    }
+
+    /* 删除 */
+    function deletePage(id) {
+        parent.layer.confirm("您确定要删除该条记录吗？", {
+            title: '温馨提示',
+            shade: [0.4, '#000'],
+            btn: ['确定', '取消'] //按钮
+        }, function (value, index, elem) {
+            ajaxHengyun({
+                type: "GET",
+                async: false,
+                dataType: 'json',
+                url: "${_gate_url}/api/logs/log/deleteApache?id=" + id,
+                success: function (rows) {
+                    if (rows.data) {
+                        parent.home.reloadJqgrid();
+                        parent.layer.msg("删除成功！", {icon: 6, time: 2000});
+                    } else {
+                        parent.layer.msg("删除失败，请稍后重试！", {icon: 5,time: 2000});
+                    }
+                }
+            });
+        }, function () {
+            closeLayer();
+        });
+    }
+
+    /*详情*/
+    function viewPage(id,documentId,userId,token) {
+        parent.layer.open({
+            id: 'view',
+            type: 2,
+            anim: 6,
+            title: '详情',
+            maxmin: false, //开启最大化最小化按钮
+            area: ['50%', '60%'],
+            content: "${_cp}/logs/apacheView?id="+id+"&documentId="+documentId+"&userId="+userId+"&token="+token,
+            btn: [],
+            yes: function (index, layero) {
+
+            }
+        });
+    }
+
+    //系统格式化
+    function formatterAppId(cellvalue, options, rawObject) {
+        var appname='';
+        for(var i=0;i<systemArr.length;i++){
+            var name = systemArr[i].name;
+            var value = systemArr[i].value;
+            if(cellvalue==value){
+                appname=name;
+                break;
+            }
+        }
+        return appname;
+    }
+
+    function getQuery(name){
+    　   var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r!=null) return unescape(r[2]); return null;
+    }
+
+    function initPage () {
+        if (fromPage != 'yunwei') {
+            $('#breadcrumb').show();
+        }
+    }
+    initPage();
+</script>
+</body>
+</html>

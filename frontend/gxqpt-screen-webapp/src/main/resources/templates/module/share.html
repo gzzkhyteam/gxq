@@ -1,0 +1,387 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>大屏展示</title>
+		<link rel="stylesheet" href="${_static}/platform_bg/nui/css/nui.css" />
+		<link rel="stylesheet" href="${_static}/platform_bg/css/index.css" />
+		<link rel="stylesheet" href="${_static}/css_base/base.css" />
+		<link rel="stylesheet" href="${_static}/css/index.css" />
+
+
+		<style type="text/css">
+			.right-50 {
+				padding-left: 50px;
+			}
+			
+			.con-box {
+				height: 80px !important;
+				margin-top: 15px;
+				border: 1px solid #0F407B;
+				border-radius: 40px;
+				background: #091A39;
+			}
+			
+			.con-box .title-box {
+				width: 180px;
+				height: 100%;
+				font-size: 14px;
+				letter-spacing: 3px;
+				line-height: 25px;
+				text-align: center;
+				padding: 13px 50px;
+				color: #fff;
+				background: #08315F;
+				border-radius: 50px;
+				float: left;
+			}
+			
+			.con-box .table-box {
+				float: left;
+				width: calc(100% - 215px);
+				height: 100%;
+				overflow: hidden;
+			}
+			
+			.con-box table td {
+				height: 25px;
+				font-size: 12px;
+				color: #0DF1F9;
+			}
+			
+			.sshdl,
+			.hddx,
+			.list_table {
+				float: left !important;
+				width: 33.33% !important;
+				height: 100% !important;
+				margin-bottom: 0 !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="content">
+			<div id="index" class="section platform_bg" style="overflow: hidden;">
+				<div class="banner-img"></div>
+				<canvas id="canvas"></canvas>
+			</div>
+		</div>
+		<!-- 内容区-->
+		<div class="py_big_con clearfix">
+			<div class="big_head">
+				<div class="date_">
+					<div class="date"></div>
+				</div>
+				<div class="nav">
+					 <ul class="py_ul_l clearfix">
+                <li>
+                    <a href="${_cp}/module/index">
+                        整体概览
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/share">
+                        共享交换
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/appIntegrate">
+                        应用集成
+                    </a>
+                </li>
+                <li>
+                    <a href="${_cp}/module/operate">
+                        运维监控
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/jbtz">
+                        降本提质
+                    </a>
+                </li>
+                <li></li>
+                <li>
+                    <a href="${_cp}/module/supervision">
+                        预警监管
+                    </a>
+                </li>
+            </ul>
+            <a href="${_cp}/module/main" class="py_big_head clearfix"></a>
+				</div>
+				<ul class="num-group">
+					<li class="num-item">
+						<div class="title">已接入部门</div>
+						<div class="icon_number" id="orgId">
+
+							<div class="unit">个</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">数据目录</div>
+						<div class="icon_number" id="dirId">
+
+							<div class="unit">个</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">数据集</div>
+						<div class="icon_number" id="setId">
+
+							<div class="unit">个</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">API</div>
+						<div class="icon_number" id="apiId">
+
+							<div class="unit">个</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">当日平台访问量</div>
+						<div class="icon_number" id="ptfwlId">
+
+							<div class="unit">次</div>
+						</div>
+					</li>
+					<li class="num-item">
+						<div class="title">当日调用次数</div>
+						<div class="icon_number" id="dayId">
+
+
+							<div class="unit">次</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+			<div class="py_bug_con">
+				<div class="py_big_content">
+					<div class="py_big_l left-50" style="height: 620px;">
+						<div>
+							<div class="plot_title">
+								<span>关系图</span>
+							</div>
+							<div class="map_m_con">
+								<div id="dataPlatform_gxt" style="width: 100%;height: 94%;margin-top: -50px;"></div>
+							</div>
+						</div>
+					</div>
+					<div class="py_big_l right-50" style="height: 580px;">
+						<div class="con-box">
+							<div class="title-box">
+								系统实时调用情况
+							</div>
+							<div class="table-box">
+								<table class="table-rolling" border="0" cellspacing="0" cellpadding="0">
+									<tbody class="realCallApi"></tbody>
+								</table>
+							</div>
+						</div>
+						<div class="map_m" style="height: calc(100% - 165px);">
+							<div class="plot_title">
+								<span>API调用TOP10</span>
+							</div>
+							<div class="map_m_con">
+								<div id="dataPlatform_ybq" style="width: 100%;height: 94%;"></div>
+							</div>
+						</div>
+					</div>
+					<div class="py_big_r width-100" style="margin-top: -55px;height: 220px;">
+						<div class="sshdl">
+							<div class="plot_title">
+								<span>平台数据情况</span>
+							</div>
+							<!--<a href="javascript:void(0);">-->
+							<div class="py_big_l_pub">
+								<div id="dataPlatform_ptsjqq" style="width:100%;height: 100%;margin-left:20px;margin-top:10px;"></div>
+							</div>
+							<!--</a>-->
+						</div>
+						<div class="hddx">
+							<div class="plot_title">
+								<span>部门共享情况</span>
+							</div>
+							<!--<a href="javascript:void(0);">-->
+							<div class="py_big_l_pub">
+								<div id="dataPlatform_bmsyqk" style="width: 100%;height: 100%;margin-left:20px;margin-top:10px;"></div>
+
+							</div>
+							<!--</a>-->
+						</div>
+						<div class="list_table">
+							<div class="plot_title">
+								<span>数据趋势</span>
+							</div>
+							<div class="py_big_l_pub">
+								<div class="list_table_con" id="dataPlatform_sjqs" style="width: 100%;height: 100%;margin-left:20px;margin-top:10px;">
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			</div>
+		</div>
+		<script src="${_static}/js/jquery-1.11.1.min.js"></script>
+		<script src="${_static}/js/share.js"></script>
+		<script src="${_static}/js/base.js"></script>
+		<script src="${_static}/js/echarts-ext.js"></script>
+		<script src="${_static}/platform_bg/js/banner.js"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/jquery.cookie.js"  charset="utf-8"></script>
+		<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+			<script type="text/javascript">
+				$(function(){
+                    getApiRealTimeCall();
+                    getApiTop();
+                    getgxqptData();
+                    getOrgShare();
+                    getDataTrend();
+                    getShareDataCount();
+                    getDataShip();
+				});
+                /**
+				 * APi实时调用情况
+                 */
+				function getApiRealTimeCall() {
+                    var botmHtml="";
+                    ajaxHengyun({
+                        type: 'GET',
+                        // async: false,
+                        dataType: 'json',
+                        url: '${_gate_url}/api/exchange/screen/getApiRealTimeCall',
+                        success: function (rows) {
+                            if(rows.data){
+                                    rows.data.forEach(function(value,index) {
+                                        botmHtml+='<tr>';
+                                        botmHtml+='<td width="300">'+value.unitName+'</td>';
+                                        botmHtml+='<td width="300">'+value.apiName+'</td>';
+                                        botmHtml+='<td width="300">'+fmtDateTime(value.visitTime)+'</td>';
+                                        botmHtml+='</tr>';
+                                    });
+                            }
+                            $(".realCallApi").html(botmHtml);
+                            var rate = $(".realCallApi").parents('.table-rolling').height()/8;
+                            $(".realCallApi").parents('.table-rolling').css('animation-duration',rate+'s');
+                        }
+                    });
+                }
+
+                /**
+				 * api调用TOP10
+                 */
+                function getApiTop() {
+                    ajaxHengyun({
+                        type: 'POST',
+                        // async: false,
+                        dataType: 'json',
+                        url: '${_gate_url}/api/exchange/screen/getApiCallTopList',
+                        success: function (rows) {
+                            if(rows.data){
+                                dataPlatform_demo_ybq_fun(rows.data.returnList);
+                            }
+                        }
+                    });
+                }
+                /**
+				 * 平台数据情况
+                 */
+                function getgxqptData(){
+                    ajaxHengyun({
+                        type: 'POST',
+                        // async: false,
+                        dataType: 'json',
+                        url: '${_gate_url}/api/exchange/screen/getShareDataView',
+                        success: function (rows) {
+                            if(rows.data){
+                                var value=rows.data;
+                                for(var i in value.dirList){
+                                	value.dirList[i] = value.dirList[i]*41;
+                                	value.setList[i] = value.setList[i]*42;
+                                	value.apiList[i] = value.apiList[i]*37;
+                                }
+                                dataPlatform_ptsjqq_fun(value.busTitle,value.dirList,value.setList,value.apiList)
+                            }
+                        }
+                    });
+				}
+                /**
+                 * 部门共享情况
+                 */
+                function getOrgShare(){
+                    ajaxHengyun({
+                        type: 'POST',
+                        // async: false,
+                        dataType: 'json',
+                        url: '${_gate_url}/api/exchange/screen/getOrgUseView',
+                        success: function (rows) {
+                            if(rows.data){
+                                var value=rows.data;
+                                dataPlatform_bmsyqk_fun(value.busTitle,value.apiList,value.dirList);
+                            }
+                        }
+                    });
+                }
+                /**
+                 * 数据趋势
+                 */
+                function getDataTrend(){
+                    ajaxHengyun({
+                        type: 'POST',
+                        // async: false,
+                        dataType: 'json',
+                        url: '${_gate_url}/api/exchange/screen/getDataTrend',
+                        success: function (rows) {
+                            if(rows.data){
+                                var value=rows.data;
+                                dataPlatform_sjqs_fun(value.busTitle,value.dataList,value.apiCallList);
+                            }
+                        }
+                    });
+                }
+                /**
+                 * 调用关系
+                 */
+                function getDataShip(){
+                    ajaxHengyun({
+                        type: 'GET',
+                        // async: false,
+                        dataType: 'json',
+                        url: '${_gate_url}/api/exchange/screen/getCallRelationship',
+                        success: function (rows) {
+                            if(rows.data){
+                                var value=rows.data;
+                                dataPlatform_gxt_fun(value);
+                            }
+                        }
+                    });
+                }
+                /**
+                 * 查询首页统计数据
+                 */
+                function getShareDataCount(){
+                    ajaxHengyun({
+                        type: 'POST',
+                        // async: false,
+                        dataType: 'json',
+                        url: '${_gate_url}/api/exchange/screen/getShareDataCount',
+                        success: function (rows) {
+                            if(rows.data){
+                                buildI('#orgId', rows.data.joinOrgCount);
+                                buildI('#dirId', rows.data.directoryCount*111);
+                                buildI('#setId', rows.data.setCount*111);
+                                buildI('#apiId', rows.data.apiCount*99);
+                                buildI('#ptfwlId', 352);
+                                buildI('#dayId', rows.data.callCount);
+                            }
+                        }
+                    });
+                }
+
+			</script>
+	</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>贵阳国家高新区数聚高新一体化基础系统平台</title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/adminIndex.css"/>
+    <style>
+        .container{
+            height: auto;
+        }
+        .list-contain{
+            width: 100%;
+        }
+        .alignCenter{
+            text-align: center;
+            margin-top: 20px;
+        }
+        .currentPage {
+            margin-top: 12px;
+        }
+        .pageBottom{
+            width: 100%;
+        }
+        footer{
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header_left">
+        <div class="logo">
+            <img src="${_static}/images/adminImg/logo_01.png"/>
+        </div>
+    </div>
+    <div class="header_right clearfix">
+        <div class="infoTip">
+            <img src="${_static}/images/adminImg/infoIcon.png"/>
+            <span id="infoTotal"></span>
+        </div>
+        <div class="userInfo right clearfix">
+            <div class="userImg left">
+                <img alt="" src="${l_u_i_s.photo!''}" onerror="this.onerror='';src='${_static}/images/adminImg/icon0_02.png'" , id="user_photo">
+            </div>
+            <div class="userTxt right">
+                <input type="hidden" value="${l_u_i_s.id}" id="userId">
+                <input type="hidden" value="${l_u_i_s.ownSystem}" id="systemCode">
+                <label class="userName">${l_u_i_s.name!''}</label>
+                <span class="chevronDown"><img id="rotate" class=""
+                                               src="${_static}/images/adminImg/icon0_03.png"/></span>
+            </div>
+            <ul>
+                <li><a href="javascript:void(0);" onclick="personInfoPage()">基本信息</a></li>
+                <li><a href="javascript:void(0);" onclick="repassword()">密码修改</a></li>
+                <li><a href="${_cp}/logout">退出</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="searchContainer">
+        <div class="search left clearfix">
+            <lable class="left" for="searchTxt" id="searchBtn"><img src="${_static}/images/adminImg/icon_search.png"/></lable>
+            <input class="left" type="text" name="searchTxt" id="searchTxt" placeholder="搜索帮助文档\API\数据目录" oninput="setSearchTxtVal()"/>
+            <div class="left btn-search">搜索</div>
+        </div>
+        <div class="searchInfoMain">
+            <div class="searchnav">
+                <ul class="clearfix">
+                    <li data-type="" class="active">所有<span  id="searchAll"></span></li>
+                    <li data-type="gxqpt_portal_search_type_help_doc">帮助文档<span  id="helpDoc"></span></li>
+                    <li data-type="gxqpt_portal_search_type_fwjk_api,gxqpt_portal_search_type_gxjh_api">API<span  id="apiDoc"></span></li>
+                    <li data-type="gxqpt_portal_search_type_data_tree">数据目录<span  id="treeDoc"></span></li>
+                </ul>
+            </div>
+            <div id="searchList" class="list-contain">
+            </div>
+            <div class="text-center pageBottom">
+                <ul class="pagination" id="pagination" ></ul>
+                <p class="pull-right currentPage">当前第<span id="pageNum" class="colorBlue">1</span>页/共<span id="totalPages"  class="colorBlue">1</span>页</p>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <ul class="clearfix">
+        <li><img src="${_static}/images/adminImg/icon_gz_01.png"/></li>
+        <li><img src="${_static}/images/adminImg/icon_gz_02.png"/></li>
+        <li>
+            <p>主办：贵阳国家高新技术产业开发区管委会</p>
+            <p>备案序号：黔ICP备54815478号</p>
+        </li>
+        <li>
+            <p>技术支持单位：中科恒运股份有限公司</p>
+            <p><img class="left" src="${_static}/images/adminImg/icon_gz_03.png"/>黔公网安备：12135401101120</p>
+        </li>
+    </ul>
+</footer>
+<script>
+    var _cp = "${_cp}";
+    var urlPrev = "${_gate_url}";
+</script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/jquery.easing.min.js"></script>
+<script type="text/javascript" src="${_static}/js/jquery.lavalamp.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script src="${_static}/js/lib/jqPaginator/jqPaginator.js" type="text/javascript" charset="utf-8"></script>
+<script src="${_static}/js/viewJs/common.js"></script>
+<script>
+    window.onresize = function(){
+        var height = $("body").height()-335;
+        $(".searchInfoMain").css("height",height);
+    };
+    var height = $("body").height()-335;
+    $(".searchInfoMain").css("height",height);
+    $("#searchTxt").val("${type}");
+    var searchData = {
+        "appendCondition": "",
+        "collections": "gxqpt_portal_search_index_set",
+        "highlighter": true,
+        "keyWords": "${type}",
+        "pageNo": 1,
+        "pageSize": 10,
+        "replaceCondition": ""
+    };
+    function jqPaginatorById(rows,pageId){//分页
+        $.jqPaginator('#pagination', {
+            totalPages: rows.pages,
+            visiblePages: 6,
+            currentPage: rows.pageNum,
+            first: '<li class="first"><a href="javascript:void(0);" onclick="firstPage('+rows.firstPage+')">首页</a></li>',
+            prev: '<li class="prev"><a href="javascript:;" onclick="prePage('+rows.prePage+')">前一页</a></li>',
+            next: '<li class="next"><a href="javascript:void(0);" onclick="nextPage('+rows.nextPage+')">下一页</a></li>',
+            last: '<li class="last"><a href="javascript:void(0);" onclick="lastPage('+rows.lastPage+')">尾页</a></li>',
+            page: '<li class="page"><a href="javascript:;" onclick="setPageNum({{page}})">{{page}}</a></li>',
+            onPageChange: function (num, type) {
+                $('#pageNum').text(num);
+            }
+        });
+    }
+    function firstPage(pageNum){//跳转首页方法
+        searchData.pageNo=pageNum;
+        getSearchList(searchData);
+    }
+    function lastPage(pageNum){//跳转尾页方法
+        searchData.pageNo=pageNum;
+        getSearchList(searchData);
+    }
+    function prePage(pageNum){//跳转前一页方法
+        searchData.pageNo=pageNum;
+        getSearchList(searchData);
+    }
+    function nextPage(pageNum){//跳转下一页方法
+        searchData.pageNo=pageNum;
+        getSearchList(searchData);
+    }
+    function setPageNum(pageNum){//跳转选中页方法
+        searchData.pageNo=pageNum;
+        getSearchList(searchData);
+    }
+    getSearchList(searchData);
+    function getSearchList(searchData) {
+        ajaxHengyun({
+            type: 'post',
+            url: '${_gate_url}/api/search/searchModule/search',
+            contentType: 'application/json',
+            data: JSON.stringify(searchData),
+            success: function (res) {
+                var html="";
+                if (res.data && res.data.datas.length) {
+                    res.data.datas.forEach(function(value,index){
+                        var val = value.highlightContent;
+                        var contentArr = value.highlightContent.match(/>[^<]+/g);
+                        if (contentArr) {
+                            val = contentArr.join('').replace(/>/g, '');
+                        }
+                        val = val.length > 100 ? val.substring(0, 100) + '...' : value.highlightContent;
+                        html+='<a data-id='+value.appId+' data-url='+value.url+'  href="javascript:" onclick="readed(this,\''+value.url+'\')" class="result-list-item">';
+                        html+='<div class="text-title">';
+                        html+=value.highlightTitle;
+                        html+='</div>';
+                        html+='<div class="status">';
+                        html+='<span class="text-label">'+val+'</span>';
+                        html+='</div>';
+                        html+='<div class="update-time">';
+                        html+='<span class="text-label">更新时间&nbsp;:&nbsp;</span><span class="text-val">'+value.ext+'</span>';
+                        html+='</div>';
+                        html+='</a>';
+                    });
+                    var pages = Math.ceil(res.data.total/res.data.pageSize);
+                    var data={
+                        pages:pages,
+                        pageNum:res.data.pageNo,
+                        firstPage:1,
+                        prePage:res.data.pageNo-1,
+                        nextPage:res.data.pageNo+1>pages?pages:res.data.pageNo+1,
+                        lastPage:pages
+                    };
+                    $("#totalPages").html(pages);
+                    jqPaginatorById(data,"pagination");
+                    $(".pageBottom").css("display","inline-block");
+                    if(!searchData.appendCondition){
+                        $("#searchAll").text("("+res.data.total+")");
+                    }
+                }else{
+                    html="<div class='alignCenter'>未找到相关信息</div>";
+                    $(".pageBottom").css("display","none");
+                    getTotalFun(searchData.keyWords);
+                    if(!searchData.appendCondition){
+                        $("#searchAll").text("(0)");
+                    }
+                };
+                $("#searchList").html(html);
+            }
+        })
+    };
+    //获取信息总条数
+    getTotalFun("${type}");
+    function getTotalFun(keyWords){
+        /*var searchDataHelp = {
+            "appendCondition": "",
+            "collections": "gxqpt_portal_search_index_set",
+            "highlighter": true,
+            "keyWords": keyWords,
+            "pageNo": 1,
+            "pageSize": 1,
+            "replaceCondition": ""
+        };
+        getTotal(searchDataHelp,'searchAll');//待办信息*/
+        var searchDataHelp = {
+            "appendCondition": "gxqpt_portal_search_type_help_doc",
+            "collections": "gxqpt_portal_search_index_set",
+            "highlighter": true,
+            "keyWords": keyWords,
+            "pageNo": 1,
+            "pageSize": 1,
+            "replaceCondition": ""
+        };
+        getTotal(searchDataHelp,'helpDoc');//待办信息
+        var searchDataApi = {
+            "appendCondition": "gxqpt_portal_search_type_fwjk_api,gxqpt_portal_search_type_gxjh_api",
+            "collections": "gxqpt_portal_search_index_set",
+            "highlighter": true,
+            "keyWords": keyWords,
+            "pageNo": 1,
+            "pageSize": 1,
+            "replaceCondition": ""
+        };
+        getTotal(searchDataApi,'apiDoc');//消息信息
+        var searchDataTree = {
+            "appendCondition": "gxqpt_portal_search_type_data_tree",
+            "collections": "gxqpt_portal_search_index_set",
+            "highlighter": true,
+            "keyWords": keyWords,
+            "pageNo": 1,
+            "pageSize": 1,
+            "replaceCondition": ""
+        };
+        getTotal(searchDataTree,'treeDoc');//消息信息
+    }
+    function getTotal(parm,type) {
+        ajaxHengyun({
+            type: 'post',
+            url: '${_gate_url}/api/search/searchModule/search',
+            contentType: 'application/json',
+            data: JSON.stringify(parm),
+            success: function (res) {
+                if (res.errmsg=="ok") {
+                    $("#"+type).text("("+res.data.total+")");
+                }else{
+                    $("#"+type).text("(0)");
+                }
+            }
+        })
+    };
+    $(".searchnav ul li").click(function() {
+        $(".searchnav ul li").removeClass("active");
+        $(this).addClass("active");
+        searchData.appendCondition=$(this).attr("data-type");
+        getSearchList(searchData);
+    });
+    $(".btn-search").click(function(){
+        var keyWords = $("#searchTxt").val();
+        if(!keyWords){
+            layer.msg("请输入关键字进行搜索！", {time: 1500});
+            return false;
+        }
+        $(".searchnav ul li").removeClass("active");
+        $(".searchnav ul li").first().addClass("active");
+        searchData.appendCondition="";
+        searchData.keyWords=keyWords;
+        searchData.pageNo=1;
+        getSearchList(searchData);
+        getTotalFun(keyWords);
+    });
+    function readed(ele,paramsUrl){
+        event.stopPropagation();
+        var id=$(ele).attr("data-id");
+        ajaxHengyun({
+            type: 'get',
+            url: '${_gate_url}/api/developer/application/getAppFullRootUrl',
+            data: {appId:id},
+            success: function (res) {
+                if (res.errmsg=="ok") {
+                    var url = res.data+paramsUrl;
+                    window.open(url);
+                }
+            }
+        })
+
+    };
+    $(document).keypress(function(e) {// 回车键事件
+        if(e.which == 13) {
+            var isFocus=$("#searchTxt").is(":focus");
+            if(true==isFocus){
+                var type = $("#searchTxt").val();
+                if(type){
+                    $(".btn-search").click();
+                }
+            }
+        }
+    });
+    $(".logo").click(function(){
+        window.location.href="${_cp}/admin/index";
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<template>
+  <Layout>
+    <Content>
+      <Breadcrumb>
+        <BreadcrumbItem>咨询管理</BreadcrumbItem>
+        <BreadcrumbItem>咨询申请</BreadcrumbItem>
+      </Breadcrumb>
+      <Card>
+        <Form
+          ref="formValidate"
+          inline
+          :label-width="100"
+          :model="searchCondition">
+          <FormItem label="咨询时间：">
+            <DatePicker
+              :value="searchCondition.referTime"
+              format="yyyy-MM-dd"
+              type="daterange"
+              style="width: 200px">
+            </DatePicker>
+          </FormItem>
+          <FormItem label="咨询名称：">
+            <Input
+              type="text"
+              v-model="searchCondition.name">
+            </Input>
+          </FormItem>
+          <FormItem label="咨询内容：">
+            <Input
+              type="text"
+              v-model="searchCondition.content">
+            </Input>
+          </FormItem>
+          <FormItem label="状态：">
+            <Select v-model="searchCondition.status" style="width:200px">
+              <Option v-for="item in statusList" :value="item.value" :key="item.value">{{item.label}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="提交单位：">
+            <Select v-model="searchCondition.status" style="width:200px">
+              <Option v-for="item in statusList" :value="item.value" :key="item.value">{{item.label}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="提交人：">
+            <Select v-model="searchCondition.status" style="width:200px">
+              <Option v-for="item in statusList" :value="item.value" :key="item.value">{{item.label}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem>
+            <Button type="primary" @click="search">查询</Button>
+          </FormItem>
+        </Form>
+        <hy-table
+          highlight-row
+          :columns="tableList.columns"
+          :data="tableList.data"
+          :total="40"
+          :pageSize="10"
+          pageType="small"
+          show-elevator
+          show-sizer
+          class="refer-apply"
+          @on-page-change="getList" />
+        <Modal
+          v-model="showModal"
+          :title="modalTitle">
+          <Form
+          :label-width="120"
+          :model="modalContent">
+            <FormItem>
+              <RadioGroup v-model="currentOperation">
+                <Radio :label="operationList.agree">同意</Radio>
+                <Radio :label="operationList.reject">驳回</Radio>
+              </RadioGroup>
+            </FormItem>
+            <template v-if="currentOperation === operationList.agree">
+              <FormItem label="处理意见：">
+                <Input
+                  type="textarea"
+                  v-model="modalContent.content"
+                  :autosize="{minRows: 2,maxRows: 5}">
+                </Input>
+              </FormItem>
+              <FormItem label="咨询人：">
+                <Select v-model="modalContent.referPerson" style="width:200px">
+		              <Option v-for="item in statusList" :value="item.value" :key="item.value">{{item.label}}</Option>
+		            </Select>
+              </FormItem>
+              <FormItem label="协助人：">
+                <Select v-model="modalContent.assistPerson" style="width:200px">
+		              <Option v-for="item in statusList" :value="item.value" :key="item.value">{{item.label}}</Option>
+		            </Select>
+              </FormItem>
+            </template>
+            <template v-else-if="currentOperation === operationList.reject">
+            	<FormItem label="驳回理由：">
+                <Input
+                	v-model="modalContent.content"
+                	type="textarea"
+                	:autosize="{minRows: 2,maxRows: 5}">
+                </Input>
+              </FormItem>
+            </template>
+          </Form>
+        </Modal>
+      </Card>
+    </Content>
+  </Layout>
+</template>
+
+<script>
+const referStatus = {
+  // 已提交
+  applied: 'applied',
+  // 处理中
+  dealing: 'dealing',
+  // 已完结
+  finished: 'finished',
+  // 已驳回
+  rejected: 'rejected'
+}
+
+const operationList = {
+  // 详情
+  detail: 'detail',
+  // 同意
+  agree: 'agree',
+  // 修改
+  reject: 'reject'
+}
+
+const statusList = [{
+  label: '状态1',
+  value: 1
+}, {
+  label: '状态2',
+  value: 2
+}]
+
+export default {
+  data () {
+    return {
+      statusList,
+      operationList,
+      searchCondition: {
+        // 咨询时间
+        referTime: [],
+        // 咨询名称
+        name: '',
+        // 状态
+        status: '',
+        // 咨询内容
+        content: ''
+      },
+      showModal: false,
+      modalTitle: '',
+      modalContent: {
+        content: '',
+        referTime: ['2018-01-01', '2018-01-03'],
+        referPerson: '',
+        assistPerson: []
+      },
+      tableList: {
+        columns: [
+          {
+            type: 'index',
+            title: '序号',
+            width: 60,
+            align: 'center'
+          },
+          {
+            title: '服务器IP',
+            key: 'name'
+          },
+          {
+            title: '进程ID',
+            key: 'age'
+          },
+          {
+            title: '进程名称',
+            key: 'address'
+          },
+          {
+            title: '用户',
+            key: 'age'
+          },
+          {
+            title: '发生日期',
+            key: 'address'
+          },
+          {
+            title: '处理状态',
+            key: 'age',
+            render: (h, params) => {
+              const age = params.row.age
+              switch (age) {
+                case 1:
+                  return h('span','状态1')
+                case 2:
+                  return h('span','状态2')
+              }
+            }
+          },
+          {
+            title: '处理人',
+            key: 'address'
+          },
+          {
+            title: '处理时间',
+            key: 'age'
+          },
+          {
+            title: '操作',
+            key: 'address',
+            render: (h, params) => {
+              const vm = this
+              const age = params.row.age
+              const id = params.row.age
+              const handle = h('span', {
+                class: 'handle',
+                domProps: {
+                  innerHTML: '处理'
+                },
+                on: {
+                  click () {
+                    vm.popModal(params.row)
+                  }
+                }
+              })
+              const detail = h('span', {
+                class: 'handle',
+                domProps: {
+                  innerHTML: '详情'
+                },
+                on: {
+                  click () {
+                    vm.$router.push({
+                      path: '/referDetail',
+                      name: 'referDetail',
+                      params: {
+                        id: 1
+                      }
+                    })
+                  }
+                }
+              })
+              switch (age) {
+                case 1:
+                  return h('div', [handle, detail])
+                case 2:
+                  return h('div', [handle])
+                default:
+                  return h('span', '--')
+              }
+            }
+          }
+        ],
+        data: [
+          {
+            name: 'John Brown',
+            age: 1,
+            address: 'New York No. 1 Lake Park',
+            date: '2016-10-03'
+          },
+          {
+            name: 'Jim Green',
+            age: 2,
+            address: 'London No. 1 Lake Park',
+            date: '2016-10-01'
+          }
+        ]
+      },
+      currentOperation: ''
+    }
+  },
+  methods: {
+    search () {
+      alert()
+    },
+    getList (pageNo, pageSize) {
+      console.log(pageNo)
+      console.log(pageSize)
+    },
+    popModal (row) {
+      if (row) {
+        const status = row.name
+        switch (status) {
+          case referStatus.applied:
+
+            break;
+          case referStatus.dealing:
+
+            break;
+          case referStatus.finished:
+
+            break;
+          case referStatus.rejected:
+
+            break;
+        }
+      }
+      this.showModal = true
+    }
+  }
+}
+</script>
+
+<style lang='less'>
+.refer-apply{
+  span.handle{
+    margin: 0 5px;
+    display: inline-block;
+  }
+}
+</style>

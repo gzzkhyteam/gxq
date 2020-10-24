@@ -1,0 +1,130 @@
+<template>
+  <Modal
+    v-model="showModal"
+    :title="modalTitle">
+    <Form
+      ref="modalForm"
+      :label-width="100"
+      :model="modalForm"
+      :rules="formValidate">
+      <FormItem label="告警名称：">
+        <Input
+          type="text"
+          v-model="modalForm.systemName" :disabled="cantEdit">
+        </Input>
+      </FormItem>
+      <FormItem label="告警级别：" prop="versionNumber">
+        <Select v-model="modalForm.status" :disabled="cantEdit">
+          <Option :value="1">一级</Option>
+          <Option :value="2">二级</Option>
+          <Option :value="3">三级</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="告警类型：" prop="versionNumber">
+        <Select v-model="modalForm.status" :disabled="cantEdit">
+          <Option :value="1">任务超时告警</Option>
+          <Option :value="2">审核超时告警</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="审核类型：" prop="versionNumber">
+        <Select v-model="modalForm.status" :disabled="cantEdit">
+          <Option :value="1">运维服务审核</Option>
+          <Option :value="2">培训审核</Option>
+          <Option :value="3">咨询审核</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="当申请提交">
+        <Input
+          type="text"
+          v-model="modalForm.systemName"
+          disabled
+          style="width: 40px; margin-right: 10px;"
+          :disabled="cantEdit">
+        </Input>天后，未审核完毕，产生告警。
+      </FormItem>
+    </Form>
+    <div slot="footer">
+      <Button class="modalBtn" type="default" @click="showModal = false" size="large">取消</Button>
+      <Button class="modalBtn" type="primary" @click="saveInfo" size="large">确定</Button>
+    </div>
+  </Modal>  
+</template>
+
+<script>
+import {mapState} from 'vuex'
+import api from '@/api/axiosApi'
+import operationApiList from '@/api/operationApiList'
+
+const ACTS = {
+  edit: 'edit',
+  create: 'create',
+  detail: 'detail'
+}
+export default {
+  props: {
+    currentAct: {
+      type: String,
+      default: ACTS.create
+    }
+  },
+  data () {
+    return {
+      showModal: false,
+      modalForm: {},
+      formValidate: {
+        systemName: [{required: true, message: '不可为空', triggre: 'blur'}],
+        versionNumber: [{required: true, message: '不可为空', triggre: 'blur'}],
+        versionName: [{required: true, message: '不可为空', triggre: 'blur'}],
+        publishingServer: [{required: true, message: '不可为空', triggre: 'blur'}],
+        upgradeContent: [{required: true, message: '不可为空', triggre: 'blur'}]
+      }
+    }
+  },
+  computed: {
+    modalTitle () {
+      const vm = this
+      switch(vm.currentAct) {
+        case ACTS.edit:
+          return '修改告警规则'
+        case ACTS.create:
+          return '新增告警规则'
+        case ACTS.detail:
+          return '告警规则详情'
+        default:
+          return '新增告警规则'
+      }
+    },
+    cantEdit () {
+      return this.currentAct == ACTS.detail
+    }
+  },
+  methods: {
+    open(id) {
+      const vm = this
+      if (id) {
+        vm.modalForm.id = id
+        console.log('获取详情')
+      } else {
+        delete vm.modalForm.id
+      }
+      vm.showModal = true
+    },
+    saveInfo () {
+      const vm = this
+      if (vm.cantEdit) {
+        vm.showModal = false
+        return
+      }
+      api(operationApiList.getTypeTree)
+      .then(res => {
+        if (res.data.errcode === 0) {
+          // 清空数据
+          vm.$refs.modalForm.resetFields()
+        }
+      }, error => {console.log(error)})
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped></style>

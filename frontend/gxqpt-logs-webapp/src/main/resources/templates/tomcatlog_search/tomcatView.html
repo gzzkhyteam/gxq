@@ -1,0 +1,385 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/jqgrid/css/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="${_static}/js/lib/zTree/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/sys_com/com.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+    <script src="${_static}/js/lib/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="${_static}/js/lib/zTree/js/jquery.ztree.core.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/js/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jqgrid/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+    <script type="text/javascript" src="${_static}/js/app.js"></script>
+    <script type="text/javascript" src="${_static}/js/module.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${_static}/js/lib/layer/layer.js" charset="utf-8"></script>
+
+    <style type="text/css">
+        #right-box {
+            width: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="workspace-body" style="overflow: hidden">
+    <div style="height: 100%;width: 30%;float: left;border-right:1px solid #E8E8E8;" >
+        <div style="height: 45px;border-bottom: 1px solid #fff;background-color:#E8E8E8;font-size:22px;text-align:center;line-height:40px;">
+            原始数据
+        </div>
+        <div>
+            <table style='margin-left:120px;margin-top: 150px;'>
+                <tr>
+                    <td>
+                        <button class="btn btn-primary btnh" id="treeSearch" type="button"
+                                onclick="down()">
+                            下载日志
+                        </button>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    <div style="height: 100%;width: 70%;float: right;border-left:1px solid #E8E8E8;" >
+        <div style="height: 45px;border-bottom: 1px solid #fff;background-color:#E8E8E8;font-size:22px;text-align:center;line-height:40px;">
+            解析数据
+        </div>
+        <div style="height: 94%; overflow: auto">
+            <div class="list-section" style="height: 100%;">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <form id="myForm" action="" method="post">
+                            <table class="table default-table table-title-left" style="word-wrap:break-word;word-break:break-all;">
+                                <tbody>
+                                <tr>
+                                    <th width="150">参数名称</th>
+                                    <th width="150">参数值</th>
+                                    <th width="200">参数说明</th>
+                                </tr>
+                                <tr>
+                                    <th>应用程序名称</th>
+                                    <td name="appId"></td>
+                                    <td>应用程序名称</td>
+                                </tr>
+                                <tr>
+                                    <th>％a</th>
+                                    <td name="remoteIp"></td>
+                                    <td>远程IP地址</td>
+                                </tr>
+                                <tr>
+                                    <th>％A</th>
+                                    <td name="localIp"></td>
+                                    <td>本地IP地址</td>
+                                </tr>
+                                <tr>
+                                    <th>％b</th>
+                                    <td name="sendByteLittleb">
+                                    </td>
+                                    <td>发送的字节数，不包括HTTP头，或“ - ”如果没有发送字节</td>
+                                </tr>
+                                <tr>
+                                    <th>％B</th>
+                                    <td name="sendByteBigb">
+                                    </td>
+                                    <td>发送的字节数，不包括HTTP头</td>
+                                </tr>
+                                <tr>
+                                    <th>％h</th>
+                                    <td name="remoteHost">
+                                    </td>
+                                    <td>远程主机名</td>
+                                </tr>
+                                <tr>
+                                    <th>％H</th>
+                                    <td name="requestAgreement">
+                                    </td>
+                                    <td>请求协议</td>
+                                </tr>
+                                <tr>
+                                    <th>％l</th>
+                                    <td name="identdUser">
+                                    </td>
+                                    <td>(小写的L)- 远程逻辑从identd的用户名（总是返回 “-” ）</td>
+                                </tr>
+                                <tr>
+                                    <th>％m</th>
+                                    <td name="method"></td>
+                                    <td>请求方法</td>
+                                </tr>
+                                <tr>
+                                    <th>％p</th>
+                                    <td name="port"></td>
+                                    <td>本地端口</td>
+                                </tr>
+                                <tr>
+                                    <th>％q</th>
+                                    <td name="queryStr"></td>
+                                    <td>查询字符串（在前面加上一个“？”如果它存在，否则是一个空字符串</td>
+                                </tr>
+                                <tr>
+                                    <th>％r</th>
+                                    <td name="firstLine"></td>
+                                    <td>第一行的要求</td>
+                                </tr>
+                                <tr>
+                                    <th>％s</th>
+                                    <td name="status"></td>
+                                    <td>响应的HTTP状态代码</td>
+                                </tr>
+                                <tr>
+                                    <th>％S</th>
+                                    <td name="sessionId"></td>
+                                    <td>用户会话ID</td>
+                                </tr>
+                                <tr>
+                                    <th>％t</th>
+                                    <td name="logTime"></td>
+                                    <td>日期和时间，在通用日志格式</td>
+                                </tr>
+                                <tr>
+                                    <th>％u</th>
+                                    <td name="remoteCheckUser"></td>
+                                    <td>远程用户身份验证</td>
+                                </tr>
+                                <tr>
+                                    <th>％U</th>
+                                    <td name="requestUrl"></td>
+                                    <td>请求的URL路径</td>
+                                </tr>
+                                <tr>
+                                    <th>％v</th>
+                                    <td name="localHost"></td>
+                                    <td>本地服务器名</td>
+                                </tr>
+                                <tr>
+                                    <th>％D</th>
+                                    <td name="dealRequestMillisecond"></td>
+                                    <td>处理请求的时间（以毫秒为单位）</td>
+                                </tr>
+                                <tr>
+                                    <th>％T</th>
+                                    <td name="timeConsum"></td>
+                                    <td>处理请求的时间（以秒为单位)</td>
+                                </tr>
+                                <tr>
+                                    <th>％I</th>
+                                    <td name="currentLine"></td>
+                                    <td>（大写的i） - 当前请求的线程名称</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Accept}i</th>
+                                    <td name="accept"></td>
+                                    <td>浏览器通过这个头告诉服务器，它所支持的数据类型。如：text/html, image/jpeg</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Accept-Encoding}i</th>
+                                    <td name="acceptEncoding"></td>
+                                    <td>浏览器通过这个头告诉服务器，它支持哪种压缩格式。</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Accept-Language}i</th>
+                                    <td name="acceptLanguage"></td>
+                                    <td>浏览器通过这个头告诉服务器，它的语言环境。</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Connection}i</th>
+                                    <td name="connectionI"></td>
+                                    <td>浏览器通过这个头告诉服务器，请求完后是断开链接还是维持链接。</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Cookie}i</th>
+                                    <td name="cookie"></td>
+                                    <td>浏览器通过这个头告诉服务器请求的cookie内容</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Host}i</th>
+                                    <td name="host"></td>
+                                    <td> 浏览器通过这个头告诉服务器，它想访问哪台主机。</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Referer}i</th>
+                                    <td name="referer"></td>
+                                    <td>浏览器通过这个头告诉服务器，客户机是哪个页面来的。</td>
+                                </tr>
+                                <tr>
+                                    <th>%{User-Agent}i</th>
+                                    <td nam="userAgent"></td>
+                                    <td>浏览器通过这个头告诉服务器浏览器类型</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Allow-Credentials}o</th>
+                                    <td name="allowCredential"></td>
+                                    <td> 服务器通过这个头告诉浏览器数据</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Access-Control-Allow-Origin}o</th>
+                                    <td name="accessControlAllowOrigin"></td>
+                                    <td> 服务器通过这个头告诉浏览器数据</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Transfer-Encoding}o</th>
+                                    <td name="transferEncoding"></td>
+                                    <td>服务器通过这个头告诉浏览器数据是以分块方式回送的</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Vary}o</th>
+                                    <td name="vary"></td>
+                                    <td>服务器通过这个头告诉浏览器数据</td>
+                                </tr>
+                                <tr>
+                                    <th>%{X-Application-Context}o</th>
+                                    <td name="xApplicationContext"></td>
+                                    <td>服务器通过这个头告诉浏览器数据</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Date}o</th>
+                                    <td name="dateO"></td>
+                                    <td>服务器通过这个头告诉浏览器数据时间</td>
+                                </tr>
+                                <tr>
+                                    <th>%{server}o</th>
+                                    <td name="server"></td>
+                                    <td>服务器通过这个头告诉浏览器服务器的型号。</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Connection}o</th>
+                                    <td name="connectionO"></td>
+                                    <td>服务器通过这个头告诉浏览器浏览器与服务器之间连接的类型</td>
+                                </tr>
+                                <tr>
+                                    <th>%{content-type}o</th>
+                                    <td name="contentType"></td>
+                                    <td>服务器通过这个头告诉浏览器回送数据的类型。</td>
+                                </tr>
+                                <tr>
+                                    <th>%{Cache-Control}o</th>
+                                    <td name="cacheControl"></td>
+                                    <td>服务器通过这个头告诉浏览器缓存状态</td>
+                                </tr>
+                                <tr>
+                                    <th>%{XXX}c</th>
+                                    <td name="xxxC"></td>
+                                    <td>xxx代表特定的Cookie名</td>
+                                </tr>
+                                <tr>
+                                    <th>%{XXX}r</th>
+                                    <td name="xxxR"></td>
+                                    <td>xxx代表ServletRequest属性名</td>
+                                </tr>
+                                <tr>
+                                    <th>%{XXX}s</th>
+                                    <td name="xxxS"></td>
+                                    <td>xxx代表HttpSession中的属性名</td>
+                                </tr>
+                                <tr>
+                                    <th>采集渠道</th>
+                                    <td name="dataChannel"></td>
+                                    <td>采集渠道,WRITE：直接写入； UPLOAD：文件上传服务；FTP：ftp；IMPORT：日志系统导入</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var id = "${id}";
+    var documentId = "${documentId}";
+    var userId = "${userId}";
+    var token = "${token}";
+    ajaxHengyun({
+        type: 'GET',
+        async: false,
+        url: "${_gate_url}/api/logs/log/getTomcat",
+        data: {id: id},
+        success: function (rows) {
+            var objectRoew = rows;
+            var appName = getSystemName(rows.data.appId);
+            $('[name="appId"]').text(appName || "");
+            $('[name="remoteIp"]').text(rows.data.remoteIp || "");
+            $('[name="localIp"]').text(rows.data.localIp || "");
+            $('[name="sendByteLittleb"]').text(rows.data.sendByteLittleb || "");
+            $('[name="sendByteBigb"]').text(rows.data.sendByteBigb || "");
+            $('[name="remoteHost"]').text(rows.data.remoteHost || "");
+            $('[name="requestAgreement"]').text(rows.data.requestAgreement || "");
+            $('[name="identdUser"]').text(rows.data.identdUser || "");
+            $('[name="method"]').text(rows.data.method || "");
+            $('[name="port"]').text(rows.data.port || "");
+            $('[name="queryStr"]').text(rows.data.queryStr || "");
+            $('[name="firstLine"]').text(rows.data.firstLine || "");
+            $('[name="status"]').text(rows.data.status || "");
+            $('[name="sessionId"]').text(rows.data.sessionId || "");
+            $('[name="logTime"]').text(rows.data.logTime || "");
+            $('[name="remoteCheckUser"]').text(rows.data.remoteCheckUser || "");
+            $('[name="requestUrl"]').text(rows.data.requestUrl || "");
+            $('[name="localHost"]').text(rows.data.localHost || "");
+            $('[name="dealRequestMillisecond"]').text(rows.data.dealRequestMillisecond || "");
+            $('[name="timeConsum"]').text(rows.data.timeConsum || "");
+            $('[name="currentLine"]').text(rows.data.currentLine || "");
+            $('[name="accept"]').text(rows.data.accept || "");
+            $('[name="acceptEncoding"]').text(rows.data.acceptEncoding || "");
+            $('[name="acceptLanguage"]').text(rows.data.acceptLanguage || "");
+            $('[name="connectionI"]').text(rows.data.connectionI || "");
+            $('[name="cookie"]').text(rows.data.cookie || "");
+            $('[name="host"]').text(rows.data.host || "");
+            $('[name="referer"]').text(rows.data.referer || "");
+            $('[name="userAgent"]').text(rows.data.userAgent || "");
+            $('[name="allowCredential"]').text(rows.data.allowCredential || "");
+            $('[name="accessControlAllowOrigin"]').text(rows.data.accessControlAllowOrigin || "");
+            $('[name="transferEncoding"]').text(rows.data.transferEncoding || "");
+            $('[name="vary"]').text(rows.data.vary || "");
+            $('[name="xApplicationContext"]').text(rows.data.xApplicationContext || "");
+            $('[name="dateO"]').text(rows.data.dateO || "");
+            $('[name="server"]').text(rows.data.server || "");
+            $('[name="connectionO"]').text(rows.data.connectionO || "");
+            $('[name="contentType"]').text(rows.data.contentType || "");
+            $('[name="cacheControl"]').text(rows.data.cacheControl || "");
+            $('[name="xxxC"]').text(rows.data.xxxC || "");
+            $('[name="xxxR"]').text(rows.data.xxxR || "");
+            $('[name="xxxS"]').text(rows.data.xxxS || "");
+            $('[name="dataChannel"]').text(rows.data.dataChannel || "");
+        }
+    });
+    function getSystemName(appId) {
+        var appName="";
+        ajaxHengyun({
+            type: "GET",
+            async: false,
+            dataType: 'json',
+            url: "${_gate_url}/api/developer/application/findList",
+            data:{type:1},
+            success: function (rows) {
+                if (rows.data) {
+                    var arr = rows.data;
+                    for(var i=0;i<arr.length;i++){
+                        if(appId==arr[i].appId){
+                            appName = arr[i].name;
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        return appName;
+    }
+    function down(){
+        // window.location.href="${_gate_url}/api/zuul/file/p/file/down?id="+documentId+'&userId='+userId+'&token='+token;
+        window.location.href="${_gate_url}/api/file/p/file/down?id="+documentId+'&userId='+userId+'&token='+token;
+    }
+</script>
+</body>
+</html>

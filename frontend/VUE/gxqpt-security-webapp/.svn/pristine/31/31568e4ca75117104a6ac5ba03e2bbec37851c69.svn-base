@@ -1,0 +1,68 @@
+<template>
+    <Card :bordered="false">
+        <p slot="title">培训详情</p>
+        <div style="text-align:center">
+            <Form ref="evalData" :model="evalData" :rules="ruleValidate" :label-width="70" class="clearfix">
+                <Row :gutter="40">
+                    <Col span="24">
+                        <FormItem label="培训类别" prop="type">
+                            <Input v-model="evalData.type" disabled></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span="12">
+                        <FormItem label="培训名称" prop="name">
+                            <Input v-model="evalData.name" disabled></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span="12">
+                        <FormItem label="培训时间" prop="trainDate">
+                            <DatePicker type="daterange" v-model="evalData.trainDate" show-week-numbers placement="bottom-end" placeholder="请选择培训时间" style="float: left"></DatePicker>
+                        </FormItem>
+                    </Col>
+                    <Col span="24">
+                        <FormItem label="培训地址" prop="address">
+                            <Input v-model="evalData.address" disabled></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span="24">
+                        <FormItem label="培训内容" :label-width="72" prop="content">
+                            <Input v-model="evalData.content" type="textarea" :autosize="{minRows: 3,maxRows: 5}" style="resize:none;" disabled></Input>
+                        </FormItem>
+                    </Col>
+                </Row>
+            </Form>
+        </div>
+    </Card>
+</template>
+
+<script>
+export default {
+    props:{
+        show: {
+            type: Boolean,
+            default: true
+        },
+        changeDisabled: {
+            type: Boolean,
+            default: true
+        },
+    },
+    data(){
+        return{
+            evalData:{},
+            ruleValidate:{}
+        }
+    },
+    methods:{
+    }
+}
+</script>
+
+<style scoped>
+.ivu-form-item >>> .ivu-form-item-content{
+    height:auto;
+}
+.ivu-input-wrapper >>> textarea{
+    resize: none;
+}
+</style>

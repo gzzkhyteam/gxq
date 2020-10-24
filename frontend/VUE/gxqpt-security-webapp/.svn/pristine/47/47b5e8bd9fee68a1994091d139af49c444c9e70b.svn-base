@@ -1,0 +1,105 @@
+<template>
+  <Layout>
+    <hengyun-header logoClass="logo-softhard"></hengyun-header>
+    <Layout class="ivu-layout-has-sider">
+      <hengyun-sidebar :menus="menus" />
+      <router-view></router-view>
+    </Layout>
+  </Layout>
+</template>
+<script>
+// 头部
+import header from '@/components/hengyun/header'
+// 侧边栏
+import siderBar from '@/components/hengyun/sideBar'
+
+const menus = [{
+  name: '部门用户',
+  icon: 'icon-quanxian',
+  subMenu: [{
+    name: '服务器管理（使用方）',
+    link: '/departmentServer'
+  }, {
+    name: '申请管理',
+    link: '/departmentApply'
+  }]
+}, {
+  name: '管理员（大数据办）',
+  icon: 'icon-beifen',
+  subMenu: [{
+    name: '服务器管理',
+    link: '/admin/server'
+  }, {
+    name: '申请管理',
+    link: '/adminApply'
+  }, {
+    name: '主机信息查看',
+    link: '/adminEngine'
+  }]
+}, {
+  name: '国信优易',
+  icon: 'icon-fuwujiankong',
+  subMenu: [{
+    name: '服务器管理',
+    link: '/serverMgr'
+  }, {
+    name: '申请管理',
+    link: '/applyMgr'
+  }, {
+    name: '主机信息查看',
+    link: '/hostInfoLook'
+  },{
+    name: '基础数据维护',
+    link: '/basisDataMaintain'
+  }]
+}, {
+  name: '高新翼云',
+  icon: 'icon-fuwujiankong',
+  subMenu: [{
+    name: '申请管理',
+    link: '/gxyyApply'
+  }, {
+    name: '主机信息管理',
+    link: '/gxyyAdminEngine'
+  }]
+}]
+
+export default {
+  components: {
+    'hengyun-sidebar': siderBar,
+    'hengyun-header': header
+  },
+  data() {
+    return {
+      isCollapsed: false,
+      menus: menus
+    }
+  },
+  computed: {
+    rotateIcon() {
+      return [
+        'menu-icon',
+        this.isCollapsed ? 'rotate-icon' : ''
+      ];
+    },
+    menuitemClasses() {
+      return [
+        'menu-item',
+        this.isCollapsed ? 'collapsed-menu' : ''
+      ]
+    }
+  },
+  methods: {
+    collapsedSider() {
+      this.$refs.side1.toggleCollapse();
+    }
+  }
+}
+</script>
+<style>
+html, body, #app, .ivu-layout{
+  height:auto;
+  min-height: 100%;
+}
+</style>
+

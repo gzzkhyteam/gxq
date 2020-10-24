@@ -1,0 +1,156 @@
+<!--
+  服务器配置项，根据hidecode来判断隐藏哪些项
+  itemCode = [
+    'CPU',
+    '内存',
+    '操作系统',
+    '所属网络',
+    '网络带宽',
+    '网关描述',
+    '数据盘',
+    '申请数量'
+  ]
+-->
+<template>
+  <Form
+    ref="applyServer"
+    :label-width="100"
+    :model="applyServer">
+    <FormItem label="CPU：" v-if="!hidecode.includes('CPU')">
+      <RadioGroup v-model="applyServer.cpuCount">
+        <Radio label="4">4核</Radio>
+        <Radio label="8">8核</Radio>
+        <Radio label="16">16核</Radio>
+      </RadioGroup>
+    </FormItem>
+    <FormItem label="内存：" v-if="!hidecode.includes('内存')">
+      <RadioGroup v-model="applyServer.memorySize">
+        <Radio label="4">4GB</Radio>
+        <Radio label="8">8GB</Radio>
+        <Radio label="16">16GB</Radio>
+      </RadioGroup>
+    </FormItem>
+    <FormItem label="操作系统：" v-if="!hidecode.includes('操作系统')">
+      <Select v-model="applyServer.system">
+        <Option v-for="item in categoryList" :value="item.value" :key="item.value">{{item.label}}</Option>
+      </Select>
+    </FormItem>
+    <FormItem label="所属网络：" v-if="!hidecode.includes('所属网络')">
+      <Select v-model="applyServer.netScope">
+        <Option v-for="item in categoryList" :value="item.value" :key="item.value">{{item.label}}</Option>
+      </Select>
+    </FormItem>
+    <FormItem label="网络带宽：" v-if="!hidecode.includes('网络带宽')">
+      <Select v-model="applyServer.netWide">
+        <Option v-for="item in categoryList" :value="item.value" :key="item.value">{{item.label}}</Option>
+      </Select>
+    </FormItem>
+    <FormItem label="网关描述：" v-if="!hidecode.includes('网关描述')">
+      <Input
+        type="textarea"
+        v-model="applyServer.gatewayDesc"
+        :rows="5">
+      </Input>
+    </FormItem>
+     <FormItem label="系统盘大小" v-if="!hidecode.includes('系统盘大小')">
+      <Input type="text" v-model="applyServer.sysDisksize"><span slot="append">GB</span></Input>
+    </FormItem>
+    <FormItem label="数据盘：" v-if="!hidecode.includes('数据盘')">
+      <Button style="float: right;" type="primary" @click="addDisk">+添加</Button>
+      <div class="disk" v-for="(item, idx) in applyServer.disks">
+        <FormItem v-model="applyServer.disks[idx].diskName" :label="`数据磁盘${idx+1}：`" :label-width="100">
+          <Col span="12">
+            <Input
+              type="text"
+              v-model="applyServer.disks[idx].diskSize">
+              <span slot="append">GB</span>
+            </Input>
+          </Col>
+          <Col span="4" offset="1">
+            <a @click="handleRemove(idx)">删除</a>
+          </Col>
+        </FormItem>
+      </div>
+    </FormItem>
+    <FormItem label="申请数量：" v-if="!hidecode.includes('申请数量')">
+      <Input v-model="applyServer.applyCount" id="applyCount" style="width: 72px;">
+        <span slot="prepend" @click="changeCount(0)">-</span>
+        <span slot="append" @click="changeCount(1)">+</span>
+      </Input>
+    </FormItem>
+  </Form>
+</template>
+
+<script>
+export default {
+  props: {
+    applyServer: {
+      type: Object,
+      default: () => {
+        return {
+          cpuCount:0,
+          memorySize:0,
+          system:'',
+          netScope:'',
+          netWide:'',
+          content:'',
+          sysDisksize:0,
+          applyCount: 1,
+          disks: [
+            {
+              diskSize:'',
+              diskName:''
+            }
+          ]
+        }
+      }
+    },
+    hidecode: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    }
+  },
+  mounted(){
+    console.log(this.applyServer);
+  },
+  data () {
+    return {
+      categoryList: [{
+        value: 1,
+        label: '分类1'
+      }]
+    }
+  },
+  methods: {
+    changeCount (type) {
+      if (type === 1) {
+        this.applyServer.applyCount++
+      } else {
+        this.applyServer.applyCount > 0 ? this.applyServer.applyCount-- : ''
+      }
+    },
+    addDisk () {
+      let diskItem = {diskSize:'', diskName:''};
+      this.applyServer.disks.push(diskItem);
+    },
+    handleRemove (idx) {
+      this.applyServer.disks.splice(idx,1);
+      console.log(this.applyServer.disks);
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.disk{
+  margin: 0 70px 10px 0;
+}
+</style>
+
+<style lang="less">
+#applyCount div{
+  cursor: pointer;
+}
+</style>

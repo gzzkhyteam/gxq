@@ -1,0 +1,61 @@
+gxqpt:
+  protocol: http
+  cas-server:
+    ip: ${gxqpt.hostname.nginx}             # SSO CAS 服务的ip
+    port: ${gxqpt.port.nginx}         # SSO CAS 服务的端口
+  port:
+    nginx: 10087
+    sso: 10000
+    gate: 10003
+    eureka: 10030
+  hostname:
+    redis: 192.168.30.165
+    rabbitmq: 192.168.30.165
+    nginx: 127.0.0.1
+    eureka: 192.168.30.80
+    center: 192.168.30.84
+    sso: 192.168.30.84
+    gate: 192.168.30.81
+  variable:
+    gate-url: ${gxqpt.protocol}://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}
+  index-url: ${gxqpt.protocol}://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path}/admin/index
+
+multiplecas:
+  cas-configure:
+    gxqpt:
+      # 其他州公网
+      casServerLoginUrl: ${gxqpt.protocol}://${gxqpt.cas-server.ip}:${gxqpt.cas-server.port}/gxqpt-sso-webapp/login
+      casServerUrlLogout: ${gxqpt.protocol}://${gxqpt.cas-server.ip}:${gxqpt.cas-server.port}/gxqpt-sso-webapp/logout
+      defaultSeviceName: ${gxqpt.protocol}://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path}/admin/index
+      #  校验去单点登录  和 退出走center 内网
+      validationCasServerUrlPrefix: http://${gxqpt.hostname.sso}:${gxqpt.port.sso}/gxqpt-sso-webapp
+      casServerLogoutNotifyUrl: http://${gxqpt.hostname.center}:${server.port}
+    sdzzww: 
+      casServerLoginUrl: ${gxqpt.protocol}://127.0.0.1:10086/gxqpt-sso-webapp/login
+      casServerUrlLogout: ${gxqpt.protocol}://127.0.0.1:10086/gxqpt-sso-webapp/logout
+      validationCasServerUrlPrefix: ${gxqpt.protocol}://127.0.0.1:10086/gxqpt-sso-webapp
+      defaultSeviceName: ${gxqpt.protocol}://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path}/admin/index
+
+
+
+spring:
+  profiles:
+    active: demo
+  rabbitmq:
+    port: 5672
+    password: gxqpt
+    username: gxqpt
+  redis:
+    port: 16379
+    password: SbtyMveYNfLzTks7H0apCmyStPzWJqjy
+    key-prefix: demo
+    pool:
+      max-active: 100
+      min-idle: 2
+      max-idle: 8
+      max-wait: 100
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/

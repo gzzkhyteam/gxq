@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="${_static}/js/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/chosen/chosen.min.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" href="${_static}/themes/blue/css/ui.css">
+    <link rel="stylesheet" href="${_static}/css/core/module.css">
+</head>
+<body>
+<div class="workspace-body">
+    <div class="col-md-12 col-lg-12" style="margin-top:30px;">
+        <div class="row">
+            <!--内容-->
+            <div class="list-section">
+                <div class="list-content">
+                    <div class="form-inline">
+                        <form id="dataForm" action="" method="post">
+                            <input type="hidden" id="id" name="id" value="${id}">
+                            <input type="hidden" id="parentId" name="parentId">
+                            <table class="table default-table table-title-left">
+                                <tbody>
+                                <tr>
+                                    <th width="130"><sub class="required">*</sub>分类名称</th>
+                                    <td><input class="form-control inp-form" id="name" name="typeName" dataType="*"
+                                               nullmsg="分类名称不能为空！"/></td>
+                                </tr>
+                                <tr>
+                                    <th width="130"><sub class="required">*</sub>预警类型编码</th>
+                                    <td><input class="form-control inp-form" id="code" name="code" readonly="readonly" dataType="*"
+                                               nullmsg="分类名称不能为空！"/></td>
+                                </tr>
+                                <tr>
+                                    <th width="130">分类描述</th>
+                                    <td><textarea style="height:270px;width:100%" id="context"
+                                                  name="context"></textarea></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <button type="submit" class="btn-submit hidden"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/jquery/jquery.cookie.js" charset="utf-8"></script>
+<script type="text/javascript" src="${_static}/js/hengyun/hengyun_ajax.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/serializeJSON/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script type="text/javascript">
+    $(function(){
+        openValidator({
+            type:"post",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/warn/warntype/update",
+        },"#dataForm",{
+            attrName:"id",
+            prefix:"",
+            suffix:"",
+        });
+    })
+    /* 获取分类信息 */
+    var id = "${id}";
+    ajaxHengyun({
+        type: "GET",
+        async: false,
+        url: "${_gate_url}/api/warn/warntype/getById",
+        data: {id: id},
+        datatype: 'json',
+        success: function (rows) {
+            if (rows.data) {
+                $("#name").val(rows.data.typeName);//名称
+                $("#context").val(rows.data.context);//描述
+                $("#code").val(rows.data.code);//预警类型编码
+            }
+        }
+    });
+    var index;
+
+    function save(num) {
+        index = num;
+        $('.btn-submit').click();
+    }
+
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        //showAllError:可选项 true | false，true：提交表单时所有错误提示信息都会显示，
+        //false：一碰到验证不通过的就停止检测后面的元素，只显示该元素的错误信息;
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            saveObj();
+        }
+    });
+
+    function save(index) {
+        var data = $('#dataForm').serializeJSON();
+        var name = data.typeName;
+        if(name==null||name==""){
+            return ;
+        }
+        ajaxHengyun({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '${_gate_url}/api/warn/warntype/update',
+            data: JSON.stringify(data),
+            success: function (rows) {
+                if (rows.data) {
+                    parent.home.getTree();
+                    parent.layer.msg("分类编辑成功！", {icon: 6, time: 1000});
+                    parent.layer.close(index);
+                } else if (context.length>250){
+                    parent.layer.msg("分类描述不得超过250个汉字！", {time: 3000});
+                } else {
+                    parent.layer.msg("分类编辑出错，请重试！", {time: 1000});
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

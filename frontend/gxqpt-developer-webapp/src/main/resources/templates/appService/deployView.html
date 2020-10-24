@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+               应用管理 > 部署管理 > <span class="active">详情</span>
+            </div>
+            <a href="javascript:" class="button-icon pull-right" onclick="history.back()">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller" ng-cloak>
+            <div class="block">
+                <div class="text-title">部署信息</div>
+                <div class="content">
+                    <table class="tab">
+                        <tbody>
+                        <tr>
+                            <th>所属应用：</th>
+                            <td>{{deploy.appName}}</td>
+                        </tr>
+                        <tr>
+                            <th>使用主机：</th>
+                            <td>{{deploy.hostName}}</td>
+                        </tr>
+                        <tr>
+                            <th>部署目录：</th>
+                            <td>{{deploy.installPath}}</td>
+                        </tr>
+                        <tr>
+                            <th>分配内存(MB)：</th>
+                            <td>{{deploy.mem}}</td>
+                        </tr>
+                        <tr>
+                            <th>分配硬盘(MB)：</th>
+                            <td>{{deploy.harddisk}}</td>
+                        </tr>
+                        <tr>
+                            <th>访问地址：</th>
+                            <td>{{deploy.indexUrl}}</td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>{{deploy.status | statusInitialize}}</td>
+                        </tr>
+                        <tr>
+                            <th>版本：</th>
+                            <td>{{deploy.version}}</td>
+                        </tr>
+                        <tr>
+                            <th>备注：</th>
+                            <td>{{deploy.remark}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script>
+    var pageType="appList";
+</script>
+</body>
+<script type="text/javascript">
+    /*angularJS*/
+    var app = angular.module('app', []);
+    app.controller('controller', function ($scope, $http, token) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+        $scope.statusList = [{
+            code:1,text:'故障中'
+        },{
+            code:2,text:'升级中'
+        },{
+            code:3,text:'运行中'
+        }];
+        /*获取部署详情*/
+        $scope.getDeploy = function () {
+            $http.get(urlPrev + '/hostInstall/get',{
+                params:{id:'${id}'},
+                headers: getHeaders(),
+            }).success(function (res) {
+                $scope.deploy= res.data;
+            })
+        }
+        $scope.getDeploy();
+    }).service('token', function () {
+        this.getToken = function () {
+            return getToken();
+        }
+    }).filter('statusInitialize', function() {//功能状态初始化
+        return function(text) {
+            if(text==1){
+                return "故障中";
+            }else if(text==2){
+                return "升级中";
+            }else if(text==3){
+                return "运行中";
+            }
+        }
+    })
+    /*angularJS*/
+</script>
+</html>

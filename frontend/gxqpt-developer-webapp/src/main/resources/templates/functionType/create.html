@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<#include "/module/header.html">
+<head>
+    <meta charset="UTF-8">
+    <title>服务监控系统 </title>
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/layer/skin/layer.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/js/lib/ValidateForm/Validform.css">
+    <link rel="stylesheet" type="text/css" href="${_static}/css/appServiceManage.css"/>
+</head>
+
+<body>
+
+<div class="main-box clearfix">
+
+    <#include "/module/navLeft.html">
+    <div class="right-box">
+        <div class="top-bar">
+            <div class="text-title pull-left">
+                类型维护 > 功能类型维护 > <span class="active">新增</span>
+            </div>
+            <a href="${_cp}/module/functionTypeList" class="button-icon pull-right">
+                返回
+            </a>
+        </div>
+        <div class="main" ng-app="app" ng-controller="controller">
+            <div class="block">
+                <div class="text-title">功能类型信息</div>
+                <div class="content">
+                    <form id="dataForm" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>功能类型名称</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" ng-model="rows.name" dataType="*" nullmsg="功能类型名称不能为空！">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>功能类型编码</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" ng-model="rows.code" dataType="*" nullmsg="功能类型编码不能为空！">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger">*&nbsp;</span>功能类型描述</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" ng-model="rows.description" dataType="*" nullmsg="功能类型描述不能为空！"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-submit hidden"></button>
+                    </form>
+                    <div class="button-bar button-bar-center">
+                        <button type="button" class="btn btn-primary " ng-click="submit()">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#include "/module/footer.html">
+<script type="text/javascript" src="${_static}/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/ValidateForm/Valid.js"></script>
+<script type="text/javascript" src="${_static}/js/lib/hengyun/hengyun_validator.js"></script>
+<script>
+    var pageType={open:['typeManage'],act:['functionTypeList']};
+    var app = angular.module('app', []);
+    $(function(){
+        openValidator({
+            type:"POST",
+            dataType: 'json',
+            contentType : 'application/json',
+            url: "${_gate_url}/api/admin/dictionary/addModuleType",
+        },"#dataForm",{
+            attrName:"ng-model",
+            prefix:"rows.",
+            suffix:"",
+        });
+    })
+    app.controller('controller', function ($scope,$http,token) {
+        var urlPrev = getUrlPrev('${_gate_url}');
+
+        $scope.submit = function () {
+            $('.btn-submit').click();
+        };
+        $scope.save = function () {
+            var moduleTypeAddDTO=$scope.rows;
+            $http.post(urlPrev + '/dictionary/addModuleType',JSON.stringify(moduleTypeAddDTO),{
+                contentType: 'application/json',
+                headers:getHeaders(),
+            }).success(function (res) {
+                if(res.errmsg=="ok"){
+                    window.location.href="${_cp}/module/functionTypeList"
+                }else{
+                    layer.msg(res.errmsg);
+                }
+            });
+        }
+    }).service('token',function () {
+        this.getToken = function () {
+            return getToken();
+        }
+    });
+    $('.btn-submit').valid({
+        form: '#dataForm',
+        showAllError: true,
+        ignoreHidden: true,
+        checkpassed: function () {
+            var appElement = document.querySelector('[ng-controller=controller]');
+            var $scope = angular.element(appElement).scope();
+            $scope.save();
+        }
+    });
+</script>
+</body>
+</html>
