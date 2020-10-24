@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.application.dao.FastEntryMapper">
+
+  <resultMap id="RankResultMap" type="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.FastEntryRankDO">
+    <result column="appResourceName" jdbcType="VARCHAR" property="appResourceName" />
+    <result column="appName" jdbcType="VARCHAR" property="appName" />
+    <result column="resourceNum" jdbcType="INTEGER" property="resourceNum" />
+  </resultMap>
+
+  <!--根据用户Id查找所有快捷入口-->
+  <select id="selectAppByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+     @mbggenerated
+     -->
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM c_fast_entry
+    WHERE user_id = #{userId}
+    ORDER  BY create_time
+  </select>
+
+  <select id="getFastEntryRank" parameterType="java.lang.Long" resultMap="RankResultMap">
+
+    SELECT cf.app_resource_name as appResourceName,count(cf.resource_id) as resourceNum,ca.name_ as appName
+    FROM c_fast_entry cf
+    LEFT JOIN c_application ca on cf.app_id = ca.app_id
+    GROUP BY cf.resource_id
+    ORDER BY resource_id
+    limit #{resultNum}
+
+  </select>
+
+  <update id="update" parameterType="com.hengyunsoft.platform.admin.entity.application.po.FastEntry">
+    update c_fast_entry
+    set
+    resource_id = #{resourceId,jdbcType=BIGINT},
+    app_id = #{appId,jdbcType=VARCHAR},
+    app_resource_name = #{appResourceName,jdbcType=VARCHAR},
+    url_ = #{url,jdbcType=VARCHAR},
+    icon_ = #{icon,jdbcType=VARCHAR},
+    desc_ = #{desc,jdbcType=VARCHAR},
+    update_user = #{updateUser,jdbcType=BIGINT},
+    update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

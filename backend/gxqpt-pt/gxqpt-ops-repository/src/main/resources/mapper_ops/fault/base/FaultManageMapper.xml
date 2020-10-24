@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.fault.dao.FaultManageMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.ops.entity.fault.po.FaultManage">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="fault_name" jdbcType="VARCHAR" property="faultName" />
+    <result column="fault_type" jdbcType="VARCHAR" property="faultType" />
+    <result column="fault_level" jdbcType="VARCHAR" property="faultLevel" />
+    <result column="system_id" jdbcType="VARCHAR" property="systemId" />
+    <result column="system_name" jdbcType="VARCHAR" property="systemName" />
+    <result column="fault_host" jdbcType="VARCHAR" property="faultHost" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="happen_time" jdbcType="TIMESTAMP" property="happenTime" />
+    <result column="fault_info" jdbcType="VARCHAR" property="faultInfo" />
+    <result column="is_true" jdbcType="VARCHAR" property="isTrue" />
+    <result column="deal_opinion" jdbcType="VARCHAR" property="dealOpinion" />
+    <result column="deal_time" jdbcType="TIMESTAMP" property="dealTime" />
+    <result column="deal_process" jdbcType="VARCHAR" property="dealProcess" />
+    <result column="result" jdbcType="VARCHAR" property="result" />
+    <result column="advice" jdbcType="VARCHAR" property="advice" />
+    <result column="is_join_knowledge" jdbcType="INTEGER" property="isJoinKnowledge" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, create_user, create_time, update_user, update_time, fault_name, fault_type, fault_level, 
+    system_id, system_name, fault_host, status, happen_time, fault_info, is_true, deal_opinion, 
+    deal_time, deal_process, result, advice, is_join_knowledge
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.ops.repository.fault.example.FaultManageExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_yw_fault_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_yw_fault_manage
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.ops.repository.fault.example.FaultManageExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_yw_fault_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_yw_fault_manage
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.ops.repository.fault.example.FaultManageExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_yw_fault_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.ops.entity.fault.po.FaultManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_fault_manage
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_fault_manage
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.ops.entity.fault.po.FaultManage">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_yw_fault_manage (id, create_user, create_time, 
+      update_user, update_time, fault_name, 
+      fault_type, fault_level, system_id, 
+      system_name, fault_host, status, 
+      happen_time, fault_info, is_true, 
+      deal_opinion, deal_time, deal_process, 
+      result, advice, is_join_knowledge
+      )
+    values (#{id,jdbcType=BIGINT}, #{createUser,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{faultName,jdbcType=VARCHAR}, 
+      #{faultType,jdbcType=VARCHAR}, #{faultLevel,jdbcType=VARCHAR}, #{systemId,jdbcType=VARCHAR}, 
+      #{systemName,jdbcType=VARCHAR}, #{faultHost,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{happenTime,jdbcType=TIMESTAMP}, #{faultInfo,jdbcType=VARCHAR}, #{isTrue,jdbcType=VARCHAR}, 
+      #{dealOpinion,jdbcType=VARCHAR}, #{dealTime,jdbcType=TIMESTAMP}, #{dealProcess,jdbcType=VARCHAR}, 
+      #{result,jdbcType=VARCHAR}, #{advice,jdbcType=VARCHAR}, #{isJoinKnowledge,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_yw_fault_manage (id, create_user, create_time, update_user, update_time, fault_name, fault_type, fault_level, system_id, system_name, fault_host, status, happen_time, fault_info, is_true, deal_opinion, deal_time, deal_process, result, advice, is_join_knowledge ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.createUser,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.faultName,jdbcType=VARCHAR}, 
+        #{item.faultType,jdbcType=VARCHAR}, #{item.faultLevel,jdbcType=VARCHAR}, #{item.systemId,jdbcType=VARCHAR}, 
+        #{item.systemName,jdbcType=VARCHAR}, #{item.faultHost,jdbcType=VARCHAR}, #{item.status,jdbcType=INTEGER}, 
+        #{item.happenTime,jdbcType=TIMESTAMP}, #{item.faultInfo,jdbcType=VARCHAR}, #{item.isTrue,jdbcType=VARCHAR}, 
+        #{item.dealOpinion,jdbcType=VARCHAR}, #{item.dealTime,jdbcType=TIMESTAMP}, #{item.dealProcess,jdbcType=VARCHAR}, 
+        #{item.result,jdbcType=VARCHAR}, #{item.advice,jdbcType=VARCHAR}, #{item.isJoinKnowledge,jdbcType=INTEGER}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.ops.entity.fault.po.FaultManage">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_yw_fault_manage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="faultName != null">
+        fault_name,
+      </if>
+      <if test="faultType != null">
+        fault_type,
+      </if>
+      <if test="faultLevel != null">
+        fault_level,
+      </if>
+      <if test="systemId != null">
+        system_id,
+      </if>
+      <if test="systemName != null">
+        system_name,
+      </if>
+      <if test="faultHost != null">
+        fault_host,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="happenTime != null">
+        happen_time,
+      </if>
+      <if test="faultInfo != null">
+        fault_info,
+      </if>
+      <if test="isTrue != null">
+        is_true,
+      </if>
+      <if test="dealOpinion != null">
+        deal_opinion,
+      </if>
+      <if test="dealTime != null">
+        deal_time,
+      </if>
+      <if test="dealProcess != null">
+        deal_process,
+      </if>
+      <if test="result != null">
+        result,
+      </if>
+      <if test="advice != null">
+        advice,
+      </if>
+      <if test="isJoinKnowledge != null">
+        is_join_knowledge,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="faultName != null">
+        #{faultName,jdbcType=VARCHAR},
+      </if>
+      <if test="faultType != null">
+        #{faultType,jdbcType=VARCHAR},
+      </if>
+      <if test="faultLevel != null">
+        #{faultLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="systemId != null">
+        #{systemId,jdbcType=VARCHAR},
+      </if>
+      <if test="systemName != null">
+        #{systemName,jdbcType=VARCHAR},
+      </if>
+      <if test="faultHost != null">
+        #{faultHost,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="happenTime != null">
+        #{happenTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="faultInfo != null">
+        #{faultInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="isTrue != null">
+        #{isTrue,jdbcType=VARCHAR},
+      </if>
+      <if test="dealOpinion != null">
+        #{dealOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="dealTime != null">
+        #{dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealProcess != null">
+        #{dealProcess,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="advice != null">
+        #{advice,jdbcType=VARCHAR},
+      </if>
+      <if test="isJoinKnowledge != null">
+        #{isJoinKnowledge,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.ops.repository.fault.example.FaultManageExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_yw_fault_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_fault_manage
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.faultName != null">
+        fault_name = #{record.faultName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.faultType != null">
+        fault_type = #{record.faultType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.faultLevel != null">
+        fault_level = #{record.faultLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.systemId != null">
+        system_id = #{record.systemId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.systemName != null">
+        system_name = #{record.systemName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.faultHost != null">
+        fault_host = #{record.faultHost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.happenTime != null">
+        happen_time = #{record.happenTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.faultInfo != null">
+        fault_info = #{record.faultInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isTrue != null">
+        is_true = #{record.isTrue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dealOpinion != null">
+        deal_opinion = #{record.dealOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dealTime != null">
+        deal_time = #{record.dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.dealProcess != null">
+        deal_process = #{record.dealProcess,jdbcType=VARCHAR},
+      </if>
+      <if test="record.result != null">
+        result = #{record.result,jdbcType=VARCHAR},
+      </if>
+      <if test="record.advice != null">
+        advice = #{record.advice,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isJoinKnowledge != null">
+        is_join_knowledge = #{record.isJoinKnowledge,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_fault_manage
+    set id = #{record.id,jdbcType=BIGINT},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      fault_name = #{record.faultName,jdbcType=VARCHAR},
+      fault_type = #{record.faultType,jdbcType=VARCHAR},
+      fault_level = #{record.faultLevel,jdbcType=VARCHAR},
+      system_id = #{record.systemId,jdbcType=VARCHAR},
+      system_name = #{record.systemName,jdbcType=VARCHAR},
+      fault_host = #{record.faultHost,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      happen_time = #{record.happenTime,jdbcType=TIMESTAMP},
+      fault_info = #{record.faultInfo,jdbcType=VARCHAR},
+      is_true = #{record.isTrue,jdbcType=VARCHAR},
+      deal_opinion = #{record.dealOpinion,jdbcType=VARCHAR},
+      deal_time = #{record.dealTime,jdbcType=TIMESTAMP},
+      deal_process = #{record.dealProcess,jdbcType=VARCHAR},
+      result = #{record.result,jdbcType=VARCHAR},
+      advice = #{record.advice,jdbcType=VARCHAR},
+      is_join_knowledge = #{record.isJoinKnowledge,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.ops.entity.fault.po.FaultManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_fault_manage
+    <set>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="faultName != null">
+        fault_name = #{faultName,jdbcType=VARCHAR},
+      </if>
+      <if test="faultType != null">
+        fault_type = #{faultType,jdbcType=VARCHAR},
+      </if>
+      <if test="faultLevel != null">
+        fault_level = #{faultLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="systemId != null">
+        system_id = #{systemId,jdbcType=VARCHAR},
+      </if>
+      <if test="systemName != null">
+        system_name = #{systemName,jdbcType=VARCHAR},
+      </if>
+      <if test="faultHost != null">
+        fault_host = #{faultHost,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="happenTime != null">
+        happen_time = #{happenTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="faultInfo != null">
+        fault_info = #{faultInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="isTrue != null">
+        is_true = #{isTrue,jdbcType=VARCHAR},
+      </if>
+      <if test="dealOpinion != null">
+        deal_opinion = #{dealOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="dealTime != null">
+        deal_time = #{dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealProcess != null">
+        deal_process = #{dealProcess,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null">
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="advice != null">
+        advice = #{advice,jdbcType=VARCHAR},
+      </if>
+      <if test="isJoinKnowledge != null">
+        is_join_knowledge = #{isJoinKnowledge,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.ops.entity.fault.po.FaultManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_fault_manage
+    set create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      fault_name = #{faultName,jdbcType=VARCHAR},
+      fault_type = #{faultType,jdbcType=VARCHAR},
+      fault_level = #{faultLevel,jdbcType=VARCHAR},
+      system_id = #{systemId,jdbcType=VARCHAR},
+      system_name = #{systemName,jdbcType=VARCHAR},
+      fault_host = #{faultHost,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      happen_time = #{happenTime,jdbcType=TIMESTAMP},
+      fault_info = #{faultInfo,jdbcType=VARCHAR},
+      is_true = #{isTrue,jdbcType=VARCHAR},
+      deal_opinion = #{dealOpinion,jdbcType=VARCHAR},
+      deal_time = #{dealTime,jdbcType=TIMESTAMP},
+      deal_process = #{dealProcess,jdbcType=VARCHAR},
+      result = #{result,jdbcType=VARCHAR},
+      advice = #{advice,jdbcType=VARCHAR},
+      is_join_knowledge = #{isJoinKnowledge,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

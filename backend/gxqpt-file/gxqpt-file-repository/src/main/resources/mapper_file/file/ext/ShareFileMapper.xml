@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.file.repository.file.dao.ShareFileMapper">
+    <resultMap id="FiletMap" type="com.hengyunsoft.platform.file.entity.file.po.File">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="app_id" jdbcType="VARCHAR" property="appId"/>
+        <result column="org_id" jdbcType="BIGINT" property="orgId"/>
+        <result column="admin_id" jdbcType="BIGINT" property="adminId"/>
+        <result column="is_delete" jdbcType="BIT" property="isDelete"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="folder_id" jdbcType="BIGINT" property="folderId"/>
+        <result column="folder_name" jdbcType="VARCHAR" property="folderName"/>
+        <result column="object_id" jdbcType="VARCHAR" property="objectId"/>
+        <result column="namespace" jdbcType="VARCHAR" property="namespace"/>
+        <result column="u_key" jdbcType="VARCHAR" property="uKey"/>
+        <result column="absolute_path" jdbcType="VARCHAR" property="absolutePath"/>
+        <result column="relative_path" jdbcType="VARCHAR" property="relativePath"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="data_type" jdbcType="VARCHAR" property="dataType"/>
+        <result column="mime" jdbcType="VARCHAR" property="mime"/>
+        <result column="submitted_file_name" jdbcType="VARCHAR" property="submittedFileName"/>
+        <result column="filename" jdbcType="VARCHAR" property="filename"/>
+        <result column="ext" jdbcType="VARCHAR" property="ext"/>
+        <result column="size" jdbcType="VARCHAR" property="size"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+    </resultMap>
+
+    <!--根据share的id查询企对应的file的id-->
+    <select id="selectFileByShare" parameterType="java.lang.Long" resultMap="FiletMap">
+        SELECT f.id,f.submitted_file_name,f.size,f.update_time,f.url,f.data_type,f.icon from f_file f,f_share_file s
+        <where>
+            <if test="id != null">
+                s.share_id = #{id,jdbcType=BIGINT} and s.file_id = f.id and f.is_delete = 0
+            </if>
+            <if test="name != null and name != ''">
+                and f.submitted_file_name like concat('%',#{name,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+        order by f.update_time desc
+
+    </select>
+
+    <!--根据folderId取查询其下的所有子文件-->
+    <select id="selectFileTree" parameterType="java.lang.Long" resultMap="FiletMap">
+        SELECT f.id,f.submitted_file_name,f.size,f.update_time,f.url,f.data_type,f.icon from f_file f
+        <where>
+            <if test="id != null">
+                f.folder_id = #{id,jdbcType=BIGINT} and f.is_delete = 0
+            </if>
+            <if test="name != null and name != ''">
+                and f.submitted_file_name like concat('%',#{name,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+
+    </select>
+
+    <!--批量删除-->
+    <delete id="deleteByShareIds" parameterType="list">
+        <!--
+        @mbggenerated
+        -->
+        delete from f_share_file where share_id in
+        <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+            #{item}
+        </foreach>
+        <if test="appId != null">
+            and app_id = #{appId,jdbcType=VARCHAR}
+        </if>
+    </delete>
+
+    <resultMap id="SynFileDataTaskMap" type="com.hengyunsoft.platform.file.entity.file.domain.SynFileDataDO">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="app_id" jdbcType="VARCHAR" property="appId"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="data_type" jdbcType="VARCHAR" property="dataType"/>
+        <result column="size" jdbcType="VARCHAR" property="size"/>
+        <result column="num" jdbcType="VARCHAR" property="num"/>
+        <result column="y_month" jdbcType="VARCHAR" property="yMonth"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+    </resultMap>
+    <select id="findSynFileData" parameterType="java.util.Date" resultMap="SynFileDataTaskMap">
+
+        SELECT
+          SUM(a.size) AS size,
+          COUNT(a.id) AS num,
+          MAX(a.id) AS id,
+          MAX(a.app_id) AS app_id,
+          MAX(a.type) AS type,
+          MAX(a.data_type) AS data_type,
+          MAX(a.y_month) AS y_month,
+          MAX(a.create_user) AS create_user
+        FROM
+          (SELECT
+            *,
+            DATE_FORMAT(ff.create_time, '%Y-%m') AS y_month
+          FROM
+            f_file ff
+          WHERE ff.type = 'SYSTEM' AND ff.data_type <![CDATA[ <> ]]> 'DIR' and ff.is_delete = 0) a where 1=1
+              <if test='startDate != null'>
+                  AND a.create_time &gt;= #{startDate,jdbcType=TIMESTAMP}
+              </if>
+              <if test='endDate != null'>
+                  AND #{endDate,jdbcType=TIMESTAMP} &gt;= a.create_time
+              </if>
+        GROUP BY a.type,
+          a.y_month,
+          a.data_type,
+          a.create_user
+        UNION
+        ALL
+        SELECT
+          SUM(a.size) AS size,
+          COUNT(a.id) AS num,
+          MAX(a.id) AS id,
+          MAX(a.app_id) AS app_id,
+          MAX(a.type) AS type,
+          MAX(a.data_type) AS data_type,
+          MAX(a.y_month) AS y_month,
+          MAX(a.create_user) AS create_user
+        FROM
+          (SELECT
+            *,
+            DATE_FORMAT(ff.create_time, '%Y-%m') AS y_month
+          FROM
+            f_file ff
+          WHERE ff.type = 'API' AND ff.data_type <![CDATA[ <> ]]> 'DIR' and ff.is_delete = 0) a where 1=1
+            <if test='startDate != null'>
+                AND a.create_time &gt;= #{startDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test='endDate != null'>
+                AND #{endDate,jdbcType=TIMESTAMP} &gt;= a.create_time
+            </if>
+        GROUP BY a.type,
+          a.y_month,
+          a.data_type,
+          a.app_id
+    </select>
+
+    <resultMap id="ShareFileRateMap" type="com.hengyunsoft.platform.file.entity.file.domain.ShareFileRateDO">
+        <result column="dataType" jdbcType="VARCHAR" property="dataType"/>
+        <result column="size" jdbcType="VARCHAR" property="size"/>
+    </resultMap>
+    <select id="findFileShareRateN" resultMap="ShareFileRateMap">
+        <![CDATA[
+            SELECT
+              a.data_type AS dataType,
+              CONVERT(SUM(a.size),SIGNED) AS size
+            FROM
+              f_file a
+            WHERE a.create_user = #{userId,jdbcType=BIGINT}
+            AND a.app_id = #{appId, jdbcType=VARCHAR}
+            AND a.is_delete = 0
+            AND a.data_type <> 'DIR'
+              AND a.id NOT IN
+              (SELECT
+                b.file_id
+              FROM
+                f_share_file b
+              WHERE b.admin_id = #{userId,jdbcType=BIGINT})
+            GROUP BY a.data_type
+        ]]>
+    </select>
+
+    <select id="findFileShareRateY" resultMap="ShareFileRateMap">
+        <![CDATA[
+            SELECT
+            a.data_type AS dataType,
+            CONVERT(SUM(a.size),SIGNED) AS size
+            FROM
+            f_file a
+            WHERE a.create_user = #{userId,jdbcType=BIGINT}
+            AND a.app_id = #{appId,jdbcType=VARCHAR}
+            AND a.is_delete = 0
+            AND a.data_type <> 'DIR'
+            AND a.id IN
+            (SELECT
+            b.file_id
+            FROM
+            f_share_file b
+            WHERE b.admin_id = #{userId,jdbcType=BIGINT})
+            GROUP BY a.data_type
+        ]]>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from f_share_file
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+</mapper>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.security.repository.interfaces.dao.InterfaceConfigMapper">
+
+    <select id="pageApiList"  resultMap="BaseResultMap"  parameterType="java.util.Map">
+
+        select
+          id, api_name, api_url, app_id, modular_name, method, error_count_minute,
+          upper_limit_count_by_day, is_sms_notify, mobile, status
+        from se_interface_config
+        where 1=1
+          <if test="param.status != null">
+            and status = #{param.status,jdbcType=INTEGER}
+          </if>
+          <if test="param.apiName != null and param.apiName != ''">
+              <!--<bind name="pattern1" value="'%' + param.apiName + '%'" />-->
+              and  api_name like #{param.apiName}
+          </if>
+          <if test="param.appId != null and ''!= param.appId">
+              and app_id = #{param.appId}
+          </if>
+        order by create_time
+    </select>
+
+    <update id="updateApiAccessLimitList" >
+        update se_interface_config
+         set
+            error_count_minute = #{interfaceConfig.errorCountMinute},
+            upper_limit_count_by_day = #{interfaceConfig.upperLimitCountByDay},
+            is_sms_notify = #{interfaceConfig.isSmsNotify},
+            mobile = #{interfaceConfig.mobile},
+          is_notify = 0,
+            <choose>
+                <when test="interfaceConfig.errorCountMinute == 0 and interfaceConfig.upperLimitCountByDay == 0">
+                    status = 0,
+                </when>
+                <otherwise>
+                    status = 1,
+                </otherwise>
+            </choose>
+            update_user = #{interfaceConfig.updateUser}
+        <where>
+            id in
+            <foreach collection="apiIdList" open="(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </where>
+    </update>
+
+
+    <select id="findNeedFilter" resultType="java.lang.Long">
+        SELECT
+        id
+        FROM se_interface_config ic
+        where ic.`status` = 1
+    </select>
+
+    <insert id="saveOrUpdate" parameterType="com.hengyunsoft.platform.security.entity.interfaces.po.InterfaceConfig">
+         insert into se_interface_config (  api_name, api_id,
+          api_url, app_id, modular_name,
+          method, error_count_minute, upper_limit_count_by_day,
+          is_sms_notify, mobile, is_notify,
+          status, create_time, create_user,
+          update_time, update_user)
+        values
+        (#{apiName,jdbcType=VARCHAR}, #{apiId,jdbcType=BIGINT},
+      #{apiUrl,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{modularName,jdbcType=VARCHAR},
+      #{method,jdbcType=VARCHAR}, #{errorCountMinute,jdbcType=INTEGER}, #{upperLimitCountByDay,jdbcType=INTEGER},
+      #{isSmsNotify,jdbcType=BIT}, #{mobile,jdbcType=VARCHAR}, #{isNotify,jdbcType=BIT},
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT},
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT})
+        on duplicate key update
+          api_name = #{apiName,jdbcType=VARCHAR},
+          api_id = #{apiId,jdbcType=BIGINT},
+          api_url = #{apiUrl,jdbcType=VARCHAR},
+          app_id = #{appId,jdbcType=VARCHAR},
+          modular_name = #{modularName,jdbcType=VARCHAR},
+          method = #{method,jdbcType=VARCHAR},
+          update_time = #{updateTime,jdbcType=TIMESTAMP},
+          update_user = #{updateUser,jdbcType=BIGINT}
+
+    </insert>
+
+    <select id="getInterfaceConfigList"  resultMap="BaseResultMap"  parameterType="java.util.Set">
+        select
+        id, api_name, api_url, app_id, modular_name, method, error_count_minute,
+        upper_limit_count_by_day, is_sms_notify, mobile, status
+        from se_interface_config
+        where  api_id in
+        <foreach collection="apiIdSet" item="apiId" open="(" separator="," close=")">
+            #{apiId}
+        </foreach>
+        order by create_time
+    </select>
+
+    <select id="pageInterfaceConfigList"  resultMap="BaseResultMap"  parameterType="java.util.List">
+        <foreach collection="apiIdList" item="apiIdSet"  separator=" union all ">
+            select
+            id, api_name, api_url, app_id, modular_name, method, error_count_minute,
+            upper_limit_count_by_day, is_sms_notify, mobile, status
+            from se_interface_config
+            where  api_id in
+            <foreach collection="apiIdSet" item="apiId" open="(" separator="," close=")">
+                #{apiId}
+            </foreach>
+        </foreach>
+        union all
+        select
+        id, api_name, api_url, app_id, modular_name, method, error_count_minute,
+        upper_limit_count_by_day, is_sms_notify, mobile, status
+        from se_interface_config
+        where id = -1
+    </select>
+</mapper>

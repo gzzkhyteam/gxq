@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.api.dao.ShareDataApiCallMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataApiCall">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="api_id" jdbcType="BIGINT" property="apiId" />
+    <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+    <result column="data_count" jdbcType="INTEGER" property="dataCount" />
+    <result column="ip_address" jdbcType="VARCHAR" property="ipAddress" />
+    <result column="is_success" jdbcType="INTEGER" property="isSuccess" />
+    <result column="rsponse_time" jdbcType="REAL" property="rsponseTime" />
+    <result column="result" jdbcType="LONGVARCHAR" property="result" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="visit_time" jdbcType="TIMESTAMP" property="visitTime" />
+    <result column="fail_type" jdbcType="INTEGER" property="failType" />
+    <result column="fail_log" jdbcType="LONGVARCHAR" property="failLog" />
+    <result column="hdle_state" jdbcType="INTEGER" property="hdleState" />
+    <result column="hdle_user" jdbcType="BIGINT" property="hdleUser" />
+    <result column="hdle_time" jdbcType="TIMESTAMP" property="hdleTime" />
+    <result column="hdle_content" jdbcType="LONGVARCHAR" property="hdleContent" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, api_id, unit_id, data_count, ip_address, is_success, rsponse_time, result, user_id, 
+    visit_time, fail_type, fail_log, hdle_state, hdle_user, hdle_time, hdle_content, 
+    create_time, create_user, update_time, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.exchange.repository.api.example.ShareDataApiCallExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_share_data_api_call
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_share_data_api_call
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.exchange.repository.api.example.ShareDataApiCallExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_share_data_api_call
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_share_data_api_call
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_api_call
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.exchange.repository.api.example.ShareDataApiCallExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_api_call
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_share_data_api_call where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_api_call
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_share_data_api_call where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataApiCall">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_api_call
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_api_call
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_api_call
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_api_call
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataApiCall">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_api_call (id, api_id, unit_id, 
+      data_count, ip_address, is_success, 
+      rsponse_time, result, user_id, 
+      visit_time, fail_type, fail_log, 
+      hdle_state, hdle_user, hdle_time, 
+      hdle_content, create_time, create_user, 
+      update_time, update_user)
+    values (#{id,jdbcType=BIGINT}, #{apiId,jdbcType=BIGINT}, #{unitId,jdbcType=VARCHAR}, 
+      #{dataCount,jdbcType=INTEGER}, #{ipAddress,jdbcType=VARCHAR}, #{isSuccess,jdbcType=INTEGER}, 
+      #{rsponseTime,jdbcType=REAL}, #{result,jdbcType=LONGVARCHAR}, #{userId,jdbcType=BIGINT}, 
+      #{visitTime,jdbcType=TIMESTAMP}, #{failType,jdbcType=INTEGER}, #{failLog,jdbcType=LONGVARCHAR}, 
+      #{hdleState,jdbcType=INTEGER}, #{hdleUser,jdbcType=BIGINT}, #{hdleTime,jdbcType=TIMESTAMP}, 
+      #{hdleContent,jdbcType=LONGVARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_api_call (id, api_id, unit_id, data_count, ip_address, is_success, rsponse_time, result, user_id, visit_time, fail_type, fail_log, hdle_state, hdle_user, hdle_time, hdle_content, create_time, create_user, update_time, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.apiId,jdbcType=BIGINT}, #{item.unitId,jdbcType=VARCHAR}, 
+        #{item.dataCount,jdbcType=INTEGER}, #{item.ipAddress,jdbcType=VARCHAR}, #{item.isSuccess,jdbcType=INTEGER}, 
+        #{item.rsponseTime,jdbcType=REAL}, #{item.result,jdbcType=LONGVARCHAR}, #{item.userId,jdbcType=BIGINT}, 
+        #{item.visitTime,jdbcType=TIMESTAMP}, #{item.failType,jdbcType=INTEGER}, #{item.failLog,jdbcType=LONGVARCHAR}, 
+        #{item.hdleState,jdbcType=INTEGER}, #{item.hdleUser,jdbcType=BIGINT}, #{item.hdleTime,jdbcType=TIMESTAMP}, 
+        #{item.hdleContent,jdbcType=LONGVARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.createUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataApiCall">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_api_call
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="apiId != null">
+        api_id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="dataCount != null">
+        data_count,
+      </if>
+      <if test="ipAddress != null">
+        ip_address,
+      </if>
+      <if test="isSuccess != null">
+        is_success,
+      </if>
+      <if test="rsponseTime != null">
+        rsponse_time,
+      </if>
+      <if test="result != null">
+        result,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="visitTime != null">
+        visit_time,
+      </if>
+      <if test="failType != null">
+        fail_type,
+      </if>
+      <if test="failLog != null">
+        fail_log,
+      </if>
+      <if test="hdleState != null">
+        hdle_state,
+      </if>
+      <if test="hdleUser != null">
+        hdle_user,
+      </if>
+      <if test="hdleTime != null">
+        hdle_time,
+      </if>
+      <if test="hdleContent != null">
+        hdle_content,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="apiId != null">
+        #{apiId,jdbcType=BIGINT},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCount != null">
+        #{dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="ipAddress != null">
+        #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isSuccess != null">
+        #{isSuccess,jdbcType=INTEGER},
+      </if>
+      <if test="rsponseTime != null">
+        #{rsponseTime,jdbcType=REAL},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="visitTime != null">
+        #{visitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failType != null">
+        #{failType,jdbcType=INTEGER},
+      </if>
+      <if test="failLog != null">
+        #{failLog,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hdleState != null">
+        #{hdleState,jdbcType=INTEGER},
+      </if>
+      <if test="hdleUser != null">
+        #{hdleUser,jdbcType=BIGINT},
+      </if>
+      <if test="hdleTime != null">
+        #{hdleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hdleContent != null">
+        #{hdleContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.exchange.repository.api.example.ShareDataApiCallExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_share_data_api_call
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_api_call
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.apiId != null">
+        api_id = #{record.apiId,jdbcType=BIGINT},
+      </if>
+      <if test="record.unitId != null">
+        unit_id = #{record.unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataCount != null">
+        data_count = #{record.dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.ipAddress != null">
+        ip_address = #{record.ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isSuccess != null">
+        is_success = #{record.isSuccess,jdbcType=INTEGER},
+      </if>
+      <if test="record.rsponseTime != null">
+        rsponse_time = #{record.rsponseTime,jdbcType=REAL},
+      </if>
+      <if test="record.result != null">
+        result = #{record.result,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.visitTime != null">
+        visit_time = #{record.visitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.failType != null">
+        fail_type = #{record.failType,jdbcType=INTEGER},
+      </if>
+      <if test="record.failLog != null">
+        fail_log = #{record.failLog,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.hdleState != null">
+        hdle_state = #{record.hdleState,jdbcType=INTEGER},
+      </if>
+      <if test="record.hdleUser != null">
+        hdle_user = #{record.hdleUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.hdleTime != null">
+        hdle_time = #{record.hdleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.hdleContent != null">
+        hdle_content = #{record.hdleContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_api_call
+    set id = #{record.id,jdbcType=BIGINT},
+      api_id = #{record.apiId,jdbcType=BIGINT},
+      unit_id = #{record.unitId,jdbcType=VARCHAR},
+      data_count = #{record.dataCount,jdbcType=INTEGER},
+      ip_address = #{record.ipAddress,jdbcType=VARCHAR},
+      is_success = #{record.isSuccess,jdbcType=INTEGER},
+      rsponse_time = #{record.rsponseTime,jdbcType=REAL},
+      result = #{record.result,jdbcType=LONGVARCHAR},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      visit_time = #{record.visitTime,jdbcType=TIMESTAMP},
+      fail_type = #{record.failType,jdbcType=INTEGER},
+      fail_log = #{record.failLog,jdbcType=LONGVARCHAR},
+      hdle_state = #{record.hdleState,jdbcType=INTEGER},
+      hdle_user = #{record.hdleUser,jdbcType=BIGINT},
+      hdle_time = #{record.hdleTime,jdbcType=TIMESTAMP},
+      hdle_content = #{record.hdleContent,jdbcType=LONGVARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataApiCall">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_api_call
+    <set>
+      <if test="apiId != null">
+        api_id = #{apiId,jdbcType=BIGINT},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCount != null">
+        data_count = #{dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="ipAddress != null">
+        ip_address = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isSuccess != null">
+        is_success = #{isSuccess,jdbcType=INTEGER},
+      </if>
+      <if test="rsponseTime != null">
+        rsponse_time = #{rsponseTime,jdbcType=REAL},
+      </if>
+      <if test="result != null">
+        result = #{result,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="visitTime != null">
+        visit_time = #{visitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failType != null">
+        fail_type = #{failType,jdbcType=INTEGER},
+      </if>
+      <if test="failLog != null">
+        fail_log = #{failLog,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hdleState != null">
+        hdle_state = #{hdleState,jdbcType=INTEGER},
+      </if>
+      <if test="hdleUser != null">
+        hdle_user = #{hdleUser,jdbcType=BIGINT},
+      </if>
+      <if test="hdleTime != null">
+        hdle_time = #{hdleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hdleContent != null">
+        hdle_content = #{hdleContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataApiCall">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_api_call
+    <set>
+      <if test="apiId != null">
+        api_id = #{apiId,jdbcType=BIGINT},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCount != null">
+        data_count = #{dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="ipAddress != null">
+        ip_address = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isSuccess != null">
+        is_success = #{isSuccess,jdbcType=INTEGER},
+      </if>
+      <if test="rsponseTime != null">
+        rsponse_time = #{rsponseTime,jdbcType=REAL},
+      </if>
+      <if test="result != null">
+        result = #{result,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="visitTime != null">
+        visit_time = #{visitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failType != null">
+        fail_type = #{failType,jdbcType=INTEGER},
+      </if>
+      <if test="failLog != null">
+        fail_log = #{failLog,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hdleState != null">
+        hdle_state = #{hdleState,jdbcType=INTEGER},
+      </if>
+      <if test="hdleUser != null">
+        hdle_user = #{hdleUser,jdbcType=BIGINT},
+      </if>
+      <if test="hdleTime != null">
+        hdle_time = #{hdleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hdleContent != null">
+        hdle_content = #{hdleContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataApiCall">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_api_call
+    set api_id = #{apiId,jdbcType=BIGINT},
+      unit_id = #{unitId,jdbcType=VARCHAR},
+      data_count = #{dataCount,jdbcType=INTEGER},
+      ip_address = #{ipAddress,jdbcType=VARCHAR},
+      is_success = #{isSuccess,jdbcType=INTEGER},
+      rsponse_time = #{rsponseTime,jdbcType=REAL},
+      result = #{result,jdbcType=LONGVARCHAR},
+      user_id = #{userId,jdbcType=BIGINT},
+      visit_time = #{visitTime,jdbcType=TIMESTAMP},
+      fail_type = #{failType,jdbcType=INTEGER},
+      fail_log = #{failLog,jdbcType=LONGVARCHAR},
+      hdle_state = #{hdleState,jdbcType=INTEGER},
+      hdle_user = #{hdleUser,jdbcType=BIGINT},
+      hdle_time = #{hdleTime,jdbcType=TIMESTAMP},
+      hdle_content = #{hdleContent,jdbcType=LONGVARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataApiCall">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_api_call
+    set api_id = #{apiId,jdbcType=BIGINT},
+      unit_id = #{unitId,jdbcType=VARCHAR},
+      data_count = #{dataCount,jdbcType=INTEGER},
+      ip_address = #{ipAddress,jdbcType=VARCHAR},
+      is_success = #{isSuccess,jdbcType=INTEGER},
+      rsponse_time = #{rsponseTime,jdbcType=REAL},
+      result = #{result,jdbcType=LONGVARCHAR},
+      user_id = #{userId,jdbcType=BIGINT},
+      visit_time = #{visitTime,jdbcType=TIMESTAMP},
+      fail_type = #{failType,jdbcType=INTEGER},
+      fail_log = #{failLog,jdbcType=LONGVARCHAR},
+      hdle_state = #{hdleState,jdbcType=INTEGER},
+      hdle_user = #{hdleUser,jdbcType=BIGINT},
+      hdle_time = #{hdleTime,jdbcType=TIMESTAMP},
+      hdle_content = #{hdleContent,jdbcType=LONGVARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

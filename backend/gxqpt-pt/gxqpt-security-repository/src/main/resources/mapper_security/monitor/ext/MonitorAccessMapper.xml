@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.security.repository.monitor.dao.MonitorAccessMapper">
+    <select id="pageServerAccessList" resultMap="BaseResultMap" parameterType="java.util.Map">
+
+        select
+        id, from_server_ip, account, login_time, logout_time, create_time,
+        to_server_ip,convert(substring(login_duration,2,2),signed) * 60 + convert(substring(login_duration,5,2),signed) as login_duration
+        from se_monitor_access
+        where 1=1
+        <if test="param != null">
+
+            <if test="null != param.begDate ">
+                and login_time <![CDATA[ >= ]]> #{param.begDate}
+            </if>
+            <if test="null != param.endDate and '' != param.endDate">
+                and login_time <![CDATA[ < ]]> #{param.endDate}
+            </if>
+            <if test="null != param.serverOrAccount and '' != param.serverOrAccount">
+                <!--<bind name="pattern1" value="'%' + param.serverOrAccount + '%'" />-->
+                and  ( from_server_ip like #{param.serverOrAccount}
+                or  to_server_ip like  #{param.serverOrAccount}
+                or  account like  #{param.serverOrAccount} )
+            </if>
+        </if>
+        order by login_time desc
+    </select>
+</mapper>

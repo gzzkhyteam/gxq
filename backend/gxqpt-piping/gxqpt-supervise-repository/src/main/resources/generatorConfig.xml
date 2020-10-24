@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry location="F:\software\maven\repertory\mysql\mysql-connector-java\5.1.40\mysql-connector-java-5.1.40.jar"/>
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <property name="Mapper.xml" value="overwrite"/>
+        <property name="Example.java" value="overwrite"/>
+        <property name="Entity.java" value="overwrite"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="false"/>
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1/gxqpt_piping_test"
+                        userId="root" password="r!o@o#t$>?.123"></jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.hengyunsoft.platform.supervise.entity.po"
+                            targetProject="src\main\java"
+                            targetExamplePackage="com.hengyunsoft.platform.supervise.repository.example"
+                            targetExampleProject="src\main\java"
+                            targetExampleSuperClass="com.hengyunsoft.db.example.BaseExample"
+                            targetGeneratedCriteriaSuperClass="com.hengyunsoft.db.example.BaseGeneratedCriteria"
+        >
+            <property name="rootClass" value="com.hengyunsoft.base.entity.BaseEntity&lt;Long&gt;"/>
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <sqlMapGenerator targetPackage="mapper_supervise.base" targetProject="src\main\resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.hengyunsoft.platform.supervise.repository.dao"
+                             targetProject="src\main\java"
+                             targetIsGenMethod="false"
+                             targetSuperClass="com.hengyunsoft.base.dao.BaseNormalDao"
+                             targetSuperGeneric="Long">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--<table tableName="b_power_supervise_type" domainObjectName="PowerSuperviseType" enableAppId="false"></table>-->
+        <!--<table tableName="b_power_supervise" domainObjectName="PowerSupervise" enableAppId="false"></table>-->
+        <table tableName="b_power_supervise_temp" domainObjectName="PowerSuperviseTemp" enableAppId="false"></table>
+
+
+        <!--<table tableName="b_data_storage_supervise" domainObjectName="DataStorageSupervise" enableAppId="false"></table>-->
+        <!--<table tableName="b_biz_app_supervise" domainObjectName="BizAppSupervise" enableAppId="false"></table>-->
+        <!--<table tableName="b_power_supervise_link" domainObjectName="PowerSuperviseLink" enableAppId="false"></table>-->
+        <!--<table tableName="b_server_supervise" domainObjectName="ServerSupervise" enableAppId="false"></table>-->
+
+    </context>
+</generatorConfiguration>

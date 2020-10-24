@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogPatternSetMapper">
+    <!--分页查询-->
+    <select id="pageQueryPattern" resultMap="BaseResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogPatternSetExample">
+        select id, app_id, log_type, log_export_type,log_pattern, create_time, create_user, update_time, update_user,
+        create_user_name, update_user_name from log_pattern_set
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+</mapper>

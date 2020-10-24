@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+
+<!-- 开发者中心start -->
+<appender name="ROOT_APPENDER_DEVELOPER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${log.path}/root_developer.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <!-- 每天一归档 -->
+        <fileNamePattern>${log.path}/%d{yyyy-MM}/root_developer-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+        <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+        <maxFileSize>32MB</maxFileSize>
+        <maxHistory>30</maxHistory>
+        <totalSizeCap>10GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+        <pattern>${common-pattern}</pattern>
+    </encoder>
+</appender>
+
+<appender name="SERVICE_APPENDER_DEVELOPER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${log.path}/service_developer.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <!-- 每天一归档 -->
+        <fileNamePattern>${log.path}/%d{yyyy-MM}/service_developer-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+        <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+        <maxFileSize>32MB</maxFileSize>
+        <maxHistory>30</maxHistory>
+        <totalSizeCap>10GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+        <pattern>${common-pattern}</pattern>
+    </encoder>
+</appender>
+<appender name="IMPL_APPENDER_DEVELOPER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${log.path}/impl_developer.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <!-- 每天一归档 -->
+        <fileNamePattern>${log.path}/%d{yyyy-MM}/impl_developer-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+        <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+        <maxFileSize>32MB</maxFileSize>
+        <maxHistory>30</maxHistory>
+        <totalSizeCap>10GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+        <pattern>${common-pattern}</pattern>
+    </encoder>
+</appender>
+<appender name="SQL_APPENDER_DEVELOPER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${log.path}/sql_developer.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <!-- 每天一归档 -->
+        <fileNamePattern>${log.path}/%d{yyyy-MM}/sql_developer-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+        <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+        <maxFileSize>32MB</maxFileSize>
+        <maxHistory>30</maxHistory>
+        <totalSizeCap>10GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+        <pattern>${common-pattern}</pattern>
+    </encoder>
+</appender>
+
+
+
+
+<!--- 开发者 -->
+<root level="${log.level.console}">
+    <appender-ref ref="CONSOLE_APPENDER"/>
+    <appender-ref ref="ROOT_APPENDER_DEVELOPER"/>
+</root>
+<logger name="com.hengyunsoft.platform.developer.impl" additivity="true" level="${log.level.impl}">
+    <appender-ref ref = "IMPL_APPENDER_DEVELOPER"/>
+</logger>
+<logger name="com.hengyunsoft.platform.developer.impl" additivity="true" level="${log.level.impl}">
+    <appender-ref ref = "IMPL_APPENDER_DEVELOPER"/>
+</logger>
+<logger name="com.hengyunsoft.platform.developer.repository.service.dao" additivity="false" level="${log.level.sql}">
+    <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+    <appender-ref ref = "SQL_APPENDER_DEVELOPER"/>
+</logger>
+<logger name="com.hengyunsoft.platform.developer.repository.apply.dao" additivity="false" level="${log.level.sql}">
+    <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+    <appender-ref ref = "SQL_APPENDER_DEVELOPER"/>
+</logger>
+<logger name="com.hengyunsoft.platform.developer.repository.core.dao" additivity="false" level="${log.level.sql}">
+    <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+    <appender-ref ref = "SQL_APPENDER_DEVELOPER"/>
+</logger>
+<logger name="com.hengyunsoft.platform.developer.repository.fast.attence.dao" additivity="false" level="${log.level.sql}">
+    <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+    <appender-ref ref = "SQL_APPENDER_DEVELOPER"/>
+</logger>
+<logger name="com.hengyunsoft.platform.developer.repository.fast.meet.dao" additivity="false" level="${log.level.sql}">
+    <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+    <appender-ref ref = "SQL_APPENDER_DEVELOPER"/>
+</logger>
+</included>

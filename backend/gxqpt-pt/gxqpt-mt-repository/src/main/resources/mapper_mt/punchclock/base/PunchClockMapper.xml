@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.punchclock.dao.PunchClockMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.mt.entity.punchclock.po.PunchClock">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="clock_date" jdbcType="DATE" property="clockDate" />
+    <result column="sign_in_time" jdbcType="TIMESTAMP" property="signInTime" />
+    <result column="sign_off_time" jdbcType="TIMESTAMP" property="signOffTime" />
+    <result column="adce_type" jdbcType="INTEGER" property="adceType" />
+    <result column="status_" jdbcType="INTEGER" property="status" />
+    <result column="auto_sign_in_flag" jdbcType="INTEGER" property="autoSignInFlag" />
+    <result column="auto_sign_off_flag" jdbcType="INTEGER" property="autoSignOffFlag" />
+    <result column="sign_in_lng" jdbcType="VARCHAR" property="signInLng" />
+    <result column="sign_in_lat" jdbcType="VARCHAR" property="signInLat" />
+    <result column="sign_location" jdbcType="VARCHAR" property="signLocation" />
+    <result column="sign_off_lng" jdbcType="VARCHAR" property="signOffLng" />
+    <result column="sign_off_lat" jdbcType="VARCHAR" property="signOffLat" />
+    <result column="sign_off_location" jdbcType="VARCHAR" property="signOffLocation" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, unit_id, user_id, clock_date, sign_in_time, sign_off_time, adce_type, status_, 
+    auto_sign_in_flag, auto_sign_off_flag, sign_in_lng, sign_in_lat, sign_location, sign_off_lng, 
+    sign_off_lat, sign_off_location, create_user, create_time, update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.mt.repository.punchclock.example.PunchClockExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_punch_clock
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_punch_clock
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.mt.repository.punchclock.example.PunchClockExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_punch_clock
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_punch_clock
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.mt.repository.punchclock.example.PunchClockExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_punch_clock
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.mt.entity.punchclock.po.PunchClock">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_clock
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_clock
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.mt.entity.punchclock.po.PunchClock">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_punch_clock (id, unit_id, user_id, 
+      clock_date, sign_in_time, sign_off_time, 
+      adce_type, status_, auto_sign_in_flag, 
+      auto_sign_off_flag, sign_in_lng, sign_in_lat, 
+      sign_location, sign_off_lng, sign_off_lat, 
+      sign_off_location, create_user, create_time, 
+      update_user, update_time)
+    values (#{id,jdbcType=BIGINT}, #{unitId,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
+      #{clockDate,jdbcType=DATE}, #{signInTime,jdbcType=TIMESTAMP}, #{signOffTime,jdbcType=TIMESTAMP}, 
+      #{adceType,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{autoSignInFlag,jdbcType=INTEGER}, 
+      #{autoSignOffFlag,jdbcType=INTEGER}, #{signInLng,jdbcType=VARCHAR}, #{signInLat,jdbcType=VARCHAR}, 
+      #{signLocation,jdbcType=VARCHAR}, #{signOffLng,jdbcType=VARCHAR}, #{signOffLat,jdbcType=VARCHAR}, 
+      #{signOffLocation,jdbcType=VARCHAR}, #{createUser,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_punch_clock (id, unit_id, user_id, clock_date, sign_in_time, sign_off_time, adce_type, status_, auto_sign_in_flag, auto_sign_off_flag, sign_in_lng, sign_in_lat, sign_location, sign_off_lng, sign_off_lat, sign_off_location, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.unitId,jdbcType=VARCHAR}, #{item.userId,jdbcType=BIGINT}, 
+        #{item.clockDate,jdbcType=DATE}, #{item.signInTime,jdbcType=TIMESTAMP}, #{item.signOffTime,jdbcType=TIMESTAMP}, 
+        #{item.adceType,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER}, #{item.autoSignInFlag,jdbcType=INTEGER}, 
+        #{item.autoSignOffFlag,jdbcType=INTEGER}, #{item.signInLng,jdbcType=VARCHAR}, #{item.signInLat,jdbcType=VARCHAR}, 
+        #{item.signLocation,jdbcType=VARCHAR}, #{item.signOffLng,jdbcType=VARCHAR}, #{item.signOffLat,jdbcType=VARCHAR}, 
+        #{item.signOffLocation,jdbcType=VARCHAR}, #{item.createUser,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.mt.entity.punchclock.po.PunchClock">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_punch_clock
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="clockDate != null">
+        clock_date,
+      </if>
+      <if test="signInTime != null">
+        sign_in_time,
+      </if>
+      <if test="signOffTime != null">
+        sign_off_time,
+      </if>
+      <if test="adceType != null">
+        adce_type,
+      </if>
+      <if test="status != null">
+        status_,
+      </if>
+      <if test="autoSignInFlag != null">
+        auto_sign_in_flag,
+      </if>
+      <if test="autoSignOffFlag != null">
+        auto_sign_off_flag,
+      </if>
+      <if test="signInLng != null">
+        sign_in_lng,
+      </if>
+      <if test="signInLat != null">
+        sign_in_lat,
+      </if>
+      <if test="signLocation != null">
+        sign_location,
+      </if>
+      <if test="signOffLng != null">
+        sign_off_lng,
+      </if>
+      <if test="signOffLat != null">
+        sign_off_lat,
+      </if>
+      <if test="signOffLocation != null">
+        sign_off_location,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="clockDate != null">
+        #{clockDate,jdbcType=DATE},
+      </if>
+      <if test="signInTime != null">
+        #{signInTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signOffTime != null">
+        #{signOffTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="adceType != null">
+        #{adceType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="autoSignInFlag != null">
+        #{autoSignInFlag,jdbcType=INTEGER},
+      </if>
+      <if test="autoSignOffFlag != null">
+        #{autoSignOffFlag,jdbcType=INTEGER},
+      </if>
+      <if test="signInLng != null">
+        #{signInLng,jdbcType=VARCHAR},
+      </if>
+      <if test="signInLat != null">
+        #{signInLat,jdbcType=VARCHAR},
+      </if>
+      <if test="signLocation != null">
+        #{signLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="signOffLng != null">
+        #{signOffLng,jdbcType=VARCHAR},
+      </if>
+      <if test="signOffLat != null">
+        #{signOffLat,jdbcType=VARCHAR},
+      </if>
+      <if test="signOffLocation != null">
+        #{signOffLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.mt.repository.punchclock.example.PunchClockExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_punch_clock
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_clock
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.unitId != null">
+        unit_id = #{record.unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.clockDate != null">
+        clock_date = #{record.clockDate,jdbcType=DATE},
+      </if>
+      <if test="record.signInTime != null">
+        sign_in_time = #{record.signInTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.signOffTime != null">
+        sign_off_time = #{record.signOffTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.adceType != null">
+        adce_type = #{record.adceType,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        status_ = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoSignInFlag != null">
+        auto_sign_in_flag = #{record.autoSignInFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoSignOffFlag != null">
+        auto_sign_off_flag = #{record.autoSignOffFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.signInLng != null">
+        sign_in_lng = #{record.signInLng,jdbcType=VARCHAR},
+      </if>
+      <if test="record.signInLat != null">
+        sign_in_lat = #{record.signInLat,jdbcType=VARCHAR},
+      </if>
+      <if test="record.signLocation != null">
+        sign_location = #{record.signLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.signOffLng != null">
+        sign_off_lng = #{record.signOffLng,jdbcType=VARCHAR},
+      </if>
+      <if test="record.signOffLat != null">
+        sign_off_lat = #{record.signOffLat,jdbcType=VARCHAR},
+      </if>
+      <if test="record.signOffLocation != null">
+        sign_off_location = #{record.signOffLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_clock
+    set id = #{record.id,jdbcType=BIGINT},
+      unit_id = #{record.unitId,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      clock_date = #{record.clockDate,jdbcType=DATE},
+      sign_in_time = #{record.signInTime,jdbcType=TIMESTAMP},
+      sign_off_time = #{record.signOffTime,jdbcType=TIMESTAMP},
+      adce_type = #{record.adceType,jdbcType=INTEGER},
+      status_ = #{record.status,jdbcType=INTEGER},
+      auto_sign_in_flag = #{record.autoSignInFlag,jdbcType=INTEGER},
+      auto_sign_off_flag = #{record.autoSignOffFlag,jdbcType=INTEGER},
+      sign_in_lng = #{record.signInLng,jdbcType=VARCHAR},
+      sign_in_lat = #{record.signInLat,jdbcType=VARCHAR},
+      sign_location = #{record.signLocation,jdbcType=VARCHAR},
+      sign_off_lng = #{record.signOffLng,jdbcType=VARCHAR},
+      sign_off_lat = #{record.signOffLat,jdbcType=VARCHAR},
+      sign_off_location = #{record.signOffLocation,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.mt.entity.punchclock.po.PunchClock">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_clock
+    <set>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="clockDate != null">
+        clock_date = #{clockDate,jdbcType=DATE},
+      </if>
+      <if test="signInTime != null">
+        sign_in_time = #{signInTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signOffTime != null">
+        sign_off_time = #{signOffTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="adceType != null">
+        adce_type = #{adceType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="autoSignInFlag != null">
+        auto_sign_in_flag = #{autoSignInFlag,jdbcType=INTEGER},
+      </if>
+      <if test="autoSignOffFlag != null">
+        auto_sign_off_flag = #{autoSignOffFlag,jdbcType=INTEGER},
+      </if>
+      <if test="signInLng != null">
+        sign_in_lng = #{signInLng,jdbcType=VARCHAR},
+      </if>
+      <if test="signInLat != null">
+        sign_in_lat = #{signInLat,jdbcType=VARCHAR},
+      </if>
+      <if test="signLocation != null">
+        sign_location = #{signLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="signOffLng != null">
+        sign_off_lng = #{signOffLng,jdbcType=VARCHAR},
+      </if>
+      <if test="signOffLat != null">
+        sign_off_lat = #{signOffLat,jdbcType=VARCHAR},
+      </if>
+      <if test="signOffLocation != null">
+        sign_off_location = #{signOffLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.mt.entity.punchclock.po.PunchClock">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_clock
+    set unit_id = #{unitId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=BIGINT},
+      clock_date = #{clockDate,jdbcType=DATE},
+      sign_in_time = #{signInTime,jdbcType=TIMESTAMP},
+      sign_off_time = #{signOffTime,jdbcType=TIMESTAMP},
+      adce_type = #{adceType,jdbcType=INTEGER},
+      status_ = #{status,jdbcType=INTEGER},
+      auto_sign_in_flag = #{autoSignInFlag,jdbcType=INTEGER},
+      auto_sign_off_flag = #{autoSignOffFlag,jdbcType=INTEGER},
+      sign_in_lng = #{signInLng,jdbcType=VARCHAR},
+      sign_in_lat = #{signInLat,jdbcType=VARCHAR},
+      sign_location = #{signLocation,jdbcType=VARCHAR},
+      sign_off_lng = #{signOffLng,jdbcType=VARCHAR},
+      sign_off_lat = #{signOffLat,jdbcType=VARCHAR},
+      sign_off_location = #{signOffLocation,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

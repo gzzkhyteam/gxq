@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.file.repository.file.dao.FileUserNumMapper">
+
+  <!--mdengbo-->
+  <select id="getYearMonthNum" resultType="com.hengyunsoft.platform.file.entity.file.domain.FileDevViewDO">
+    SELECT sum(fu.num) num, fu.fyear_month fYearMonth
+    from f_file_usernum fu
+    where fu.create_user = #{userId}
+    and fu.fyear_month = #{yearMonth}
+    and fu.app_id = #{appId}
+  </select>
+
+  <resultMap id="FileDataTypeDevViewDO" type="com.hengyunsoft.platform.file.entity.file.domain.FileDataTypeDevViewDO">
+    <result column="dataType" property="dataType" />
+    <result column="num" property="num" />
+  </resultMap>
+
+  <!--mdengbo-->
+  <select id="getFileDataType" resultMap="FileDataTypeDevViewDO">
+    SELECT fu.data_type dataType, sum(num) num
+    from f_file_usernum fu
+    where fu.create_user = #{userId}
+    and fu.fyear_month = #{yearMonth}
+    and fu.app_id = #{appId}
+    GROUP BY dataType
+  </select>
+
+</mapper>

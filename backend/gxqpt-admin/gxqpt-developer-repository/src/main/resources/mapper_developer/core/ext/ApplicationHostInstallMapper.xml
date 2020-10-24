@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.core.dao.ApplicationHostInstallMapper">
+    <resultMap id="PageResultMap" type="com.hengyunsoft.platform.developer.entity.core.domain.ApplicationHostInstallDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="app_id" jdbcType="VARCHAR" property="appId"/>
+        <result column="host_id" jdbcType="BIGINT" property="hostId"/>
+        <result column="mem" jdbcType="INTEGER" property="mem"/>
+        <result column="harddisk" jdbcType="INTEGER" property="harddisk"/>
+        <result column="install_path" jdbcType="VARCHAR" property="installPath"/>
+        <result column="version_" jdbcType="VARCHAR" property="version"/>
+        <result column="index_url" jdbcType="VARCHAR" property="indexUrl"/>
+        <result column="remark_" jdbcType="VARCHAR" property="remark"/>
+        <result column="status_" jdbcType="INTEGER" property="status"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <!--拓展的表外字段-->
+        <result column="host_name" jdbcType="VARCHAR" property="hostName"/>
+        <result column="name_" jdbcType="VARCHAR" property="applicationName"/>
+        <result column="app_name" jdbcType="VARCHAR" property="appName"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+    </resultMap>
+
+    <!--查询主机应用部署列表-->
+    <select id="findList" parameterType="string" resultMap="PageResultMap">
+        <!-- <if test="hostName != null and hostName != ''">
+        <bind name="partent" value="'%'+hostName+'%'"/>
+        </if> -->
+        SELECT chi.id,chi.mem,chi.harddisk,chi.install_path,chi.status_,chi.app_id,chi.host_id,ca.name_,ch.host_name
+        FROM c_application_host_install chi left join c_application ca on chi.app_id=ca.app_id join c_host ch ON
+        chi.host_id=ch.id
+        <where>
+            <if test="hostName != null and hostName != ''">
+                and ch.host_name LIKE #{hostName,typeHandler=fullLike}
+            </if>
+            <if test="appId != null and appId != ''">
+                and chi.app_id=#{appId}
+            </if>
+            <if test="hostId != null and hostId != ''">
+                and chi.host_id=#{hostId}
+            </if>
+        </where>
+    </select>
+    <!--查询主机应用详情-->
+    <select id="getDetail" parameterType="Integer" resultMap="BaseResultMap">
+        SELECT chi.id, chi.app_id, chi.host_id, chi.mem, chi.harddisk, chi.install_path, chi.version_, chi.index_url,
+        chi.remark_, chi.status_,
+        chi.create_user, chi.create_time, chi.update_user, chi.update_time,ca.name_,ch.host_name FROM
+        c_application_host_install chi join c_host ch on ch.id=chi.host_id join c_application ca on ca.app_id=chi.app_id
+        where 1=1
+        <if test="id != null and id != ''">
+            and chi.id=#{id}
+        </if>
+    </select>
+    <select id="getHostName" resultMap="PageResultMap">
+	   	select ch.id as host_id,ch.host_name FROM c_assign_role car join c_user cu on cu.id=car.user_id JOIN c_role  cr on cr.id=car.role_id RIGHT JOIN c_host ch on ch.id=cr.biz_flag and ch.status=1
+	    where 1=1 
+	    <if test="adminId!= null and adminId != ''">
+	    	and car.user_id=#{adminId}
+	    </if>
+	  </select>
+    <!--查询应用名称列表-->
+    <select id="getApplicationName" resultMap="PageResultMap">
+	   SELECT app_id, name_ FROM  c_application
+    </select>
+    <sql id="Page_Column_List">
+        <!--
+        @mbggenerated
+        -->
+        c.id, c.app_id, c.host_id, c.mem, c.harddisk, c.install_path, c.version_,
+        c.index_url, c.remark_, c.status_,c.create_user, c.create_time,
+        c.update_user, c.update_time, c_host.host_name host_name, c_application.name_ app_name
+    </sql>
+    <sql id="Detail_Column_List">
+        <!--
+        @mbggenerated
+        -->
+        c.id, c.app_id, c.host_id, c.mem, c.harddisk, c.install_path, c.version_,
+        c.index_url, c.remark_, c.status_,c.create_user, c.create_time,
+        c.update_user, c.update_time, c_host.host_name host_name,c_application.name_ app_name
+    </sql>
+
+    <!--当前管理的应用查询
+    @wz-->
+    <select id="pageHostInstall"  resultMap="PageResultMap">
+        select
+        <include refid="Page_Column_List"/>
+        from c_application_host_install c
+         join c_host on c.host_id=c_host.id
+         join c_application on c.app_id=c_application.app_id
+        where c.app_id=#{appId,jdbcType=VARCHAR}
+        <if test="hostId != null">
+            and c.host_id=#{hostId,jdbcType=BIGINT}
+        </if>
+        <if test="hostName != null">
+            and c_host.host_name LIKE #{hostName,typeHandler=fullLike}
+        </if>
+    </select>
+
+    <!--当前管理的应用详情
+    @wz-->
+    <select id="getDetails" parameterType="Long" resultMap="PageResultMap">
+        select
+        <include refid="Page_Column_List"/>
+        from c_application_host_install c
+        left join c_host on c.host_id=c_host.id
+        left join c_application on c.app_id=c_application.app_id
+        where c.id=#{id,jdbcType=BIGINT}
+    </select>
+    <!--查询主机应用数据-->
+    <select id="getDetailById" parameterType="Long" resultMap="PageResultMap">
+		SELECT chi.*,cu.name_ user_name ,ca.name_ FROM c_application_host_install chi LEFT JOIN c_user cu on chi.create_user=cu.id LEFT JOIN c_application ca on ca.app_id=chi.app_id
+		where chi.id=#{installId}
+    </select>
+</mapper>

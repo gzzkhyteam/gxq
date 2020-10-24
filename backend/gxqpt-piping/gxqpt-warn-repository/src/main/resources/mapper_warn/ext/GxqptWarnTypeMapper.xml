@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.warn.repository.dao.GxqptWarnTypeMapper">
+
+    <!--查询预警类型列表-->
+    <select id="getWarnTypeList" resultType="java.util.HashMap">
+        SELECT DISTINCT id as warnTypeId , type_name as warnTypeName FROM b_warntype WHERE parent_id != -1 AND is_enable = TRUE
+    </select>
+    <select id="getCode" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT code FROM b_warntype WHERE code = #{code,jdbcType=VARCHAR}
+    </select>
+    <select id="getIdByParentId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT id FROM b_warntype WHERE parent_id = -1
+    </select>
+    <select id="getWarnType" resultType="java.util.HashMap">
+        SELECT DISTINCT id,type_name FROM b_warntype WHERE parent_id != -1 AND is_enable = TRUE
+    </select>
+
+
+    <select id="getTypeAll" resultType="java.util.HashMap">
+        SELECT id,type_name,parent_id FROM b_warntype WHERE is_enable = TRUE
+    </select>
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.msgs.repository.bbsmsg.dao.BbsIncrementMainMsgMapper">
+  <resultMap id="ThirdBaseResultMap" type="com.hengyunsoft.platform.msgs.entity.bbsmsg.msgdo.BbsNotReadMsgResDO">
+    <!--
+    @mbggenerated
+    -->
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="biz_id" jdbcType="VARCHAR" property="bizId" />
+    <result column="biz_type" jdbcType="VARCHAR" property="bizType" />
+    <result column="client_flag" jdbcType="VARCHAR" property="clientFlag" />
+    <result column="brief_tpye" jdbcType="VARCHAR" property="briefTpye" />
+    <result column="detailed_type" jdbcType="VARCHAR" property="detailedType" />
+    <result column="detailed_type_desc" jdbcType="VARCHAR" property="detailedTypeDesc" />
+    <result column="title_" jdbcType="VARCHAR" property="title" />
+    <result column="content_" jdbcType="VARCHAR" property="content" />
+    <result column="sender_name" jdbcType="VARCHAR" property="senderName" />
+    <result column="handler_url" jdbcType="VARCHAR" property="handlerUrl" />
+    <result column="handler_params" jdbcType="VARCHAR" property="handlerParams" />
+    <result column="single_handle_is" jdbcType="BIT" property="singleHandleIs" />
+    <result column="handler_need_is" jdbcType="BIT" property="handlerNeedIs" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="app_name" jdbcType="VARCHAR" property="appName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+
+    <result column="recId" jdbcType="BIGINT" property="recId" />
+    <result column="msg_id" jdbcType="BIGINT" property="msgId" />
+    <result column="receive_id" jdbcType="BIGINT" property="receiveId" />
+    <result column="read_is" jdbcType="BIT" property="readIs" />
+    <result column="recHanderNeedIs" jdbcType="BIT" property="recHanderNeedIs" />
+    <result column="recCreateTime" jdbcType="TIMESTAMP" property="recCreateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <select id="getAllNotReadMsg" parameterType="map" resultMap="ThirdBaseResultMap">
+    SELECT
+          bimm.id, bimm.biz_id, bimm.biz_type, bimm.client_flag, bimm.brief_tpye, bimm.detailed_type, bimm.detailed_type_desc,
+          bimm.title_, bimm.content_, bimm.sender_name, bimm.handler_url, bimm.handler_params, bimm.single_handle_is, bimm.handler_need_is,
+          bimm.app_id, bimm.app_name, bimm.create_time,
+          birm.id as recId, birm.msg_id, birm.receive_id, birm.read_is,
+          birm.handler_need_is as recHanderNeedIs, birm.create_time as recCreateTime, birm.update_user,birm.update_time
+
+          FROM b_bbs_increment_main_msg bimm
+
+          left join b_bbs_increment_receive_msg birm on birm.msg_id = bimm.id
+
+          where birm.receive_id = #{userId}
+          and birm.read_is = false
+          order by birm.update_time desc
+
+  </select>
+
+  <select id="getNeedHandleNotReadMsg" parameterType="map" resultMap="ThirdBaseResultMap">
+
+    SELECT
+          bimm.id, bimm.biz_id, bimm.biz_type, bimm.client_flag, bimm.brief_tpye, bimm.detailed_type, bimm.detailed_type_desc,
+          bimm.title_, bimm.content_, bimm.sender_name, bimm.handler_url, bimm.handler_params, bimm.single_handle_is, bimm.handler_need_is,
+          bimm.app_id, bimm.app_name, bimm.create_time,
+          birm.id as recId, birm.msg_id, birm.receive_id, birm.read_is,
+          birm.handler_need_is as recHanderNeedIs, birm.create_time as recCreateTime, birm.update_user,birm.update_time
+
+          FROM b_bbs_increment_main_msg bimm
+
+          left join b_bbs_increment_receive_msg birm on birm.msg_id = bimm.id
+
+          where
+          birm.receive_id = #{userId}
+          and birm.read_is = false
+          and birm.handler_need_is = true
+          order by birm.update_time desc
+
+  </select>
+
+  <select id="getCommonNotReadMsg" parameterType="map" resultMap="ThirdBaseResultMap">
+     SELECT
+          bimm.id, bimm.biz_id, bimm.biz_type, bimm.client_flag, bimm.brief_tpye, bimm.detailed_type, bimm.detailed_type_desc,
+          bimm.title_, bimm.content_, bimm.sender_name, bimm.handler_url, bimm.handler_params, bimm.single_handle_is, bimm.handler_need_is,
+          bimm.app_id, bimm.app_name, bimm.create_time,
+          birm.id as recId, birm.msg_id, birm.receive_id, birm.read_is,
+          birm.handler_need_is as recHanderNeedIs, birm.create_time as recCreateTime, birm.update_user,birm.update_time
+
+          FROM b_bbs_increment_main_msg bimm
+
+          left join b_bbs_increment_receive_msg birm on birm.msg_id = bimm.id
+
+          where
+          birm.receive_id = #{userId}
+          and birm.read_is = false
+          and birm.handler_need_is = false
+          order by birm.update_time desc
+
+  </select>
+
+
+</mapper>

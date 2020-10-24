@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.standard.repository.standard.dao.StandardClassifyMapper">
+
+  	<select id="findDevOpsDocTree" parameterType="map" resultMap="BaseResultMap">
+	    select 
+	    <include refid="Base_Column_List" />
+	    from standard_classify
+	    where 1=1
+	    <if test="treeId !=null">
+	    	and id = #{treeId,jdbcType=BIGINT}
+	    </if>
+	    <if test="name !=null and name != ''">
+	    	and name like CONCAT('%',#{name},'%')
+	    </if>
+  	</select>
+
+	<!-- 获取当前子节点的ID -->
+	<select id="findCurrentChildNodeId" resultType="Long" parameterType="Long">
+		select id from standard_classify where parent_id in
+		<foreach collection="childs" open="(" close=")" item="power" separator=",">
+			'${power}'
+		</foreach>
+	</select>
+</mapper>

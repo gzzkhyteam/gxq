@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogStructApacheMapper">
+    <resultMap id="logTypeMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogTypeDO">
+        <result column="month" property="month"></result>
+        <result column="count" property="count"></result>
+        <result column="log_type" property="logType"></result>
+        <result column="year" property="year"></result>
+    </resultMap>
+    <resultMap id="LogRespondMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogRespondMonthDO">
+        <result column="month" property="month"></result>
+        <result column="respondTime" property="respondTime"></result>
+        <result column="year" property="year"></result>
+    </resultMap>
+    <!--分页查询结构化应用系统APP列表-->
+    <select id="pageQueryApache" resultMap="BaseResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructApacheExample">
+        select id, document_id, app_id, remote_ip, local_ip, send_byte, foobar_e, foobar_i, foobar_n,
+        foobar_o, clf_byte_count, file_name, host, request_agreement, remote_login_name,
+        method, port, thread_id, query_str, req_first_line, status, log_time, time_consum,
+        remote_user, request_url, rsp_server_name, ucn_server_name, data_channel, create_time,
+        create_user, update_time, update_user, create_user_name, update_user_name
+        from log_struct_apache
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <!--分页查询告警apache结构化列表-->
+    <select id="pageQueryWarningApache" resultMap="BaseResultMap"
+            parameterType="Long">
+        select lsa.id, lsa.document_id, lsa.app_id, lsa.remote_ip, lsa.local_ip, lsa.send_byte, lsa.foobar_e, lsa.foobar_i, lsa.foobar_n,
+        lsa.foobar_o, lsa.clf_byte_count, lsa.file_name, lsa.host, lsa.request_agreement, lsa.remote_login_name,
+        lsa.method, lsa.port, lsa.thread_id, lsa.query_str, lsa.req_first_line, lsa.status, lsa.log_time, lsa.time_consum,
+        lsa.remote_user, lsa.request_url, lsa.rsp_server_name, lsa.ucn_server_name, lsa.data_channel, lsa.create_time,
+        lsa.create_user, lsa.update_time, lsa.update_user, lsa.create_user_name, lsa.update_user_name
+        from log_warning_struct lws,log_struct_apache lsa where lws.log_struct_id = lsa.id and lws.log_type='APACHE' and lws.log_warning_id = #{id,jdbcType=BIGINT}
+
+    </select>
+
+    <!--查询apache结构化告警数据-->
+    <select id="queryApacheWarn" resultMap="BaseResultMap"
+            parameterType="Long">
+        select lsa.id, lsa.document_id, lsa.app_id, lsa.remote_ip, lsa.local_ip, lsa.send_byte, lsa.foobar_e, lsa.foobar_i, lsa.foobar_n,
+        lsa.foobar_o, lsa.clf_byte_count, lsa.file_name, lsa.host, lsa.request_agreement, lsa.remote_login_name,
+        lsa.method, lsa.port, lsa.thread_id, lsa.query_str, lsa.req_first_line, lsa.status, lsa.log_time, lsa.time_consum,
+        lsa.remote_user, lsa.request_url, lsa.rsp_server_name, lsa.ucn_server_name, lsa.data_channel, lsa.create_time,
+        lsa.create_user, lsa.update_time, lsa.update_user, lsa.create_user_name, lsa.update_user_name
+        from log_struct_apache lsa where not exists (
+        SELECT 1
+        FROM log_warn_check lwc
+        WHERE lwc.log_type='APACHE' and lwc.log_struct_id = lsa.id ) order by lsa.log_time limit #{pageSize,jdbcType=BIGINT}
+
+    </select>
+
+    <delete id="deleteByDocumentIds" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogFileInterfaceExample">
+        delete from log_struct_apache
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+<!--前十二月数量统计-->
+    <select id="findMonthCount" parameterType="String" resultMap="logTypeMap">
+         select  YEAR(la.create_time) as year,MONTH(la.create_time) as month, COUNT(MONTH(la.create_time)) as count from log_struct_apache la where la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time)
+    </select>
+    <!--前十二月日志响应时间-->
+    <select id="findLogRespondMonth" parameterType="String" resultMap="LogRespondMap">
+ select  YEAR(la.create_time) as year,MONTH(la.create_time) as month, sum(la.time_consum) as respondTime from log_struct_apache la where la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time)
+    </select>
+</mapper>

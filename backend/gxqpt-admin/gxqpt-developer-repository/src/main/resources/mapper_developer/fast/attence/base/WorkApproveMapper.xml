@@ -1,0 +1,719 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.fast.attence.dao.WorkApproveMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApprove">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="aprove_code" jdbcType="VARCHAR" property="aproveCode" />
+    <result column="aprove_type" jdbcType="VARCHAR" property="aproveType" />
+    <result column="apply_time" jdbcType="TIMESTAMP" property="applyTime" />
+    <result column="apply_user_id" jdbcType="BIGINT" property="applyUserId" />
+    <result column="apply_user_name" jdbcType="VARCHAR" property="applyUserName" />
+    <result column="current_state" jdbcType="VARCHAR" property="currentState" />
+    <result column="current_aprove_user_id" jdbcType="BIGINT" property="currentAproveUserId" />
+    <result column="current_aprove_user_operation" jdbcType="VARCHAR" property="currentAproveUserOperation" />
+    <result column="aprove_state" jdbcType="VARCHAR" property="aproveState" />
+    <result column="in_aprove" jdbcType="VARCHAR" property="inAprove" />
+    <result column="is_change" jdbcType="VARCHAR" property="isChange" />
+    <result column="change_reason" jdbcType="VARCHAR" property="changeReason" />
+    <result column="change_time" jdbcType="TIMESTAMP" property="changeTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="backlog_id" jdbcType="BIGINT" property="backlogId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, app_id, aprove_code, aprove_type, apply_time, apply_user_id, apply_user_name, 
+    current_state, current_aprove_user_id, current_aprove_user_operation, aprove_state, 
+    in_aprove, is_change, change_reason, change_time, create_time, update_time, create_user, 
+    update_user, backlog_id
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.WorkApproveExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_work_approve
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_work_approve
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.WorkApproveExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_work_approve
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectByAppIdAndId" parameterType="map" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <include refid="Base_Column_List" />
+    from b_work_approve
+    where 1=1 and app_id = #{appId,jdbcType=VARCHAR} and id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAppIdById" parameterType="map" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_work_approve
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_work_approve
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.WorkApproveExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_work_approve
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_work_approve where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_work_approve
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_work_approve where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApprove">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_approve
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApprove">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_approve
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+    #{item}
+  </foreach>
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApprove">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_approve
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApprove">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_approve
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApprove">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_work_approve (id, app_id, aprove_code, 
+      aprove_type, apply_time, apply_user_id, 
+      apply_user_name, current_state, current_aprove_user_id, 
+      current_aprove_user_operation, aprove_state, 
+      in_aprove, is_change, change_reason, 
+      change_time, create_time, update_time, 
+      create_user, update_user, backlog_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{aproveCode,jdbcType=VARCHAR}, 
+      #{aproveType,jdbcType=VARCHAR}, #{applyTime,jdbcType=TIMESTAMP}, #{applyUserId,jdbcType=BIGINT}, 
+      #{applyUserName,jdbcType=VARCHAR}, #{currentState,jdbcType=VARCHAR}, #{currentAproveUserId,jdbcType=BIGINT}, 
+      #{currentAproveUserOperation,jdbcType=VARCHAR}, #{aproveState,jdbcType=VARCHAR}, 
+      #{inAprove,jdbcType=VARCHAR}, #{isChange,jdbcType=VARCHAR}, #{changeReason,jdbcType=VARCHAR}, 
+      #{changeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=BIGINT}, #{updateUser,jdbcType=BIGINT}, #{backlogId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_work_approve (id, app_id, aprove_code, aprove_type, apply_time, apply_user_id, apply_user_name, current_state, current_aprove_user_id, current_aprove_user_operation, aprove_state, in_aprove, is_change, change_reason, change_time, create_time, update_time, create_user, update_user, backlog_id ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.appId,jdbcType=VARCHAR}, #{item.aproveCode,jdbcType=VARCHAR}, 
+        #{item.aproveType,jdbcType=VARCHAR}, #{item.applyTime,jdbcType=TIMESTAMP}, #{item.applyUserId,jdbcType=BIGINT}, 
+        #{item.applyUserName,jdbcType=VARCHAR}, #{item.currentState,jdbcType=VARCHAR}, 
+        #{item.currentAproveUserId,jdbcType=BIGINT}, #{item.currentAproveUserOperation,jdbcType=VARCHAR}, 
+        #{item.aproveState,jdbcType=VARCHAR}, #{item.inAprove,jdbcType=VARCHAR}, #{item.isChange,jdbcType=VARCHAR}, 
+        #{item.changeReason,jdbcType=VARCHAR}, #{item.changeTime,jdbcType=TIMESTAMP}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=BIGINT}, #{item.updateUser,jdbcType=BIGINT}, 
+        #{item.backlogId,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApprove">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_work_approve
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="aproveCode != null">
+        aprove_code,
+      </if>
+      <if test="aproveType != null">
+        aprove_type,
+      </if>
+      <if test="applyTime != null">
+        apply_time,
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id,
+      </if>
+      <if test="applyUserName != null">
+        apply_user_name,
+      </if>
+      <if test="currentState != null">
+        current_state,
+      </if>
+      <if test="currentAproveUserId != null">
+        current_aprove_user_id,
+      </if>
+      <if test="currentAproveUserOperation != null">
+        current_aprove_user_operation,
+      </if>
+      <if test="aproveState != null">
+        aprove_state,
+      </if>
+      <if test="inAprove != null">
+        in_aprove,
+      </if>
+      <if test="isChange != null">
+        is_change,
+      </if>
+      <if test="changeReason != null">
+        change_reason,
+      </if>
+      <if test="changeTime != null">
+        change_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="backlogId != null">
+        backlog_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="aproveCode != null">
+        #{aproveCode,jdbcType=VARCHAR},
+      </if>
+      <if test="aproveType != null">
+        #{aproveType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null">
+        #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyUserId != null">
+        #{applyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="applyUserName != null">
+        #{applyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="currentState != null">
+        #{currentState,jdbcType=VARCHAR},
+      </if>
+      <if test="currentAproveUserId != null">
+        #{currentAproveUserId,jdbcType=BIGINT},
+      </if>
+      <if test="currentAproveUserOperation != null">
+        #{currentAproveUserOperation,jdbcType=VARCHAR},
+      </if>
+      <if test="aproveState != null">
+        #{aproveState,jdbcType=VARCHAR},
+      </if>
+      <if test="inAprove != null">
+        #{inAprove,jdbcType=VARCHAR},
+      </if>
+      <if test="isChange != null">
+        #{isChange,jdbcType=VARCHAR},
+      </if>
+      <if test="changeReason != null">
+        #{changeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="changeTime != null">
+        #{changeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="backlogId != null">
+        #{backlogId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.WorkApproveExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_work_approve
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_approve
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aproveCode != null">
+        aprove_code = #{record.aproveCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aproveType != null">
+        aprove_type = #{record.aproveType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyTime != null">
+        apply_time = #{record.applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.applyUserId != null">
+        apply_user_id = #{record.applyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="record.applyUserName != null">
+        apply_user_name = #{record.applyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currentState != null">
+        current_state = #{record.currentState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currentAproveUserId != null">
+        current_aprove_user_id = #{record.currentAproveUserId,jdbcType=BIGINT},
+      </if>
+      <if test="record.currentAproveUserOperation != null">
+        current_aprove_user_operation = #{record.currentAproveUserOperation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aproveState != null">
+        aprove_state = #{record.aproveState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inAprove != null">
+        in_aprove = #{record.inAprove,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isChange != null">
+        is_change = #{record.isChange,jdbcType=VARCHAR},
+      </if>
+      <if test="record.changeReason != null">
+        change_reason = #{record.changeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.changeTime != null">
+        change_time = #{record.changeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.backlogId != null">
+        backlog_id = #{record.backlogId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_approve
+    set id = #{record.id,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      aprove_code = #{record.aproveCode,jdbcType=VARCHAR},
+      aprove_type = #{record.aproveType,jdbcType=VARCHAR},
+      apply_time = #{record.applyTime,jdbcType=TIMESTAMP},
+      apply_user_id = #{record.applyUserId,jdbcType=BIGINT},
+      apply_user_name = #{record.applyUserName,jdbcType=VARCHAR},
+      current_state = #{record.currentState,jdbcType=VARCHAR},
+      current_aprove_user_id = #{record.currentAproveUserId,jdbcType=BIGINT},
+      current_aprove_user_operation = #{record.currentAproveUserOperation,jdbcType=VARCHAR},
+      aprove_state = #{record.aproveState,jdbcType=VARCHAR},
+      in_aprove = #{record.inAprove,jdbcType=VARCHAR},
+      is_change = #{record.isChange,jdbcType=VARCHAR},
+      change_reason = #{record.changeReason,jdbcType=VARCHAR},
+      change_time = #{record.changeTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      backlog_id = #{record.backlogId,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApprove">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_approve
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="aproveCode != null">
+        aprove_code = #{aproveCode,jdbcType=VARCHAR},
+      </if>
+      <if test="aproveType != null">
+        aprove_type = #{aproveType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null">
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id = #{applyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="applyUserName != null">
+        apply_user_name = #{applyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="currentState != null">
+        current_state = #{currentState,jdbcType=VARCHAR},
+      </if>
+      <if test="currentAproveUserId != null">
+        current_aprove_user_id = #{currentAproveUserId,jdbcType=BIGINT},
+      </if>
+      <if test="currentAproveUserOperation != null">
+        current_aprove_user_operation = #{currentAproveUserOperation,jdbcType=VARCHAR},
+      </if>
+      <if test="aproveState != null">
+        aprove_state = #{aproveState,jdbcType=VARCHAR},
+      </if>
+      <if test="inAprove != null">
+        in_aprove = #{inAprove,jdbcType=VARCHAR},
+      </if>
+      <if test="isChange != null">
+        is_change = #{isChange,jdbcType=VARCHAR},
+      </if>
+      <if test="changeReason != null">
+        change_reason = #{changeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="changeTime != null">
+        change_time = #{changeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="backlogId != null">
+        backlog_id = #{backlogId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApprove">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_approve
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="aproveCode != null">
+        aprove_code = #{aproveCode,jdbcType=VARCHAR},
+      </if>
+      <if test="aproveType != null">
+        aprove_type = #{aproveType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null">
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id = #{applyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="applyUserName != null">
+        apply_user_name = #{applyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="currentState != null">
+        current_state = #{currentState,jdbcType=VARCHAR},
+      </if>
+      <if test="currentAproveUserId != null">
+        current_aprove_user_id = #{currentAproveUserId,jdbcType=BIGINT},
+      </if>
+      <if test="currentAproveUserOperation != null">
+        current_aprove_user_operation = #{currentAproveUserOperation,jdbcType=VARCHAR},
+      </if>
+      <if test="aproveState != null">
+        aprove_state = #{aproveState,jdbcType=VARCHAR},
+      </if>
+      <if test="inAprove != null">
+        in_aprove = #{inAprove,jdbcType=VARCHAR},
+      </if>
+      <if test="isChange != null">
+        is_change = #{isChange,jdbcType=VARCHAR},
+      </if>
+      <if test="changeReason != null">
+        change_reason = #{changeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="changeTime != null">
+        change_time = #{changeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="backlogId != null">
+        backlog_id = #{backlogId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApprove">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_approve
+    set app_id = #{appId,jdbcType=VARCHAR},
+      aprove_code = #{aproveCode,jdbcType=VARCHAR},
+      aprove_type = #{aproveType,jdbcType=VARCHAR},
+      apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      apply_user_id = #{applyUserId,jdbcType=BIGINT},
+      apply_user_name = #{applyUserName,jdbcType=VARCHAR},
+      current_state = #{currentState,jdbcType=VARCHAR},
+      current_aprove_user_id = #{currentAproveUserId,jdbcType=BIGINT},
+      current_aprove_user_operation = #{currentAproveUserOperation,jdbcType=VARCHAR},
+      aprove_state = #{aproveState,jdbcType=VARCHAR},
+      in_aprove = #{inAprove,jdbcType=VARCHAR},
+      is_change = #{isChange,jdbcType=VARCHAR},
+      change_reason = #{changeReason,jdbcType=VARCHAR},
+      change_time = #{changeTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      backlog_id = #{backlogId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApprove">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_approve
+    set app_id = #{appId,jdbcType=VARCHAR},
+      aprove_code = #{aproveCode,jdbcType=VARCHAR},
+      aprove_type = #{aproveType,jdbcType=VARCHAR},
+      apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      apply_user_id = #{applyUserId,jdbcType=BIGINT},
+      apply_user_name = #{applyUserName,jdbcType=VARCHAR},
+      current_state = #{currentState,jdbcType=VARCHAR},
+      current_aprove_user_id = #{currentAproveUserId,jdbcType=BIGINT},
+      current_aprove_user_operation = #{currentAproveUserOperation,jdbcType=VARCHAR},
+      aprove_state = #{aproveState,jdbcType=VARCHAR},
+      in_aprove = #{inAprove,jdbcType=VARCHAR},
+      is_change = #{isChange,jdbcType=VARCHAR},
+      change_reason = #{changeReason,jdbcType=VARCHAR},
+      change_time = #{changeTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      backlog_id = #{backlogId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+</mapper>

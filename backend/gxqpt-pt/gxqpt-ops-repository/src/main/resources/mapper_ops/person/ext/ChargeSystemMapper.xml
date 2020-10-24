@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.person.dao.ChargeSystemMapper">
+    <resultMap id="FaultCountResultMap" type="com.hengyunsoft.platform.ops.entity.fault.domain.FaultMonitoringDO">
+        <result column="count" jdbcType="INTEGER" property="count" />
+        <result column="hour" jdbcType="INTEGER" property="hour" />
+    </resultMap>
+
+    <resultMap id="ScoreCountResultMap" type="com.hengyunsoft.platform.ops.entity.fault.domain.ScoreCountDO">
+        <result column="count" jdbcType="INTEGER" property="count" />
+        <result column="score" jdbcType="INTEGER" property="score" />
+    </resultMap>
+
+    <!--根据用户id、查询当天start............................................................................................. -->
+  <!--根据用户id、查询当天已处理故障数和处理时长（按应用）-->
+  <select id="faultCountAndHour" resultMap="FaultCountResultMap" parameterType="java.lang.Long" >
+    SELECT count(f.system_id) as count,SUM(TIMESTAMPDIFF(MINUTE,happen_time,deal_time)) as hour
+    from b_yw_fault_manage f
+    left  JOIN b_yw_charge_system  s
+    on f.system_id=s.system_id
+   where p_id=#{userId} and f.status=3 and to_days(deal_time) = to_days(now());
+  </select>
+
+    <resultMap id="CountBySystemIdResultMap" type="com.hengyunsoft.platform.ops.entity.person.po.ChargeSystem">
+        <result column="system_id" jdbcType="VARCHAR" property="systemId" />
+    </resultMap>
+    <!--根据用户id、查询负责的应用数(系统数)-->
+    <select id="findBySystemId" resultMap="CountBySystemIdResultMap" parameterType="java.lang.Long" >
+       SELECT system_id as systemId
+        FROM b_yw_charge_system
+        where p_id=#{userId}
+        GROUP BY  system_id;
+    </select>
+
+    <!--查询应用评分-当天未处理故障数-->
+    <select id="faultCount" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+      SELECT count(f.system_id) as count
+      from b_yw_fault_manage f
+      left  JOIN b_yw_charge_system  s
+      on f.system_id=s.system_id
+      where p_id=#{userId} and f.status=1 and to_days(f.happen_time) = to_days(now());
+    </select>
+    <!--查询应用评分-当天故障数数量(包括未处理和已处理)-->
+    <select id="faultAllCount" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count
+        from b_yw_fault_manage f
+        left  JOIN b_yw_charge_system  s
+        on f.system_id=s.system_id
+        where p_id=#{userId} and to_days(f.happen_time) = to_days(now());
+    </select>
+
+  <!--查询服务评分-当天-->
+  <select id="serviceScore" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+   SELECT count(s.id) as count,sum(s.score) as score
+   from b_yw_service_manage s
+   LEFT JOIN b_yw_deal_user d on d.buss_id=s.id
+   where d.person_id=#{userId} and d.type="clr" and TO_DAYS(score_time)= to_days(now())
+  </select>
+  <!--查询培训评分-当天-->
+  <select id="trainScore" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+      SELECT count(t.id) count, sum(t.train_sorce) as score FROM b_yw_train_manage  t
+      LEFT JOIN  b_yw_deal_user d on d.buss_id=t.id
+      where d.person_id=#{userId} and d.type='pxr' and  to_days(t.score_time)=to_days(now())
+  </select>
+
+  <!--查询咨询评分-当天-->
+  <select id="consulttationScore" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+    SELECT count(t.id) count, sum(t.score) as score  FROM b_yw_consult_manage   t
+    LEFT JOIN b_yw_deal_user  d on d.buss_id=t.id
+    where  d.person_id=#{userId} and d.type='zxr' and to_days(t.score_time)=to_days(now())
+  </select>
+    <!--根据用户id、查询当天end............................................................................................. -->
+
+
+    <!--根据用户id、查询本周start.............................................................................................-->
+    <!--根据用户id、查询本周已处理故障数和处理时长（按应用）-->
+    <select id="faultCountAndHourWeek" resultMap="FaultCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count,SUM(TIMESTAMPDIFF(MINUTE,happen_time,deal_time)) as hour
+        from b_yw_fault_manage f
+        left  JOIN b_yw_charge_system  s on f.system_id=s.system_id
+        where  s.p_id=#{userId} and f.status=3
+        and YEARWEEK(date_format(deal_time,'%Y-%m-%d')- INTERVAL 1 DAY) = YEARWEEK(now());
+    </select>
+    <!--查询应用评分-本周未处理故障数-->
+    <select id="faultCountWeek" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count
+        from b_yw_fault_manage f
+        left  JOIN b_yw_charge_system  s on f.system_id=s.system_id
+        where  s.p_id=#{userId} and f.status=1
+        and YEARWEEK(date_format(f.happen_time,'%Y-%m-%d')- INTERVAL 1 DAY) = YEARWEEK(now());
+    </select>
+    <!--查询应用评分-本周故障数数量(包括未处理和已处理)-->
+    <select id="faultAllCountWeek" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count
+        from b_yw_fault_manage f
+        left   JOIN b_yw_charge_system  s
+        on f.system_id=s.system_id
+        where  s.p_id=#{userId}
+        and YEARWEEK(date_format(f.happen_time,'%Y-%m-%d')- INTERVAL 1 DAY) = YEARWEEK(now());
+    </select>
+
+    <!--查询服务评分-本周-->
+    <select id="serviceScoreWeek" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(s.id) as count,sum(s.score) as score
+       from b_yw_service_manage s
+       LEFT JOIN b_yw_deal_user d on d.buss_id=s.id
+       where d.person_id=#{userId} and d.type="clr"
+       and YEARWEEK(date_format(s.score_time,'%Y-%m-%d')- INTERVAL 1 DAY) = YEARWEEK(now());
+    </select>
+    <!--查询培训评分-本周-->
+    <select id="trainScoreWeek" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+      SELECT count(t.id) count, sum(t.train_sorce) as score
+       FROM b_yw_train_manage  t
+      LEFT JOIN b_yw_deal_user d on d.buss_id=t.id
+      where  d.person_id=#{userId} and d.type='pxr'
+       and YEARWEEK(date_format(t.score_time,'%Y-%m-%d')- INTERVAL 1 DAY) = YEARWEEK(now());
+    </select>
+
+    <!--查询咨询评分-本周-->
+    <select id="consulttationScoreWeek" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+         SELECT count(t.id) count, sum(t.score) as score
+         FROM b_yw_consult_manage   t
+         LEFT JOIN b_yw_deal_user d on d.buss_id=t.id
+         where d.person_id=#{userId} and d.type='zxr'
+         and YEARWEEK(date_format(t.score_time,'%Y-%m-%d')- INTERVAL 1 DAY) = YEARWEEK(now());
+    </select>
+    <!--根据用户id、查询本周end..............................................................................................-->
+
+    <!--根据用户id、查询本月start..............................................................................................-->
+    <!--根据用户id、查询本月已处理故障数和处理时长（按应用）-->
+    <select id="faultCountAndHourMonth" resultMap="FaultCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count,SUM(TIMESTAMPDIFF(MINUTE,happen_time,deal_time)) as hour
+        from b_yw_fault_manage f
+        left  JOIN  b_yw_charge_system s on f.system_id=s.system_id
+        where s.p_id=#{userId} and f.status=3 and date_format(deal_time,'%Y-%m')=date_format(now(),'%Y-%m');
+    </select>
+    <!--查询应用评分-本月未处理故障数-->
+    <select id="faultCountMonth" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count from b_yw_fault_manage f
+         left   JOIN b_yw_charge_system  s on f.system_id=s.system_id
+        where s.p_id=#{userId} and  f.status=1
+        and date_format(f.happen_time,'%Y-%m')=date_format(now(),'%Y-%m');
+    </select>
+    <!--查询应用评分-本月故障数数量(包括未处理和已处理)-->
+    <select id="faultAllCountMonth" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count from b_yw_fault_manage f
+        left   JOIN b_yw_charge_system  s on f.system_id=s.system_id
+        where s.p_id=#{userId} and date_format(f.happen_time,'%Y-%m')=date_format(now(),'%Y-%m');
+    </select>
+
+    <!--查询服务评分-本月-->
+    <select id="serviceScoreMonth" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+       SELECT count(s.id) as count,sum(s.score) as score
+       from b_yw_service_manage s
+       LEFT JOIN b_yw_deal_user d on d.buss_id=s.id
+       where d.person_id=#{userId} and d.type="clr" and date_format(s.score_time,'%Y-%m')=date_format(now(),'%Y-%m')
+    </select>
+    <!--查询培训评分-本月-->
+    <select id="trainScoreMonth" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(t.id) count, sum(t.train_sorce) as score FROM b_yw_train_manage   t
+        LEFT JOIN b_yw_deal_user  d on d.buss_id=t.id
+        where d.person_id=#{userId} and d.type='pxr' and date_format(t.score_time,'%Y-%m')=date_format(now(),'%Y-%m');
+    </select>
+
+    <!--查询咨询评分-本月-->
+    <select id="consulttationScoreMonth" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(t.id) count, sum(t.score) as score  FROM b_yw_consult_manage   t
+         LEFT JOIN b_yw_deal_user  d on d.buss_id=t.id
+         where  d.person_id=#{userId} and type='zxr' and date_format(t.score_time,'%Y-%m')=date_format(now(),'%Y-%m');
+    </select>
+    <!--根据用户id、查询本月end..............................................................................................-->
+
+
+    <!--根据用户id、查询本年start..............................................................................................-->
+
+    <!--根据用户id、查询本年已处理故障数和处理时长（按应用）-->
+    <select id="faultCountAndHourYear" resultMap="FaultCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count,SUM(TIMESTAMPDIFF(MINUTE,happen_time,deal_time)) as hour
+        from b_yw_fault_manage f
+        left  JOIN b_yw_charge_system s on f.system_id=s.system_id
+        where s.p_id=#{userId} and  f.status=3 and YEAR(deal_time)=YEAR(NOW());
+    </select>
+    <!--查询应用评分-本年未处理故障数-->
+    <select id="faultCountYear" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count from b_yw_fault_manage f
+        left   JOIN b_yw_charge_system  s on f.system_id=s.system_id
+        where  s.p_id=#{userId} and f.status=1 and YEAR(f.happen_time)=YEAR(NOW());
+    </select>
+    <!--查询应用评分-本年故障数数量(包括未处理和已处理)-->
+    <select id="faultAllCountYear" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count from b_yw_fault_manage f
+        left   JOIN b_yw_charge_system s on f.system_id=s.system_id
+        where s.p_id=#{userId} and YEAR(f.happen_time)=YEAR(NOW());
+    </select>
+
+    <!--查询服务评分-本年-->
+    <select id="serviceScoreYear" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+       SELECT count(s.id) as count,sum(s.score) as score
+       from b_yw_service_manage s
+       LEFT JOIN b_yw_deal_user d on d.buss_id=s.id
+       where d.person_id=#{userId} and d.type="clr" and YEAR(s.score_time)=YEAR(NOW())
+    </select>
+    <!--查询培训评分-本年-->
+    <select id="trainScoreYear" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(t.id) count, sum(t.train_sorce) as score FROM b_yw_train_manage   t
+        LEFT JOIN b_yw_deal_user  d on d.buss_id=t.id
+        where  d.person_id=#{userId} and d.type='pxr' and YEAR(t.score_time)=YEAR(NOW());
+    </select>
+
+    <!--查询咨询评分-本年-->
+    <select id="consulttationScoreYear" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+         SELECT count(t.id) count, sum(t.score) as score  FROM b_yw_consult_manage   t
+         LEFT JOIN  b_yw_deal_user  d on d.buss_id=t.id
+         where  d.person_id=#{userId} and d.type='zxr' and YEAR(t.score_time)=YEAR(NOW());
+    </select>
+    <!--根据用户id、查询本年end..............................................................................................-->
+
+
+
+    <!--根据用户id、查询昨天、上周、上月、去年start................................................................................. -->
+
+    <!--根据用户id、查询昨天start............................................................................................. -->
+    <!--根据用户id、查询昨天已处理故障数和处理时长（按应用）-->
+    <select id="faultCountAndHourLast" resultMap="FaultCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count,SUM(TIMESTAMPDIFF(MINUTE,happen_time,deal_time)) as hour
+        from b_yw_fault_manage f
+        left  JOIN b_yw_charge_system  s
+        on f.system_id=s.system_id
+        where p_id=#{userId} and f.status=3
+         and  1>=TO_DAYS( NOW())-TO_DAYS( deal_time);
+    </select>
+    <!--查询应用评分-昨天未处理故障数-->
+    <select id="faultCountLast" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count
+        from b_yw_fault_manage f
+        left  JOIN b_yw_charge_system  s
+        on f.system_id=s.system_id
+        where p_id=#{userId} and f.status=1 and 1>=TO_DAYS(NOW())-TO_DAYS(f.happen_time);
+    </select>
+    <!--查询应用评分-昨天故障数数量(包括未处理和已处理)-->
+    <select id="faultAllCountLast" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count
+        from b_yw_fault_manage f
+        left  JOIN b_yw_charge_system  s
+        on f.system_id=s.system_id
+        where p_id=#{userId} and 1>=TO_DAYS(NOW())-TO_DAYS(f.happen_time);
+    </select>
+
+    <!--查询服务评分-昨天-->
+    <select id="serviceScoreLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(s.id) as count,sum(s.score) as score
+        from b_yw_service_manage s
+        LEFT JOIN b_yw_deal_user d on d.buss_id=s.id
+        where d.person_id=#{userId} and d.type="clr" and 1>=TO_DAYS(NOW())-TO_DAYS(s.score_time);
+    </select>
+    <!--查询培训评分-昨天-->
+    <select id="trainScoreLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(t.id) count, sum(t.train_sorce) as score
+         FROM b_yw_train_manage  t
+        LEFT JOIN  b_yw_deal_user d on d.buss_id=t.id
+        where d.person_id=#{userId} and d.type='pxr' and  1>=TO_DAYS(NOW())-TO_DAYS(t.score_time)
+    </select>
+
+    <!--查询咨询评分-昨天-->
+    <select id="consulttationScoreLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(t.id) count, sum(t.score) as score
+         FROM b_yw_consult_manage   t
+        LEFT JOIN b_yw_deal_user  d on d.buss_id=t.id
+        where  d.person_id=#{userId} and d.type='zxr' and 1>=TO_DAYS(NOW())-TO_DAYS(t.score_time);
+    </select>
+    <!--根据用户id、查询昨天end............................................................................................. -->
+
+
+    <!--根据用户id、查询上周start.............................................................................................-->
+    <!--根据用户id、查询上周已处理故障数和处理时长（按应用）-->
+    <select id="faultCountAndHourWeekLast" resultMap="FaultCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count,SUM(TIMESTAMPDIFF(MINUTE,happen_time,deal_time)) as hour
+        from b_yw_fault_manage f
+        left  JOIN b_yw_charge_system  s on f.system_id=s.system_id
+        where  s.p_id=#{userId} and f.status=3
+        and  YEARWEEK(date_format(deal_time,'%Y-%m-%d')) = YEARWEEK(now())-1;
+    </select>
+    <!--查询应用评分-上周未处理故障数-->
+    <select id="faultCountWeekLast" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count
+        from b_yw_fault_manage f
+        left  JOIN b_yw_charge_system  s on f.system_id=s.system_id
+        where  s.p_id=#{userId} and f.status=1
+        and  YEARWEEK(date_format(f.happen_time,'%Y-%m-%d')) = YEARWEEK(now())-1;
+    </select>
+    <!--查询应用评分-上周故障数数量(包括未处理和已处理)-->
+    <select id="faultAllCountWeekLast" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count
+        from b_yw_fault_manage f
+        left   JOIN b_yw_charge_system  s
+        on f.system_id=s.system_id
+        where  s.p_id=#{userId}
+        and  YEARWEEK(date_format(f.happen_time,'%Y-%m-%d')) = YEARWEEK(now())-1;
+    </select>
+
+    <!--查询服务评分-上周-->
+    <select id="serviceScoreWeekLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(s.id) as count,sum(s.score) as score
+        from b_yw_service_manage s
+        LEFT JOIN b_yw_deal_user d on d.buss_id=s.id
+        where d.person_id=#{userId} and d.type="clr"
+        and  YEARWEEK(date_format(s.score_time,'%Y-%m-%d')) = YEARWEEK(now())-1;
+    </select>
+    <!--查询培训评分-上周-->
+    <select id="trainScoreWeekLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(t.id) count, sum(t.train_sorce) as score
+        FROM b_yw_train_manage  t
+        LEFT JOIN b_yw_deal_user d on d.buss_id=t.id
+        where  d.person_id=#{userId} and d.type='pxr'
+        and  YEARWEEK(date_format(t.score_time,'%Y-%m-%d')) = YEARWEEK(now())-1;
+    </select>
+
+    <!--查询咨询评分-上周-->
+    <select id="consulttationScoreWeekLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(t.id) count, sum(t.score) as score
+        FROM b_yw_consult_manage   t
+        LEFT JOIN b_yw_deal_user d on d.buss_id=t.id
+        where d.person_id=#{userId} and d.type='zxr'
+        and  YEARWEEK(date_format(t.score_time,'%Y-%m-%d')) = YEARWEEK(now())-1;
+    </select>
+    <!--根据用户id、查询上周end..............................................................................................-->
+
+    <!--根据用户id、查询上月start..............................................................................................-->
+    <!--根据用户id、查询上月已处理故障数和处理时长（按应用）-->
+    <select id="faultCountAndHourMonthLast" resultMap="FaultCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count,SUM(TIMESTAMPDIFF(MINUTE,happen_time,deal_time)) as hour
+        from b_yw_fault_manage f
+        left  JOIN  b_yw_charge_system s on f.system_id=s.system_id
+        where s.p_id=#{userId} and f.status=3
+        and PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(f.deal_time,'%Y%m'))=1;
+    </select>
+    <!--查询应用评分-上月未处理故障数-->
+    <select id="faultCountMonthLast" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count from b_yw_fault_manage f
+        left   JOIN b_yw_charge_system  s on f.system_id=s.system_id
+        where s.p_id=#{userId} and  f.status=1
+        AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(f.happen_time,'%Y%m'))=1;
+    </select>
+    <!--查询应用评分-上月故障数数量(包括未处理和已处理)-->
+    <select id="faultAllCountMonthLast" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count from b_yw_fault_manage f
+        left   JOIN b_yw_charge_system  s on f.system_id=s.system_id
+        where s.p_id=#{userId}
+        AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(f.happen_time,'%Y%m'))=1;
+    </select>
+
+    <!--查询服务评分-上月-->
+    <select id="serviceScoreMonthLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(s.id) as count,sum(s.score) as score
+        from b_yw_service_manage s
+        LEFT JOIN b_yw_deal_user d on d.buss_id=s.id
+        where d.person_id=#{userId} and d.type="clr"
+        AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(s.score_time,'%Y%m'))=1;
+    </select>
+    <!--查询培训评分-上月-->
+    <select id="trainScoreMonthLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(t.id) count, sum(t.train_sorce) as score FROM b_yw_train_manage   t
+        LEFT JOIN b_yw_deal_user  d on d.buss_id=t.id
+        where d.person_id=#{userId} and d.type='pxr'
+        AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(t.score_time,'%Y%m'))=1;
+    </select>
+
+    <!--查询咨询评分-上月-->
+    <select id="consulttationScoreMonthLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(t.id) count, sum(t.score) as score  FROM b_yw_consult_manage   t
+        LEFT JOIN b_yw_deal_user  d on d.buss_id=t.id
+        where  d.person_id=#{userId} and type='zxr'
+        AND PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(t.score_time,'%Y%m'))=1;
+    </select>
+    <!--根据用户id、查询上月end..............................................................................................-->
+
+    <!--根据用户id、查询去年start..............................................................................................-->
+    <!--根据用户id、查询去年已处理故障数和处理时长（按应用）-->
+    <select id="faultCountAndHourYearLast" resultMap="FaultCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count,SUM(TIMESTAMPDIFF(MINUTE,happen_time,deal_time)) as hour
+        from b_yw_fault_manage f
+        left  JOIN b_yw_charge_system s on f.system_id=s.system_id
+        where s.p_id=#{userId} and  f.status=3
+        and YEAR(f.deal_time)=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR));
+    </select>
+    <!--查询应用评分-去年未处理故障数-->
+    <select id="faultCountYearLast" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count from b_yw_fault_manage f
+        left   JOIN b_yw_charge_system  s on f.system_id=s.system_id
+        where  s.p_id=#{userId} and f.status=1
+        and YEAR(f.happen_time)=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR));
+    </select>
+    <!--查询应用评分-去年故障数数量(包括未处理和已处理)-->
+    <select id="faultAllCountYearLast" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        SELECT count(f.system_id) as count from b_yw_fault_manage f
+        left   JOIN b_yw_charge_system s on f.system_id=s.system_id
+        where s.p_id=#{userId}
+        and YEAR(f.happen_time)=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR));
+    </select>
+
+    <!--查询服务评分-去年-->
+    <select id="serviceScoreYearLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(s.id) as count,sum(s.score) as score
+        from b_yw_service_manage s
+        LEFT JOIN b_yw_deal_user d on d.buss_id=s.id
+        where d.person_id=#{userId} and d.type="clr"
+        and YEAR(s.score_time)=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR));
+    </select>
+    <!--查询培训评分-去年-->
+    <select id="trainScoreYearLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+        SELECT count(t.id) count, sum(t.train_sorce) as score FROM b_yw_train_manage   t
+        LEFT JOIN b_yw_deal_user  d on d.buss_id=t.id
+        where  d.person_id=#{userId} and d.type='pxr'
+        and YEAR(t.score_time)=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR));
+    </select>
+
+    <!--查询咨询评分-去年-->
+    <select id="consulttationScoreYearLast" resultMap="ScoreCountResultMap" parameterType="java.lang.Long" >
+         SELECT count(t.id) count, sum(t.score) as score  FROM b_yw_consult_manage   t
+         LEFT JOIN  b_yw_deal_user  d on d.buss_id=t.id
+         where  d.person_id=#{userId} and d.type='zxr'
+        and YEAR(t.score_time)=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR));
+    </select>
+    <!--根据用户id、查询本年end..............................................................................................-->
+</mapper>

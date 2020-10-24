@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.common.dao.CommonMapper">
+    <select id="selectOrgIdByUserId" parameterType="java.lang.Long" resultType="java.lang.String">
+        SELECT mainorgid FROM v_emp WHERE gxqpt_emp_id = #{userId} LIMIT 1
+    </select>
+
+    <select id="selectOrgNameByUnitId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT name_ FROM v_org WHERE id = #{orgId}
+    </select>
+    <select id="selectDemandUnitInfoByUserId" parameterType="java.lang.Long" resultType="map">
+        SELECT IFNULL(e.name_,'') linkName,IFNULL(e.mainmobile,'') linkPhone,IFNULL(e.mainorgname,'') orgName,IFNULL(d.`name`,'') typeName FROM v_emp e
+            INNER JOIN v_org o ON e.mainorgid = o.id
+            LEFT JOIN b_dictionary d ON o.for_type = d.`code` AND d.dictionary_type_code = 'org.type'
+          WHERE gxqpt_emp_id = #{userId}
+    </select>
+
+
+    <resultMap id="BusInfoResultMap" type="com.hengyunsoft.platform.exchange.entity.screen.po.BusInfoDO">
+        <result column="id" jdbcType="VARCHAR" property="id" />
+        <result column="investorEnterpriseName" jdbcType="VARCHAR" property="investorEnterpriseName" />
+        <result column="creditCode" jdbcType="VARCHAR" property="creditCode" />
+        <result column="legalRepresentative" jdbcType="VARCHAR" property="legalRepresentative" />
+        <result column="industryType" jdbcType="VARCHAR" property="industryType" />
+        <result column="companyType" jdbcType="VARCHAR" property="companyType" />
+        <result column="businessTerm" jdbcType="VARCHAR" property="businessTerm" />
+        <result column="registerTime" jdbcType="VARCHAR" property="registerTime" />
+        <result column="staff_amount" jdbcType="VARCHAR" property="staffAmount" />
+        <result column="registerAuthority" jdbcType="VARCHAR" property="registerAuthority" />
+    </resultMap>
+    <select id="selectBusInfoList" parameterType="map" resultMap="BusInfoResultMap">
+    SELECT id,investorEnterpriseName,credit_code creditCode,`legal_representative` legalRepresentative ,`industry_type` industryType,
+    `company_type` companyType ,`business_term` businessTerm,staff_amount
+    ,`register_time` registerTime ,`register_authority` registerAuthority ,`address`  FROM b_ythpt_v1
+    WHERE company_name IS NOT NULL
+        <if test="unitName != null and unitName != ''">
+            AND investorEnterpriseName LIKE #{unitName,typeHandler=fullLike}
+        </if>
+        <if test="creditCode != null and creditCode != ''">
+            AND credit_code LIKE #{creditCode,typeHandler=fullLike}
+        </if>
+        <if test="legalRepresentative != null and legalRepresentative != ''">
+            AND legal_representative LIKE #{legalRepresentative,typeHandler=fullLike}
+        </if>
+    ORDER BY id DESC
+    </select>
+    <resultMap id="BusInfoDetailResultMap" type="com.hengyunsoft.platform.exchange.entity.screen.po.BusInfoDetailDO">
+        <result column="id" jdbcType="VARCHAR" property="id" />
+        <result column="companyName" jdbcType="VARCHAR" property="companyName" />
+        <result column="investorEnterpriseName" jdbcType="VARCHAR" property="investorEnterpriseName" />
+        <result column="legalRepresentative" jdbcType="VARCHAR" property="legalRepresentative" />
+        <result column="registerNoView" jdbcType="VARCHAR" property="registerNoView" />
+        <result column="registerTime" jdbcType="VARCHAR" property="registerTime" />
+        <result column="organizationCode" jdbcType="VARCHAR" property="organizationCode" />
+        <result column="creditCodeView" jdbcType="VARCHAR" property="creditCodeView" />
+        <result column="businessTerm" jdbcType="VARCHAR" property="businessTerm" />
+        <result column="statusKeyword" jdbcType="VARCHAR" property="statusKeyword" />
+        <result column="registerCapital" jdbcType="VARCHAR" property="registerCapital" />
+        <result column="registerCapitalUnit" jdbcType="VARCHAR" property="registerCapitalUnit" />
+        <result column="companyType" jdbcType="VARCHAR" property="companyType" />
+        <result column="industryType" jdbcType="VARCHAR" property="industryType" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="tel" jdbcType="VARCHAR" property="tel" />
+        <result column="website" jdbcType="VARCHAR" property="website" />
+        <result column="approveDate" jdbcType="VARCHAR" property="approveDate" />
+        <result column="staffAmount" jdbcType="VARCHAR" property="staffAmount" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="registerAddress" jdbcType="VARCHAR" property="registerAddress" />
+        <result column="registerAuthority" jdbcType="VARCHAR" property="registerAuthority" />
+        <result column="businessScope" jdbcType="VARCHAR" property="businessScope" />
+    </resultMap>
+    <select id="selectBusInfoDetail" parameterType="java.lang.String" resultMap="BusInfoDetailResultMap">
+        SELECT
+            id,
+            company_name companyName,
+            investorEnterpriseName,
+            legal_representative legalRepresentative,
+            register_no_view registerNoView,
+            register_time registerTime,
+            organization_code organizationCode,
+            credit_code_view creditCodeView,
+            business_term businessTerm,
+            status_keyword statusKeyword,
+            register_capital registerCapital,
+            register_capital_unit registerCapitalUnit,
+            company_type companyType,
+            industry_type industryType,
+            email,
+            tel,
+            website,
+            approve_date approveDate,
+            staff_amount staffAmount,
+            address,
+            register_address registerAddress,
+            register_authority registerAuthority,
+            business_scope  businessScope
+        FROM b_ythpt_v1
+        WHERE id = #{id}
+    </select>
+</mapper>

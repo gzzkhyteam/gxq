@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.base.dao.HolidayDataMapper">
+    <resultMap id="ExtBaseResultMap" type="com.hengyunsoft.platform.admin.entity.base.po.HolidayData">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="number" jdbcType="VARCHAR" property="number"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="start_time" jdbcType="VARCHAR" property="startTime"/>
+        <result column="end_time" jdbcType="VARCHAR" property="endTime"/>
+        <result column="year" jdbcType="VARCHAR" property="year"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+    </resultMap>
+    <delete id="deleteByYear">
+        delete from b_holiday_data
+        where year &gt;= #{year}
+    </delete>
+
+    <!--根据日期查询数据 STR_TO_DATE(s.att_day,'%Y-%m-%d') -->
+    <select id="getByDisDate" parameterType="java.util.Map" resultMap="ExtBaseResultMap">
+      select *
+        from b_holiday_data t
+        WHERE  1 =1
+         AND(
+          (STR_TO_DATE(t.start_time,'%Y-%m-%d') >  #{startTime,jdbcType=TIMESTAMP}   AND  #{endTime,jdbcType=TIMESTAMP} > STR_TO_DATE(t.start_time,'%Y-%m-%d') )
+          OR
+          ( STR_TO_DATE(t.end_time,'%Y-%m-%d') > #{startTime,jdbcType=TIMESTAMP}   AND #{endTime,jdbcType=TIMESTAMP}  >  STR_TO_DATE(t.end_time,'%Y-%m-%d') )
+         )
+    </select>
+
+</mapper>

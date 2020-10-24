@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.hardware.repository.apply.dao.ApplyManageMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyManage">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_no" jdbcType="VARCHAR" property="applyNo" />
+    <result column="apply_orgid" jdbcType="VARCHAR" property="applyOrgid" />
+    <result column="apply_orgname" jdbcType="VARCHAR" property="applyOrgname" />
+    <result column="apply_uid" jdbcType="VARCHAR" property="applyUid" />
+    <result column="apply_uname" jdbcType="VARCHAR" property="applyUname" />
+    <result column="apply_type" jdbcType="VARCHAR" property="applyType" />
+    <result column="apply_time" jdbcType="TIMESTAMP" property="applyTime" />
+    <result column="step_code" jdbcType="VARCHAR" property="stepCode" />
+    <result column="step_name" jdbcType="VARCHAR" property="stepName" />
+    <result column="scode" jdbcType="VARCHAR" property="scode" />
+    <result column="sname" jdbcType="VARCHAR" property="sname" />
+    <result column="apply_email" jdbcType="VARCHAR" property="applyEmail" />
+    <result column="apply_reason" jdbcType="VARCHAR" property="applyReason" />
+    <result column="server_keyid" jdbcType="BIGINT" property="serverKeyid" />
+    <result column="resflag" jdbcType="BIT" property="resflag" />
+    <result column="endflag" jdbcType="VARCHAR" property="endflag" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, apply_no, apply_orgid, apply_orgname, apply_uid, apply_uname, apply_type, apply_time, 
+    step_code, step_name, scode, sname, apply_email, apply_reason, server_keyid, resflag, 
+    endflag, create_user, create_time, update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyManageExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_hd_apply_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_hd_apply_manage
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyManageExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_hd_apply_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_hd_apply_manage
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_apply_manage
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyManageExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_apply_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_hd_apply_manage where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_apply_manage
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_hd_apply_manage where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_manage
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_manage
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_manage
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_manage
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyManage">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_apply_manage (id, apply_no, apply_orgid, 
+      apply_orgname, apply_uid, apply_uname, 
+      apply_type, apply_time, step_code, 
+      step_name, scode, sname, 
+      apply_email, apply_reason, server_keyid, 
+      resflag, endflag, create_user, 
+      create_time, update_user, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{applyNo,jdbcType=VARCHAR}, #{applyOrgid,jdbcType=VARCHAR}, 
+      #{applyOrgname,jdbcType=VARCHAR}, #{applyUid,jdbcType=VARCHAR}, #{applyUname,jdbcType=VARCHAR}, 
+      #{applyType,jdbcType=VARCHAR}, #{applyTime,jdbcType=TIMESTAMP}, #{stepCode,jdbcType=VARCHAR}, 
+      #{stepName,jdbcType=VARCHAR}, #{scode,jdbcType=VARCHAR}, #{sname,jdbcType=VARCHAR}, 
+      #{applyEmail,jdbcType=VARCHAR}, #{applyReason,jdbcType=VARCHAR}, #{serverKeyid,jdbcType=BIGINT}, 
+      #{resflag,jdbcType=BIT}, #{endflag,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_apply_manage (id, apply_no, apply_orgid, apply_orgname, apply_uid, apply_uname, apply_type, apply_time, step_code, step_name, scode, sname, apply_email, apply_reason, server_keyid, resflag, endflag, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.applyNo,jdbcType=VARCHAR}, #{item.applyOrgid,jdbcType=VARCHAR}, 
+        #{item.applyOrgname,jdbcType=VARCHAR}, #{item.applyUid,jdbcType=VARCHAR}, #{item.applyUname,jdbcType=VARCHAR}, 
+        #{item.applyType,jdbcType=VARCHAR}, #{item.applyTime,jdbcType=TIMESTAMP}, #{item.stepCode,jdbcType=VARCHAR}, 
+        #{item.stepName,jdbcType=VARCHAR}, #{item.scode,jdbcType=VARCHAR}, #{item.sname,jdbcType=VARCHAR}, 
+        #{item.applyEmail,jdbcType=VARCHAR}, #{item.applyReason,jdbcType=VARCHAR}, #{item.serverKeyid,jdbcType=BIGINT}, 
+        #{item.resflag,jdbcType=BIT}, #{item.endflag,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyManage">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_apply_manage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="applyNo != null">
+        apply_no,
+      </if>
+      <if test="applyOrgid != null">
+        apply_orgid,
+      </if>
+      <if test="applyOrgname != null">
+        apply_orgname,
+      </if>
+      <if test="applyUid != null">
+        apply_uid,
+      </if>
+      <if test="applyUname != null">
+        apply_uname,
+      </if>
+      <if test="applyType != null">
+        apply_type,
+      </if>
+      <if test="applyTime != null">
+        apply_time,
+      </if>
+      <if test="stepCode != null">
+        step_code,
+      </if>
+      <if test="stepName != null">
+        step_name,
+      </if>
+      <if test="scode != null">
+        scode,
+      </if>
+      <if test="sname != null">
+        sname,
+      </if>
+      <if test="applyEmail != null">
+        apply_email,
+      </if>
+      <if test="applyReason != null">
+        apply_reason,
+      </if>
+      <if test="serverKeyid != null">
+        server_keyid,
+      </if>
+      <if test="resflag != null">
+        resflag,
+      </if>
+      <if test="endflag != null">
+        endflag,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="applyNo != null">
+        #{applyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="applyOrgid != null">
+        #{applyOrgid,jdbcType=VARCHAR},
+      </if>
+      <if test="applyOrgname != null">
+        #{applyOrgname,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUid != null">
+        #{applyUid,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUname != null">
+        #{applyUname,jdbcType=VARCHAR},
+      </if>
+      <if test="applyType != null">
+        #{applyType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null">
+        #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stepCode != null">
+        #{stepCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stepName != null">
+        #{stepName,jdbcType=VARCHAR},
+      </if>
+      <if test="scode != null">
+        #{scode,jdbcType=VARCHAR},
+      </if>
+      <if test="sname != null">
+        #{sname,jdbcType=VARCHAR},
+      </if>
+      <if test="applyEmail != null">
+        #{applyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="applyReason != null">
+        #{applyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="serverKeyid != null">
+        #{serverKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="resflag != null">
+        #{resflag,jdbcType=BIT},
+      </if>
+      <if test="endflag != null">
+        #{endflag,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyManageExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_hd_apply_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_manage
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.applyNo != null">
+        apply_no = #{record.applyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyOrgid != null">
+        apply_orgid = #{record.applyOrgid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyOrgname != null">
+        apply_orgname = #{record.applyOrgname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyUid != null">
+        apply_uid = #{record.applyUid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyUname != null">
+        apply_uname = #{record.applyUname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyType != null">
+        apply_type = #{record.applyType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyTime != null">
+        apply_time = #{record.applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.stepCode != null">
+        step_code = #{record.stepCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stepName != null">
+        step_name = #{record.stepName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.scode != null">
+        scode = #{record.scode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sname != null">
+        sname = #{record.sname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyEmail != null">
+        apply_email = #{record.applyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyReason != null">
+        apply_reason = #{record.applyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serverKeyid != null">
+        server_keyid = #{record.serverKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="record.resflag != null">
+        resflag = #{record.resflag,jdbcType=BIT},
+      </if>
+      <if test="record.endflag != null">
+        endflag = #{record.endflag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_manage
+    set id = #{record.id,jdbcType=BIGINT},
+      apply_no = #{record.applyNo,jdbcType=VARCHAR},
+      apply_orgid = #{record.applyOrgid,jdbcType=VARCHAR},
+      apply_orgname = #{record.applyOrgname,jdbcType=VARCHAR},
+      apply_uid = #{record.applyUid,jdbcType=VARCHAR},
+      apply_uname = #{record.applyUname,jdbcType=VARCHAR},
+      apply_type = #{record.applyType,jdbcType=VARCHAR},
+      apply_time = #{record.applyTime,jdbcType=TIMESTAMP},
+      step_code = #{record.stepCode,jdbcType=VARCHAR},
+      step_name = #{record.stepName,jdbcType=VARCHAR},
+      scode = #{record.scode,jdbcType=VARCHAR},
+      sname = #{record.sname,jdbcType=VARCHAR},
+      apply_email = #{record.applyEmail,jdbcType=VARCHAR},
+      apply_reason = #{record.applyReason,jdbcType=VARCHAR},
+      server_keyid = #{record.serverKeyid,jdbcType=BIGINT},
+      resflag = #{record.resflag,jdbcType=BIT},
+      endflag = #{record.endflag,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_manage
+    <set>
+      <if test="applyNo != null">
+        apply_no = #{applyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="applyOrgid != null">
+        apply_orgid = #{applyOrgid,jdbcType=VARCHAR},
+      </if>
+      <if test="applyOrgname != null">
+        apply_orgname = #{applyOrgname,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUid != null">
+        apply_uid = #{applyUid,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUname != null">
+        apply_uname = #{applyUname,jdbcType=VARCHAR},
+      </if>
+      <if test="applyType != null">
+        apply_type = #{applyType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null">
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stepCode != null">
+        step_code = #{stepCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stepName != null">
+        step_name = #{stepName,jdbcType=VARCHAR},
+      </if>
+      <if test="scode != null">
+        scode = #{scode,jdbcType=VARCHAR},
+      </if>
+      <if test="sname != null">
+        sname = #{sname,jdbcType=VARCHAR},
+      </if>
+      <if test="applyEmail != null">
+        apply_email = #{applyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="applyReason != null">
+        apply_reason = #{applyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="serverKeyid != null">
+        server_keyid = #{serverKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="resflag != null">
+        resflag = #{resflag,jdbcType=BIT},
+      </if>
+      <if test="endflag != null">
+        endflag = #{endflag,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_manage
+    <set>
+      <if test="applyNo != null">
+        apply_no = #{applyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="applyOrgid != null">
+        apply_orgid = #{applyOrgid,jdbcType=VARCHAR},
+      </if>
+      <if test="applyOrgname != null">
+        apply_orgname = #{applyOrgname,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUid != null">
+        apply_uid = #{applyUid,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUname != null">
+        apply_uname = #{applyUname,jdbcType=VARCHAR},
+      </if>
+      <if test="applyType != null">
+        apply_type = #{applyType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null">
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stepCode != null">
+        step_code = #{stepCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stepName != null">
+        step_name = #{stepName,jdbcType=VARCHAR},
+      </if>
+      <if test="scode != null">
+        scode = #{scode,jdbcType=VARCHAR},
+      </if>
+      <if test="sname != null">
+        sname = #{sname,jdbcType=VARCHAR},
+      </if>
+      <if test="applyEmail != null">
+        apply_email = #{applyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="applyReason != null">
+        apply_reason = #{applyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="serverKeyid != null">
+        server_keyid = #{serverKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="resflag != null">
+        resflag = #{resflag,jdbcType=BIT},
+      </if>
+      <if test="endflag != null">
+        endflag = #{endflag,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_manage
+    set apply_no = #{applyNo,jdbcType=VARCHAR},
+      apply_orgid = #{applyOrgid,jdbcType=VARCHAR},
+      apply_orgname = #{applyOrgname,jdbcType=VARCHAR},
+      apply_uid = #{applyUid,jdbcType=VARCHAR},
+      apply_uname = #{applyUname,jdbcType=VARCHAR},
+      apply_type = #{applyType,jdbcType=VARCHAR},
+      apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      step_code = #{stepCode,jdbcType=VARCHAR},
+      step_name = #{stepName,jdbcType=VARCHAR},
+      scode = #{scode,jdbcType=VARCHAR},
+      sname = #{sname,jdbcType=VARCHAR},
+      apply_email = #{applyEmail,jdbcType=VARCHAR},
+      apply_reason = #{applyReason,jdbcType=VARCHAR},
+      server_keyid = #{serverKeyid,jdbcType=BIGINT},
+      resflag = #{resflag,jdbcType=BIT},
+      endflag = #{endflag,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_manage
+    set apply_no = #{applyNo,jdbcType=VARCHAR},
+      apply_orgid = #{applyOrgid,jdbcType=VARCHAR},
+      apply_orgname = #{applyOrgname,jdbcType=VARCHAR},
+      apply_uid = #{applyUid,jdbcType=VARCHAR},
+      apply_uname = #{applyUname,jdbcType=VARCHAR},
+      apply_type = #{applyType,jdbcType=VARCHAR},
+      apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      step_code = #{stepCode,jdbcType=VARCHAR},
+      step_name = #{stepName,jdbcType=VARCHAR},
+      scode = #{scode,jdbcType=VARCHAR},
+      sname = #{sname,jdbcType=VARCHAR},
+      apply_email = #{applyEmail,jdbcType=VARCHAR},
+      apply_reason = #{applyReason,jdbcType=VARCHAR},
+      server_keyid = #{serverKeyid,jdbcType=BIGINT},
+      resflag = #{resflag,jdbcType=BIT},
+      endflag = #{endflag,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

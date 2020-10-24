@@ -1,0 +1,41 @@
+gxqpt:
+  port:
+    nginx: ${server.port}
+    eureka: 10030
+    gate: 10003         # 开发环境不使用nginx
+  hostname:
+    redis: 127.0.0.1
+    rabbitmq: 127.0.0.1
+    mysql: 127.0.0.1
+    nginx: 127.0.0.1
+    eureka: 127.0.0.1
+    gate: 127.0.0.1     # eureka 实例界面实现的 statu链接   本地环境不使用nginx
+    piping: 127.0.0.1
+  mysql:
+    piping:
+      database: gxqpt_piping_dev       # 根据环境更改
+    port: 3306                  # 根据环境更改
+    username: root              # 根据环境更改
+    password: LLm65c0VVd3axid9u+Y7DZeKwcODMjU95FRhxom6ApE2yZ1kbi5YzSsdAIz+edUOZH3Engm17+NyfyNczpaYlw==
+
+
+spring:
+  profiles:
+    active: dev
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq}     # 根据环境更改
+    port: 5672               # 根据环境更改
+    password: guest          # 根据环境更改
+    username: guest          # 根据环境更改
+  redis:
+    host: ${gxqpt.hostname.redis}
+    port: 6379
+    key-prefix: dev
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+
+id-generator:
+  machine-code: 1  # id生成器机器掩码

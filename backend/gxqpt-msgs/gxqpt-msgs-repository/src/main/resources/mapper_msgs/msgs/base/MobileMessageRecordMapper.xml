@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.msgs.repository.channelgroup.dao.MobileMessageRecordMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.msgs.entity.channelgroup.po.MobileMessageRecord">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="msg_id" jdbcType="VARCHAR" property="msgId" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="app_name" jdbcType="VARCHAR" property="appName" />
+    <result column="sender" jdbcType="VARCHAR" property="sender" />
+    <result column="topic" jdbcType="VARCHAR" property="topic" />
+    <result column="channel_id" jdbcType="VARCHAR" property="channelId" />
+    <result column="draft" jdbcType="INTEGER" property="draft" />
+    <result column="start_time" jdbcType="VARCHAR" property="startTime" />
+    <result column="img_text" jdbcType="LONGVARCHAR" property="imgText" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, msg_id, app_id, app_name, sender, topic, channel_id, draft, start_time, img_text, 
+    create_time, update_time, file_path
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.msgs.repository.channelgroup.example.MobileMessageRecordExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from msgs_mobile_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from msgs_mobile_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.msgs.repository.channelgroup.example.MobileMessageRecordExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from msgs_mobile_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from msgs_mobile_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.msgs.repository.channelgroup.example.MobileMessageRecordExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from msgs_mobile_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.msgs.entity.channelgroup.po.MobileMessageRecord">
+    <!--
+    @mbggenerated
+    -->
+    update msgs_mobile_record
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update msgs_mobile_record
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.msgs.entity.channelgroup.po.MobileMessageRecord">
+    <!--
+    @mbggenerated
+    -->
+    insert into msgs_mobile_record (id, msg_id, app_id, 
+      app_name, sender, topic, 
+      channel_id, draft, start_time, 
+      img_text, create_time, update_time, 
+      file_path)
+    values (#{id,jdbcType=BIGINT}, #{msgId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, 
+      #{appName,jdbcType=VARCHAR}, #{sender,jdbcType=VARCHAR}, #{topic,jdbcType=VARCHAR}, 
+      #{channelId,jdbcType=VARCHAR}, #{draft,jdbcType=INTEGER}, #{startTime,jdbcType=VARCHAR}, 
+      #{imgText,jdbcType=LONGVARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{filePath,jdbcType=VARCHAR})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into msgs_mobile_record (id, msg_id, app_id, app_name, sender, topic, channel_id, draft, start_time, img_text, create_time, update_time, file_path ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.msgId,jdbcType=VARCHAR}, #{item.appId,jdbcType=VARCHAR}, 
+        #{item.appName,jdbcType=VARCHAR}, #{item.sender,jdbcType=VARCHAR}, #{item.topic,jdbcType=VARCHAR}, 
+        #{item.channelId,jdbcType=VARCHAR}, #{item.draft,jdbcType=INTEGER}, #{item.startTime,jdbcType=VARCHAR}, 
+        #{item.imgText,jdbcType=LONGVARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.filePath,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.msgs.entity.channelgroup.po.MobileMessageRecord">
+    <!--
+    @mbggenerated
+    -->
+    insert into msgs_mobile_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="msgId != null">
+        msg_id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="appName != null">
+        app_name,
+      </if>
+      <if test="sender != null">
+        sender,
+      </if>
+      <if test="topic != null">
+        topic,
+      </if>
+      <if test="channelId != null">
+        channel_id,
+      </if>
+      <if test="draft != null">
+        draft,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="imgText != null">
+        img_text,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="filePath != null">
+        file_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="msgId != null">
+        #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null">
+        #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="sender != null">
+        #{sender,jdbcType=VARCHAR},
+      </if>
+      <if test="topic != null">
+        #{topic,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null">
+        #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="draft != null">
+        #{draft,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="imgText != null">
+        #{imgText,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="filePath != null">
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.msgs.repository.channelgroup.example.MobileMessageRecordExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from msgs_mobile_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update msgs_mobile_record
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.msgId != null">
+        msg_id = #{record.msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appName != null">
+        app_name = #{record.appName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sender != null">
+        sender = #{record.sender,jdbcType=VARCHAR},
+      </if>
+      <if test="record.topic != null">
+        topic = #{record.topic,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelId != null">
+        channel_id = #{record.channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.draft != null">
+        draft = #{record.draft,jdbcType=INTEGER},
+      </if>
+      <if test="record.startTime != null">
+        start_time = #{record.startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgText != null">
+        img_text = #{record.imgText,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.filePath != null">
+        file_path = #{record.filePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update msgs_mobile_record
+    set id = #{record.id,jdbcType=BIGINT},
+      msg_id = #{record.msgId,jdbcType=VARCHAR},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      app_name = #{record.appName,jdbcType=VARCHAR},
+      sender = #{record.sender,jdbcType=VARCHAR},
+      topic = #{record.topic,jdbcType=VARCHAR},
+      channel_id = #{record.channelId,jdbcType=VARCHAR},
+      draft = #{record.draft,jdbcType=INTEGER},
+      start_time = #{record.startTime,jdbcType=VARCHAR},
+      img_text = #{record.imgText,jdbcType=LONGVARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      file_path = #{record.filePath,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.msgs.entity.channelgroup.po.MobileMessageRecord">
+    <!--
+    @mbggenerated
+    -->
+    update msgs_mobile_record
+    <set>
+      <if test="msgId != null">
+        msg_id = #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null">
+        app_name = #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="sender != null">
+        sender = #{sender,jdbcType=VARCHAR},
+      </if>
+      <if test="topic != null">
+        topic = #{topic,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null">
+        channel_id = #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="draft != null">
+        draft = #{draft,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="imgText != null">
+        img_text = #{imgText,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="filePath != null">
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.msgs.entity.channelgroup.po.MobileMessageRecord">
+    <!--
+    @mbggenerated
+    -->
+    update msgs_mobile_record
+    set msg_id = #{msgId,jdbcType=VARCHAR},
+      app_id = #{appId,jdbcType=VARCHAR},
+      app_name = #{appName,jdbcType=VARCHAR},
+      sender = #{sender,jdbcType=VARCHAR},
+      topic = #{topic,jdbcType=VARCHAR},
+      channel_id = #{channelId,jdbcType=VARCHAR},
+      draft = #{draft,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=VARCHAR},
+      img_text = #{imgText,jdbcType=LONGVARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      file_path = #{filePath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+   <select id="getAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from msgs_mobile_record
+    order by create_time desc
+  </select>
+  <select id="getNewest" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from msgs_mobile_record
+    where create_time is not null 
+    order by create_time desc limit 1
+  </select>
+  <select id="getTotalNum" resultType="java.lang.Integer">
+    select 
+    count(id)
+    from msgs_mobile_record
+  </select>
+ 
+ 
+  <resultMap id="msgAnalysisChannelUsedMap" type="com.hengyunsoft.platform.msgs.dto.msg.MsgAnalysisChannelUsedDTO">
+    <result column="name" jdbcType="VARCHAR" property="channelName" />
+    <result column="mysend" jdbcType="INTEGER" property="personalUsed" />
+    <result column="authorizeUsed" jdbcType="INTEGER" property="authorizeUsed" />
+  </resultMap>
+   <resultMap id="getMsgAllChannelUsedCountMap" type="com.hengyunsoft.platform.msgs.entity.msgsmessage.dos.MsgAllChannelUsedDO">
+    <result column="year_" jdbcType="VARCHAR" property="year" />
+    <result column="month_" jdbcType="VARCHAR" property="month" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+  </resultMap>
+  <resultMap id="getAppSendMap" type="com.hengyunsoft.platform.msgs.entity.msgsmessage.dos.MsgAnalysisSendErrorDO">
+    <result column="app_name" jdbcType="VARCHAR" property="name" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+  </resultMap>
+  
+  <!-- 个人渠道使用情况 -->
+  <select id="getMsgChannelUsedCount" resultMap="msgAnalysisChannelUsedMap">
+  	 select data_.name,data_.mysend,(data_.count-data_.mysend) as authorizeUsed from 
+		(select mc.name,count(1) as count,count(if(mwr.sender=#{userId},1,null)) as mysend
+			from msgs_mobile_record mwr left join msgs_channel mc on mwr.channel_id=mc.id
+			where mwr.draft=0 and mwr.channel_id in 
+			<foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            	#{item}
+        	</foreach>
+			group by mwr.channel_id
+		) data_
+  </select>  
+  <!-- 近一年高新区各类型渠道使用发展情况 -->
+  <select id="getMsgAllChannelUsedCount" resultMap="getMsgAllChannelUsedCountMap">
+  	  select date_.year_,date_.month_,count(1) as count
+	  from
+		(select year(create_time) year_,month(create_time) month_ 
+		from msgs_mobile_record
+		where (create_time BETWEEN date_sub(now(),interval 1 year) and now())) date_
+	  group by date_.year_,date_.month_
+	  order by date_.year_,date_.month_
+  </select>  
+</mapper>

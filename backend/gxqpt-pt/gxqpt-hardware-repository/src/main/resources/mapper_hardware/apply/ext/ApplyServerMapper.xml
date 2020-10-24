@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.hardware.repository.apply.dao.ApplyServerMapper">
+    <delete id="deleteByApplyKeyId" parameterType="java.lang.Long">
+        delete from b_hd_apply_server
+        where apply_keyid = #{applyKeyId,jdbcType=BIGINT}
+    </delete>
+
+    <!--联查操作系统和网络-->
+    <resultMap id="QueryApplyServersResultMap" type="com.hengyunsoft.platform.hardware.entity.apply.domain.ApplyServerDO">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="apply_keyid" jdbcType="BIGINT" property="applyKeyid" />
+        <result column="cpu_count" jdbcType="INTEGER" property="cpuCount" />
+        <result column="memory_size" jdbcType="BIGINT" property="memorySize" />
+        <result column="system" jdbcType="VARCHAR" property="system" />
+        <result column="sys_disksize" jdbcType="INTEGER" property="sysDisksize" />
+        <result column="net_scope" jdbcType="VARCHAR" property="netScope" />
+        <result column="net_wide" jdbcType="INTEGER" property="netWide" />
+        <result column="gateway_desc" jdbcType="LONGVARCHAR" property="gatewayDesc" />
+        <result column="apply_count" jdbcType="INTEGER" property="applyCount" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="systemName" jdbcType="VARCHAR" property="systemName" />
+        <result column="netScopeName" jdbcType="VARCHAR" property="netScopeName" />
+    </resultMap>
+    <sql id="queryApplyServers">
+        select
+        servers.id, servers.apply_keyid, servers.cpu_count, servers.memory_size,servers.system, dic.`name` as systemName,
+        servers.sys_disksize,servers.net_scope,dictype.`name` as netScopeName, servers.net_wide,
+        servers.gateway_desc, servers.apply_count, servers.create_user, servers.create_time,
+        servers.update_user, servers.update_time
+        from b_hd_apply_server servers
+        LEFT JOIN b_hd_dictionary_type dictype on  servers.net_scope = dictype.`code` and dictype.is_delete=0
+        LEFT JOIN b_hd_dictionary dic on servers.system = dic.`code` and dic.is_delete=0
+    </sql>
+    
+    <select id="getApplyServerById" parameterType="java.lang.Long" resultMap="QueryApplyServersResultMap">
+        <include refid="queryApplyServers" />
+        where server.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="getApplyServerByApplyKeyId" parameterType="java.lang.Long" resultMap="QueryApplyServersResultMap">
+        <include refid="queryApplyServers" />
+        where servers.apply_keyid = #{id,jdbcType=BIGINT}
+    </select>
+</mapper>

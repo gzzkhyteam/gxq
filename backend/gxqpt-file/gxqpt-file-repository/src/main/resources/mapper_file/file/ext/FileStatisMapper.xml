@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.file.repository.file.dao.FileStatisMapper">
+
+    <insert id="downCountIncrease" parameterType="com.hengyunsoft.platform.file.entity.file.po.FileStatis" >
+        insert into f_file_statis
+        (
+        app_id, file_id, down_count, upload_count, create_time
+        )
+        values (#{appId, jdbcType=VARCHAR},#{fileId, jdbcType=BIGINT}, 1, 0, sysdate())
+        ON DUPLICATE KEY UPDATE
+        down_count = down_count + 1,
+        update_time = sysdate()
+    </insert>
+    <insert id="uploadCountIncrease" parameterType="com.hengyunsoft.platform.file.entity.file.po.FileStatis" >
+        insert into f_file_statis
+        (
+        app_id, file_id, down_count, upload_count, create_time
+        )
+        values (#{appId, jdbcType=VARCHAR},#{fileId, jdbcType=BIGINT}, 0, 1, sysdate())
+        ON DUPLICATE KEY UPDATE
+        upload_count = upload_count + 1,
+        update_time = sysdate()
+    </insert>
+    <resultMap id="DownMap" type="com.hengyunsoft.platform.file.entity.file.domain.FileDownLoadDO">
+        <result column="submitted_file_name" jdbcType="VARCHAR" property="fileName" />
+    </resultMap>
+            
+    <select id="findDown" parameterType="java.lang.Long" resultMap="DownMap">
+        SELECT SUM(statis.down_count) AS sum_d,f_file.submitted_file_name
+        FROM f_file_statis statis
+        LEFT JOIN f_file f_file ON statis.file_id = f_file.id
+        WHERE f_file.admin_id = #{userId,jdbcType=BIGINT}
+        group by statis.file_id
+        ORDER BY sum_d DESC
+        LIMIT 20
+    </select>
+</mapper>

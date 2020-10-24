@@ -1,0 +1,696 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.fast.meet.dao.MeetMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.developer.entity.fast.meet.po.Meet">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name_" jdbcType="VARCHAR" property="name" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="moderator" jdbcType="VARCHAR" property="moderator" />
+    <result column="join_leader" jdbcType="VARCHAR" property="joinLeader" />
+    <result column="remark" jdbcType="LONGVARCHAR" property="remark" />
+    <result column="cancel" jdbcType="SMALLINT" property="cancel" />
+    <result column="cancel_reason" jdbcType="VARCHAR" property="cancelReason" />
+    <result column="cancel_time" jdbcType="TIMESTAMP" property="cancelTime" />
+    <result column="cancel_user" jdbcType="BIGINT" property="cancelUser" />
+    <result column="notice_status" jdbcType="SMALLINT" property="noticeStatus" />
+    <result column="meet_status" jdbcType="SMALLINT" property="meetStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, name_, start_time, end_time, address, moderator, join_leader, remark, cancel, 
+    cancel_reason, cancel_time, cancel_user, notice_status, meet_status, create_time, 
+    create_user, update_time, update_user, app_id
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.meet.example.MeetExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_meet
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_meet
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.developer.repository.fast.meet.example.MeetExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_meet
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectByAppIdAndId" parameterType="map" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <include refid="Base_Column_List" />
+    from b_meet
+    where 1=1 and app_id = #{appId,jdbcType=VARCHAR} and id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAppIdById" parameterType="map" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_meet
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_meet
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.meet.example.MeetExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_meet
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_meet where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_meet
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_meet where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.Meet">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.Meet">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.Meet">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.Meet">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.Meet">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_meet (id, name_, start_time, 
+      end_time, address, moderator, 
+      join_leader, remark, cancel, 
+      cancel_reason, cancel_time, cancel_user, 
+      notice_status, meet_status, create_time, 
+      create_user, update_time, update_user, 
+      app_id)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{address,jdbcType=VARCHAR}, #{moderator,jdbcType=VARCHAR}, 
+      #{joinLeader,jdbcType=VARCHAR}, #{remark,jdbcType=LONGVARCHAR}, #{cancel,jdbcType=SMALLINT}, 
+      #{cancelReason,jdbcType=VARCHAR}, #{cancelTime,jdbcType=TIMESTAMP}, #{cancelUser,jdbcType=BIGINT}, 
+      #{noticeStatus,jdbcType=SMALLINT}, #{meetStatus,jdbcType=SMALLINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT}, 
+      #{appId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_meet (id, name_, start_time, end_time, address, moderator, join_leader, remark, cancel, cancel_reason, cancel_time, cancel_user, notice_status, meet_status, create_time, create_user, update_time, update_user, app_id ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.name,jdbcType=VARCHAR}, #{item.startTime,jdbcType=TIMESTAMP}, 
+        #{item.endTime,jdbcType=TIMESTAMP}, #{item.address,jdbcType=VARCHAR}, #{item.moderator,jdbcType=VARCHAR}, 
+        #{item.joinLeader,jdbcType=VARCHAR}, #{item.remark,jdbcType=LONGVARCHAR}, #{item.cancel,jdbcType=SMALLINT}, 
+        #{item.cancelReason,jdbcType=VARCHAR}, #{item.cancelTime,jdbcType=TIMESTAMP}, #{item.cancelUser,jdbcType=BIGINT}, 
+        #{item.noticeStatus,jdbcType=SMALLINT}, #{item.meetStatus,jdbcType=SMALLINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.createUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, 
+        #{item.appId,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.Meet">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_meet
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name_,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="moderator != null">
+        moderator,
+      </if>
+      <if test="joinLeader != null">
+        join_leader,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="cancel != null">
+        cancel,
+      </if>
+      <if test="cancelReason != null">
+        cancel_reason,
+      </if>
+      <if test="cancelTime != null">
+        cancel_time,
+      </if>
+      <if test="cancelUser != null">
+        cancel_user,
+      </if>
+      <if test="noticeStatus != null">
+        notice_status,
+      </if>
+      <if test="meetStatus != null">
+        meet_status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="moderator != null">
+        #{moderator,jdbcType=VARCHAR},
+      </if>
+      <if test="joinLeader != null">
+        #{joinLeader,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="cancel != null">
+        #{cancel,jdbcType=SMALLINT},
+      </if>
+      <if test="cancelReason != null">
+        #{cancelReason,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelTime != null">
+        #{cancelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cancelUser != null">
+        #{cancelUser,jdbcType=BIGINT},
+      </if>
+      <if test="noticeStatus != null">
+        #{noticeStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="meetStatus != null">
+        #{meetStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.meet.example.MeetExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_meet
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.name != null">
+        name_ = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startTime != null">
+        start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime != null">
+        end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.address != null">
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.moderator != null">
+        moderator = #{record.moderator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.joinLeader != null">
+        join_leader = #{record.joinLeader,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.cancel != null">
+        cancel = #{record.cancel,jdbcType=SMALLINT},
+      </if>
+      <if test="record.cancelReason != null">
+        cancel_reason = #{record.cancelReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cancelTime != null">
+        cancel_time = #{record.cancelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.cancelUser != null">
+        cancel_user = #{record.cancelUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.noticeStatus != null">
+        notice_status = #{record.noticeStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="record.meetStatus != null">
+        meet_status = #{record.meetStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet
+    set id = #{record.id,jdbcType=BIGINT},
+      name_ = #{record.name,jdbcType=VARCHAR},
+      start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      address = #{record.address,jdbcType=VARCHAR},
+      moderator = #{record.moderator,jdbcType=VARCHAR},
+      join_leader = #{record.joinLeader,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=LONGVARCHAR},
+      cancel = #{record.cancel,jdbcType=SMALLINT},
+      cancel_reason = #{record.cancelReason,jdbcType=VARCHAR},
+      cancel_time = #{record.cancelTime,jdbcType=TIMESTAMP},
+      cancel_user = #{record.cancelUser,jdbcType=BIGINT},
+      notice_status = #{record.noticeStatus,jdbcType=SMALLINT},
+      meet_status = #{record.meetStatus,jdbcType=SMALLINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.Meet">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet
+    <set>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="moderator != null">
+        moderator = #{moderator,jdbcType=VARCHAR},
+      </if>
+      <if test="joinLeader != null">
+        join_leader = #{joinLeader,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="cancel != null">
+        cancel = #{cancel,jdbcType=SMALLINT},
+      </if>
+      <if test="cancelReason != null">
+        cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelTime != null">
+        cancel_time = #{cancelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cancelUser != null">
+        cancel_user = #{cancelUser,jdbcType=BIGINT},
+      </if>
+      <if test="noticeStatus != null">
+        notice_status = #{noticeStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="meetStatus != null">
+        meet_status = #{meetStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.Meet">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet
+    <set>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="moderator != null">
+        moderator = #{moderator,jdbcType=VARCHAR},
+      </if>
+      <if test="joinLeader != null">
+        join_leader = #{joinLeader,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="cancel != null">
+        cancel = #{cancel,jdbcType=SMALLINT},
+      </if>
+      <if test="cancelReason != null">
+        cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelTime != null">
+        cancel_time = #{cancelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cancelUser != null">
+        cancel_user = #{cancelUser,jdbcType=BIGINT},
+      </if>
+      <if test="noticeStatus != null">
+        notice_status = #{noticeStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="meetStatus != null">
+        meet_status = #{meetStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.Meet">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet
+    set name_ = #{name,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      moderator = #{moderator,jdbcType=VARCHAR},
+      join_leader = #{joinLeader,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=LONGVARCHAR},
+      cancel = #{cancel,jdbcType=SMALLINT},
+      cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+      cancel_time = #{cancelTime,jdbcType=TIMESTAMP},
+      cancel_user = #{cancelUser,jdbcType=BIGINT},
+      notice_status = #{noticeStatus,jdbcType=SMALLINT},
+      meet_status = #{meetStatus,jdbcType=SMALLINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      app_id = #{appId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.Meet">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet
+    set name_ = #{name,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      moderator = #{moderator,jdbcType=VARCHAR},
+      join_leader = #{joinLeader,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=LONGVARCHAR},
+      cancel = #{cancel,jdbcType=SMALLINT},
+      cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+      cancel_time = #{cancelTime,jdbcType=TIMESTAMP},
+      cancel_user = #{cancelUser,jdbcType=BIGINT},
+      notice_status = #{noticeStatus,jdbcType=SMALLINT},
+      meet_status = #{meetStatus,jdbcType=SMALLINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      app_id = #{appId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+</mapper>

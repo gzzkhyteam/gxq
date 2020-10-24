@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.org.gxqpt.dao.GxqptOrgMapper">
+    <!--浏览次数增加-->
+    <resultMap id="ExtendResultMap" type="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwOrg">
+        <!--
+        @备用
+        -->
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
+        <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="short_name" jdbcType="VARCHAR" property="shortName"/>
+        <result column="else_name" jdbcType="VARCHAR" property="elseName"/>
+        <result column="for_type" jdbcType="VARCHAR" property="forType"/>
+        <result column="for_class" jdbcType="VARCHAR" property="forClass"/>
+        <result column="forindustry" jdbcType="VARCHAR" property="forindustry"/>
+        <result column="orgadmin" jdbcType="VARCHAR" property="orgadmin"/>
+        <result column="zipcode" jdbcType="VARCHAR" property="zipcode"/>
+        <result column="telcode" jdbcType="VARCHAR" property="telcode"/>
+        <result column="faxcode" jdbcType="VARCHAR" property="faxcode"/>
+        <result column="status_" jdbcType="VARCHAR" property="status"/>
+        <result column="sortvalue" jdbcType="INTEGER" property="sortvalue"/>
+        <result column="descrption" jdbcType="VARCHAR" property="descrption"/>
+        <result column="forarea" jdbcType="VARCHAR" property="forarea"/>
+        <result column="forcity" jdbcType="VARCHAR" property="forcity"/>
+        <result column="forcounty" jdbcType="VARCHAR" property="forcounty"/>
+        <result column="fortown" jdbcType="VARCHAR" property="fortown"/>
+        <result column="forgk" jdbcType="VARCHAR" property="forgk"/>
+        <result column="fornodetype" jdbcType="VARCHAR" property="fornodetype"/>
+        <result column="orgduty" jdbcType="VARCHAR" property="orgduty"/>
+        <result column="isdelete" jdbcType="VARCHAR" property="isdelete"/>
+        <result column="isenable" jdbcType="VARCHAR" property="isenable"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="logid" jdbcType="VARCHAR" property="logid"/>
+        <result column="otherid" jdbcType="VARCHAR" property="otherid"/>
+    </resultMap>
+    <resultMap id="PolyResultMap" type="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.GxqptOrgPolyDO">
+        <!--
+        @聚合类
+        -->
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
+        <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="short_name" jdbcType="VARCHAR" property="shortName"/>
+        <result column="else_name" jdbcType="VARCHAR" property="elseName"/>
+        <result column="for_type" jdbcType="VARCHAR" property="forType"/>
+        <result column="for_class" jdbcType="VARCHAR" property="forClass"/>
+        <result column="forindustry" jdbcType="VARCHAR" property="forindustry"/>
+        <result column="orgadmin" jdbcType="VARCHAR" property="orgadmin"/>
+        <result column="zipcode" jdbcType="VARCHAR" property="zipcode"/>
+        <result column="telcode" jdbcType="VARCHAR" property="telcode"/>
+        <result column="faxcode" jdbcType="VARCHAR" property="faxcode"/>
+        <result column="status_" jdbcType="VARCHAR" property="status"/>
+        <result column="sortvalue" jdbcType="INTEGER" property="sortvalue"/>
+        <result column="descrption" jdbcType="VARCHAR" property="descrption"/>
+        <result column="forarea" jdbcType="VARCHAR" property="forarea"/>
+        <result column="forcity" jdbcType="VARCHAR" property="forcity"/>
+        <result column="forcounty" jdbcType="VARCHAR" property="forcounty"/>
+        <result column="fortown" jdbcType="VARCHAR" property="fortown"/>
+        <result column="forgk" jdbcType="VARCHAR" property="forgk"/>
+        <result column="fornodetype" jdbcType="VARCHAR" property="fornodetype"/>
+        <result column="orgduty" jdbcType="VARCHAR" property="orgduty"/>
+        <result column="isdelete" jdbcType="VARCHAR" property="isdelete"/>
+        <result column="isenable" jdbcType="VARCHAR" property="isenable"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="logid" jdbcType="VARCHAR" property="logid"/>
+        <result column="otherid" jdbcType="VARCHAR" property="otherid"/>
+        <result column="otherid" jdbcType="VARCHAR" property="otherid"/>
+        <result column="system_code" jdbcType="VARCHAR" property="systemCode"/>
+    </resultMap>
+    <resultMap id="OrgTreeBySystemMap" type="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.OrgTreeBySystemDO">
+        <!--
+        @聚合类
+        -->
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="system_code" jdbcType="VARCHAR" property="systemCode"/>
+    </resultMap>
+    <sql id="My_Column_List">
+        <!--
+        @基本
+        -->
+        c_gxqpt_org.id, c_gxqpt_org.parent_id, c_gxqpt_org.org_id, c_gxqpt_org.name_, c_gxqpt_org.short_name,
+        c_gxqpt_org.else_name, c_gxqpt_org.for_type, c_gxqpt_org.for_class, c_gxqpt_org.forindustry,
+        c_gxqpt_org.orgadmin, c_gxqpt_org.zipcode, c_gxqpt_org.telcode, c_gxqpt_org.faxcode, c_gxqpt_org.status_,
+        c_gxqpt_org.sortvalue, c_gxqpt_org.descrption, c_gxqpt_org.forarea, c_gxqpt_org.forcity,
+        c_gxqpt_org.forcounty, c_gxqpt_org.fortown, c_gxqpt_org.forgk, c_gxqpt_org.fornodetype, c_gxqpt_org.orgduty,
+        c_gxqpt_org.isdelete, c_gxqpt_org.isenable, c_gxqpt_org.create_user,
+        c_gxqpt_org.create_time, c_gxqpt_org.update_user, c_gxqpt_org.update_time, c_gxqpt_org.logid,
+        c_gxqpt_org.otherid
+    </sql>
+    <sql id="My_Column_List_Join_Dictionary">
+        <!--
+        @code转换字典
+        -->
+        c.id, c.parent_id, c.org_id, c.name_, c.short_name, c.else_name, bt.name for_type,bc.name for_class,
+        c.forindustry,
+        c.orgadmin, c.zipcode, c.telcode, c.faxcode, c.status_, c.sortvalue, c.descrption, c.forarea, c.forcity,
+        c.forcounty, c.fortown, c.forgk, c.fornodetype, c.orgduty, c.isdelete, c.isenable, c.create_user,
+        c.create_time, c.update_user, c.update_time, c.logid, c.otherid
+    </sql>
+    <sql id="My_Column_List_Alias">
+        <!--
+        @表别名
+        -->
+        c.id, c.parent_id, c.org_id, c.name_, c.short_name, c.else_name, c.for_type,c.for_class, c.forindustry,
+        c.orgadmin, c.zipcode, c.telcode, c.faxcode, c.status_, c.sortvalue, c.descrption, c.forarea, c.forcity,
+        c.forcounty, c.fortown, c.forgk, c.fornodetype, c.orgduty, c.isdelete, c.isenable, c.create_user,
+        c.create_time, c.update_user, c.update_time, c.logid, c.otherid
+    </sql>
+    <sql id="My_Column_List_Alias_Sdzzww">
+        <!--
+        @表别名
+        -->
+        s.id, s.parent_id, s.org_id, s.name_, s.short_name, s.else_name, s.for_type,s.for_class, s.forindustry,
+        s.orgadmin, s.zipcode, s.telcode, s.faxcode, s.status_, s.sortvalue, s.descrption, s.forarea, s.forcity,
+        s.forcounty, s.fortown, s.forgk, s.fornodetype, s.orgduty, s.isdelete, s.isenable, s.create_user,
+        s.create_time, s.update_user, s.update_time, s.logid, s.otherid
+    </sql>
+    <sql id="My_Column_List_Join_Dictionary_All">
+        <!--
+        @code转换字典-所有
+        -->
+        o.id, o.parent_id, o.org_id, o.name_, o.short_name, o.else_name, bd_type.name for_type,bd_class.name for_class,
+        bd_dustry.name forindustry,
+        u.name_ orgadmin, o.zipcode, o.telcode, o.faxcode, o.status_, o.sortvalue, o.descrption, ba_area.name forarea,
+        ba_city.name forcity,
+        ba_county.name forcounty, ba_town.name fortown, bd_gk.name forgk, o.fornodetype, o.orgduty,
+        o.isdelete, o.isenable, o.create_user,
+        o.create_time, o.update_user, o.update_time, o.logid, o.otherid
+    </sql>
+
+    <!--逻辑删除-->
+    <update id="updateIsdelete" parameterType="String">
+    update c_gxqpt_org
+    set isdelete='1'
+
+    where 1=1
+    and id=#{id,jdbcType=VARCHAR}
+  </update>
+
+    <!--多条件联级查询(根据用户权限)-->
+    <select id="selectOrgWithShare" resultMap="BaseResultMap">
+        <!--
+        @mbggenerated
+        -->
+        select
+
+        <include refid="My_Column_List"/>
+        from c_assign_role join c_role on role_id = c_role.id
+        join c_gxqpt_org on c_role.biz_flag = c_gxqpt_org.id
+        join c_data_share_to_app on c_gxqpt_org.id = c_data_share_to_app.biz_id
+        where 1=1
+        and c_data_share_to_app.app_id=#{appId,jdbcType=VARCHAR}
+        and c_gxqpt_org.isdelete='0'
+        and c_assign_role.user_id = #{adminId,jdbcType=BIGINT}
+        order by c_gxqpt_org.sortvalue asc
+    </select>
+
+    <!--多条件模糊联级查询（根据用户权限）-->
+    <select id="selectLikeAppByShare" resultMap="BaseResultMap">
+        <!--
+        @mbggenerated
+        -->
+        select
+
+        <include refid="My_Column_List"/>
+        from c_assign_role join c_role on role_id = c_role.id
+        join c_gxqpt_org on c_role.biz_flag = c_gxqpt_org.id
+        join c_data_share_to_app on c_gxqpt_org.id = c_data_share_to_app.biz_id
+        where 1=1
+        <if test="morg.name != null">
+            and c_gxqpt_org.name_ like #{morg.name,typeHandler=fullLike}
+        </if>
+        <if test="morg.forType != null">
+            and c_gxqpt_org.for_type = #{morg.forType,jdbcType=VARCHAR}
+        </if>
+        <if test="morg.forClass != null">
+            and c_gxqpt_org.for_class = #{morg.forClass,jdbcType=VARCHAR}
+        </if>
+        <if test="morg.parentId != null">
+            and c_gxqpt_org.parent_id = #{morg.parentId,jdbcType=VARCHAR}
+        </if>
+        and c_data_share_to_app.app_id=#{appId,jdbcType=VARCHAR}
+        and c_gxqpt_org.isdelete='0'
+        and c_assign_role.user_id = #{adminId,jdbcType=BIGINT}
+        order by c_gxqpt_org.sortvalue asc
+    </select>
+
+    <!--查询出type和class的字典（显示列表）-->
+    <select id="selectOrgJoinDictionary" resultMap="ExtendResultMap">
+        select
+
+        <include refid="My_Column_List_Join_Dictionary"/>
+        from
+        <if test="systemCode != null">
+            c_${systemCode}_org c
+        </if>
+        left join b_dictionary bt on bt.code = c.for_type
+        left join b_dictionary bc on bc.code = c.for_class
+        where 1=1
+        <if test="morg.name != null">
+            and c.name_ like #{morg.name,typeHandler=fullLike}
+        </if>
+        <if test="morg.forType != null and morg.forType !=''">
+            and c.for_type = #{morg.forType,jdbcType=VARCHAR}
+        </if>
+        <if test="morg.forClass != null and morg.forClass !=''">
+            and c.for_class = #{morg.forClass,jdbcType=VARCHAR}
+        </if>
+        <if test="morg.isenable != null and morg.isenable !=''">
+            and c.isenable = #{morg.isenable,jdbcType=VARCHAR}
+        </if>
+        and c.id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+
+            #{id}
+
+        </foreach>
+        order by c.sortvalue asc
+    </select>
+
+    <!--只有权限的user才能获得相应单位-->
+    <select id="selectOrgWithManager" resultMap="BaseResultMap">
+        <!--
+        @mbggenerated
+        -->
+        select distinct
+        <include refid="My_Column_List"/>
+        from c_assign_role join c_role on role_id = c_role.id
+        join c_gxqpt_org on c_role.biz_flag = c_gxqpt_org.id
+        where c_assign_role.user_id = #{adminId,jdbcType=BIGINT}
+        and c_gxqpt_org.isdelete!="1"
+        and c_role.code_ = 'data_org'
+        order by c_gxqpt_org.sortvalue asc
+    </select>
+
+    <!--编辑之前获得的详情信息（字典）-->
+    <select id="details" resultMap="BaseResultMap">
+        <!--
+        @mbggenerated
+        -->
+        select
+
+        <include refid="My_Column_List_Join_Dictionary_All"/>
+        from c_${systemCode}_org o
+        left join b_area ba_area on o.forarea= ba_area.id
+        left join b_area ba_city on o.forcity=ba_city.id
+        left join b_area ba_county on forcounty=ba_county.id
+        left join b_area ba_town on o.fortown=ba_town.id
+        left join b_dictionary bd_gk on o.forgk=bd_gk.`code` and bd_gk.dictionary_type_code='org.ascription'
+        left join b_dictionary bd_dustry on o.forindustry=bd_dustry.`code` and bd_dustry.dictionary_type_code='app_type'
+        left join b_dictionary bd_class on o.for_class=bd_class.`code` and bd_class.dictionary_type_code='level'
+        left join b_dictionary bd_type on o.for_type=bd_type.`code` and bd_type.dictionary_type_code='org.type'
+        left join c_user u on u.account_ = o.`orgadmin`
+        where 1=1
+        and o.id = #{id,jdbcType=VARCHAR}
+        order by o.sortvalue asc
+    </select>
+
+
+    <!--对外接口-->
+    <!--通过应用id+体系编码获得其可见所有单位-->
+    <select id="pageByAppAndSys" resultMap="BaseResultMap">
+        select
+
+        <include refid="My_Column_List_Alias"/>
+        from c_data_share_to_app
+        join c_${systemCode}_org c on c.id = c_data_share_to_app.biz_id
+        where 1=1
+        and c_data_share_to_app.app_id=#{appId,jdbcType=VARCHAR}
+        and c.isdelete!='1'
+        order by c.sortvalue asc
+    </select>
+
+    <!--通过用户id+体系编码获得所有单位-->
+    <select id="findByAdmAndSys" resultMap="BaseResultMap">
+        select
+        <include refid="My_Column_List_Alias"/>
+        from c_${systemCode}_emp e
+        join c_user on e.gxqpt_emp_id=c_user.id
+        join c_${systemCode}_org c on e.mainorgid=c.id
+        where 1=1
+        and c_user.id = #{adminId,jdbcType=BIGINT}
+        and c.isdelete!='1'
+        order by c.sortvalue asc
+    </select>
+
+    <!--通过体系编码获得所有单位-->
+    <select id="pageBySys" resultMap="BaseResultMap">
+        select
+        <include refid="My_Column_List_Alias"/>
+        from c_${systemCode}_org c
+        where 1=1
+        and c.isdelete!='1'
+        order by c.sortvalue asc
+    </select>
+
+    <!--获取聚合体系单位-->
+    <select id="pagePoly" resultMap="PolyResultMap">
+        select
+        <include refid="My_Column_List_Alias_Sdzzww"/>
+        ,'sdzzww' system_code
+        from c_sdzzww_org s
+        where 1=1
+        and s.isdelete!='1'
+        union all
+        select
+        <include refid="My_Column_List_Alias"/>
+        ,'gxqpt' system_code
+        from c_gxqpt_org c
+        where 1=1
+        and c.isdelete!='1'
+    </select>
+
+    <!--某个用户获取聚合体系单位-->
+    <select id="pagePolyByUser" parameterType="Long" resultMap="PolyResultMap">
+        select
+        <include refid="My_Column_List_Alias"/>,
+        'gxqpt' system_code
+        from c_gxqpt_emp e
+        join c_user on e.gxqpt_emp_id=c_user.id
+        join c_gxqpt_org c on e.mainorgid=c.id
+        where 1=1
+        and c_user.id = #{adminId,jdbcType=BIGINT}
+        and c.isdelete!= 1
+        order by c.sortvalue asc)
+        union all
+        select
+        <include refid="My_Column_List_Alias"/>,
+        'sdzzww' system_code
+        from c_sdzzww_emp e
+        join c_user on e.gxqpt_emp_id=c_user.id
+        join c_sdzzww_org c on e.mainorgid=c.id
+        where 1=1
+        and c_user.id = #{adminId,jdbcType=BIGINT}
+        and c.isdelete!= 1
+        order by c.sortvalue asc)
+    </select>
+
+    <!--通过应用id来获取聚合体系单位-->
+    <select id="pagePolyByApp" resultMap="PolyResultMap">
+        select
+        <include refid="My_Column_List_Alias_Sdzzww"/>
+        ,'sdzzww' system_code
+        from c_sdzzww_org s
+        where
+        s.isdelete!='1'
+        union all
+        select
+        <include refid="My_Column_List_Alias"/>
+        ,'gxqpt' system_code
+        from c_gxqpt_org c
+        join c_data_share_to_app on c.id=c_data_share_to_app.biz_id
+        where
+        c_data_share_to_app.biz_type='ORG'
+        and c_data_share_to_app.app_id=#{appId,jdbcType=VARCHAR}
+        and c.isdelete!='1'
+    </select>
+
+    <!--根据user查询所有emp下的单位-->
+    <sql id="findOrgByUserBaseSQL">
+      SELECT
+            org.*,#{sysCode,jdbcType=VARCHAR} system_code
+            FROM
+                (
+                    SELECT
+                        emp.mainorgid orgId
+                    FROM
+                        c_${sysCode}_emp emp
+                    WHERE
+                        emp.gxqpt_emp_id = #{userId}
+                    UNION
+                        SELECT
+                            identi.org_id orgId
+                        FROM
+                            c_${sysCode}_emp_identity identi
+                        WHERE
+                            user_id = (
+                                SELECT
+                                    emp.id
+                                FROM
+                                    c_${sysCode}_emp emp
+                                WHERE
+                                    emp.gxqpt_emp_id = #{userId}
+                            )
+                            AND identi.isdelete='0'
+                ) empinfo
+            JOIN c_${sysCode}_org org ON empinfo.orgId = org.id
+             AND org.isdelete='0' AND org.isenable='1'
+    </sql>
+    <!--根据user集合查询所有emp下的单位-->
+    <sql id="findOrgByUsersBaseSQL">
+        SELECT
+        org.*,#{sysCode,jdbcType=VARCHAR} system_code
+        FROM
+        (
+        SELECT
+        emp.mainorgid orgId
+        FROM
+        c_${sysCode}_emp emp
+        WHERE
+        emp.gxqpt_emp_id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        UNION
+        SELECT
+        identi.org_id orgId
+        FROM
+        c_${sysCode}_emp_identity identi
+        WHERE
+        user_id IN (
+        SELECT
+        emp.id
+        FROM
+        c_${sysCode}_emp emp
+        WHERE
+        emp.gxqpt_emp_id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        )
+        AND identi.isdelete='0'
+        ) empinfo
+        JOIN c_${sysCode}_org org ON empinfo.orgId = org.id
+        AND org.isdelete='0' AND org.isenable='1'
+    </sql>
+    <!--2018-5-17 王镇新需求修改，查询当前登录人所有身份对应的全部单位-->
+    <select id="findOrgByUser" resultMap="PolyResultMap">
+            <include refid="findOrgByUserBaseSQL"/>
+    </select>
+    <!--上数据口的人员集合版-->
+    <select id="findOrgByUsers" resultMap="PolyResultMap">
+        <include refid="findOrgByUsersBaseSQL"/>
+    </select>
+    <!--根据userId查询其所在单位信息-->
+    <resultMap id="OrgAndEmpInfoResultMap" type="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.OrgAndEmpInfoDO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="system_code" jdbcType="VARCHAR" property="systemCode"/>
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="telcode" jdbcType="VARCHAR" property="telcode"/>
+        <result column="for_type" jdbcType="VARCHAR" property="forType"/>
+        <result column="for_class" jdbcType="VARCHAR" property="forClass"/>
+        <result column="forindustry" jdbcType="VARCHAR" property="forindustry"/>
+        <result column="zipcode" jdbcType="VARCHAR" property="zipcode"/>
+        <result column="faxcode" jdbcType="VARCHAR" property="faxcode"/>
+        <result column="status_" jdbcType="VARCHAR" property="status"/>
+        <result column="sortvalue" jdbcType="INTEGER" property="sortvalue"/>
+        <result column="forarea" jdbcType="VARCHAR" property="forarea"/>
+        <result column="forcity" jdbcType="VARCHAR" property="forcity"/>
+        <result column="forcounty" jdbcType="VARCHAR" property="forcounty"/>
+        <result column="fortown" jdbcType="VARCHAR" property="fortown"/>
+        <result column="forgk" jdbcType="VARCHAR" property="forgk"/>
+        <result column="fornodetype" jdbcType="VARCHAR" property="fornodetype"/>
+    </resultMap>
+
+    <select id="getOrgInfoByUserId" resultMap="OrgAndEmpInfoResultMap">
+        SELECT
+            org.id,
+            org.parent_id,
+            org.name_,
+            org.telcode,
+            org.for_type,
+            org.for_class,
+            org.forindustry,
+            org.zipcode,
+            org.telcode,
+            org.faxcode,
+            org.status_,
+            org.sortvalue,
+            org.forarea,
+            org.forcity,
+            org.forcounty,
+            org.fortown,
+            org.forgk,
+            org.fornodetype,
+            '${systemCode}' system_code
+            FROM
+                (
+                    SELECT
+                        emp.mainorgid orgId
+                    FROM
+                        c_${systemCode}_emp emp
+                    WHERE
+                        emp.gxqpt_emp_id = #{userId}
+                    UNION
+                        SELECT
+                            identi.org_id orgId
+                        FROM
+                            c_${systemCode}_emp_identity identi
+                        WHERE
+                            user_id = (
+                                SELECT
+                                    emp.id
+                                FROM
+                                    c_${systemCode}_emp emp
+                                WHERE
+                                    emp.gxqpt_emp_id = #{userId}
+                            )
+                            AND identi.isdelete='0'
+                ) empinfo
+            JOIN c_${systemCode}_org org ON empinfo.orgId = org.id
+            ORDER BY org.sortvalue ASC
+    </select>
+
+    <!--根据userId查询其所在单位，部门，岗位职务信息-->
+    <resultMap id="OrgSimpleInfoResultMap" type="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.OrgInfosDO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="orgName" jdbcType="VARCHAR" property="orgName"/>
+        <result column="deptId" jdbcType="VARCHAR" property="deptId"/>
+        <result column="deptName" jdbcType="VARCHAR" property="deptName"/>
+        <result column="dutyName" jdbcType="VARCHAR" property="dutyName"/>
+        <result column="postName" jdbcType="VARCHAR" property="postName"/>
+    </resultMap>
+    <select id="getOrgSimpleInfo" resultMap="OrgSimpleInfoResultMap">
+        SELECT
+              org.id,
+              org.name_ orgName,
+              empinfo.deptId,
+              dept.name_ deptName,
+              duties.name_ dutyName,
+              post.name_ postName
+            FROM
+                (
+                    SELECT
+                        emp.mainorgid orgId,emp.maindeptid deptId,emp.mainduty duty,emp.mainpost post
+                    FROM
+                        c_${systemCode}_emp emp
+                    WHERE
+                        emp.gxqpt_emp_id = #{userId}
+                    UNION
+                        SELECT
+                             identi.org_id orgId ,identi.dept_id deptId,identi.duty_id duty,identi.post_id post
+                        FROM
+                            c_${systemCode}_emp_identity identi
+                        WHERE
+                            user_id = (
+                                SELECT
+                                    emp.id
+                                FROM
+                                    c_${systemCode}_emp emp
+                                WHERE
+                                    emp.gxqpt_emp_id = #{userId}
+                            )
+                            AND identi.isdelete='0'
+                ) empinfo
+            LEFT JOIN c_${systemCode}_org org ON empinfo.orgId = org.id
+            LEFT JOIN c_${systemCode}_department dept on empinfo.deptId = dept.id
+            LEFT JOIN c_${systemCode}_duties duties on empinfo.duty = duties.id
+            LEFT JOIN c_${systemCode}_post post on empinfo.post = post.id
+            ORDER BY org.sortvalue ASC
+    </select>
+
+    <!--查询所有单位-->
+    <select id="findAll" resultType="String">
+        select GROUP_CONCAT(t1.id) from(
+        <foreach collection="systemList" index="index" item="item">
+            <choose>
+                <when test='index != "0"'>
+                    union all
+                </when>
+            </choose>
+            select distinct o.id from c_${item.code}_org o
+            join c_application on o.id = c_application.org_id
+            where c_application.status_= 1 and o.isdelete='0' and o.isenable='1'
+        </foreach>
+        ) t1
+        union all
+        select GROUP_CONCAT(t2.id) from(
+        <foreach collection="systemList" index="index" item="item">
+            <choose>
+                <when test='index != "0"'>
+                    union all
+                </when>
+            </choose>
+            select distinct o.id
+            from c_${item.code}_org o
+            where o.isdelete='0' and o.isenable='1'
+        </foreach>
+        ) t2
+        union all
+        select GROUP_CONCAT(distinct a.id) from c_application a where a.status_= 1
+    </select>
+
+    <select id="findAppNum" resultType="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.FindAppNumDO">
+        SELECT COUNT(app.`id`) num, DATE_FORMAT( app.create_time, '%Y%m' ) month
+        FROM c_application app
+		where org_id != ''
+		GROUP BY DATE_FORMAT( app.create_time, '%Y%m' )
+        order by MONTH desc
+        limit 0 ,7;
+    </select>
+
+    <!--2018-5-30，根据userId 查询单位、部门、职务、岗位以及体系编码-->
+    <select id="getOrgDeptDutyByUserId" resultType="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.OrgDeptDutyInfoDO">
+        SELECT
+            emp.mainorgid orgId ,
+            emp.mainorgname orgName,
+            emp.maindeptid deptId,
+            emp.maindeptname deptName,
+            emp.mainduty dutyId,
+            emp.maindutyname dutyName,
+            emp.mainpost postId,
+            emp.mainpostname postName,
+            emp.name_ userName,
+            emp.photo photo,
+            '${systemCode}' systemCode
+        FROM
+            c_${systemCode}_emp emp
+        WHERE
+            emp.gxqpt_emp_id = #{userId}
+    </select>
+
+    <!--2018-6-26根据userID,OrgID查询单位、部门、职务、岗位以及体系编码-->
+    <select id="getOrgDeptDutyinfo" resultType="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.OrgDeptDutyInfoDO">
+         SELECT
+            org.id orgId,
+            org.name_ orgName,
+            empinfo.deptId,
+			dept.name_ deptName,
+            empinfo.duty dutyId,
+			duties.name_ dutyName,
+            empinfo.post postId,
+			post.name_ postName,
+            empinfo.name_ userName,
+			empinfo.photo,
+			'${systemCode}' systemCode
+            FROM
+                (
+                    SELECT
+                        emp.mainorgid orgId,emp.maindeptid deptId,emp.mainduty duty,emp.mainpost post,emp.name_ ,emp.photo
+                    FROM
+                        c_${systemCode}_emp emp
+                    WHERE
+                        emp.gxqpt_emp_id = #{userId}
+                    UNION
+                        SELECT
+                            identi.org_id orgId ,identi.dept_id deptId,identi.duty_id duty,identi.post_id post,t_emp.name_,t_emp.photo
+                        FROM
+                            c_${systemCode}_emp_identity identi
+                            JOIN c_${systemCode}_emp t_emp on identi.user_id = t_emp.id
+                        WHERE
+                           user_id = (
+                                SELECT
+                                    emp.id
+                                FROM
+                                    c_${systemCode}_emp emp
+                                WHERE
+                                    emp.gxqpt_emp_id = #{userId}
+                            )
+                            AND identi.isdelete='0'
+                ) empinfo
+            LEFT JOIN c_${systemCode}_org org ON empinfo.orgId = org.id
+            LEFT JOIN c_${systemCode}_department dept on empinfo.deptId = dept.id
+            LEFT JOIN c_${systemCode}_duties duties on empinfo.duty = duties.id
+            left JOIN c_${systemCode}_post post on empinfo.post = post.id
+            WHERE 1=1
+            <if test="orgId != null and orgId!='' ">
+                and empinfo.orgId = #{orgId}
+            </if>
+            ORDER BY org.sortvalue ASC,dept.sortvalue ASC
+    </select>
+    <!--查询全单位根据体系-->
+    <select id="findAllOrgBySystem" resultMap="OrgTreeBySystemMap">
+        SELECT
+        *
+        FROM
+        <foreach collection="systems" index="index" item="item" open="("  close=")">
+            <choose>
+                <when test='index != "0"'>
+                    UNION ALL
+                </when>
+            </choose>
+            SELECT
+            org.id,
+            org.name_,
+            org.sortvalue,
+            '${item}' system_code,
+            org.parent_id
+            FROM c_${item}_org org
+            WHERE org.isdelete='0' AND org.isenable='1'
+        </foreach>
+        org ORDER BY org.sortvalue
+    </select>
+    <!--全体系查询-平台管理员-->
+    <select id="findOrgByPtAdminAndSystemCode" resultMap="PolyResultMap">
+        SELECT
+        *
+        FROM
+        <foreach collection="systems" index="index" item="item" open="(" close=")">
+            <choose>
+                <when test='index != "0"'>
+                    UNION ALL
+                </when>
+            </choose>
+            SELECT
+            id, name_,sortvalue,#{item} system_code, ${index} sort
+            FROM
+            c_${item}_org
+            WHERE
+            c_${item}_org.isdelete = '0'
+            AND c_${item}_org.isenable = '1'
+        </foreach>
+        c_gxqpt_org
+        ORDER BY sort, sortvalue
+    </select>
+    <!--全体系查询-一般管理员-->
+    <select id="findOrgByAdminAndSystemCode" resultMap="PolyResultMap">
+        SELECT
+        *
+        FROM
+        <foreach collection="systems" index="index" item="item" open="(" close=")">
+            <choose>
+                <when test='index != "0"'>
+                    UNION ALL
+                </when>
+            </choose>
+            SELECT
+            c_${item}_org.id, c_${item}_org.name_,sortvalue,#{item} system_code, ${index} sort
+            FROM c_${item}_org JOIN c_user ON c_${item}_org.orgadmin=c_user.account_ WHERE c_user.id = ${adminId}
+            AND c_${item}_org.isdelete!="1"
+        </foreach>
+        c_gxqpt_org
+        ORDER BY sort, sortvalue
+    </select>
+    <!--根据单位ids查询单位名称id信息-->
+    <select id="findOrgNameByIds" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        <foreach collection="systems" index="index" item="item" open="(" close=")">
+            <choose>
+                <when test='index != "0"'>
+                    UNION ALL
+                </when>
+            </choose>
+            SELECT
+            c_${item}_org.id, c_${item}_org.name_,sortvalue,${index} sort
+            FROM c_${item}_org
+            WHERE c_${item}_org.id IN
+            <foreach collection="ids" index="mindex" item="id" open="(" close=")">
+                <choose>
+                    <when test='mindex != "0"'>
+                        ,
+                    </when>
+                </choose>
+                #{id}
+            </foreach>
+        </foreach>
+        c_gxqpt_org
+        ORDER BY sort, sortvalue
+    </select>
+
+    <!--查询全体系单位:共享交换-->
+    <select id="findOrgByExchange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="My_Column_List_Alias"/>
+        FROM
+        <foreach collection="systems" index="index" item="item" open="(" close=")">
+            <choose>
+                <when test='index != "0"'>
+                    UNION ALL
+                </when>
+            </choose>
+            SELECT
+            <include refid="Base_Column_List"/>
+            FROM c_${item}_org org
+            <where>
+                <if test="obj.isdelete != null and obj.isdelete!='' ">
+                    AND org.isdelete = #{obj.isdelete}
+                </if>
+                <if test="obj.id != null and obj.id!='' ">
+                    AND org.id = #{obj.id}
+                </if>
+                <if test="obj.isenable != null and obj.isenable!='' ">
+                    AND org.isenable = #{obj.isenable}
+                </if>
+            </where>
+        </foreach>
+        c
+        ORDER BY c.sortvalue
+    </select>
+</mapper>

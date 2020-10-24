@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.api.dao.ShareDataApiMapper">
+    <!--获取标签云数据-->
+    <select id="selectTagCould" resultType="map">
+        SELECT * FROM v_tag_cloud
+    </select>
+    <resultMap id="ListResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.ShareDataApiListDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="unitName" jdbcType="VARCHAR" property="unitName"/>
+        <result column="unit_id" jdbcType="VARCHAR" property="unitId"/>
+        <result column="dirName" jdbcType="VARCHAR" property="dirName"/>
+        <result column="dir_id" jdbcType="VARCHAR" property="dirId"/>
+        <result column="dataType" jdbcType="INTEGER" property="dataType"/>
+        <result column="api_name" jdbcType="VARCHAR" property="apiName"/>
+        <result column="api_url" jdbcType="VARCHAR" property="apiUrl"/>
+        <result column="api_code" jdbcType="VARCHAR" property="apiCode"/>
+        <result column="api_status" jdbcType="INTEGER" property="apiStatus"/>
+        <result column="data_fmat" jdbcType="INTEGER" property="dataFmat"/>
+        <result column="auth_status" jdbcType="INTEGER" property="authStatus"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="createUserName" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="create_time" jdbcType="DATE" property="createTime"/>
+    </resultMap>
+
+    <resultMap id="AuthResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.ApiAuthUnitListDO">
+        <!--
+        @mbggenerated
+        -->
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="apiName" jdbcType="VARCHAR" property="apiName"/>
+        <result column="orgName" jdbcType="VARCHAR" property="orgName"/>
+        <result column="dateTerm" jdbcType="VARCHAR" property="dateTerm"/>
+        <result column="limitTime" jdbcType="VARCHAR" property="limitTime"/>
+        <result column="dataNum" jdbcType="INTEGER" property="dataNum"/>
+        <result column="callNum" jdbcType="INTEGER" property="callNum"/>
+    </resultMap>
+
+    <select id="selectList" parameterType="map" resultMap="ListResultMap">
+        SELECT api.id,api.api_name,api.api_status,api.auth_status,api.api_code,dict.dir_name dirName,dict.data_type dataType,api.dir_id,
+        api.create_user,u.name_ createUserName,org.name_ unitName,api.create_time FROM b_share_data_api api
+        INNER JOIN b_share_data_directory dict ON api.dir_id = dict.id
+        INNER JOIN v_emp u ON api.create_user = u.gxqpt_emp_id
+        INNER JOIN v_org org ON api.unit_id = org.id
+        <where>
+            AND ((api_type = 3 AND auth_status = 3) OR api_type = 2 OR api_type = 1)
+            <if test="apiName != null and apiName !=''">
+                AND api.api_name LIKE #{apiName,typeHandler=fullLike}
+            </if>
+            <if test="apiStatus != null and apiStatus !=''">
+                AND api.api_status = #{apiStatus}
+            </if>
+            <if test="unitId != null and unitId !=''">
+                AND api.unit_id = #{unitId}
+            </if>
+            <if test="createUser != null and createUser !=''">
+                AND api.create_user = #{createUser}
+            </if>
+        </where>
+        ORDER BY api.create_time DESC
+    </select>
+
+    <select id="selectAuthUnit" parameterType="map" resultMap="AuthResultMap">
+        SELECT  au.id,api.api_name apiName,org.name_ orgName,(CASE WHEN date_term = -1 THEN '永久' ELSE date_term END)
+        dateTerm,limit_time limitTime,
+        IFNULL(dataNum,0) dataNum,IFNULL(callNum,0) callNum
+        FROM b_share_data_api_user au
+        INNER JOIN b_share_data_api api ON au.api_id = api.id
+        INNER JOIN v_org org ON au.unit_id = org.id
+        LEFT JOIN (SELECT api_id,unit_id,SUM(data_count) dataNum,COUNT(id) callNum
+        FROM b_share_data_api_call GROUP BY api_id,unit_id) ci
+        ON ci.api_id = au.api_id AND ci.unit_id = au.unit_id
+        WHERE au.api_type = 4
+        AND au.api_id = #{apiId}
+        <if test="unitName != null and unitName !=''">
+            AND org.name_ LIKE #{unitName,typeHandler=fullLike}
+        </if>
+    </select>
+
+    <resultMap id="OrgResultMap" type="com.hengyunsoft.platform.exchange.entity.directory.po.domain.VOrgDO">
+        <result column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="name_" jdbcType="VARCHAR" property="name_"/>
+    </resultMap>
+
+    <select id="selectNoAuthUnit" parameterType="map" resultMap="OrgResultMap">
+        SELECT org.id,org.name_ FROM v_org org
+        WHERE id NOT in
+                (SELECT unit_id FROM b_share_data_api_user WHERE api_type = 4 AND api_id = #{apiId})
+    </select>
+
+    <resultMap id="UseResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.ApiUseDO">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="orgName" jdbcType="VARCHAR" property="orgName"/>
+        <result column="limit_time" jdbcType="DATE" property="limitTime"/>
+        <result column="visit_time" jdbcType="TIMESTAMP" property="visitTime"/>
+        <result column="data_count" jdbcType="INTEGER" property="dataCount"/>
+        <result column="rsponse_time" jdbcType="FLOAT" property="rsponseTime"/>
+    </resultMap>
+    <select id="selectApiUse" parameterType="map" resultMap="UseResultMap">
+        SELECT c.id,org.name_ orgName,au.limit_time,c.visit_time,c.data_count,c.rsponse_time FROM b_share_data_api_call c
+        INNER JOIN v_org org ON c.unit_id = org.id
+        INNER JOIN b_share_data_api_user au ON c.api_id = au.api_id
+        WHERE c.api_id = #{apiId}
+        AND is_success = 1
+        <if test="orgName != null and orgName !=''">
+            AND org.name_ LIKE #{orgName,typeHandler=fullLike}
+        </if>
+        <if test="callDate !=null">
+            AND DATE_FORMAT(visit_time,'%Y-%m-%d') = DATE_FORMAT(#{callDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+        </if>
+    </select>
+
+
+    <resultMap id="UseExceptionResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.ApiUseExceptionDO">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="fail_log" jdbcType="VARCHAR" property="failLog"/>
+        <result column="visit_time" jdbcType="TIMESTAMP" property="visitTime"/>
+        <result column="fail_type" jdbcType="INTEGER" property="failType"/>
+        <result column="hdle_state" jdbcType="INTEGER" property="hdleState"/>
+        <result column="hdle_user" jdbcType="VARCHAR" property="hdleUser"/>
+    </resultMap>
+    <select id="selectApiUseException" parameterType="map" resultMap="UseExceptionResultMap">
+        SELECT c.id,fail_log,c.visit_time,fail_type,hdle_state,u.name_ hdle_user FROM b_share_data_api_call c
+        LEFT JOIN v_emp u ON c.hdle_user  = u.gxqpt_emp_id
+        WHERE c.api_id = #{apiId}
+        AND is_success = 2
+        <if test="failLog != null and failLog != ''">
+            AND fail_log LIKE #{failLog,typeHandler=fullLike}
+        </if>
+        <if test="callDate !=null">
+            AND DATE_FORMAT(visit_time,'%Y-%m-%d') = DATE_FORMAT(#{callDate,jdbcType=TIMESTAMP},'%Y-%m-%d')
+        </if>
+        <if test="hdleState !=null and hdleState !=''">
+            AND hdle_state = #{hdleState}
+        </if>
+    </select>
+    <!--  根据目录查询api-->
+    <select id="getApiList"  parameterType="java.util.Map"   resultMap="ListResultMap">
+        SELECT api.id,api.api_code,api.api_name,api.api_url,api.data_fmat,api.api_status,api.create_time,api.unit_id
+        FROM b_share_data_api api
+        WHERE  api.dir_id=#{dirId} and api.auth_status=3 AND api.api_status=1
+        ORDER BY  api.create_time
+    </select>
+    <!--  热门TOP10API-->
+    <select id="getHostApi" resultMap="ListResultMap">
+      SELECT api.id,api.api_code,api.api_name,api.dir_id
+        FROM b_share_data_api_call c
+        INNER JOIN b_share_data_api api ON c.api_id = api.id AND api.auth_status=3 AND api.api_status=1
+         WHERE fail_type = 1 OR fail_type IS NULL
+        GROUP BY api_id
+        ORDER BY  COUNT(c.id) DESC
+        LIMIT 10
+    </select>
+
+
+    <resultMap id="OpenOpiInfoResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.ApiOpenInfoDO">
+        <result column="limitTime" jdbcType="DATE" property="limitTime"/>
+        <result column="apiId" jdbcType="BIGINT" property="apiId"/>
+        <result column="dataTerm" jdbcType="INTEGER" property="dataTerm"/>
+        <result column="setId" jdbcType="BIGINT" property="setId"/>
+        <result column="tableName" jdbcType="VARCHAR" property="tableName"/>
+        <result column="callUnitId" jdbcType="VARCHAR" property="callUnitId"/>
+        <result column="dataFmat" jdbcType="INTEGER" property="dataFmat"/>
+    </resultMap>
+
+    <!--  根据密钥获取Api的相关信息-->
+    <select id="selectOpenOpiInfo" resultMap="OpenOpiInfoResultMap" parameterType="java.lang.String">
+        SELECT au.limit_time limitTime,au.api_id apiId,au.unit_id callUnitId,
+        au.date_term dataTerm,ds.table_code tableName,ds.id setId,da.data_fmat dataFmat
+        FROM b_share_data_api_user au
+        INNER JOIN b_share_data_api da ON au.api_id = da.id
+        INNER JOIN b_share_data_directory dd ON da.dir_id = dd.id
+        INNER JOIN b_share_data_set ds ON dd.set_id = ds.id
+        WHERE secret_key = #{secretKey}
+    </select>
+
+
+
+
+
+    <!--  查询api量 -->
+    <select id="getApiCountByCode" parameterType="java.util.Map" resultType="int">
+          SELECT count(1)
+          FROM b_share_data_api api
+          WHERE api.dir_id IN (
+                  SELECT bsddw.id
+                  FROM  b_share_data_directory_ware bsddw
+                  WHERE  bsddw.is_bottom=2
+                  AND bsddw.status_=4 AND bsddw.opt_type=5 AND  bsddw.set_id IS NOT NULL AND share_way != 3
+                    <if test="busCode!=null and busCode=='domain' ">and bsddw.domain=#{busKey}</if>
+                    <if test="busCode!=null and busCode=='theme' ">and bsddw.theme_one=#{busKey}</if>
+                    <if test="busCode!=null and busCode=='industry' ">and bsddw.industry_one=#{busKey}</if>
+                    <if test="busCode!=null and busCode=='service' ">and bsddw.service_one=#{busKey}</if>
+                    <if test="busCode!=null and busCode=='special_type' ">and bsddw.special_type=#{busKey}</if>
+                    <if test="busCode!=null and busCode=='base' ">
+                        and bsddw.parent_id IN(
+                        SELECT id FROM b_share_data_directory_ware dw WHERE dw.dir_code = #{busKey}
+                        )
+                    </if>
+          )
+        AND api.auth_status=3 and  api.api_status=1
+    </select>
+
+    <!--  查询单位下正常目录可用API总数，用于概览 -->
+    <select id="selectDirCanUserApiCount" parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(api.id) FROM b_share_data_api api
+        INNER JOIN b_share_data_directory_ware ware ON api.dir_id = ware.id
+        WHERE ware.unit_id =#{unitId}
+        AND ware.is_bottom = 2
+        AND ware.status_ = 4
+        AND ware.opt_type = 5
+         AND api.auth_status=3
+        AND  api.api_status=1
+        and ware.share_way != 3
+        AND ware.set_id IS NOT NULL
+    </select>
+    <resultMap id="DetailResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.ApiDetailDO">
+        <result column="create_time" jdbcType="DATE" property="createTime"/>
+        <result column="name_" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="api_url" jdbcType="VARCHAR" property="apiUrl"/>
+        <result column="api_desc" jdbcType="VARCHAR" property="apiDesc"/>
+        <result column="data_fmat" jdbcType="INTEGER" property="dataFmat"/>
+        <result column="api_code" jdbcType="VARCHAR" property="apiCode"/>
+        <result column="api_name" jdbcType="VARCHAR" property="apiName"/>
+        <result column="set_id" jdbcType="BIGINT" property="setId"/>
+        <result column="unit_id" jdbcType="VARCHAR" property="unitId"/>
+        <result column="share_way" jdbcType="INTEGER" property="shareWay"/>
+        <result column="open_way" jdbcType="INTEGER" property="openWay"/>
+    </resultMap>
+    <select id="selectDetailById" parameterType="java.lang.Long" resultMap="DetailResultMap">
+      SELECT api.id,api.api_name,api.api_code,api.api_desc,api.api_url,d.set_id,api.unit_id,d.share_way,d.open_way,
+        (CASE WHEN api.data_fmat = 1 THEN 'json' ELSE 'xml' END) data_fmat,
+        u.name_,api.create_time
+        FROM b_share_data_api api
+        LEFT JOIN v_emp u ON api.create_user = u.gxqpt_emp_id
+		LEFT JOIN b_share_data_directory d ON api.dir_id = d.id
+      WHERE api.id=#{id}
+    </select>
+
+    <select id="selectUnitOwnerDir" resultType="java.lang.Boolean">
+        SELECT COUNT(*) FROM b_share_data_api_user au
+        INNER JOIN b_share_data_api da ON au.api_id = da.id
+        WHERE au.unit_id = #{unitId}
+        AND da.dir_id = #{dirId}
+    </select>
+
+    <!--根据数据集id查询api-->
+    <select id="getApiListBySetId" parameterType="java.util.Map" resultType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataApi">
+          SELECT bsda.id,bsda.api_name AS  apiName
+          FROM  b_share_data_api bsda
+          LEFT JOIN  b_share_data_directory_ware bsddw  on bsda.dir_id= bsddw.id
+          WHERE  bsda.auth_status=3 and   bsddw.set_id=#{setId}
+    </select>
+    <!-- 根据单位id查询api数量-->
+    <select id="getApiCountByUnit" parameterType="java.util.Map" resultType="int">
+      SELECT IFNULL(count(1),0)
+      FROM  b_share_data_api
+      WHERE auth_status=3 and unit_id=#{unitId}
+    </select>
+    <!-- 批量更新第一种方法，通过接收传进来的参数list进行循环着组装sql -->
+    <update id="batchUpdate" parameterType="java.util.Map">
+        update b_share_data_api set
+        api_status=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.apiStatus,jdbcType=INTEGER}
+        </foreach>
+        ,update_time=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+        ,update_user=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateUser,jdbcType=BIGINT}
+        </foreach>
+        where ID in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+</mapper>

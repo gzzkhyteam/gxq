@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.service.dao.ServiceDirectoryMapper">
+
+    <select id="selectParentsById" parameterType="long" resultMap="BaseResultMap">
+        SELECT
+                T2.*
+        FROM
+            (
+            SELECT
+                @r AS _id,
+                ( SELECT @r := parent_id FROM b_yw_service_directory WHERE id = _id ) AS parent_id,
+                @l := @l + 1 AS lvl
+            FROM
+                ( SELECT @r := #{id}, @l := 0 ) vars,
+                b_yw_service_directory h
+            WHERE
+                @r &lt;&gt; 0
+            ) T1
+            JOIN b_yw_service_directory T2 ON T1._id = T2.id
+        ORDER BY
+            T1.lvl DESC
+  </select>
+
+    <!--模糊查询服务目录信息-->
+    <select id="getPageList" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT  id, parent_id, sort, level, type, service_name,
+        service_info, service_result, create_time,
+        create_user, update_time, update_user
+        FROM b_yw_service_directory
+        <where>
+            <if test="serviceName!= null and serviceName!=''">
+                 and  service_name like #{serviceName,typeHandler=fullLike}
+                 or type like #{serviceName,typeHandler=fullLike}
+            </if>
+        </where>
+    </select>
+
+</mapper>

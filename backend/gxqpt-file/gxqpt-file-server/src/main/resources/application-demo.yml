@@ -1,0 +1,79 @@
+gxqpt:
+  port:
+    nginx: 10087
+    eureka: 10030
+    gate: ${gxqpt.port.nginx}   # 正式环境使用nginx
+  hostname:
+    redis: 192.168.30.165
+    rabbitmq: 192.168.30.165
+    mysql: 192.168.30.165
+    nginx: 127.0.0.1
+    eureka: 192.168.30.80
+    gate: ${gxqpt.hostname.nginx}    # 正式环境使用nginx
+    file: 192.168.30.83
+  shareFileUrl: http://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}/gxqpt-file/no/sharefile/
+  mysql:
+    file:
+      database: gxqpt_file_demo       # 根据环境更改
+      max-active: 100
+    port: 3218                  # 根据环境更改
+    username: root              # 数据库密码需要加密： System.out.println(ConfigTools.encrypt("your mysql password"));
+    password: LLm65c0VVd3axid9u+Y7DZeKwcODMjU95FRhxom6ApE2yZ1kbi5YzSsdAIz+edUOZH3Engm17+NyfyNczpaYlw==
+  file:
+    fastdfs:
+      enabled: true
+    upload-path-prefix: /home/gxqpt/uploadfile/file
+    upload-path-temp: /home/gxqpt/uploadfile/temp
+#    remote-uri-prefix: http://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}/file/
+    remote-uri-prefix: http://${gxqpt.hostname.nginx}:6080/
+    ffmpeg-path: /usr/local/bin/ffmpeg
+  swf-conver:
+    env: 2
+    swf-tools-path: /usr/local/swftools/bin/pdf2swf
+    office-home: /opt/openoffice4
+
+spring:
+  profiles:
+    active: demo
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq}     # 根据环境更改
+    port: 5672               # 根据环境更改
+    password: gxqpt          # 根据环境更改
+    username: gxqpt          # 根据环境更改
+  redis:
+    host: ${gxqpt.hostname.redis}
+    port: 16379
+    password: SbtyMveYNfLzTks7H0apCmyStPzWJqjy
+    key-prefix: demo
+    pool:
+      max-active: 100
+      min-idle: 2
+      max-idle: 8
+      max-wait: 100
+
+server:
+  undertow:
+    io-threads: 8 # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
+    worker-threads: 80  # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
+    buffer-size: 1024  # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理 , 每块buffer的空间大小,越小的空间被利用越充分
+    buffers-per-region: 1024  # 每个区分配的buffer数量 , 所以pool的大小是buffer-size * buffers-per-region
+    direct-buffers: true  # 是否分配的直接内存
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+
+id-generator:
+  machine-code: 1  # id生成器机器掩码
+
+#ftp服务器信息
+ftp:
+  host: 192.168.30.83
+  port: 0
+  username: ftpUser
+  password: ftp@server
+  basePath: /usr/local/ftpuser  #linux中ftp服务器根目录 /home/ftpUser      window中配成斜线  /
+  logAppId: 35kj6356
+  logAppSecret: logs35kj6356
+  serverUrl: http://192.168.30.83:10044

@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.search.repository.core.dao.CollectionMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.search.entity.core.po.Collection">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="collection_name" jdbcType="VARCHAR" property="collectionName" />
+    <result column="collection_code" jdbcType="VARCHAR" property="collectionCode" />
+    <result column="create_app_id" jdbcType="VARCHAR" property="createAppId" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, collection_name, collection_code, create_app_id, create_user_id, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.search.repository.core.example.CollectionExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from c_collection
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.search.repository.core.example.CollectionExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="map" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from c_collection
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_collection
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.search.repository.core.example.CollectionExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_collection where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_collection
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_collection where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.search.entity.core.po.Collection">
+    <!--
+    @mbggenerated
+    -->
+    update c_collection
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="com.hengyunsoft.platform.search.entity.core.po.Collection">
+    <!--
+    @mbggenerated
+    -->
+    update c_collection
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.search.entity.core.po.Collection">
+    <!--
+    @mbggenerated
+    -->
+    update c_collection
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="com.hengyunsoft.platform.search.entity.core.po.Collection">
+    <!--
+    @mbggenerated
+    -->
+    update c_collection
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.search.entity.core.po.Collection">
+    <!--
+    @mbggenerated
+    -->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into c_collection (collection_name, collection_code, create_app_id, 
+      create_user_id, update_time)
+    values (#{collectionName,jdbcType=VARCHAR}, #{collectionCode,jdbcType=VARCHAR}, #{createAppId,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into c_collection (collection_name, collection_code, create_app_id, create_user_id, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.collectionName,jdbcType=VARCHAR}, #{item.collectionCode,jdbcType=VARCHAR}, 
+        #{item.createAppId,jdbcType=VARCHAR}, #{item.createUserId,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.search.entity.core.po.Collection">
+    <!--
+    @mbggenerated
+    -->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into c_collection
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="collectionName != null">
+        collection_name,
+      </if>
+      <if test="collectionCode != null">
+        collection_code,
+      </if>
+      <if test="createAppId != null">
+        create_app_id,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="collectionName != null">
+        #{collectionName,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionCode != null">
+        #{collectionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createAppId != null">
+        #{createAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.search.repository.core.example.CollectionExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from c_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_collection
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.collectionName != null">
+        collection_name = #{record.collectionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.collectionCode != null">
+        collection_code = #{record.collectionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createAppId != null">
+        create_app_id = #{record.createAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null">
+        create_user_id = #{record.createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_collection
+    set id = #{record.id,jdbcType=BIGINT},
+      collection_name = #{record.collectionName,jdbcType=VARCHAR},
+      collection_code = #{record.collectionCode,jdbcType=VARCHAR},
+      create_app_id = #{record.createAppId,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.search.entity.core.po.Collection">
+    <!--
+    @mbggenerated
+    -->
+    update c_collection
+    <set>
+      <if test="collectionName != null">
+        collection_name = #{collectionName,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionCode != null">
+        collection_code = #{collectionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createAppId != null">
+        create_app_id = #{createAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.search.entity.core.po.Collection">
+    <!--
+    @mbggenerated
+    -->
+    update c_collection
+    <set>
+      <if test="collectionName != null">
+        collection_name = #{collectionName,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionCode != null">
+        collection_code = #{collectionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createAppId != null">
+        create_app_id = #{createAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.search.entity.core.po.Collection">
+    <!--
+    @mbggenerated
+    -->
+    update c_collection
+    set collection_name = #{collectionName,jdbcType=VARCHAR},
+      collection_code = #{collectionCode,jdbcType=VARCHAR},
+      create_app_id = #{createAppId,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.search.entity.core.po.Collection">
+    <!--
+    @mbggenerated
+    -->
+    update c_collection
+    set collection_name = #{collectionName,jdbcType=VARCHAR},
+      collection_code = #{collectionCode,jdbcType=VARCHAR},
+      create_app_id = #{createAppId,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <resultMap id="OptResultMap" type="com.hengyunsoft.platform.search.entity.core.po.OptClollection">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="collection_name" jdbcType="VARCHAR" property="collectionName" />
+    <result column="collection_code" jdbcType="VARCHAR" property="collectionCode" />
+    <result column="create_app_id" jdbcType="VARCHAR" property="createAppId" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="collection_id" jdbcType="BIGINT" property="collectionId" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="opt" jdbcType="INTEGER" property="opt" />
+  </resultMap>
+
+  <select id="getAllOptByAppId" parameterType="java.lang.String" resultMap="OptResultMap">
+    SELECT
+    co.id,
+	co.app_id,
+	co.collection_id,
+	co.opt,
+	cc.collection_code,
+	cc.collection_name,
+	cc.create_user_id,
+	cc.create_app_id
+FROM
+	c_app_opt_collection co
+LEFT JOIN c_collection cc ON co.collection_id = cc.id
+WHERE
+	co.app_id = #{appId,jdbcType=VARCHAR}
+AND
+  co.opt > 0
+  </select>
+
+  <select id="getAllCanRead" parameterType="java.lang.String" resultMap="OptResultMap">
+    SELECT
+    co.id,
+    co.app_id,
+    co.collection_id,
+    co.opt,
+    cc.collection_code,
+    cc.collection_name,
+    cc.create_user_id,
+    cc.create_app_id
+    FROM
+    c_app_opt_collection co
+    LEFT JOIN c_collection cc ON co.collection_id = cc.id
+    WHERE
+    co.app_id = #{appId,jdbcType=VARCHAR}
+    AND
+    (co.opt = 1 OR co.opt =3)
+  </select>
+
+
+  <select id="getAllCanWrite" parameterType="java.lang.String" resultMap="OptResultMap">
+    SELECT
+    co.id,
+    co.app_id,
+    co.collection_id,
+    co.opt,
+    cc.collection_code,
+    cc.collection_name,
+    cc.create_user_id,
+    cc.create_app_id
+    FROM
+    c_app_opt_collection co
+    LEFT JOIN c_collection cc ON co.collection_id = cc.id
+    WHERE
+    co.app_id = #{appId,jdbcType=VARCHAR}
+    AND
+    (co.opt = 2 OR co.opt =3)
+  </select>
+</mapper>

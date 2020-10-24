@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.alarm.dao.AlarmRuleSettingsMapper">
+  <resultMap id="PageResultMap" type="com.hengyunsoft.platform.ops.entity.alarm.po.AlarmRuleSettings">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="alarm_name" jdbcType="VARCHAR" property="alarmName" />
+    <result column="alarm_level" jdbcType="INTEGER" property="alarmLevel" />
+    <result column="alarm_type" jdbcType="INTEGER" property="alarmType" />
+    <result column="task_type" jdbcType="INTEGER" property="taskType" />
+    <result column="day" jdbcType="INTEGER" property="day" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <!--查询告警规则设置分页信息-->
+  <select id="getAlarmPageList"  parameterType="java.util.Map" resultMap="PageResultMap">
+    SELECT  id,alarm_name, alarm_level,alarm_type,task_type,day,
+    create_time, create_user, update_time, update_user
+    FROM b_yw_alarm_rule_settings
+    <where>
+      <if test="alarmName!= null and alarmName!=''">
+        and  alarm_name =#{alarmName,jdbcType=VARCHAR}
+      </if>
+      <if test="alarmLevel!= null and alarmLevel!=''">
+        AND alarm_level =#{alarmLevel,jdbcType=INTEGER}
+      </if>
+      <if test="alarmType!= null and alarmType!=''">
+        AND alarm_type =#{alarmType,jdbcType=INTEGER}
+      </if>
+      <if test="taskType!= null and taskType!=''">
+        AND task_type =#{taskType,jdbcType=INTEGER}
+      </if>
+    </where>
+    order by create_time desc
+  </select>
+</mapper>

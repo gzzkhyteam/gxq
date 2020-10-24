@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.core.dao.DependRelationMapper">
+    <resultMap id="StatisticsResultMap"
+               type="com.hengyunsoft.platform.developer.entity.core.domain.DependRelationStatisticsDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="consume_type" jdbcType="VARCHAR" property="consumeType"/>
+        <result column="consume_id" jdbcType="BIGINT" property="consumeId"/>
+        <result column="producer_type" jdbcType="VARCHAR" property="producerType"/>
+        <result column="producer_id" jdbcType="BIGINT" property="producerId"/>
+        <result column="producer_name" jdbcType="VARCHAR" property="producerName"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="reduce_time" jdbcType="DOUBLE" property="reduceTime"/>
+        <result column="reduce_cost" jdbcType="INTEGER" property="reduceCost"/>
+        <result column="app_name" jdbcType="VARCHAR" property="appName"/>
+        <result column="original_time" jdbcType="DOUBLE" property="originalTime"/>
+        <result column="original_cost" jdbcType="INTEGER" property="originalCost"/>
+        <result column="actual_reduce_time" jdbcType="DOUBLE" property="actualReduceTime"/>
+        <result column="actual_reduce_cost" jdbcType="INTEGER" property="actualReduceCost"/>
+        <result column="reduce_protect_cost" jdbcType="INTEGER" property="reduceProtectCost"/>
+    </resultMap>
+
+
+    <resultMap id="UseInfoMap" type="com.hengyunsoft.platform.developer.entity.apply.po.domain.DependRelationDO">
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="num" jdbcType="INTEGER" property="num"/>
+        <result column="xDate" jdbcType="VARCHAR" property="xDate"></result>
+    </resultMap>
+
+    <select id="getUseInfo" resultMap="UseInfoMap">
+        SELECT t.producer_type type,COUNT(*) num, str_to_date(#{strDate,jdbcType=VARCHAR}, '%Y-%m-%d') xDate
+        from c_depend_relation t
+        WHERE t.create_time &lt;= str_to_date(#{strDate,jdbcType=VARCHAR}, '%Y-%m-%d')
+        GROUP BY t.producer_type
+    </select>
+
+    <!--预计降本率
+    @wz-->
+    <select id="getReduced" resultType="String">
+    SELECT
+	1 - sum(
+		c_depend_relation.reduce_cost
+	) / app.orig + 0.005
+	FROM
+	(
+		SELECT
+			sum(
+				c_application.original_cost
+			) orig
+		FROM
+			c_application
+		WHERE
+			c_application.status_ = 1
+	) app,
+	c_depend_relation
+	JOIN c_application ON c_depend_relation.consume_id = c_application.id
+	WHERE
+	c_application.status_ = 1
+  </select>
+    <!-- farglory 降本提质-成本统计  -->
+    <select id="findApplicationReduceCost" resultMap="StatisticsResultMap">
+        select t1.name_ app_name,t1.reduce_build_cost original_cost,
+		t1.reduce_protect_cost, t1.reduce_use_cost actual_reduce_cost,
+		t1.reduce_build_cost+t1.reduce_protect_cost+t1.reduce_use_cost reduce_cost
+		from  c_application t1
+		where t1.status_=1
+		and t1.type_='jryy'
+		order by reduce_cost desc
+		limit 0,7;
+-- 		select t1.name_ app_name,t1.original_cost,group_concat(t2.producer_name) producer_name,
+-- 		sum(t2.reduce_cost) reduce_cost,(t1.original_cost - sum(t2.reduce_cost) ) actual_reduce_cost,
+-- 		t1.reduce_protect_cost
+-- 		from  c_application  t1  join c_depend_relation t2 on t1.id=t2.consume_id
+-- 		where t1.status_=1
+-- 		group by t1.id
+-- 		order by reduce_cost desc
+-- 		limit 0,7;
+	</select>
+    <!-- farglory 降本提质-工期统计  -->
+    <select id="findApplicationReduceTime" resultMap="StatisticsResultMap">
+		select t1.name_ app_name,t1.original_time,
+		group_concat(t2.producer_name)
+		producer_name, sum(t2.reduce_time) reduce_time,(t1.original_time -
+		sum(t2.reduce_time)) actual_reduce_time
+		from c_depend_relation t2 left join c_application t1 on t1.id=t2.consume_id
+		where t1.status_=1
+		group by t1.id
+		order by reduce_time desc
+		limit 0,7;
+	</select>
+</mapper>

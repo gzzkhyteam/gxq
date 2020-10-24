@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.file.repository.file.dao.ShareMapper">
+    <!--下载次数增加-->
+    <update id="updateDownloadTimesById" parameterType="Long">
+    update f_share
+    set download_times=download_times+1
+
+    where 1=1
+    and id=#{id,jdbcType=BIGINT}
+  </update>
+    <!--浏览次数增加-->
+    <update id="updateBrowsTimesById" parameterType="Long">
+        update f_share
+        set brows_times=brows_times+1
+
+        where 1=1
+        and id=#{id,jdbcType=BIGINT}
+    </update>
+    <!--保存次数增加-->
+    <update id="updateSaveTimesById" parameterType="Long">
+        update f_share
+        set save_times=save_times+1
+
+        where 1=1
+        and id=#{id,jdbcType=BIGINT}
+    </update>
+
+    <!--个人分享数量-->
+    <select id="getMyShare" resultType="com.hengyunsoft.platform.file.entity.file.domain.FileShareNumDO">
+        select count(ff.admin_id) num, ff.data_type dataType
+        from
+        (select distinct(sf.file_id),sf.admin_id,f.data_type
+        from f_share_file sf
+        join f_file f on sf.file_id = f.id
+        where f.is_delete = 0
+        and sf.admin_id = #{userId}
+        and sf.app_id = #{appId}
+        and f.data_type  &lt;&gt; "DIR") ff
+        group by ff.data_type;
+    </select>
+
+    <resultMap id="ShareMap" type="com.hengyunsoft.platform.file.entity.file.domain.FileShareDO">
+        <result column="count" jdbcType="INTEGER" property="count" />
+        <result column="share_time" jdbcType="VARCHAR" property="shareTime" />
+    </resultMap>
+    <select id="findShareN" parameterType="java.lang.Long" resultMap="ShareMap">
+        SELECT COUNT(id) AS count,DATE_FORMAT(create_time,'%Y-%m') AS share_time
+        FROM f_share
+        WHERE (create_time BETWEEN date_sub(now(),interval 6 month) and now())
+        and admin_id=#{userId,jdbcType=BIGINT}
+        group by share_time
+    </select>
+    <select id="findShare" parameterType="com.hengyunsoft.platform.file.entity.file.domain.QueryFileShareDO" resultMap="ShareMap">
+        SELECT COUNT(id) AS count,DATE_FORMAT(create_time,'%Y-%m') AS share_time
+        FROM f_share
+        WHERE 1 = 1
+        and admin_id=#{queryFileShareDo.userId}
+        and create_time &gt;= #{queryFileShareDo.createTimeStart}
+        and create_time &lt;= #{queryFileShareDo.createTimeEnd}
+        group by share_time
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from f_share
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+</mapper>

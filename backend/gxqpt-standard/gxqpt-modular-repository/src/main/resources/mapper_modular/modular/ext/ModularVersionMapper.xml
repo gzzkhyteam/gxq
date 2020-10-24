@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.modular.repository.modular.dao.ModularVersionMapper">
+    <resultMap id="ModularVersionDOResultMap"
+               type="com.hengyunsoft.platform.modular.entity.modular.domain.ModularVersionDO">
+
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="rep_name" jdbcType="VARCHAR" property="repName"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="artifact_id" jdbcType="VARCHAR" property="artifactId"/>
+        <result column="version_" jdbcType="VARCHAR" property="version"/>
+        <result column="classifier" jdbcType="VARCHAR" property="classifier"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="download_count" jdbcType="VARCHAR" property="downloadCount"/>
+    </resultMap>
+
+    <!--根据id获得相应的版本信息-->
+    <select id="getModularVersionById" resultMap="ModularVersionDOResultMap" parameterType="java.lang.Long">
+        select v.id,v.rep_name,v.group_id,v.artifact_id,v.version_,v.classifier,create_user_name,v.create_time,(select count(1) from modular_log l where v.group_id = l.group_id
+        and v.artifact_id=l.artifact_id and v.version_=l.version_ and v.classifier=l.classifier) download_count
+        from modular_version v where v.id = #{id,jdbcType=BIGINT}
+    </select>
+    <!--版本列表分页查询-分页查询指定模块的jar包-->
+    <select id="pageModularJar" resultMap="ModularVersionDOResultMap"
+            parameterType="com.hengyunsoft.platform.modular.repository.modular.example.ModularVersionExample">
+            SELECT
+            v.id,
+            v.version_,
+            v.rep_name,
+            v.classifier,
+            v.create_time,
+            v.group_id,
+            v.artifact_id,
+            v.create_company_name,
+            create_user_name,
+            (
+            CASE
+            WHEN v.classifier IS NULL
+            OR v.classifier = &apos;&apos; THEN
+            (
+            SELECT
+            count(1)
+            FROM
+            modular_log l
+            WHERE
+            v.group_id = l.group_id
+            AND v.artifact_id = l.artifact_id
+            AND v.version_ = l.version_
+            AND v.rep_name = l.rep_name
+            AND (
+            l.classifier IS NULL
+            OR l.classifier = &apos;&apos;
+            )
+            )
+            ELSE
+            (
+            SELECT
+            count(1)
+            FROM
+            modular_log l
+            WHERE
+            v.group_id = l.group_id
+            AND v.artifact_id = l.artifact_id
+            AND v.version_ = l.version_
+            AND v.classifier = l.classifier
+            AND v.rep_name = l.rep_name
+            )
+            END
+            ) download_count
+            FROM
+            modular_version v
+            <if test="_parameter != null">
+                <include refid="Example_Where_Clause"/>
+            </if>
+            ORDER BY v.create_time DESC
+    </select>
+    <!--版本列表分页查询-分页查询jar包-->
+    <select id="pageJar" resultMap="ModularVersionDOResultMap"
+            parameterType="com.hengyunsoft.platform.modular.entity.modular.domain.ModularVersionPage">
+        SELECT
+        v.id,
+        v.group_id,
+        v.artifact_id,
+        v.version_,
+        v.classifier,
+        v.rep_name
+        FROM
+        modular_version v,
+        modular m
+        WHERE
+        v.rep_name = m.rep_name
+        AND v.group_id = m.group_id
+        AND v.artifact_id = m.artifact_id
+
+        <if test="repName != null and repName !=''">
+            AND v.rep_name LIKE CONCAT('%', #{repName}, '%')
+        </if>
+        <if test="modularName != null and modularName !=''">
+            AND m.modular_name LIKE CONCAT('%', #{modularName}, '%')
+        </if>
+        <if test="groupId != null and groupId !=''">
+            AND v.group_id LIKE CONCAT('%', #{groupId}, '%')
+        </if>
+        <if test="artifactId != null and artifactId !=''">
+            AND v.artifact_id LIKE CONCAT('%', #{artifactId}, '%')
+        </if>
+        <if test="version != null and version !=''">
+            AND v.version_ LIKE CONCAT('%', #{version}, '%')
+        </if>
+        <if test="classifier != null and classifier !=''">
+            AND v.classifier LIKE CONCAT('%', #{classifier}, '%')
+        </if>
+        <if test="description != null and description !=''">
+            AND m.description LIKE CONCAT('%', #{description}, '%')
+        </if>
+
+    </select>
+    <!--根据groupId artifactId version classifier查询版本-->
+    <select id="getModVerByGidAndAidAndVerAndClas" resultMap="ModularVersionDOResultMap"
+            parameterType="com.hengyunsoft.platform.modular.entity.modular.domain.ModularVersionDO">
+        select v.id from modular_version v where v.group_id = #{groupId}
+            and v.artifact_id = #{artifactId}
+            and v.version_ = #{version}
+            and v.classifier = #{classifier}
+    </select>
+    <!--获得版本号-->
+    <select id="getVersion" resultType="java.lang.String" 
+    		parameterType="com.hengyunsoft.platform.modular.entity.modular.domain.GetVersionDO">
+		SELECT
+			max(version_) 
+		FROM
+			modular_version 
+		WHERE
+			create_user = #{getVersionDO.userId} 
+			AND group_id = #{getVersionDO.groupId} 
+			AND artifact_id = #{getVersionDO.artifactId} 
+			AND classifier = ''
+    </select>
+    <!--获得某一版本相应的版本信息-->
+    <select id="getVersionList" resultMap="BaseResultMap" 
+    		parameterType="com.hengyunsoft.platform.modular.entity.modular.domain.GetVersionDO">
+        SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			modular_version 
+		WHERE
+			group_id = #{getVersionDO.groupId}
+			AND artifact_id = #{getVersionDO.artifactId} 
+			AND version_ = #{getVersionDO.version} 
+    </select>
+</mapper>

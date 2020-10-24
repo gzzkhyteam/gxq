@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.directory.dao.ShareDataElementWareMapper">
+
+    <!--根据目录id更新数据集字段标识为空-->
+    <update id="updateSetFiled2Null"  parameterType="java.util.Map" >
+        UPDATE  b_share_data_element_ware SET set_field = NULL
+        WHERE dir_id=#{dirId}
+    </update>
+
+    <!--根据目录id和字段标识更新数据集字段标识为空-->
+    <update id="updateSetFiled"  parameterType="java.util.Map" >
+        UPDATE  b_share_data_element_ware SET set_field = #{setField}
+        WHERE dir_id=#{dirId}  AND field_code = #{fieldCode}
+    </update>
+    <!-- 批量更新第一种方法，通过接收传进来的参数list进行循环着组装sql -->
+    <update id="batchUpdate" parameterType="java.util.Map">
+        update b_share_data_element_ware set
+        status_=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.status,jdbcType=INTEGER}
+        </foreach>
+        ,opt_type=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.optType,jdbcType=INTEGER}
+        </foreach>
+        ,update_time=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+        ,update_user=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateUser,jdbcType=BIGINT}
+        </foreach>
+        where ID in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+</mapper>

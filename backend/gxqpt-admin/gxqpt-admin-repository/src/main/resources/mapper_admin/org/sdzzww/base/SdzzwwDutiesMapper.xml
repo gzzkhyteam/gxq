@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.org.sdzzww.dao.SdzzwwDutiesMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDuties">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name_" jdbcType="VARCHAR" property="name" />
+    <result column="code_" jdbcType="VARCHAR" property="code" />
+    <result column="isleader" jdbcType="VARCHAR" property="isleader" />
+    <result column="orgid" jdbcType="VARCHAR" property="orgid" />
+    <result column="orgname" jdbcType="VARCHAR" property="orgname" />
+    <result column="sortvalue" jdbcType="INTEGER" property="sortvalue" />
+    <result column="isdelete" jdbcType="VARCHAR" property="isdelete" />
+    <result column="isenable" jdbcType="VARCHAR" property="isenable" />
+    <result column="level_" jdbcType="VARCHAR" property="level" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="logid" jdbcType="VARCHAR" property="logid" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, name_, code_, isleader, orgid, orgname, sortvalue, isdelete, isenable, level_, 
+    description, logid, create_user, create_time, update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.admin.repository.org.sdzzww.example.SdzzwwDutiesExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_sdzzww_duties
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from c_sdzzww_duties
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.admin.repository.org.sdzzww.example.SdzzwwDutiesExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_sdzzww_duties
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="map" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from c_sdzzww_duties
+    where 1=1 and id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_sdzzww_duties
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.admin.repository.org.sdzzww.example.SdzzwwDutiesExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_sdzzww_duties
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_sdzzww_duties where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_sdzzww_duties
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_sdzzww_duties where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDuties">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_duties
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDuties">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_duties
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDuties">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_duties
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDuties">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_duties
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDuties">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_sdzzww_duties (id, name_, code_, 
+      isleader, orgid, orgname, 
+      sortvalue, isdelete, isenable, 
+      level_, description, logid, 
+      create_user, create_time, update_user, 
+      update_time)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{isleader,jdbcType=VARCHAR}, #{orgid,jdbcType=VARCHAR}, #{orgname,jdbcType=VARCHAR}, 
+      #{sortvalue,jdbcType=INTEGER}, #{isdelete,jdbcType=VARCHAR}, #{isenable,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{logid,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_sdzzww_duties (id, name_, code_, isleader, orgid, orgname, sortvalue, isdelete, isenable, level_, description, logid, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.code,jdbcType=VARCHAR}, 
+        #{item.isleader,jdbcType=VARCHAR}, #{item.orgid,jdbcType=VARCHAR}, #{item.orgname,jdbcType=VARCHAR}, 
+        #{item.sortvalue,jdbcType=INTEGER}, #{item.isdelete,jdbcType=VARCHAR}, #{item.isenable,jdbcType=VARCHAR}, 
+        #{item.level,jdbcType=VARCHAR}, #{item.description,jdbcType=VARCHAR}, #{item.logid,jdbcType=VARCHAR}, 
+        #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, 
+        #{item.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDuties">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_sdzzww_duties
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name_,
+      </if>
+      <if test="code != null">
+        code_,
+      </if>
+      <if test="isleader != null">
+        isleader,
+      </if>
+      <if test="orgid != null">
+        orgid,
+      </if>
+      <if test="orgname != null">
+        orgname,
+      </if>
+      <if test="sortvalue != null">
+        sortvalue,
+      </if>
+      <if test="isdelete != null">
+        isdelete,
+      </if>
+      <if test="isenable != null">
+        isenable,
+      </if>
+      <if test="level != null">
+        level_,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="logid != null">
+        logid,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="isleader != null">
+        #{isleader,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null">
+        #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgname != null">
+        #{orgname,jdbcType=VARCHAR},
+      </if>
+      <if test="sortvalue != null">
+        #{sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="isenable != null">
+        #{isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="logid != null">
+        #{logid,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.admin.repository.org.sdzzww.example.SdzzwwDutiesExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from c_sdzzww_duties
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_duties
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name_ = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.code != null">
+        code_ = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isleader != null">
+        isleader = #{record.isleader,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgid != null">
+        orgid = #{record.orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgname != null">
+        orgname = #{record.orgname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sortvalue != null">
+        sortvalue = #{record.sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="record.isdelete != null">
+        isdelete = #{record.isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isenable != null">
+        isenable = #{record.isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.level != null">
+        level_ = #{record.level,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logid != null">
+        logid = #{record.logid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_duties
+    set id = #{record.id,jdbcType=VARCHAR},
+      name_ = #{record.name,jdbcType=VARCHAR},
+      code_ = #{record.code,jdbcType=VARCHAR},
+      isleader = #{record.isleader,jdbcType=VARCHAR},
+      orgid = #{record.orgid,jdbcType=VARCHAR},
+      orgname = #{record.orgname,jdbcType=VARCHAR},
+      sortvalue = #{record.sortvalue,jdbcType=INTEGER},
+      isdelete = #{record.isdelete,jdbcType=VARCHAR},
+      isenable = #{record.isenable,jdbcType=VARCHAR},
+      level_ = #{record.level,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      logid = #{record.logid,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDuties">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_duties
+    <set>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code_ = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="isleader != null">
+        isleader = #{isleader,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null">
+        orgid = #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgname != null">
+        orgname = #{orgname,jdbcType=VARCHAR},
+      </if>
+      <if test="sortvalue != null">
+        sortvalue = #{sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null">
+        isdelete = #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="isenable != null">
+        isenable = #{isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level_ = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="logid != null">
+        logid = #{logid,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDuties">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_duties
+    <set>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code_ = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="isleader != null">
+        isleader = #{isleader,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null">
+        orgid = #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgname != null">
+        orgname = #{orgname,jdbcType=VARCHAR},
+      </if>
+      <if test="sortvalue != null">
+        sortvalue = #{sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null">
+        isdelete = #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="isenable != null">
+        isenable = #{isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level_ = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="logid != null">
+        logid = #{logid,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDuties">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_duties
+    set name_ = #{name,jdbcType=VARCHAR},
+      code_ = #{code,jdbcType=VARCHAR},
+      isleader = #{isleader,jdbcType=VARCHAR},
+      orgid = #{orgid,jdbcType=VARCHAR},
+      orgname = #{orgname,jdbcType=VARCHAR},
+      sortvalue = #{sortvalue,jdbcType=INTEGER},
+      isdelete = #{isdelete,jdbcType=VARCHAR},
+      isenable = #{isenable,jdbcType=VARCHAR},
+      level_ = #{level,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      logid = #{logid,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDuties">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_duties
+    set name_ = #{name,jdbcType=VARCHAR},
+      code_ = #{code,jdbcType=VARCHAR},
+      isleader = #{isleader,jdbcType=VARCHAR},
+      orgid = #{orgid,jdbcType=VARCHAR},
+      orgname = #{orgname,jdbcType=VARCHAR},
+      sortvalue = #{sortvalue,jdbcType=INTEGER},
+      isdelete = #{isdelete,jdbcType=VARCHAR},
+      isenable = #{isenable,jdbcType=VARCHAR},
+      level_ = #{level,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      logid = #{logid,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

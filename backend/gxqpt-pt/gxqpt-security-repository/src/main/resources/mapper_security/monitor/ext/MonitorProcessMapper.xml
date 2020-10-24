@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.security.repository.monitor.dao.MonitorProcessMapper">
+
+    <select id="pageProcessList" resultMap="BaseResultMap" parameterType="java.util.Map">
+
+        select <include refid="Base_Column_List" />
+        from se_monitor_process
+        where 1=1
+            <if test="null != param">
+                <if test="param.processName != null">
+                   <!-- <bind name="pattern1" value="'%' + param.processName + '%'" />-->
+                    and process_name like #{param.processName}
+                </if>
+                <if test="param.status != null">
+                    and status = #{param.status}
+                </if>
+                <if test="param.serverIp != null">
+                    <!--<bind name="pattern2" value="'%' + param.serverIp + '%'" />-->
+                    and server_ip like #{param.serverIp}
+                </if>
+            </if>
+        order by warn_time desc
+    </select>
+
+    <update id="updateById" parameterType="com.hengyunsoft.platform.security.entity.monitor.po.MonitorProcess">
+          update se_monitor_process
+          <set>
+              status = #{monitorProcess.status,jdbcType.INTEGER},
+              handle_user = #{monitorProcess.handleUser,jdbcType.VARCHAR},
+              handle_time = #{monitorProcess.handleTime,jdbcTyep.TIMESTAMP},
+              remarks = #{monitorProcess.remarks,jdbcType.VARCHAR},
+              update_time = #{monitorProcess.updateTime,jdbcType.TIMESTAMP},
+              update_user = #{monitorProcess.updateUser,jdbcType.VARCHAR}
+          </set>
+           where id = #{monitorProcess.id,jdbcTpye.BIGINT}
+    </update>
+</mapper>

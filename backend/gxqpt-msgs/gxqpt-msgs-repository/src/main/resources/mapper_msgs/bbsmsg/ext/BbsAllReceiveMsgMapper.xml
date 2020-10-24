@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.msgs.repository.bbsmsg.dao.BbsAllReceiveMsgMapper">
+  <resultMap id="SecondBaseResultMap" type="com.hengyunsoft.platform.msgs.entity.bbsmsg.po.BbsAllReceiveMsg">
+    <!--
+    @mbggenerated
+    -->
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="msg_id" jdbcType="BIGINT" property="msgId" />
+    <result column="receive_id" jdbcType="BIGINT" property="receiveId" />
+    <result column="read_is" jdbcType="BIT" property="readIs" />
+    <result column="handler_need_is" jdbcType="BIT" property="handlerNeedIs" />
+    <result column="handler_params" jdbcType="VARCHAR" property="handlerParams" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+
+  <update id="updateBacklog" parameterType="com.hengyunsoft.platform.msgs.entity.bbsmsg.msgdo.UpdateBacklogDO">
+    update b_bbs_all_receive_msg barm
+    set barm.handler_need_is = false , barm.read_is = true , barm.update_time  = DATE_FORMAT(NOW(),"%Y-%m-%d %H:%i:%S")
+    WHERE
+    barm.msg_id = #{updateBacklogDO.msgId}
+    and barm.receive_id = #{updateBacklogDO.receiveId}
+  </update>
+
+</mapper>

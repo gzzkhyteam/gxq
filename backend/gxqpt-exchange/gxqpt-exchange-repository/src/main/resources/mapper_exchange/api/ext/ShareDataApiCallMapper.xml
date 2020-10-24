@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.api.dao.ShareDataApiCallMapper">
+    <!--selectApiCallInfo-->
+    <select id="selectApiCallInfo" parameterType="java.lang.Integer" resultType="com.hengyunsoft.platform.exchange.entity.api.domain.ApiCallDO">
+        SELECT org.name_ unitName,w.dir_name dirName,a.api_name apiName,
+        c.ip_address ipAddr,c.visit_time visitTime,c.data_count dataCount
+         FROM b_share_data_api_call c
+        INNER JOIN b_share_data_api a ON c.api_id = a.id
+        INNER JOIN b_share_data_directory_ware w ON a.dir_id = w.id
+        LEFT JOIN v_org org ON c.unit_id = org.id
+        WHERE w.share_way = #{shareWay}
+        AND is_success = 1
+    </select>
+    <!--查询目录月度调用次数（按照共享与非共享分类）-->
+    <select id="selectMonthCallInfo" parameterType="java.lang.String" resultType="com.hengyunsoft.platform.exchange.entity.api.domain.ApiDirCallDO">
+        SELECT
+        DATE_FORMAT(c.create_time,'%Y-%m') callMonth,
+        SUM(CASE WHEN open_way = 1 THEN 1 ELSE 0 END) openNum,
+        SUM(CASE WHEN open_way = 2 THEN 1 ELSE 0 END) shareNum
+         FROM b_share_data_api_call c
+        INNER JOIN b_share_data_api a ON c.api_id = a.id
+        INNER JOIN b_share_data_directory_ware w ON a.dir_id = w.id
+        WHERE DATE_FORMAT(c.create_time,'%Y') = #{year}
+        GROUP BY DATE_FORMAT(c.create_time,'%Y-%m')
+    </select>
+    <!-- api实时调用-->
+    <select id="getApiRealTimeCall" resultType="com.hengyunsoft.platform.exchange.entity.api.domain.ApiCallDO">
+        SELECT bsdac.visit_time AS  visitTime,vo.name_ AS unitName,bsda.api_name AS apiName
+        FROM  b_share_data_api_call bsdac
+        LEFT  JOIN  v_org vo ON  bsdac.unit_id = vo.id
+        LEFT  JOIN  b_share_data_api bsda ON  bsdac.api_id = bsda.id
+        WHERE bsda.auth_status=3 AND bsda.api_status=1
+        ORDER BY  bsdac.visit_time DESC  limit 50
+    </select>
+    <!-- 当日调用次数-->
+    <select id="getApiCallCount" parameterType="java.util.Map" resultType="int">
+                SELECT count(sdc.id)
+                FROM b_share_data_api_call sdc
+                JOIN  b_share_data_api bsda  on sdc.api_id = bsda.id
+                WHERE  bsda.auth_status=3 and bsda.api_status=1
+                AND DATE_FORMAT(sdc.create_time,'%Y-%m-%d') = DATE_FORMAT(#{nowDate},'%Y-%m-%d')
+    </select>
+   <!-- 查询单位申请的api-->
+    <select id="getUnitListByUnitId" parameterType="java.util.Map" resultType="com.hengyunsoft.platform.exchange.entity.api.domain.ApiCallDO">
+          SELECT bsda.api_name as apiName
+          FROM b_share_data_api_user bsdau
+          JOIN  b_share_data_api bsda ON bsdau.api_id = bsda.id
+          WHERE  bsdau.auth_status=3 AND bsdau.unit_id=#{unitId}
+    </select>
+    <!-- 查询api共享给那些单位了-->
+    <select id="getShareUnitListByApiId" parameterType="java.util.Map" resultType="com.hengyunsoft.platform.exchange.entity.api.domain.ApiCallDO">
+          SELECT vo.name_ as unitName
+          FROM  b_share_data_api_user bsdau
+          JOIN v_org vo on bsdau.unit_id = vo.id
+          WHERE  bsdau.api_id=#{apiId} AND  bsdau.auth_status=3
+    </select>
+  
+</mapper>

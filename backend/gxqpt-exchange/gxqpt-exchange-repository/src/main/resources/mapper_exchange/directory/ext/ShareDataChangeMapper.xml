@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.directory.dao.ShareDataChangeMapper">
+    <!-- 更新变动表-->
+  <update id="updateStatusByApplyCode" parameterType="java.util.Map">
+      UPDATE  b_share_data_change set status_ =#{status},update_time= NOW()
+      WHERE apply_code=#{applyCode}
+  </update>
+
+    <!-- 查询目录或者字段是否在发布在中-->
+    <select id="getDirOrElement"  parameterType="java.util.Map" resultMap="BaseResultMap">
+       SELECT * from b_share_data_change c
+       LEFT JOIN b_share_data_change_element  e
+       on c.id=e.bus_id
+      where  e.chg_id=#{id,jdbcType=BIGINT}
+    </select>
+
+</mapper>

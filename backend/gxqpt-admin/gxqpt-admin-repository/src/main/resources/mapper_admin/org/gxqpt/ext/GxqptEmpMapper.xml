@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.org.gxqpt.dao.GxqptEmpMapper">
+    <resultMap id="EmpAndUserMap" type="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.GxqptEmpAndUserDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="passwordmd5" jdbcType="VARCHAR" property="passwordmd5"/>
+        <result column="passwordsha" jdbcType="VARCHAR" property="passwordsha"/>
+        <result column="sex_" jdbcType="VARCHAR" property="sex"/>
+        <result column="birthday_" jdbcType="VARCHAR" property="birthday"/>
+        <result column="nation_" jdbcType="VARCHAR" property="nation"/>
+        <result column="photo" jdbcType="VARCHAR" property="photo"/>
+        <result column="mainorgid" jdbcType="VARCHAR" property="mainorgid"/>
+        <result column="mainorgname" jdbcType="VARCHAR" property="mainorgname"/>
+        <result column="maindeptid" jdbcType="VARCHAR" property="maindeptid"/>
+        <result column="maindeptname" jdbcType="VARCHAR" property="maindeptname"/>
+        <result column="mainduty" jdbcType="VARCHAR" property="mainduty"/>
+        <result column="maindutyname" jdbcType="VARCHAR" property="maindutyname"/>
+        <result column="mainpost" jdbcType="VARCHAR" property="mainpost"/>
+        <result column="mainpostname" jdbcType="VARCHAR" property="mainpostname"/>
+        <result column="officetel" jdbcType="VARCHAR" property="officetel"/>
+        <result column="mainmobile" jdbcType="VARCHAR" property="mainmobile"/>
+        <result column="submobile" jdbcType="VARCHAR" property="submobile"/>
+        <result column="isorgadmin" jdbcType="VARCHAR" property="isorgadmin"/>
+        <result column="isdelete" jdbcType="VARCHAR" property="isdelete"/>
+        <result column="isenable" jdbcType="VARCHAR" property="isenable"/>
+        <result column="usertype" jdbcType="VARCHAR" property="usertype"/>
+        <result column="status_" jdbcType="VARCHAR" property="status"/>
+        <result column="descrption" jdbcType="VARCHAR" property="descrption"/>
+        <result column="iscommittee" jdbcType="VARCHAR" property="iscommittee"/>
+        <result column="isdeputy" jdbcType="VARCHAR" property="isdeputy"/>
+        <result column="isheader" jdbcType="VARCHAR" property="isheader"/>
+        <result column="isleader" jdbcType="VARCHAR" property="isleader"/>
+        <result column="userduty" jdbcType="VARCHAR" property="userduty"/>
+        <result column="sortvalue" jdbcType="INTEGER" property="sortvalue"/>
+        <result column="dutylevel" jdbcType="VARCHAR" property="dutylevel"/>
+        <result column="otherid" jdbcType="VARCHAR" property="otherid"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="logid" jdbcType="VARCHAR" property="logid"/>
+        <result column="gxqpt_emp_id" jdbcType="BIGINT" property="gxqptEmpId"/>
+        <!--2018-11-21BUG修改新增-->
+        <result column="identityId" jdbcType="VARCHAR" property="identityId"/>
+    </resultMap>
+
+    <resultMap id="EmpTreeBySystemMap" type="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.EmpTreeBySystemDO">
+        <!--
+        @聚合类
+        -->
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="mainorgid" jdbcType="VARCHAR" property="mainorgid"/>
+        <result column="maindeptid" jdbcType="VARCHAR" property="maindeptid"/>
+        <result column="system_code" jdbcType="VARCHAR" property="systemCode"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+    </resultMap>
+
+    <sql id="Base_Column_List_Mine">
+        <!--
+        @mbggenerated
+        -->
+        e.id, e.name_, e.nickname, e.passwordmd5, e.passwordsha, e.sex_, e.birthday_, e.nation_, e.photo, e.mainorgid,
+        e.mainorgname, e.maindeptid, e.maindeptname, e.mainduty, e.maindutyname, e.mainpost, e.mainpostname,
+        e.officetel, e.mainmobile, e.submobile, e.isorgadmin, e.isdelete, e.isenable, e.usertype, e.status_,
+        e.descrption, e.iscommittee, e.isdeputy, e.isheader, e.isleader, e.userduty, e.sortvalue, e.dutylevel,
+        e.otherid, e.create_user, e.create_time, e.update_user, e.update_time, e.logid, e.gxqpt_emp_id
+    </sql>
+    <sql id="Base_Column_List_Mine_No_Name">
+        <!--
+        @mbggenerated
+        -->
+        e.id, e.name_, e.nickname, e.passwordmd5, e.passwordsha, e.sex_, e.birthday_, e.nation_, e.photo, e.mainorgid,
+        e.maindeptid, e.mainduty, e.mainpost,
+        e.officetel, e.mainmobile, e.submobile, e.isorgadmin, e.isdelete, e.isenable, e.usertype, e.status_,
+        e.descrption, e.iscommittee, e.isdeputy, e.isheader, e.isleader, e.userduty, e.sortvalue, e.dutylevel,
+        e.otherid, e.create_user, e.create_time, e.update_user, e.update_time, e.logid, e.gxqpt_emp_id
+    </sql>
+    <sql id="Base_Column_List_Mine_Ident">
+        <!--
+        @mbggenerated
+        -->
+        e.id, e.name_, e.nickname, e.passwordmd5, e.passwordsha, e.sex_, e.birthday_, e.nation_, e.photo,
+        i.dept_id maindeptid, i.org_id mainorgid, i.post_id, i.duty_id,
+        e.officetel, e.mainmobile, e.submobile, e.isorgadmin, e.isdelete, e.isenable, e.usertype, e.status_,
+        e.descrption, e.iscommittee, e.isdeputy, e.isheader, e.isleader, e.userduty, e.sortvalue, e.dutylevel,
+        e.otherid, e.create_user, e.create_time, e.update_user, e.update_time, e.logid, e.gxqpt_emp_id
+    </sql>
+
+    <select id="findEmps" resultMap="EmpAndUserMap">
+        select
+        <include refid="Base_Column_List_Mine"/>
+        ,#{ownSystem} systemCode
+        from c_user c
+        join c_${ownSystem}_emp e on
+        c.id=e.gxqpt_emp_id
+        where c.id=#{id,jdbcType=VARCHAR}
+    </select>
+
+    <!--根据用户Id,systemCode查询用户-->
+    <sql id="Base_Column_ListEmp">
+        <!--
+        @mbggenerated
+        -->
+        id, name_, nickname, passwordmd5, passwordsha, sex_, birthday_, nation_, photo, mainorgid,
+        mainorgname, maindeptid, maindeptname, mainduty, maindutyname, mainpost, mainpostname,
+        officetel, mainmobile, submobile, isorgadmin, isdelete, isenable, usertype, status_,
+        descrption, iscommittee, isdeputy, isheader, isleader, userduty, sortvalue, dutylevel,
+        otherid, create_user, create_time, update_user, update_time, logid, gxqpt_emp_id
+    </sql>
+    <select id="findEmpListByUser" resultMap="EmpAndUserMap">
+        select<include refid="Base_Column_ListEmp"/>,'${systemCode}' systemCode
+        from c_${systemCode}_emp
+        where 1=1
+        <if test="userId !=null and userId !=''">
+            and c_${systemCode}_emp.gxqpt_emp_id = #{userId}
+        </if>
+        <if test="orgId !=null and orgId !=''">
+            and c_${systemCode}_emp.mainorgid = #{orgId}
+        </if>
+        <if test="deptId !=null and deptId !=''">
+            and c_${systemCode}_emp.maindeptid = #{deptId}
+        </if>
+    </select>
+
+
+    <!--查询单位、部门下的用户 2018-7-20 消息管理系统要求过滤手机为空的用户-->
+    <select id="findIdentityEmpList" resultMap="EmpAndUserMap">
+        SELECT t.* from (
+        SELECT emp.id,emp.isdelete,emp.name_,
+        emp.dutylevel,emp.officetel,emp.mainmobile,emp.sortvalue,emp.isenable,emp.status_,
+        t.org_id mainorgid,org.name_ as mainorgname,t.dept_id maindeptid,dept.name_ as
+        maindeptname,emp.mainpost,post.name_ as mainpostname,emp.mainduty,duty.name_ as maindutyname,
+        emp.submobile, emp.isorgadmin, emp.usertype, emp.nickname, emp.sex_, emp.birthday_, emp.nation_, emp.photo,
+        emp.descrption, emp.iscommittee, emp.isdeputy, t.isheader, t.isleader, emp.userduty, emp.gxqpt_emp_id,t.id as identityId
+        from c_gxqpt_emp_identity t
+        JOIN c_gxqpt_emp emp on t.user_id = emp.id
+        LEFT JOIN c_gxqpt_org org on t.org_id = org.id
+        LEFT JOIN c_gxqpt_department dept on t.dept_id = dept.id
+        LEFT JOIN c_gxqpt_post post on t.post_id = post.id
+        LEFT JOIN c_gxqpt_duties duty on t.duty_id = duty.id
+        where t.isdelete = '0' and t.isenable = '1'
+        UNION
+        SELECT id,isdelete, name_, dutylevel,officetel,mainmobile,sortvalue, isenable, status_,
+        mainorgid,mainorgname, maindeptid, maindeptname, mainpost, mainpostname,mainduty, maindutyname,
+        submobile, isorgadmin, usertype,nickname,sex_, birthday_, nation_, photo,
+        descrption, iscommittee, isdeputy, isheader, isleader, userduty, gxqpt_emp_id,'' as identityId from c_gxqpt_emp
+        ) t where 1=1
+        <if test="name !=null and name !=''">
+            and t.name_ like #{name,typeHandler=fullLike}
+        </if>
+
+        <if test="nickname !=null and nickname !=''">
+            and t.nickname like #{nickname,typeHandler=fullLike}
+        </if>
+
+        <if test="mainorgname !=null and mainorgname !=''">
+            and t.mainorgname like #{mainorgname,typeHandler=fullLike}
+        </if>
+
+        <if test="isdelete !=null and isdelete !=''">
+            and t.isdelete = #{isdelete}
+        </if>
+
+        <if test="isenable !=null and isenable !=''">
+            and t.isenable = #{isenable}
+        </if>
+
+        <if test="maindeptid !=null and maindeptid !=''">
+            and t.maindeptid = #{maindeptid}
+        </if>
+
+        <if test="mainorgid !=null and mainorgid !=''">
+            and t.mainorgid = #{mainorgid}
+        </if>
+        <if test="maindutyname !=null and maindutyname !=''">
+            and t.maindutyname like #{maindutyname,typeHandler=fullLike}
+        </if>
+        <if test="mainpostname !=null and mainpostname !=''">
+            and t.mainpostname  like #{mainpostname,typeHandler=fullLike}
+        </if>
+        <if test="mainmobile !=null and mainmobile ==1">
+            and (t.mainmobile !='' or t.submobile !='')
+        </if>
+        order by t.sortvalue asc
+    </select>
+
+    <!--移动端查询-->
+    <select id="findIdentityEmpList2app" resultMap="EmpAndUserMap">
+        SELECT t.* from (
+        SELECT emp.id,emp.isdelete,emp.name_,
+        emp.dutylevel,emp.officetel,emp.mainmobile,emp.sortvalue,emp.isenable,emp.status_,
+        t.org_id mainorgid,org.name_ as mainorgname,t.dept_id maindeptid,dept.name_ as
+        maindeptname,emp.mainpost,post.name_ as mainpostname,emp.mainduty,duty.name_ as maindutyname,
+        emp.submobile, emp.isorgadmin, emp.usertype, emp.nickname, emp.sex_, emp.birthday_, emp.nation_, emp.photo,
+        emp.descrption, emp.iscommittee, emp.isdeputy, emp.isheader, emp.isleader, emp.userduty, emp.gxqpt_emp_id
+        from c_gxqpt_emp_identity t
+        JOIN c_gxqpt_emp emp on t.user_id = emp.id
+        LEFT JOIN c_gxqpt_org org on t.org_id = org.id
+        LEFT JOIN c_gxqpt_department dept on t.dept_id = dept.id
+        LEFT JOIN c_gxqpt_post post on t.post_id = post.id
+        LEFT JOIN c_gxqpt_duties duty on t.duty_id = duty.id
+        where t.isdelete = '0' and t.isenable = '1'
+        UNION
+        SELECT id,isdelete, name_, dutylevel,officetel,mainmobile,sortvalue, isenable, status_,
+        mainorgid,mainorgname, maindeptid, maindeptname, mainpost, mainpostname,mainduty, maindutyname,
+        submobile, isorgadmin, usertype,nickname,sex_, birthday_, nation_, photo,
+        descrption, iscommittee, isdeputy, isheader, isleader, userduty, gxqpt_emp_id from c_gxqpt_emp
+        ) t where 1=1
+        <if test="name !=null and name !=''">
+            and (
+            t.name_ like #{name,typeHandler=fullLike} or
+            t.nickname like #{name,typeHandler=fullLike} or
+            t.officetel like #{name,typeHandler=fullLike} or
+            t.mainmobile like #{name,typeHandler=fullLike} or
+            t.submobile like #{name,typeHandler=fullLike}
+            )
+        </if>
+
+        <if test="mainorgname !=null and mainorgname !=''">
+            and t.mainorgname like #{mainorgname,typeHandler=fullLike}
+        </if>
+
+        <if test="isdelete !=null and isdelete !=''">
+            and t.isdelete = #{isdelete}
+        </if>
+
+        <if test="isenable !=null and isenable !=''">
+            and t.isenable = #{isenable}
+        </if>
+
+        <if test="maindeptid !=null and maindeptid !=''">
+            and t.maindeptid = #{maindeptid}
+        </if>
+
+        <if test="mainorgid !=null and mainorgid !=''">
+            and t.mainorgid = #{mainorgid}
+        </if>
+        GROUP BY t.gxqpt_emp_id
+        ORDER BY t.sortvalue ASC
+    </select>
+
+    <select id="getMainOrg" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_ListEmp"/>
+        from c_${systemCode}_emp
+        where c_${systemCode}_emp.isdelete = '0'
+        and c_${systemCode}_emp.isenable = '1'
+        and c_${systemCode}_emp.gxqpt_emp_id = #{userId}
+    </select>
+
+    <select id="findEmpByDpm" resultType="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.EmpByDpmInfoDO">
+        SELECT
+        DISTINCT
+        id,
+        name_ name,
+        '${systemCode}' systemCode
+        FROM
+        c_${systemCode}_emp
+        WHERE
+        c_${systemCode}_emp.id IN (
+        SELECT
+        emp.id emp_id
+        FROM
+        c_${systemCode}_emp emp
+        WHERE
+        emp.maindeptid = #{dpmId}
+        AND emp.isdelete = '0'
+        AND emp.isenable = '1'
+        UNION
+        SELECT
+        identi.user_id emp_id
+        FROM
+        c_${systemCode}_emp_identity identi
+        WHERE
+        dept_id = #{dpmId}
+        AND identi.isdelete = '0'
+        )
+    </select>
+    <select id="findUserByDpm" resultType="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.EmpByDpmInfoDO">
+        SELECT
+        DISTINCT
+        gxqpt_emp_id id,
+        name_ name,
+        '${systemCode}' systemCode
+        FROM
+        c_${systemCode}_emp
+        WHERE
+        c_${systemCode}_emp.id IN (
+        SELECT
+        emp.id emp_id
+        FROM
+        c_${systemCode}_emp emp
+        WHERE
+        emp.maindeptid = #{dpmId}
+        AND emp.isdelete = '0'
+        AND emp.isenable = '1'
+        UNION
+        SELECT
+        identi.user_id emp_id
+        FROM
+        c_${systemCode}_emp_identity identi
+        WHERE
+        dept_id = #{dpmId}
+        AND identi.isdelete = '0'
+        )
+    </select>
+    <!--邮件系统根据体系模糊查询人员-->
+    <select id="findAllEmpBySystem" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_ListEmp"/>
+        FROM
+        <foreach collection="systems" index="index" item="item" open="(" close=")">
+            <choose>
+                <when test='index != "0"'>
+                    UNION ALL
+                </when>
+            </choose>
+            SELECT
+            <include refid="Base_Column_ListEmp"/>
+            FROM c_${item}_emp emp
+            WHERE isdelete='0' AND isenable='1'
+            <if test="data !=null">
+                <if test="data.dpmId != null and data.dpmId != ''">
+                    AND maindeptid = #{data.dpmId}
+                </if>
+                <if test="data.keyWord != null and data.keyWord !=''">
+                    AND (nickname LIKE #{data.keyWord,typeHandler=fullLike} OR name_ LIKE #{data.keyWord,typeHandler=fullLike})
+                </if>
+            </if>
+        </foreach>
+        emp ORDER BY emp.sortvalue
+    </select>
+    <select id="findEmpByOrgId" resultMap="BaseResultMap">
+        SELECT
+        DISTINCT
+        <include refid="Base_Column_List_Mine"/>
+        FROM
+        <foreach collection="systems" index="index" item="item" open="(" close=")">
+            <choose>
+                <when test='index != "0"'>
+                    UNION ALL
+                </when>
+            </choose>
+            SELECT
+            <include refid="Base_Column_List_Mine"/>
+            FROM
+            c_${item}_emp e
+            WHERE
+            e.id IN (
+            SELECT
+            emp.id emp_id
+            FROM
+            c_${item}_emp emp
+            WHERE
+            emp.mainorgid IN
+            <foreach collection="ids" index="mindex" item="id" open="(" close=")">
+                <choose>
+                    <when test='mindex != "0"'>
+                        ,
+                    </when>
+                </choose>
+                #{id}
+            </foreach>
+            AND emp.isdelete = '0'
+            AND emp.isenable = '1'
+            UNION
+            SELECT
+            i.user_id emp_id
+            FROM
+            c_${item}_emp_identity i join c_${item}_emp e on e.id = i.user_id
+            WHERE
+            i.isdelete = '0'
+            and i.isenable = '1'
+            and
+            org_id IN
+            <foreach collection="ids" index="mindex" item="id" open="(" close=")">
+                <choose>
+                    <when test='mindex != "0"'>
+                        ,
+                    </when>
+                </choose>
+                #{id}
+            </foreach>)
+        </foreach>
+        e
+        ORDER BY sortvalue,create_time
+    </select>
+    <select id="findEmpByUserIds" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        <foreach collection="systems" index="index" item="item" open="(" close=")">
+            <choose>
+                <when test='index != "0"'>
+                    UNION ALL
+                </when>
+            </choose>
+            SELECT
+            <include refid="Base_Column_List_Mine"/>
+            FROM
+            c_${item}_emp e
+        </foreach>
+        e
+        WHERE
+        1=1
+        <if test="user.name != null and user.name != ''">
+            AND name_  like #{user.name,typeHandler=fullLike}
+        </if>
+        <if test="user.phone != null and user.phone != ''">
+            AND photo like #{user.phone,typeHandler=fullLike}
+        </if>
+        <if test="user.officetel != null and user.officetel != ''">
+            AND officetel like #{user.officetel,typeHandler=fullLike}
+        </if>
+        <if test="user.nickname != null and user.nickname != ''">
+            AND nickname like #{user.nickname,typeHandler=fullLike}
+        </if>
+        <if test="user.maindeptname != null and user.maindeptname != ''">
+            AND maindeptname like #{user.maindeptname,typeHandler=fullLike}
+        </if>
+        <if test="user.userIds != null">
+            AND
+            e.gxqpt_emp_id
+            IN
+            <foreach collection="user.userIds" index="mindex" item="id" open="(" close=")">
+                <choose>
+                    <when test='mindex != "0"'>
+                        ,
+                    </when>
+                </choose>
+                #{id}
+            </foreach>
+        </if>
+    </select>
+    <!--查询某体系下单位集合下所有人员,包含所有字段,单位部门岗位职务名称因为多职务问题无法获取-->
+    <select id="findEmpsByOrgIds" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List_Mine_No_Name"/>
+        FROM c_${systemCode}_emp e
+        JOIN c_${systemCode}_org o ON e.mainorgid = o.id
+        WHERE
+        e.mainorgid IN
+        <foreach collection="orgIds" index="mindex" item="id" open="(" close=")">
+            <choose>
+                <when test='mindex != "0"'>
+                    ,
+                </when>
+            </choose>
+            #{id}
+        </foreach>
+        UNION
+        SELECT
+        <include refid="Base_Column_List_Mine_Ident"/>
+        FROM
+        c_${systemCode}_emp_identity i JOIN c_${systemCode}_emp e ON e.id = i.user_id
+        WHERE
+        i.isdelete = '0'
+        and i.isenable = '1'
+        and i.org_id IN
+        <foreach collection="orgIds" index="mindex" item="id" open="(" close=")">
+            <choose>
+                <when test='mindex != "0"'>
+                    ,
+                </when>
+            </choose>
+            #{id}
+        </foreach>
+    </select>
+
+    <!--查询全人员根据体系-->
+    <select id="findAllEmpBySystemTree" resultMap="EmpTreeBySystemMap">
+        SELECT
+        *
+        FROM
+        <foreach collection="systems" index="index" item="item" open="(" close=")">
+            <choose>
+                <when test='index != "0"'>
+                    UNION ALL
+                </when>
+            </choose>
+            SELECT
+            emp.id,
+            emp.name_,
+            emp.sortvalue,
+            emp.mainorgid,
+            emp.maindeptid,
+            emp.nickname,
+            '${item}' system_code
+            FROM c_${item}_emp emp
+            WHERE emp.isdelete='0' AND emp.isenable='1'
+        </foreach>
+        emp ORDER BY emp.sortvalue
+    </select>
+</mapper>

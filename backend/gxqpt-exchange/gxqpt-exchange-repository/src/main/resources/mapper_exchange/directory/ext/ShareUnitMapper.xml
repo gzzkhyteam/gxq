@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.directory.dao.ShareUnitMapper">
+
+    <!--根据目录id查询共享单位-->
+      <select id="getUnitListByDirId" parameterType="java.util.Map" resultType="String">
+          SELECT unit_id
+          FROM b_share_unit
+          WHERE  dir_id=#{dirId}
+      </select>
+
+    <!--根据目录id删除共享单位-->
+        <delete id="deleteByDirId" parameterType="java.util.Map" >
+            DELETE  FROM b_share_unit WHERE  dir_id=#{dirId}
+        </delete>
+
+    <!-- 批量更新第一种方法，通过接收传进来的参数list进行循环着组装sql -->
+    <update id="batchUpdate" parameterType="java.util.Map">
+        update b_share_unit set
+        opt_type=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.optType,jdbcType=INTEGER}
+        </foreach>
+        ,update_time=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+        ,update_user=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateUser,jdbcType=BIGINT}
+        </foreach>
+        where ID in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+</mapper>

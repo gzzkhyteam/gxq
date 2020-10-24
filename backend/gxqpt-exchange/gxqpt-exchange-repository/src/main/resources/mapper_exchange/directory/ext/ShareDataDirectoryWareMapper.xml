@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.directory.dao.ShareDataDirectoryWareMapper">
+    <!--查询各单位开放与不开放的占比-->
+    <select id="selectUnitDirTypeNum" resultType="com.hengyunsoft.platform.exchange.entity.directory.po.domain.ShareDataDirecoryUnitNumDO">
+        SELECT o.name_ unitName,
+        COUNT(w.id) totalNum,
+        SUM(CASE WHEN open_way = 1 THEN 1 ELSE 0 END) openNum,
+        SUM(CASE WHEN open_way = 2 THEN 1 ELSE 0 END) shareNum
+         FROM b_share_data_directory_ware w
+        INNER JOIN v_org o ON w.unit_id = o.id
+        WHERE is_bottom = 2
+        AND w.status_ = 4
+        GROUP BY w.unit_id
+    </select>
+    <!--查询目录占比-->
+    <select id="selectDirTypeNum"  resultType="com.hengyunsoft.platform.exchange.entity.directory.po.domain.ShareDataDirecoryUnitNumDO">
+        SELECT
+        SUM(CASE WHEN open_way = 1 THEN 1 ELSE 0 END) openNum,
+        SUM(CASE WHEN share_way = 1 THEN 1 ELSE 0 END) shareNum,
+        SUM(CASE WHEN share_way = 2 THEN 1 ELSE 0 END) condShareNum,
+        SUM(CASE WHEN share_way = 3 THEN 1 ELSE 0 END) noShareNum
+        FROM b_share_data_directory_ware
+        WHERE is_bottom = 2
+        AND status_ = 4
+    </select>
+    <!--查询共享交换分析目录数量月度数据-->
+    <select id="selectDirMonthData" parameterType="java.lang.String"  resultType="com.hengyunsoft.platform.exchange.entity.directory.po.domain.ShareDataDirecoryUnitNumDO">
+        SELECT DATE_FORMAT(create_time,'%Y-%m') createMonth,
+        SUM(CASE WHEN open_way = 1 THEN 1 ELSE 0 END) openNum,
+        SUM(CASE WHEN open_way = 2 THEN 1 ELSE 0 END) shareNum
+         FROM b_share_data_directory_ware
+        WHERE
+        is_bottom = 2
+        AND status_ = 4
+        AND DATE_FORMAT(create_time,'%Y') = #{year}
+        GROUP BY DATE_FORMAT(create_time,'%Y-%m')
+    </select>
+    <!-- 查询单位及数据集-->
+    <select id="getBusDataByOrg" parameterType="java.util.Map" resultType="com.hengyunsoft.platform.exchange.entity.directory.po.ShareCountView">
+        select tab.name_ AS dirName,tab.id AS unitId,IFNULL(tmp.data_count,0) AS dataCount
+        FROM v_org tab
+        left join (
+                select bsds.unit_id,count(1) as data_count
+            from b_share_data_directory_ware  bsds
+			where bsds.is_bottom=2
+			AND bsds.status_ = 4
+            AND bsds.opt_type = 5
+            AND bsds.set_id IS NOT NULL
+            AND share_way != 3
+            GROUP BY bsds.unit_id
+        )tmp on tab.id=tmp.unit_id
+    </select>
+
+    <!-- 查询主题，行业，服务及数据集-->
+    <select id="getBusDataByBus" parameterType="java.util.Map" resultType="com.hengyunsoft.platform.exchange.entity.directory.po.ShareCountView">
+        select bsd.dict_name as dirName,IFNULL(tmp.dataCount ,0) as dataCount,#{busCode} AS  busCode,bsd.dict_code AS  busKey
+        from b_share_dict bsd
+        LEFT JOIN (
+        select
+        <if test="busCode!=null and busCode=='domain' "> bsddw.domain AS busKey,</if>
+        <if test="busCode!=null and busCode=='theme' "> bsddw.theme_one AS busKey,</if>
+        <if test="busCode!=null and busCode=='industry' ">bsddw.industry_one AS busKey,</if>
+        <if test="busCode!=null and busCode=='service' ">bsddw.service_one AS busKey,</if>
+        COUNT(bsddw.id) as dataCount
+        from b_share_data_directory_ware bsddw
+        where bsddw.is_bottom=2 and bsddw.status_=4 and bsddw.opt_type=5 and  bsddw.set_id IS NOT NULL and share_way != 3
+            <if test="busCode!=null and busCode=='domain' ">GROUP BY bsddw.domain</if>
+            <if test="busCode!=null and busCode=='theme' ">GROUP BY bsddw.theme_one</if>
+            <if test="busCode!=null and busCode=='industry' ">GROUP BY bsddw.industry_one</if>
+            <if test="busCode!=null and busCode=='service' ">GROUP BY bsddw.service_one</if>
+        )tmp on bsd.dict_code = tmp.busKey
+        where bsd.level_=#{level} and bsd.p_id=#{busCode}
+        ORDER  BY  bsd.index_no
+    </select>
+
+
+    <resultMap id="WareResultMap" type="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataView">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <id column="set_id" jdbcType="BIGINT" property="setId" />
+        <result column="dir_name" jdbcType="VARCHAR" property="dirName" />
+        <result column="dir_code" jdbcType="VARCHAR" property="dirCode" />
+        <result column="desc_" jdbcType="VARCHAR" property="desc" />
+        <result column="see_count" jdbcType="INTEGER" property="seeCount" />
+        <result column="down_count" jdbcType="INTEGER" property="downCount" />
+        <result column="data_count" jdbcType="INTEGER" property="dataCount" />
+        <result column="open_way" jdbcType="INTEGER" property="openWay" />
+        <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+        <result column="share_way" jdbcType="INTEGER" property="shareWay" />
+        <result column="data_type" jdbcType="INTEGER" property="dataType" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="themeThreeName" jdbcType="VARCHAR" property="themeThreeName" />
+        <result column="industryThreeName" jdbcType="VARCHAR" property="industryThreeName" />
+        <result column="serviceThreeName" jdbcType="VARCHAR" property="serviceThreeName" />
+        <result column="unitName" jdbcType="VARCHAR" property="unitName" />
+    </resultMap>
+
+    <!-- 根据单位查询元目录 -->
+    <select id="getBottomDirByUnit" parameterType="java.util.Map" resultMap="WareResultMap">
+          SELECT bsddw.id,bsddw.dir_code,bsddw.unit_id,bsddw.dir_name,bsddw.data_count,bsddw.see_count,bsddw.down_count,bsddw.update_time,bsddw.desc_,bsddw.open_way,bsddw.share_way,
+           bsddw.data_type,bsddw.create_time,bsd.dict_name as themeThreeName,bsd2.dict_name as industryThreeName,bsd3.dict_name as serviceThreeName,
+           bsd4.dict_name as domainName
+          FROM  b_share_data_directory_ware bsddw
+          LEFT  JOIN  b_share_dict bsd ON bsddw.theme_three = bsd.dict_code
+          LEFT  JOIN  b_share_dict bsd2 ON bsddw.industry_three = bsd2.dict_code
+          LEFT  JOIN  b_share_dict bsd3 ON bsddw.service_three = bsd3.dict_code
+          LEFT  JOIN  b_share_dict bsd4 ON bsddw.domain = bsd4.dict_code
+          <where>
+                bsddw.is_bottom=2 and bsddw.status_=4 and bsddw.opt_type=5 and  bsddw.set_id IS NOT NULL and share_way != 3
+                <if test="unitId!=null and unitId!='' ">and bsddw.unit_id=#{unitId}</if>
+                <if test="searchKey!=null and searchKey!='' ">and (
+                        bsddw.dir_name LIKE  #{searchKey,typeHandler=fullLike} OR
+                        bsd.dict_name LIKE  #{searchKey,typeHandler=fullLike} OR
+                        bsd2.dict_name LIKE  #{searchKey,typeHandler=fullLike} OR
+                        bsd3.dict_name LIKE  #{searchKey,typeHandler=fullLike} OR
+                        bsd4.dict_name LIKE  #{searchKey,typeHandler=fullLike} OR
+                        bsddw.see_count LIKE  #{searchKey,typeHandler=fullLike} OR
+                        bsddw.down_count LIKE  #{searchKey,typeHandler=fullLike}
+                    )
+                </if>
+          </where>
+            <if test="indexNo!=null and indexNo==1">ORDER BY bsddw.update_time DESC </if>
+            <if test="indexNo!=null and indexNo==2">ORDER BY bsddw.see_count DESC</if>
+            <if test="indexNo!=null and indexNo==3">ORDER BY bsddw.down_count DESC</if>
+    </select>
+    <!-- 根据主题，领域，服务，行业等查询元目录 -->
+    <select id="getBottomDirByBuss" parameterType="java.util.Map" resultMap="WareResultMap">
+        SELECT bsddw.id,bsddw.unit_id,bsddw.dir_code,bsddw.dir_name,bsddw.see_count,bsddw.down_count,bsddw.data_count,bsddw.update_time,bsddw.desc_,bsddw.open_way,bsddw.share_way,
+        bsddw.data_type,bsddw.create_time,bsd.dict_name as themeThreeName,bsd2.dict_name as industryThreeName,bsd3.dict_name as serviceThreeName,
+        bsd4.dict_name as domainName
+        FROM  b_share_data_directory_ware bsddw
+        LEFT  JOIN  b_share_dict bsd ON bsddw.theme_three = bsd.dict_code
+        LEFT  JOIN  b_share_dict bsd2 ON bsddw.industry_three = bsd2.dict_code
+        LEFT  JOIN  b_share_dict bsd3 ON bsddw.service_three = bsd3.dict_code
+        LEFT  JOIN  b_share_dict bsd4 ON bsddw.domain = bsd4.dict_code
+        <where>
+            bsddw.is_bottom=2 and bsddw.status_=4 and bsddw.opt_type=5 and  bsddw.set_id IS NOT NULL and share_way != 3
+            <if test="busCode!=null and busCode=='domain' ">and bsddw.domain=#{busKey}</if>
+            <if test="busCode!=null and busCode=='theme' ">and bsddw.theme_one=#{busKey}</if>
+            <if test="busCode!=null and busCode=='industry' ">and bsddw.industry_one=#{busKey}</if>
+            <if test="busCode!=null and busCode=='service' ">and bsddw.service_one=#{busKey}</if>
+            <if test="busCode!=null and busCode=='special_type' ">and bsddw.special_type=#{busKey}</if>
+            <if test="busCode!=null and busCode=='base' ">
+                and bsddw.parent_id IN(
+                SELECT id FROM b_share_data_directory_ware dw WHERE dw.dir_code = #{busKey}
+                )
+            </if>
+            <if test="searchKey!=null and searchKey!='' ">and (
+                bsddw.dir_name LIKE  #{searchKey,typeHandler=fullLike} OR
+                bsd.dict_name LIKE  #{searchKey,typeHandler=fullLike} OR
+                bsd2.dict_name LIKE  #{searchKey,typeHandler=fullLike} OR
+                bsd3.dict_name LIKE  #{searchKey,typeHandler=fullLike} OR
+                bsd4.dict_name LIKE  #{searchKey,typeHandler=fullLike} OR
+                bsddw.see_count LIKE  #{searchKey,typeHandler=fullLike} OR
+                bsddw.down_count LIKE  #{searchKey,typeHandler=fullLike}
+                )
+            </if>
+        </where>
+        <if test="indexNo!=null and indexNo==1">ORDER BY bsddw.update_time DESC </if>
+        <if test="indexNo!=null and indexNo==2">ORDER BY bsddw.see_count DESC</if>
+        <if test="indexNo!=null and indexNo==3">ORDER BY bsddw.down_count DESC</if>
+    </select>
+    <!-- 根据元目录id查询详情 -->
+    <select id="getDirViewById" parameterType="java.util.Map" resultMap="WareResultMap">
+        SELECT bsddw.id,bsddw.unit_id,bsddw.dir_code,bsddw.dir_name,bsddw.see_count,bsddw.down_count,bsddw.update_time,bsddw.desc_,bsddw.open_way,bsddw.share_way,
+            bsddw.data_type,bsddw.create_time,bsd.dict_name as themeThreeName,bsd2.dict_name as industryThreeName,bsd3.dict_name as serviceThreeName,
+            bsd4.dict_name as domainName,org.name_ as unitName,bsddw.desc_,bsddw.set_id
+        FROM  b_share_data_directory bsddw
+        LEFT  JOIN  b_share_dict bsd ON bsddw.theme_three = bsd.dict_code
+        LEFT  JOIN  b_share_dict bsd2 ON bsddw.industry_three = bsd2.dict_code
+        LEFT  JOIN  b_share_dict bsd3 ON bsddw.service_three = bsd3.dict_code
+        LEFT  JOIN  b_share_dict bsd4 ON bsddw.domain = bsd4.dict_code
+        LEFT  JOIN   v_org  org on bsddw.unit_id = org.id
+       WHERE  bsddw.id=#{id}
+    </select>
+
+
+
+    <!-- 根据年月查询元目录数量 -->
+    <select id="getDirCount" parameterType="java.util.Map" resultType="int">
+            SELECT IFNULL(count(1),0)
+            FROM b_share_data_directory_ware
+            WHERE  is_bottom=2 AND
+             DATE_FORMAT(create_time,'%Y') = #{yearKey}  AND  DATE_FORMAT(create_time,'%m') = #{monthKey}
+    </select>
+    <!-- 根据年月查询数据集数量 -->
+    <select id="getSetCount" parameterType="java.util.Map" resultType="int">
+           SELECT IFNULL(count(1),0)
+            FROM b_share_data_set
+            WHERE  status_=3 AND
+             DATE_FORMAT(create_time,'%Y') = #{yearKey}  AND  DATE_FORMAT(create_time,'%m') = #{monthKey}
+    </select>
+    <!-- 根据年月查询API数量 -->
+    <select id="getApiCount" parameterType="java.util.Map" resultType="int">
+            SELECT IFNULL(count(1),0)
+            FROM b_share_data_api
+            WHERE  auth_status=3 AND
+             DATE_FORMAT(create_time,'%Y') = #{yearKey}  AND  DATE_FORMAT(create_time,'%m') = #{monthKey}
+    </select>
+
+    <!-- 查询部门的api数量 -->
+    <select id="getOrgApiCount" resultType="com.hengyunsoft.platform.exchange.entity.screen.po.OrgApiViewDO">
+          SELECT tmp .unit_id AS unitId,tmp.apiCount,vg.name_ AS unitName FROM (
+            SELECT unit_id,count(1) AS apiCount
+            FROM b_share_data_api
+            WHERE  auth_status=3
+            GROUP BY  unit_id
+          )tmp
+          LEFT JOIN v_org vg ON tmp.unit_id = vg.id
+    </select>
+
+    <!-- 根据单位id查询Api调用次数 -->
+    <select id="getOrgApiCallCount"  parameterType="java.util.Map" resultType="int">
+        SELECT IFNULL(count(1),0)
+        FROM  b_share_data_api_call
+        WHERE unit_id =#{unitId}
+    </select>
+
+    <!-- API调用TOP10 -->
+    <select id="getApiCallTopList" resultType="com.hengyunsoft.platform.exchange.entity.screen.po.ApiTopDO">
+          SELECT tmp.apiCallCount,sda.api_name as apiName FROM(
+            SELECT count(1) as apiCallCount,sdc.api_id
+                FROM b_share_data_api_call sdc
+                JOIN  b_share_data_api bsda  on sdc.api_id = bsda.id
+                WHERE  bsda.auth_status=3 and bsda.api_status=1
+                GROUP BY  sdc.api_id
+            )tmp
+            LEFT JOIN b_share_data_api sda on tmp.api_id = sda.id
+            ORDER  BY  tmp.apiCallCount DESC  limit 10
+    </select>
+
+
+    <!-- 根据年月查询API调用次数 -->
+    <select id="getApiCallCount" parameterType="java.util.Map" resultType="int">
+        SELECT IFNULL(count(sdc.id),0)
+        FROM b_share_data_api_call sdc
+        JOIN  b_share_data_api bsda  on sdc.api_id = bsda.id
+        WHERE  DATE_FORMAT(sdc.create_time,'%Y') = #{yearKey}  AND  DATE_FORMAT(sdc.create_time,'%m') = #{monthKey}
+        AND bsda.auth_status=3 AND bsda.api_status=1
+    </select>
+    <!-- 根据年月查询数据交换量 -->
+    <select id="getTransDataCount" parameterType="java.util.Map" resultType="int">
+        SELECT IFNULL(sum(sdc.data_count),0)
+        FROM b_share_data_api_call sdc
+        JOIN  b_share_data_api bsda  on sdc.api_id = bsda.id
+        WHERE  DATE_FORMAT(sdc.create_time,'%Y') = #{yearKey}  AND  DATE_FORMAT(sdc.create_time,'%m') = #{monthKey}
+    </select>
+    <!-- 根据单位查询目录数-->
+    <select id="getOrgDirCount" parameterType="java.util.Map" resultType="int">
+            SELECT IFNULL(count(1),0)
+            FROM b_share_data_directory_ware
+            WHERE  is_bottom=2 AND data_status=1
+            <if test="unitId!=null and unitId!='' ">and unit_id=#{unitId} </if>
+    </select>
+    <!--更新查看量-->
+    <update id="updateSeeCount" parameterType="java.util.Map">
+        UPDATE  b_share_data_directory_ware SET see_count=see_count+1
+        WHERE id=#{id}
+    </update>
+
+    <!--根据单位查询目录-->
+    <select id="getListByUnit" parameterType="java.util.Map" resultType="com.hengyunsoft.platform.exchange.entity.directory.po.domain.DirViewDO">
+        SELECT bsddw.id,bsddw.dir_name AS name,bsddw.set_id as setId,bsds.set_name AS setName
+        FROM b_share_data_directory_ware bsddw
+        LEFT  JOIN  b_share_data_set bsds ON bsddw.set_id = bsds.id
+        WHERE  bsddw.is_bottom=2 AND bsddw.data_status=1 and bsddw.unit_id=#{unitId}
+    </select>
+    <!--数据目录单位前6名-->
+    <select id="getDirDataList" resultType="com.hengyunsoft.platform.exchange.entity.screen.po.OrgScreenDO">
+      SELECT unit_id AS  unitId,count(1) AS dataCount
+      FROM  b_share_data_directory_ware
+      WHERE status_=4 AND  data_status=1  AND  is_bottom=2
+      GROUP BY  unit_id
+      ORDER BY   dataCount DESC  limit 6
+    </select>
+
+    <!--根据数据id为null-->
+    <update id="updateSetIdToNull"  parameterType="java.util.Map" >
+        UPDATE  b_share_data_directory_ware SET set_id = NULL
+        WHERE id=#{id}  AND   set_id = #{setId};
+    </update>
+    <!--更新数据集id-->
+    <update id="updateSetId"  parameterType="java.util.Map" >
+        UPDATE  b_share_data_directory_ware SET set_id =  #{setId}
+        WHERE id=#{id}
+    </update>
+
+    <!-- 批量更新第一种方法，通过接收传进来的参数list进行循环着组装sql -->
+    <update id="batchUpdate" parameterType="java.util.Map">
+        update b_share_data_directory_ware set
+        status_=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.status,jdbcType=INTEGER}
+        </foreach>
+        ,opt_type=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.optType,jdbcType=INTEGER}
+        </foreach>
+        ,data_status=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.dataStatus,jdbcType=INTEGER}
+        </foreach>
+        ,theme_one=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.themeOne,jdbcType=VARCHAR}
+        </foreach>
+        ,theme_two=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.themeTwo,jdbcType=VARCHAR}
+        </foreach>
+        ,theme_three=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.themeThree,jdbcType=VARCHAR}
+        </foreach>
+        ,industry_one=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.industryOne,jdbcType=VARCHAR}
+        </foreach>
+        ,industry_two=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.industryTwo,jdbcType=VARCHAR}
+        </foreach>
+        ,industry_two=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.industryTwo,jdbcType=VARCHAR}
+        </foreach>
+        ,industry_three=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.industryThree,jdbcType=VARCHAR}
+        </foreach>
+        ,service_one=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.serviceOne,jdbcType=VARCHAR}
+        </foreach>
+        ,service_two=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.serviceTwo,jdbcType=VARCHAR}
+        </foreach>
+        ,service_three=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.serviceThree,jdbcType=VARCHAR}
+        </foreach>
+        ,domain=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.domain,jdbcType=VARCHAR}
+        </foreach>
+        ,special_type=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.specialType,jdbcType=VARCHAR}
+        </foreach>
+        ,update_time=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+        ,update_user=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateUser,jdbcType=BIGINT}
+        </foreach>
+        where ID in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+</mapper>

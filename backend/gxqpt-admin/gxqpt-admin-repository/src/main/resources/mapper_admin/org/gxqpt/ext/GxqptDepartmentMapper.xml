@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.org.gxqpt.dao.GxqptDepartmentMapper">
+    <resultMap id="ExtendResultMap" type="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="parent_name" jdbcType="VARCHAR" property="parentName"/>
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
+        <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="short_name" jdbcType="VARCHAR" property="shortName"/>
+        <result column="else_name" jdbcType="VARCHAR" property="elseName"/>
+        <result column="for_type" jdbcType="VARCHAR" property="forType"/>
+        <result column="for_class" jdbcType="VARCHAR" property="forClass"/>
+        <result column="forindustry" jdbcType="VARCHAR" property="forindustry"/>
+        <result column="orgadmin" jdbcType="VARCHAR" property="orgadmin"/>
+        <result column="zipcode" jdbcType="VARCHAR" property="zipcode"/>
+        <result column="telcode" jdbcType="VARCHAR" property="telcode"/>
+        <result column="faxcode" jdbcType="VARCHAR" property="faxcode"/>
+        <result column="status_" jdbcType="VARCHAR" property="status"/>
+        <result column="sortvalue" jdbcType="INTEGER" property="sortvalue"/>
+        <result column="descrption" jdbcType="VARCHAR" property="descrption"/>
+        <result column="fornodetype" jdbcType="VARCHAR" property="fornodetype"/>
+        <result column="orgduty" jdbcType="VARCHAR" property="orgduty"/>
+        <result column="isdelete" jdbcType="VARCHAR" property="isdelete"/>
+        <result column="isenable" jdbcType="VARCHAR" property="isenable"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="logid" jdbcType="VARCHAR" property="logid"/>
+        <result column="otherid" jdbcType="VARCHAR" property="otherid"/>
+    </resultMap>
+    <resultMap id="DpmTreeBySystemMap" type="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.DpmTreeBySystemDO">
+        <!--
+        @聚合类
+        -->
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
+        <result column="system_code" jdbcType="VARCHAR" property="systemCode"/>
+    </resultMap>
+    <update id="updateByChileName" parameterType="com.hengyunsoft.platform.admin.entity.org.gxqpt.po.GxqptDepartment">
+        <!--
+        @mbggenerated
+        -->
+
+        <!--同步修改上级部门对应下级部门的名称-->
+        update c_gxqpt_department
+        <set>
+            <if test="record.name != null">
+                parent_name = #{record.name,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where parent_id = #{record.id,jdbcType=VARCHAR}
+    </update>
+    <sql id="My_Column_List_Alias">
+        <!--
+        @本表别名
+        -->
+        c.id, c.parent_name, c.parent_id, c.org_id, name_, c.short_name, c.else_name, c.for_type,c.for_class,
+        c.forindustry, c.orgadmin, c.zipcode, c.telcode, c.faxcode, c.status_, c.sortvalue, c.descrption,
+        c.fornodetype, c.orgduty, c.isdelete, c.isenable, c.create_user, c.create_time, c.update_user,
+        c.update_time, c.logid, c.otherid
+    </sql>
+    <sql id="My_Column_List_Join_Dictionary">
+        <!--
+        @code转换字典
+        -->
+        c.id, c.parent_name, c.parent_id, c.org_id, c.name_, c.short_name, c.else_name, bt.name for_type,bc.name for_class,
+        c.forindustry, c.orgadmin, c.zipcode, c.telcode, c.faxcode, c.status_, c.sortvalue, c.descrption,
+        c.fornodetype, c.orgduty, c.isdelete, c.isenable, c.create_user, c.create_time, c.update_user,
+        c.update_time, c.logid, c.otherid
+    </sql>
+    <!--查询部门（code转换字典）-->
+    <select id="selectDpmJoinDictionary" resultMap="ExtendResultMap">
+        select
+
+        <include refid="My_Column_List_Join_Dictionary"/>
+        from
+        <if test="systemCode != null">
+            c_${systemCode}_department c
+        </if>
+        left join b_dictionary bt on bt.code = c.for_type
+        left join b_dictionary bc on bc.code = c.for_class
+        where 1=1
+        <if test="dpm.name != null and dpm.name !=''">
+            and c.name_ like #{dpm.name,typeHandler=fullLike}
+        </if>
+        <if test="dpm.isdelete != null and dpm.isdelete !=''">
+            and c.isdelete = #{dpm.isdelete,jdbcType=VARCHAR}
+        </if>
+        <if test="dpm.forType != null and dpm.forType !=''">
+            and c.for_type = #{dpm.forType,jdbcType=VARCHAR}
+        </if>
+        <if test="dpm.forClass != null and dpm.forClass !='' ">
+            and c.for_class = #{dpm.forClass,jdbcType=VARCHAR}
+        </if>
+        <if test="dpm.isenable != null and dpm.isenable !='' ">
+            and c.isenable = #{dpm.isenable,jdbcType=VARCHAR}
+        </if>
+        <if test="dpm.orgId != null and dpm.orgId !='' ">
+            and c.org_id = #{dpm.orgId,jdbcType=VARCHAR}
+        </if>
+        order by c.sortvalue asc
+    </select>
+    <!--对外接口-->
+    <!--通过单位id+体系编码获得所有部门-->
+    <select id="pageByOrgAndSys" resultMap="ExtendResultMap">
+        select
+
+        <include refid="My_Column_List_Alias"/>
+        from c_${systemCode}_department c
+        where 1=1
+        and c.org_id = #{orgId,jdbcType=VARCHAR}
+    </select>
+    <!--获得当前人员所在单位下的所有部门-->
+    <select id="findDpmByUser" resultMap="ExtendResultMap">
+    SELECT id,name_ FROM c_${ownSystem}_department WHERE c_${ownSystem}_department.org_id IN (
+        SELECT
+            org.id
+            FROM
+                (
+                    SELECT
+                        emp.mainorgid orgId
+                    FROM
+                        c_${ownSystem}_emp emp
+                    WHERE
+                        emp.gxqpt_emp_id = #{userId,jdbcType=VARCHAR}
+                    UNION
+                        SELECT
+                            identi.org_id orgId
+                        FROM
+                            c_${ownSystem}_emp_identity identi
+                        WHERE
+                            user_id = (
+                                SELECT
+                                    emp.id
+                                FROM
+                                    c_${ownSystem}_emp emp
+                                WHERE
+                                    emp.gxqpt_emp_id = #{userId,jdbcType=VARCHAR}
+                            )
+                            AND identi.isdelete='0'
+                ) empinfo
+            JOIN c_${ownSystem}_org org ON empinfo.orgId = org.id)
+             AND c_${ownSystem}_department.isdelete='0' AND c_${ownSystem}_department.isenable='1'
+    </select>
+    <select id="findDpmByUserAndOrg" resultMap="ExtendResultMap">
+        SELECT
+            department.*
+            FROM
+                (
+                    SELECT
+                        emp.maindeptid departmentId,emp.mainorgid orgId
+                    FROM
+                        c_${ownSystem}_emp emp
+                    WHERE
+                        emp.gxqpt_emp_id = #{userId,jdbcType=VARCHAR}
+                    UNION
+                        SELECT
+                            identi.dept_id departmentId,identi.org_id orgId
+                        FROM
+                            c_${ownSystem}_emp_identity identi
+                        WHERE
+                            user_id = (
+                                SELECT
+                                    emp.id
+                                FROM
+                                    c_${ownSystem}_emp emp
+                                WHERE
+                                    emp.gxqpt_emp_id = #{userId,jdbcType=VARCHAR}
+                            )
+                            AND identi.isdelete='0'
+                ) empinfo
+            JOIN c_${ownSystem}_department department ON empinfo.departmentId = department.id
+            <if test="orgId != null and orgId !=''">
+                AND empinfo.orgId = #{orgId,jdbcType=VARCHAR}
+            </if>
+            AND department.isdelete='0' AND department.isenable='1'
+            JOIN c_${ownSystem}_org org ON empinfo.orgId = org.id
+			AND org.isdelete='0' AND org.isenable='1'
+    </select>
+    <!--查询全部门根据体系-->
+    <select id="findAllDpmBySystem" resultMap="DpmTreeBySystemMap">
+    SELECT
+    *
+    FROM
+    <foreach collection="systems" index="index" item="item" open="("  close=")">
+        <choose>
+            <when test='index != "0"'>
+                UNION ALL
+            </when>
+        </choose>
+        SELECT
+        dpm.id,
+        dpm.name_,
+        dpm.sortvalue,
+        dpm.org_id,
+        '${item}' system_code
+        FROM c_${item}_department dpm
+        WHERE dpm.isdelete='0' AND dpm.isenable='1'
+    </foreach>
+        dpm ORDER BY dpm.sortvalue
+    </select>
+    <!--根据部门ids查询单位名称id信息-->
+    <select id="findDpmNameByIds" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        <foreach collection="systems" index="index" item="item" open="(" close=")">
+            <choose>
+                <when test='index != "0"'>
+                    UNION ALL
+                </when>
+            </choose>
+            SELECT
+            c_${item}_department.id, c_${item}_department.name_,sortvalue,${index} sort
+            FROM c_${item}_department
+            WHERE c_${item}_department.id IN
+            <foreach collection="ids" index="mindex" item="id" open="(" close=")">
+                <choose>
+                    <when test='mindex != "0"'>
+                        ,
+                    </when>
+                </choose>
+                #{id}
+            </foreach>
+        </foreach>
+        c_gxqpt_department
+        ORDER BY sort, sortvalue
+    </select>
+</mapper>

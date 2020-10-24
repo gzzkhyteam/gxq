@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.consult.dao.ConsultManageMapper">
+
+    <resultMap id="ApplyResultMap" type="com.hengyunsoft.platform.ops.entity.consult.domain.ConsultManageDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="consult_name" jdbcType="VARCHAR" property="consultName"/>
+        <result column="consult_time" jdbcType="TIMESTAMP" property="consultTime"/>
+        <result column="consult_info" jdbcType="VARCHAR" property="consultInfo"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="score" jdbcType="DECIMAL" property="score"/>
+        <result column="score_time" jdbcType="TIMESTAMP" property="scoreTime"/>
+        <result column="sub_dept" jdbcType="VARCHAR" property="subDept"/>
+        <result column="sub_person" jdbcType="VARCHAR" property="subPerson"/>
+        <result column="consult_advice" jdbcType="VARCHAR" property="consultAdvice"/>
+        <result column="deal_opinion" jdbcType="VARCHAR" property="dealOpinion"/>
+        <result column="service_attitude" jdbcType="DECIMAL" property="serviceAttitude"/>
+        <result column="service_efficiency" jdbcType="DECIMAL" property="serviceEfficiency"/>
+        <result column="service_quality" jdbcType="DECIMAL" property="serviceQuality"/>
+        <result column="deal_result" jdbcType="VARCHAR" property="dealResult"/>
+        <result column="zxrId" jdbcType="BIGINT" property="zxrId"/>
+        <result column="apply_code" jdbcType="VARCHAR" property="applyCode"/>
+    </resultMap>
+
+    <select id="getApplyPageList" parameterType="map" resultMap="ApplyResultMap">
+        SELECT b.id,b.consult_name,b.consult_time,b.status,b.score,b.consult_info,b.sub_dept,b.apply_code
+        FROM b_yw_consult_manage b
+        WHERE 1=1
+        <if test="consultName != null and consultName !=''">
+            AND b.consult_name LIKE #{consultName,typeHandler=fullLike}
+        </if>
+        <if test="startTime != null">
+            AND b.consult_time >= #{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime != null">
+            AND #{endTime,jdbcType=TIMESTAMP} >= b.consult_time
+        </if>
+        <if test="status != null and status !=''">
+            AND b.status= #{status}
+        </if>
+        <if test="createUser != null and createUser !=''">
+            AND b.create_user = #{createUser}
+        </if>
+        <if test="applyCode!= null and applyCode!=''">
+            AND b.apply_code LIKE CONCAT('%',#{applyCode},'%')
+        </if>
+        ORDER BY b.consult_time DESC
+    </select>
+
+    <select id="getDealPageList" parameterType="map" resultMap="ApplyResultMap">
+        SELECT b.id,b.consult_name,b.consult_time,b.status,b.score,b.sub_dept,b.sub_person,b.apply_code
+        FROM b_yw_consult_manage b
+        WHERE 1=1
+        <if test="consultName != null and consultName !=''">
+            AND b.consult_name LIKE CONCAT('%',#{consultName},'%')
+        </if>
+        <if test="startTime != null">
+            AND b.consult_time >= #{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime != null">
+            AND #{endTime,jdbcType=TIMESTAMP} >= b.consult_time
+        </if>
+        <if test="status != null and status !=''">
+            AND b.status= #{status}
+        </if>
+        <if test="subDept != null and subDept !=''">
+            AND b.sub_dept LIKE CONCAT('%',#{subDept},'%')
+        </if>
+        <if test="subPerson != null and subPerson !=''">
+            AND b.sub_person LIKE CONCAT('%',#{subPerson},'%')
+        </if>
+        <if test="applyCode!= null and applyCode!=''">
+            AND b.apply_code LIKE CONCAT('%',#{applyCode},'%')
+        </if>
+        ORDER BY b.consult_time DESC
+    </select>
+
+    <select id="getHandlePageList" parameterType="map" resultMap="ApplyResultMap">
+        SELECT
+        a.id,
+        a.consult_name,
+        a.consult_time,
+        a.status,
+        a.score,
+        a.sub_dept,
+        a.sub_person,
+        a.apply_code,
+        b.person_id AS zxrId
+        FROM
+        b_yw_consult_manage a
+        LEFT JOIN b_yw_deal_user b
+        ON a.id = b.buss_id
+        <where>
+            and b.type = 'zxr' and a.status IN (2, 4)
+            <if test="consultName != null and consultName !=''">
+                AND a.consult_name LIKE CONCAT('%',#{consultName},'%')
+            </if>
+            <if test="startTime != null">
+                AND a.consult_time >= #{startTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endTime != null">
+                AND #{endTime,jdbcType=TIMESTAMP} >= a.consult_time
+            </if>
+            <if test="status != null and status !=''">
+                AND a.status= #{status}
+            </if>
+            <if test="subDept != null and subDept !=''">
+                AND a.sub_dept LIKE CONCAT('%',#{subDept},'%')
+            </if>
+            <if test="subPerson != null and subPerson !=''">
+                AND a.sub_person LIKE CONCAT('%',#{subPerson},'%')
+            </if>
+            <if test="personId != null and personId !=''">
+                AND b.person_id = #{personId}
+            </if>
+            <if test="applyCode!= null and applyCode!=''">
+                AND a.apply_code LIKE CONCAT('%',#{applyCode},'%')
+            </if>
+        </where>
+        ORDER BY a.consult_time DESC
+    </select>
+
+
+</mapper>

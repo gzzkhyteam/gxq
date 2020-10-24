@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.msgs.repository.msgsmessage.dao.MsgsMessageMapper">
+    <resultMap id="ChannelByAnalysisResultMap" type="com.hengyunsoft.platform.msgs.entity.msgsmessage.po.ChannelByAnalysis">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="send_status" jdbcType="INTEGER" property="sendCount" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="channel_type_name" jdbcType="VARCHAR" property="channelTypeName" />
+    </resultMap>		
+    <resultMap id="msgsListMap" type="com.hengyunsoft.platform.msgs.entity.msgsmessage.dos.MsgsListDO">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="send_job_time" jdbcType="TIMESTAMP" property="sendTime" />
+        <result column="type_id" jdbcType="BIGINT" property="channelType" />
+        <result column="channel" jdbcType="TIMESTAMP" property="channelName" />
+    </resultMap>
+    <!-- 获取信息列表 -->
+    <select id="getMsgsList" parameterType="com.hengyunsoft.platform.msgs.entity.msgsmessage.dos.MsgsMessageQueryDO" resultMap="msgsListMap">
+        select mm.id,mm.title,mm.send_job_time,mmc.type_id,if(GROUP_CONCAT(mmc.channel SEPARATOR ',') is null,"",GROUP_CONCAT(mmc.channel SEPARATOR ',')) as channel
+           from msgs_message mm left join msgs_message_channel mmc on mm.id=mmc.message_id
+           where mm.create_user = #{msgsMessageQueryDTO.userId} AND mm.msg_status = #{msgsMessageQueryDTO.msgStatus}
+           <if test="msgsMessageQueryDTO.channelType!=null">
+                AND mmc.type_id = #{msgsMessageQueryDTO.channelType}
+           </if>
+           <if test="msgsMessageQueryDTO.name!=null and msgsMessageQueryDTO.name!=''">
+                AND mmc.channel like #{msgsMessageQueryDTO.name}
+           </if>
+           <if test="msgsMessageQueryDTO.createTimeStart!=null">
+                AND mm.send_job_time &gt; #{msgsMessageQueryDTO.createTimeStart}
+           </if>
+           <if test="msgsMessageQueryDTO.createTimeEnd!=null">
+                AND mm.send_job_time &lt; #{msgsMessageQueryDTO.createTimeEnd}
+           </if>
+        group by mm.id
+        order by mm.send_job_time desc
+    </select>
+    <!--消息统计渠道-->
+    <select id="queryChannelByAnalysis" resultMap="ChannelByAnalysisResultMap"
+            parameterType="com.hengyunsoft.platform.msgs.repository.msgsmessage.example.MsgsMessageQueryParam">
+        select count(b.id) as count,a.`name` as name from msgs_message_type b,msgs_channel_type a
+        where a.id = b.type_id
+            <if test="createTimeStart!=null">
+                AND  DATE_FORMAT(b.create_time,'%Y-%m-%d') >= #{createTimeStart ,jdbcType=TIMESTAMP}
+            </if>
+            <if test="createTimeEnd!=null">
+                AND  DATE_FORMAT(b.create_time,'%Y-%m-%d') >= #{createTimeEnd ,jdbcType=TIMESTAMP}
+            </if>
+        group by a.id
+    </select>
+    <!--更改消息条件-->
+    <update id="updateMessageById" parameterType="com.hengyunsoft.platform.msgs.entity.msgsmessage.po.MsgsMessage">
+        <!--
+        @mbggenerated
+        -->
+        update msgs_message
+        set title = #{title,jdbcType=VARCHAR},
+        contact_person = #{contactPerson,jdbcType=VARCHAR},
+        msg_status = #{msgStatus,jdbcType=INTEGER},
+        msg_txt = #{msgTxt,jdbcType=VARCHAR},
+        msg_type = #{msgType,jdbcType=INTEGER},
+        media_id = #{mediaId,jdbcType=VARCHAR},
+        media_url = #{mediaUrl,jdbcType=VARCHAR},
+        attachment_id = #{attachmentId,jdbcType=VARCHAR},
+        attachment_url = #{attachmentUrl,jdbcType=VARCHAR},
+        html_editid = #{htmlEditid,jdbcType=VARCHAR},
+        send_job_time = #{sendJobTime,jdbcType=TIMESTAMP},
+        update_user = #{updateUser,jdbcType=BIGINT},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateStatusById" parameterType="java.lang.Long">
+	   update msgs_message
+	   set msg_status = 0
+	   where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

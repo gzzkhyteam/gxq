@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.api.dao.ShareDataDemandMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataDemand">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+    <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+    <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+    <result column="unit_type" jdbcType="VARCHAR" property="unitType" />
+    <result column="cont_name" jdbcType="VARCHAR" property="contName" />
+    <result column="cont_tel" jdbcType="VARCHAR" property="contTel" />
+    <result column="cont_email" jdbcType="VARCHAR" property="contEmail" />
+    <result column="credit_code" jdbcType="VARCHAR" property="creditCode" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="purpose" jdbcType="VARCHAR" property="purpose" />
+    <result column="apply_reason" jdbcType="LONGVARCHAR" property="applyReason" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="api_id" jdbcType="BIGINT" property="apiId" />
+    <result column="status_" jdbcType="INTEGER" property="status" />
+    <result column="estimate_time" jdbcType="TIMESTAMP" property="estimateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, apply_code, unit_id, unit_name, unit_type, cont_name, cont_tel, cont_email, credit_code, 
+    content, purpose, apply_reason, org_id, api_id, status_, estimate_time, create_time, 
+    create_user, update_time, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.exchange.repository.api.example.ShareDataDemandExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_share_data_demand
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_share_data_demand
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.exchange.repository.api.example.ShareDataDemandExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_share_data_demand
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_share_data_demand
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_demand
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.exchange.repository.api.example.ShareDataDemandExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_demand
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_share_data_demand where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_demand
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_share_data_demand where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataDemand">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_demand
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_demand
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_demand
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_demand
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataDemand">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_demand (id, apply_code, unit_id, 
+      unit_name, unit_type, cont_name, 
+      cont_tel, cont_email, credit_code, 
+      content, purpose, apply_reason, 
+      org_id, api_id, status_, 
+      estimate_time, create_time, create_user, 
+      update_time, update_user)
+    values (#{id,jdbcType=BIGINT}, #{applyCode,jdbcType=VARCHAR}, #{unitId,jdbcType=VARCHAR}, 
+      #{unitName,jdbcType=VARCHAR}, #{unitType,jdbcType=VARCHAR}, #{contName,jdbcType=VARCHAR}, 
+      #{contTel,jdbcType=VARCHAR}, #{contEmail,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR}, 
+      #{content,jdbcType=LONGVARCHAR}, #{purpose,jdbcType=VARCHAR}, #{applyReason,jdbcType=LONGVARCHAR}, 
+      #{orgId,jdbcType=VARCHAR}, #{apiId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, 
+      #{estimateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_demand (id, apply_code, unit_id, unit_name, unit_type, cont_name, cont_tel, cont_email, credit_code, content, purpose, apply_reason, org_id, api_id, status_, estimate_time, create_time, create_user, update_time, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.applyCode,jdbcType=VARCHAR}, #{item.unitId,jdbcType=VARCHAR}, 
+        #{item.unitName,jdbcType=VARCHAR}, #{item.unitType,jdbcType=VARCHAR}, #{item.contName,jdbcType=VARCHAR}, 
+        #{item.contTel,jdbcType=VARCHAR}, #{item.contEmail,jdbcType=VARCHAR}, #{item.creditCode,jdbcType=VARCHAR}, 
+        #{item.content,jdbcType=LONGVARCHAR}, #{item.purpose,jdbcType=VARCHAR}, #{item.applyReason,jdbcType=LONGVARCHAR}, 
+        #{item.orgId,jdbcType=VARCHAR}, #{item.apiId,jdbcType=BIGINT}, #{item.status,jdbcType=INTEGER}, 
+        #{item.estimateTime,jdbcType=TIMESTAMP}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.createUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataDemand">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_demand
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="applyCode != null">
+        apply_code,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="unitName != null">
+        unit_name,
+      </if>
+      <if test="unitType != null">
+        unit_type,
+      </if>
+      <if test="contName != null">
+        cont_name,
+      </if>
+      <if test="contTel != null">
+        cont_tel,
+      </if>
+      <if test="contEmail != null">
+        cont_email,
+      </if>
+      <if test="creditCode != null">
+        credit_code,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="purpose != null">
+        purpose,
+      </if>
+      <if test="applyReason != null">
+        apply_reason,
+      </if>
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="apiId != null">
+        api_id,
+      </if>
+      <if test="status != null">
+        status_,
+      </if>
+      <if test="estimateTime != null">
+        estimate_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="applyCode != null">
+        #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitName != null">
+        #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitType != null">
+        #{unitType,jdbcType=VARCHAR},
+      </if>
+      <if test="contName != null">
+        #{contName,jdbcType=VARCHAR},
+      </if>
+      <if test="contTel != null">
+        #{contTel,jdbcType=VARCHAR},
+      </if>
+      <if test="contEmail != null">
+        #{contEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null">
+        #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="purpose != null">
+        #{purpose,jdbcType=VARCHAR},
+      </if>
+      <if test="applyReason != null">
+        #{applyReason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="apiId != null">
+        #{apiId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="estimateTime != null">
+        #{estimateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.exchange.repository.api.example.ShareDataDemandExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_share_data_demand
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_demand
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.applyCode != null">
+        apply_code = #{record.applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitId != null">
+        unit_id = #{record.unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitName != null">
+        unit_name = #{record.unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitType != null">
+        unit_type = #{record.unitType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contName != null">
+        cont_name = #{record.contName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contTel != null">
+        cont_tel = #{record.contTel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contEmail != null">
+        cont_email = #{record.contEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creditCode != null">
+        credit_code = #{record.creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.purpose != null">
+        purpose = #{record.purpose,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyReason != null">
+        apply_reason = #{record.applyReason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.orgId != null">
+        org_id = #{record.orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apiId != null">
+        api_id = #{record.apiId,jdbcType=BIGINT},
+      </if>
+      <if test="record.status != null">
+        status_ = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.estimateTime != null">
+        estimate_time = #{record.estimateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_demand
+    set id = #{record.id,jdbcType=BIGINT},
+      apply_code = #{record.applyCode,jdbcType=VARCHAR},
+      unit_id = #{record.unitId,jdbcType=VARCHAR},
+      unit_name = #{record.unitName,jdbcType=VARCHAR},
+      unit_type = #{record.unitType,jdbcType=VARCHAR},
+      cont_name = #{record.contName,jdbcType=VARCHAR},
+      cont_tel = #{record.contTel,jdbcType=VARCHAR},
+      cont_email = #{record.contEmail,jdbcType=VARCHAR},
+      credit_code = #{record.creditCode,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=LONGVARCHAR},
+      purpose = #{record.purpose,jdbcType=VARCHAR},
+      apply_reason = #{record.applyReason,jdbcType=LONGVARCHAR},
+      org_id = #{record.orgId,jdbcType=VARCHAR},
+      api_id = #{record.apiId,jdbcType=BIGINT},
+      status_ = #{record.status,jdbcType=INTEGER},
+      estimate_time = #{record.estimateTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataDemand">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_demand
+    <set>
+      <if test="applyCode != null">
+        apply_code = #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitName != null">
+        unit_name = #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitType != null">
+        unit_type = #{unitType,jdbcType=VARCHAR},
+      </if>
+      <if test="contName != null">
+        cont_name = #{contName,jdbcType=VARCHAR},
+      </if>
+      <if test="contTel != null">
+        cont_tel = #{contTel,jdbcType=VARCHAR},
+      </if>
+      <if test="contEmail != null">
+        cont_email = #{contEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null">
+        credit_code = #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="purpose != null">
+        purpose = #{purpose,jdbcType=VARCHAR},
+      </if>
+      <if test="applyReason != null">
+        apply_reason = #{applyReason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="apiId != null">
+        api_id = #{apiId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="estimateTime != null">
+        estimate_time = #{estimateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataDemand">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_demand
+    <set>
+      <if test="applyCode != null">
+        apply_code = #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitName != null">
+        unit_name = #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitType != null">
+        unit_type = #{unitType,jdbcType=VARCHAR},
+      </if>
+      <if test="contName != null">
+        cont_name = #{contName,jdbcType=VARCHAR},
+      </if>
+      <if test="contTel != null">
+        cont_tel = #{contTel,jdbcType=VARCHAR},
+      </if>
+      <if test="contEmail != null">
+        cont_email = #{contEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null">
+        credit_code = #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="purpose != null">
+        purpose = #{purpose,jdbcType=VARCHAR},
+      </if>
+      <if test="applyReason != null">
+        apply_reason = #{applyReason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="apiId != null">
+        api_id = #{apiId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="estimateTime != null">
+        estimate_time = #{estimateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataDemand">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_demand
+    set apply_code = #{applyCode,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=VARCHAR},
+      unit_name = #{unitName,jdbcType=VARCHAR},
+      unit_type = #{unitType,jdbcType=VARCHAR},
+      cont_name = #{contName,jdbcType=VARCHAR},
+      cont_tel = #{contTel,jdbcType=VARCHAR},
+      cont_email = #{contEmail,jdbcType=VARCHAR},
+      credit_code = #{creditCode,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR},
+      purpose = #{purpose,jdbcType=VARCHAR},
+      apply_reason = #{applyReason,jdbcType=LONGVARCHAR},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      api_id = #{apiId,jdbcType=BIGINT},
+      status_ = #{status,jdbcType=INTEGER},
+      estimate_time = #{estimateTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.exchange.entity.api.po.ShareDataDemand">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_demand
+    set apply_code = #{applyCode,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=VARCHAR},
+      unit_name = #{unitName,jdbcType=VARCHAR},
+      unit_type = #{unitType,jdbcType=VARCHAR},
+      cont_name = #{contName,jdbcType=VARCHAR},
+      cont_tel = #{contTel,jdbcType=VARCHAR},
+      cont_email = #{contEmail,jdbcType=VARCHAR},
+      credit_code = #{creditCode,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR},
+      purpose = #{purpose,jdbcType=VARCHAR},
+      apply_reason = #{applyReason,jdbcType=LONGVARCHAR},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      api_id = #{apiId,jdbcType=BIGINT},
+      status_ = #{status,jdbcType=INTEGER},
+      estimate_time = #{estimateTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

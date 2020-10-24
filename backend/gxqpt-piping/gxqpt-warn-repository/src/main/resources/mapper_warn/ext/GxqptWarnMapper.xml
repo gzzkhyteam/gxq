@@ -1,0 +1,809 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.warn.repository.dao.GxqptWarnMapper">
+    <resultMap id="QueryWarnLedgerResMap" type="com.hengyunsoft.platform.warn.entity.domain.QueryWarnLedgerResDO">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="warntime" jdbcType="TIMESTAMP" property="warntime" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="rec_name" jdbcType="VARCHAR" property="recName" />
+    </resultMap>
+
+    <resultMap id="QueryWarnHandleLedgerResMap" type="com.hengyunsoft.platform.warn.entity.domain.QueryWarnHandleLedgerResDO">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="warntime" jdbcType="TIMESTAMP" property="warntime" />
+        <result column="rec_name" jdbcType="VARCHAR" property="recName" />
+        <result column="rec_type" jdbcType="VARCHAR" property="recType" />
+        <result column="result_" jdbcType="BIT" property="result" />
+        <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+
+    <resultMap id="QueryWarnHandleResultLedgerResMap" type="com.hengyunsoft.platform.warn.entity.domain.QueryWarnHandleResultLedgerResDO">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="warntime" jdbcType="TIMESTAMP" property="warntime" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="rec_name" jdbcType="VARCHAR" property="recName" />
+        <result column="confirm_cost_time" jdbcType="VARCHAR" property="confirmCostTime" />
+        <result column="handle_cost_time" jdbcType="VARCHAR" property="handleCostTime" />
+    </resultMap>
+    <!--获取预警台账分页列表  过滤掉抄送人记录-->
+    <select id="getWarnLedgerList" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnLedgerPagingReqDO" resultMap="QueryWarnLedgerResMap">
+        SELECT bw.id,bw.title,bw.type,bw.level,bw.warntime,bw.status,bd.app_name
+        FROM b_warn bw
+        LEFT JOIN b_duty bd ON bw.id = bd.warn_id
+        WHERE
+
+        /*接收人类型 1、确认人 2、抄送人 3、责任人*/
+        <if test="warnLedgerPagingReqDO.userId != null">
+            /*查询抄送人相关预警信息*/
+           bw.id in (select bse.warn_id from b_sendee bse where bse.rec_type = '2' and bse.user_id = #{warnLedgerPagingReqDO.userId})
+        </if>
+
+         /*默认查询： 1、未确认 2、已确认属实*/
+        <if test="warnLedgerPagingReqDO.status == null  or  warnLedgerPagingReqDO.status == ''">
+           and bw.status in ('1','2')
+        </if>
+
+        /*已处理 ： 3、已确认不属实 4、已处理*/
+        <if test="warnLedgerPagingReqDO.status != null and  warnLedgerPagingReqDO.status != '' and  warnLedgerPagingReqDO.status == 'handled'">
+            and bw.status in ('3','4')
+        </if>
+
+        /*1、未确认*/
+        <if test="warnLedgerPagingReqDO.status != null and  warnLedgerPagingReqDO.status != '' and  warnLedgerPagingReqDO.status == 'unconfirmed'">
+            and  bw.status = "1"
+        </if>
+
+        /*2、已确认*/
+        <if test="warnLedgerPagingReqDO.status != null and  warnLedgerPagingReqDO.status != '' and  warnLedgerPagingReqDO.status == 'confirmed'">
+            and bw.status = "2"
+        </if>
+
+        /*4、全部*/
+        <if test="warnLedgerPagingReqDO.status != null and  warnLedgerPagingReqDO.status != '' and  warnLedgerPagingReqDO.status == 'all'">
+            and bw.status in ('1','2','3','4')
+        </if>
+
+        <if test="warnLedgerPagingReqDO.title != null and warnLedgerPagingReqDO.title != ''">
+            and bw.title LIKE #{warnLedgerPagingReqDO.title,typeHandler=fullLike}
+        </if>
+        <if test="warnLedgerPagingReqDO.appName != null and warnLedgerPagingReqDO.appName != ''">
+            and bd.app_name LIKE #{warnLedgerPagingReqDO.appName,typeHandler=fullLike}
+        </if>
+        <if test="warnLedgerPagingReqDO.typeList != null">
+            and bw.type_id IN
+            <foreach close=")" collection="warnLedgerPagingReqDO.typeList" index="index" item="item" open="(" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="warnLedgerPagingReqDO.level != null and warnLedgerPagingReqDO.level != 5">
+            and bw.level = #{warnLedgerPagingReqDO.level}
+        </if>
+        <if test="warnLedgerPagingReqDO.warnStartTime != null and warnLedgerPagingReqDO.warnStartTime != ''">
+            and bw.warntime &gt;= STR_TO_DATE(#{warnLedgerPagingReqDO.warnStartTime},"%Y-%m-%d %H:%i:%S")
+        </if>
+        <if test="warnLedgerPagingReqDO.warnEndTime != null and warnLedgerPagingReqDO.warnEndTime != ''">
+            and bw.warntime &lt;= STR_TO_DATE(#{warnLedgerPagingReqDO.warnEndTime},"%Y-%m-%d %H:%i:%S")
+        </if>
+        order by bw.level desc, bw.warntime desc
+    </select>
+
+    <!--获取预警处理台账分页列表  过滤掉抄送人记录-->
+    <select id="getWarnHandleLedgerList" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnLedgerHandlePagingReqDO" resultMap="QueryWarnHandleLedgerResMap">
+
+        SELECT bw.id,bw.title,bw.type,bw.level,bw.warntime,bs.warn_id,bs.result_,bs.remarks,bs.rec_name,bs.rec_type,
+        bs.status,bs.handler_leve,bd.app_name,bs.update_time
+        FROM b_warn bw
+        LEFT JOIN b_sendee bs ON bw.id = bs.warn_id
+        LEFT JOIN b_duty bd ON bw.id = bd.warn_id
+        WHERE
+        bs.rec_type in ('1','3')
+        <if test="warnLedgerHandlePagingReqDO.title != null and warnLedgerHandlePagingReqDO.title != ''">
+            and bw.title LIKE #{warnLedgerHandlePagingReqDO.title,typeHandler=fullLike}
+        </if>
+        <if test="warnLedgerHandlePagingReqDO.appName != null and warnLedgerHandlePagingReqDO.appName != ''">
+            and bd.app_name LIKE #{warnLedgerHandlePagingReqDO.appName,typeHandler=fullLike}
+        </if>
+        <if test="warnLedgerHandlePagingReqDO.typeList != null">
+            and bw.type_id IN
+            <foreach close=")" collection="warnLedgerHandlePagingReqDO.typeList" index="index" item="item" open="(" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="warnLedgerHandlePagingReqDO.level != null  and warnLedgerHandlePagingReqDO.level != 5">
+            and bw.level = #{warnLedgerHandlePagingReqDO.level}
+        </if>
+        <if test="warnLedgerHandlePagingReqDO.warnStartTime != null and warnLedgerHandlePagingReqDO.warnStartTime != ''">
+            and bw.warntime &gt;= STR_TO_DATE(#{warnLedgerHandlePagingReqDO.warnStartTime},"%Y-%m-%d %H:%i:%S")
+        </if>
+        <if test="warnLedgerHandlePagingReqDO.warnEndTime != null and warnLedgerHandlePagingReqDO.warnEndTime != ''">
+            and bw.warntime &lt;= STR_TO_DATE(#{warnLedgerHandlePagingReqDO.warnEndTime},"%Y-%m-%d %H:%i:%S")
+        </if>
+
+        /*接收人类型 1、确认人 2、抄送人 3、责任人*/
+        <if test="warnLedgerHandlePagingReqDO.userId != null">
+            and bs.warn_id in (select bse.warn_id from b_sendee bse where bse.rec_type = '2' and bse.user_id = #{warnLedgerHandlePagingReqDO.userId})
+        </if>
+        order by bw.level desc, bs.update_time desc
+    </select>
+
+    <!--获取预警处理结果台账分页列表  过滤掉抄送人记录-->
+    <select id="getWarnHandleResultLedgerList" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnLedgerHandleResultPagingReqDO" resultMap="QueryWarnHandleResultLedgerResMap">
+
+        SELECT bw.id,bw.title,bw.type,bw.level,bw.warntime,bw.status,bd.app_name,bw.confirm_cost_time ,bw.handle_cost_time
+        FROM b_warn bw
+        LEFT JOIN b_duty bd ON bw.id = bd.warn_id
+        WHERE
+
+        /*已处理 ： 3、已确认不属实 4、已处理*/
+        bw.status in ('3','4')
+        <if test="warnLedgerHandleResultPagingReqDO.title != null and warnLedgerHandleResultPagingReqDO.title != ''">
+            and bw.title LIKE #{warnLedgerHandleResultPagingReqDO.title,typeHandler=fullLike}
+        </if>
+        <if test="warnLedgerHandleResultPagingReqDO.appName != null and warnLedgerHandleResultPagingReqDO.appName != ''">
+            and bd.app_name LIKE #{warnLedgerHandleResultPagingReqDO.appName,typeHandler=fullLike}
+        </if>
+
+        <if test="warnLedgerHandleResultPagingReqDO.typeList != null">
+            and bw.type_id IN
+            <foreach close=")" collection="warnLedgerHandleResultPagingReqDO.typeList" index="index" item="item" open="(" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="warnLedgerHandleResultPagingReqDO.level != null and warnLedgerHandleResultPagingReqDO.level != 5">
+            and bw.level = #{warnLedgerHandleResultPagingReqDO.level}
+        </if>
+        <if test="warnLedgerHandleResultPagingReqDO.warnStartTime != null and warnLedgerHandleResultPagingReqDO.warnStartTime != ''">
+            and bw.warntime &gt;= STR_TO_DATE(#{warnLedgerHandleResultPagingReqDO.warnStartTime},"%Y-%m-%d %H:%i:%S")
+        </if>
+        <if test="warnLedgerHandleResultPagingReqDO.warnEndTime != null and warnLedgerHandleResultPagingReqDO.warnEndTime != ''">
+            and bw.warntime &lt;= STR_TO_DATE(#{warnLedgerHandleResultPagingReqDO.warnEndTime},"%Y-%m-%d %H:%i:%S")
+        </if>
+
+        /*接收人类型 1、确认人 2、抄送人 3、责任人*/
+        <if test="warnLedgerHandleResultPagingReqDO.userId != null">
+            and bw.id in (select bse.warn_id from b_sendee bse where bse.rec_type = '2' and bse.user_id = #{warnLedgerHandleResultPagingReqDO.userId})
+        </if>
+        order by bw.warntime desc
+    </select>
+    
+    
+    
+    
+	<resultMap id="scaleMap" type="com.hengyunsoft.platform.warn.entity.domain.ObjectWarnCountDO">
+	    <result column="object_id" jdbcType="VARCHAR" property="objectId" />
+	    <result column="object_name" jdbcType="VARCHAR" property="objectName" />
+	    <result column="count" jdbcType="INTEGER" property="count" /> 
+	    <result column="tag" jdbcType="VARCHAR" property="tag" />  
+	    <result column="confirm_cost_time" jdbcType="VARCHAR" property="confirmCostTime" />
+	    <result column="handle_cost_time" jdbcType="VARCHAR" property="handleCostTime" />
+	</resultMap>
+    <!-- 获取单位本月新增、已处理、未处理预警数量 -->
+    <select id="getOrgWarns" parameterType="java.util.Date" resultMap="scaleMap">
+	    select org_id as object_id,org_name as object_name,count,tag,confirm_cost_time,handle_cost_time from (
+			select bd.org_id,bd.org_name,count(bw.id) count ,'1' tag, null confirm_cost_time, null handle_cost_time
+			from b_warn bw
+			join b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 1 and bd.who_handle = 1
+			where bd.status = '1' and bw.create_time &gt; #{beforeTime} and bw.create_time &lt; #{thisTime}
+			group by bd.org_id
+			UNION  all
+			select bd.org_id,bd.org_name,count(bw.id) count,'2' tag, null confirm_cost_time, ROUND(AVG (TIMESTAMPDIFF(SECOND,bd.create_time,bd.update_time))/3600, 2) handle_cost_time
+			from b_warn bw
+			join b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 3 and bd.who_handle = 0
+			where  bd.status = '3' and bw.han_time &gt; #{beforeTime} and bw.han_time &lt; #{thisTime}
+			group by bd.org_id
+			UNION  all
+			select bd.org_id,bd.org_name,count(bw.id) count,'3' tag, null confirm_cost_time, null handle_cost_time
+			from b_warn bw
+			join b_sendee  bd on bd.warn_id = bw.id and bd.rec_type = 3 and bd.who_handle = 1
+			where bw.status = '2' and bd.update_time &gt; #{beforeTime}  and bd.update_time &lt; #{thisTime}  group by bd.org_id
+            UNION  all
+            select bd.org_id,bd.org_name,count(bw.id) count,'4' tag, ROUND(AVG (TIMESTAMPDIFF(SECOND,bd.create_time,bd.update_time)/3600), 2) confirm_cost_time, null handle_cost_time
+            from b_warn bw
+            join b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 1 AND bd.status = 2
+            where bd.status = '2' and bd.update_time &gt; #{beforeTime}  and bd.update_time &lt; #{thisTime}
+            group by bd.org_id
+			) as z
+    </select>
+    <!-- 获取部门本月新增、已处理、未处理预警数量 tag: 1、待确认  2、已处理  3、待处理  4、已确认-->
+    <select id="getDepWarns" parameterType="java.util.Date" resultMap="scaleMap">
+	    select department_id as object_id,department_name as object_name,count,tag,confirm_cost_time,handle_cost_time from (
+			select bd.department_id,bd.department_name,count(bw.id) count ,'1' tag, null confirm_cost_time, null handle_cost_time
+			from b_warn bw
+			join b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 1 and bd.who_handle = 1
+			where  bd.status = '1' and bw.create_time &gt; #{beforeTime} and bw.create_time &lt; #{thisTime}
+			group by bd.department_id
+			UNION  all
+			select bd.department_id,bd.department_name,count(bw.id) count,'2' tag, null confirm_cost_time, ROUND(AVG (TIMESTAMPDIFF(SECOND,bd.create_time,bd.update_time))/3600, 2) handle_cost_time
+			from b_warn bw
+			join b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 3 and bd.who_handle = 0
+			where bd.status = '3' and bw.han_time &gt; #{beforeTime} and bw.han_time &lt; #{thisTime}
+			group by bd.department_id
+			UNION  all
+			select bd.department_id,bd.department_name,count(bw.id) count,'3' tag, null confirm_cost_time, null handle_cost_time
+			from b_warn bw
+			join b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 3 and bd.who_handle = 1
+			where bw.status = '2' and bd.update_time &gt; #{beforeTime} and bd.update_time &lt; #{thisTime}   group by bd.department_id
+            UNION  all
+            select bd.department_id,bd.department_name,count(bw.id) count,'4' tag, ROUND(AVG (TIMESTAMPDIFF(SECOND,bd.create_time,bd.update_time)/3600), 2) confirm_cost_time, null handle_cost_time
+            from b_warn bw
+            join b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 1 AND bd.status = 2
+            where bd.status = '2' and bd.update_time &gt; #{beforeTime}  and bd.update_time &lt; #{thisTime} GROUP BY bd.department_id
+			) as z
+    </select>
+    <!-- 获取人员本月新增、已处理、未处理预警数量 tag: 1、待确认  2、已处理  3、待处理 -->
+    <select id="getEmpWarns" parameterType="java.util.Date" resultMap="scaleMap">
+	    select user_id as object_id,emp_name as object_name,count,tag,confirm_cost_time,handle_cost_time from (
+	        /*#未确认*/
+			select bd.user_id,bd.rec_name emp_name,count(bw.id) count ,'1' tag, null confirm_cost_time, null handle_cost_time
+			from b_warn bw
+			join b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 1 and bd.who_handle = 1
+			where bd.status = '1' and  bw.create_time &gt; #{beforeTime} and bw.create_time &lt; #{thisTime}
+			group by bd.user_id
+			UNION  all
+			/*#已处理*/
+			select bd.user_id,bd.rec_name emp_name,count(bw.id) count,'2' tag, null confirm_cost_time, ROUND(AVG (TIMESTAMPDIFF(SECOND,bd.create_time,bd.update_time))/3600, 2) handle_cost_time
+			from b_warn bw
+			join b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 3 and bd.who_handle = 0
+			where bd.status = '3' and bw.han_time &gt; #{beforeTime} and bw.han_time &lt; #{thisTime}
+			group by bd.user_id
+			UNION  all
+			/*#待处理*/
+			select bd.user_id,bd.rec_name emp_name,count(bw.id) count,'3' tag, null confirm_cost_time, null handle_cost_time
+			from b_warn bw
+			join b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 3 and bd.who_handle = 1
+			where bw.status = '2' and bd.update_time &gt; #{beforeTime} and bd.update_time &lt; #{thisTime}  group by bd.user_id
+            UNION ALL
+            /*#已确认*/
+            select bd.user_id,bd.rec_name emp_name,count(bw.id) count,'4' tag, ROUND(AVG (TIMESTAMPDIFF(SECOND,bd.create_time,bd.update_time)/3600), 2) confirm_cost_time, null handle_cost_time
+            from b_warn bw
+            join b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 1 and bd.status = 2
+            where bd.status = '2' and bd.update_time &gt; #{beforeTime} and bd.update_time &lt; #{thisTime} group by bd.user_id
+			) as z
+  </select>
+    <select id="findContentTop" resultType="com.hengyunsoft.platform.warn.entity.domain.GxqptPublicTopContentDO">
+        <foreach collection="map.ids" index="index" item="item">
+            <if test="index != 0">
+                UNION ALL
+            </if>
+            SELECT
+            #{item} name,
+            COUNT(*) num
+            FROM
+            b_warn
+            WHERE
+            b_warn.content LIKE #{item,typeHandler=fullLike}
+            AND YEAR(b_warn.warntime) = YEAR(#{map.date,jdbcType=TIMESTAMP})
+        </foreach>
+    </select>
+    <resultMap id="personalMap" type="com.hengyunsoft.platform.warn.entity.domain.WarnPersonalCountDO">
+        <result column="name_" jdbcType="VARCHAR" property="name" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="departmentMap" type="com.hengyunsoft.platform.warn.entity.domain.WarnDepartmentCountDO">
+        <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="appMap" type="com.hengyunsoft.platform.warn.entity.domain.WarnAppCountDO">
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="statusMap" type="com.hengyunsoft.platform.warn.entity.domain.WarnStatusCountDO">
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="warnlistMap" type="com.hengyunsoft.platform.warn.entity.domain.GxqptWarnPagingDO">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="warn_id" jdbcType="BIGINT" property="warnId" />
+        <result column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="warntime" jdbcType="TIMESTAMP" property="warntime" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="handler_leve" jdbcType="INTEGER" property="handlerLeve" />
+        <result column="who_handle" jdbcType="BIT" property="whoHandle" />
+        <result column="is_handle" jdbcType="BIT" property="isHandle" />
+        <result column="rec_type" jdbcType="VARCHAR" property="recType" />
+        <result column="callback_url" jdbcType="VARCHAR" property="callbackUrl" />
+    </resultMap>
+
+    <select id="getStatusByCompany" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnParamDO" resultMap="statusMap">
+        select bw.status,count(bw.id) as count
+        from b_warn bw
+        left join b_duty bd on bd.warn_id = bw.id
+        where 1=1
+        <if test="warnParamDTO.appId != null">
+            and bd.app_id = #{warnParamDTO.appId}
+        </if>
+        <if test="warnParamDTO.orgId != null">
+            and bd.org_id = #{warnParamDTO.orgId}
+        </if>
+        <if test="warnParamDTO.startTime != null">
+            and bw.create_time &gt; #{warnParamDTO.startTime}
+        </if>
+        <if test="warnParamDTO.endTime != null">
+            and bw.create_time &lt; #{warnParamDTO.endTime}
+        </if>
+        group by bw.status
+    </select>
+    <select id="getStatusByApp" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnParamDO" resultMap="statusMap">
+        select bw.status,count(bw.id) as count
+        from b_warn bw
+        left join b_duty bd on bd.warn_id = bw.id
+        where 1=1
+        <if test="warnParamDTO.appId != null">
+            and bd.app_id = #{warnParamDTO.appId}
+        </if>
+        <if test="warnParamDTO.startTime != null">
+            and bw.create_time &gt; #{warnParamDTO.startTime}
+        </if>
+        <if test="warnParamDTO.endTime != null">
+            and bw.create_time &lt; #{warnParamDTO.endTime}
+        </if>
+        group by bw.status
+    </select>
+    <select id="getStatusByPersonal" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnParamDO" resultMap="statusMap">
+        select bw.status,count(bw.id) as count
+        from b_warn bw
+        left join b_duty bd on bd.warn_id = bw.id
+        where 1=1
+        <if test="warnParamDTO.appId != null">
+            and bd.app_id = #{warnParamDTO.appId}
+        </if>
+        <if test="warnParamDTO.orgId != null">
+            and bd.org_id = #{warnParamDTO.orgId}
+        </if>
+        <if test="warnParamDTO.departmentId != null">
+            and bd.department_id = #{warnParamDTO.departmentId}
+        </if>
+        <if test="warnParamDTO.startTime != null">
+            and bw.create_time &gt; #{warnParamDTO.startTime}
+        </if>
+        <if test="warnParamDTO.endTime != null">
+            and bw.create_time &lt; #{warnParamDTO.endTime}
+        </if>
+        group by bw.status
+    </select>
+    <select id="getHandleByPersonal" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnParamDO" resultMap="personalMap">
+        SELECT bd.name_,avg(TIMESTAMPDIFF(HOUR, bw.warntime, bw.han_time)) as count
+        from b_warn bw left join b_duty bd on bw.id=bd.warn_id where 1=1
+        <if test="warnParamDTO.appId != null">
+            and bd.app_id = #{warnParamDTO.appId}
+        </if>
+        <if test="warnParamDTO.orgId != null">
+            and bd.org_id = #{warnParamDTO.orgId}
+        </if>
+        <if test="warnParamDTO.departmentId != null">
+            and bd.department_id = #{warnParamDTO.departmentId}
+        </if>
+        <if test="warnParamDTO.startTime != null">
+            and bw.create_time &gt; #{warnParamDTO.startTime}
+        </if>
+        <if test="warnParamDTO.endTime != null">
+            and bw.create_time &lt; #{warnParamDTO.endTime}
+        </if>
+        group by bd.user_id order by count desc
+    </select>
+    <select id="getHandleByCompany" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnParamDO" resultMap="departmentMap">
+        SELECT bd.department_name,avg(TIMESTAMPDIFF(HOUR, bw.warntime, bw.han_time)) as count
+        from b_warn bw left join b_duty bd on bw.id=bd.warn_id where 1=1
+        <if test="warnParamDTO.appId != null">
+            and bd.app_id = #{warnParamDTO.appId}
+        </if>
+        <if test="warnParamDTO.orgId != null">
+            and bd.org_id = #{warnParamDTO.orgId}
+        </if>
+        <if test="warnParamDTO.startTime != null">
+            and bw.create_time &gt; #{warnParamDTO.startTime}
+        </if>
+        <if test="warnParamDTO.endTime != null">
+            and bw.create_time &lt; #{warnParamDTO.endTime}
+        </if>
+        group by bd.department_id order by count desc
+    </select>
+    <select id="getHandleByApp" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnParamDO" resultMap="departmentMap">
+        SELECT bd.org_name,avg(TIMESTAMPDIFF(HOUR, bw.warntime, bw.han_time)) as count
+        from b_warn bw left join b_duty bd on bw.id=bd.warn_id where 1=1
+        <if test="warnParamDTO.appId != null">
+            and bd.app_id = #{warnParamDTO.appId}
+        </if>
+        <if test="warnParamDTO.startTime != null">
+            and bw.create_time &gt; #{warnParamDTO.startTime}
+        </if>
+        <if test="warnParamDTO.endTime != null">
+            and bw.create_time &lt; #{warnParamDTO.endTime}
+        </if>
+        group by bd.org_id order by count desc
+    </select>
+    <select id="findList" parameterType="com.hengyunsoft.platform.warn.entity.domain.QueryWarnDO" resultMap="warnlistMap">
+        SELECT b_warn.id,b_warn.title,b_warn.content,b_warn.type,b_warn.type_id,b_warn.level,b_warn.warntime,b_warn.is_handle,b_warn.callback_url,b_sendee.warn_id,b_sendee.user_id,b_sendee.rec_type,b_sendee.status,b_sendee.handler_leve,b_sendee.result_,b_sendee.who_handle,b_duty.app_name,b_duty.app_type,b_warntype.type_name
+        FROM b_warn b_warn
+        LEFT JOIN b_sendee b_sendee ON b_warn.id = b_sendee.warn_id
+        LEFT JOIN b_duty b_duty ON b_warn.id = b_duty.warn_id
+        LEFT JOIN b_warntype b_warntype ON b_warntype.id = b_warn.type_id
+        WHERE
+        <!--如果是抄送人（==2） who_handle 可以为空，（== 1/3 代表确认人和 责任人）who_handle IS NULL 代表当前流程是否到自己这一步 应为多个确认人时 确认的顺序是有先后级别的  等到上一级确认人确认后 下一级的才可以看得到-->
+        IF (
+        b_sendee.rec_type != 2,
+
+        IF (
+        b_sendee.rec_type = 1,
+       /* #预警状态 1、未确认 2、已确认属实 3、已确认不属实 4、已处理
+        #如果数据已经确认 或是 已经处理的  直接展示*/
+        IF (
+        b_warn. status IN (2, 4),
+        1 = 1,
+        /*#确认人 当为第一位确认人时 顺序展示 b、当确认人为第二以上个时 需要判断该数据是否属实*/
+        IF (
+        b_sendee.handler_leve = 1,
+        1 = 1,
+        b_warn. status = 1
+        AND b_sendee.who_handle = 1
+        )
+        ),
+        /*#当是责任人时 需要确认此数据是否属实 需要展示属实 和已经处理的*/
+        b_warn. STATUS IN (2, 4)
+        ),
+        b_sendee.who_handle IS NULL
+        )
+       <!--<if test="!queryWarnDO.isAdmin">
+           and b_sendee.user_id=#{queryWarnDO.userId}
+       </if>-->
+        <if test="queryWarnDO.userId != null ">
+            and b_sendee.user_id=#{queryWarnDO.userId}
+        </if>
+        <if test="queryWarnDO.appName != null ">
+            and b_duty.app_name LIKE #{queryWarnDO.appName,typeHandler=fullLike}
+        </if>
+        <if test="queryWarnDO.typeList != null ">
+            and b_warn.type_id IN
+            <foreach collection="queryWarnDO.typeList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="queryWarnDO.level != null ">
+            and b_warn.level = #{queryWarnDO.level}
+        </if>
+        /*2019-03-13 未确认时 只显示 属于自己未确认的数据 ( rec_type接收人类型 1、确认人 2、抄送人 3、责任人)*/
+        <if test="queryWarnDO.status == 1">
+            and b_sendee.rec_type = 1
+            and b_sendee.who_handle =1
+        </if>
+        <if test="queryWarnDO.status == 2">
+            and b_sendee.rec_type = 1
+            and b_sendee.who_handle =0
+        </if>
+        /* status预警状态 1、未确认 2、已确认 3、已处理*/
+        <if test="queryWarnDO.status == 3 ">
+            and b_sendee.rec_type = 3
+            and b_sendee.who_handle =0
+        </if>
+        /* status==4  查询流程到自己处理的状态   还未处理的*/
+        <if test="queryWarnDO.status == 4 ">
+            and b_sendee.rec_type = 3
+            and b_sendee.who_handle =1
+        </if>
+
+        <if test="queryWarnDO.status != null and queryWarnDO.status != 4">
+            and b_sendee.status = #{queryWarnDO.status}
+        </if>
+        <if test="queryWarnDO.title != null ">
+            and b_warn.title LIKE #{queryWarnDO.title,typeHandler=fullLike}
+        </if>
+        <if test="queryWarnDO.warntimeStart != null ">
+            and b_warn.warntime &gt; #{queryWarnDO.warntimeStart}
+        </if>
+        <if test="queryWarnDO.warntimeEnd != null ">
+            and b_warn.warntime &lt; #{queryWarnDO.warntimeEnd}
+        </if>
+        ORDER BY b_warn.level desc,b_warn.warntime desc
+    </select>
+    <select id="findWarnList" parameterType="java.lang.Long" resultMap="warnlistMap">
+        SELECT b_warn.id,b_warn.title,b_warn.content,b_warn.type,b_warn.level,b_warn.warntime,b_warn.is_handle,b_warn.callback_url,b_sendee.warn_id,b_sendee.user_id,b_sendee.rec_type,b_sendee.status,b_sendee.handler_leve,b_sendee.result_,b_sendee.who_handle,b_duty.app_name,b_duty.app_type,b_warntype.id,b_warntype.type_name
+        FROM b_warn b_warn
+        LEFT JOIN b_sendee b_sendee ON b_warn.id = b_sendee.warn_id
+        LEFT JOIN b_duty b_duty ON b_warn.id = b_duty.warn_id
+        LEFT JOIN b_warntype b_warntype ON b_warntype.id = b_warn.type_id
+        WHERE b_sendee.status = "1"
+        <if test="userId != null ">
+            and b_sendee.user_id=#{userId}
+        </if>
+        ORDER BY b_warn.level desc,b_warn.warntime desc
+    </select>
+    <resultMap id="fairStatusMap" type="com.hengyunsoft.platform.warn.entity.domain.FairWarnStatusCountDO">
+        <result column="count" jdbcType="BIGINT" property="count" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="time" jdbcType="INTEGER" property="time" />
+    </resultMap>
+    <resultMap id="levelMap" type="com.hengyunsoft.platform.warn.entity.domain.FairWarnLevelCountDO">
+        <result column="count" jdbcType="BIGINT" property="count" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+    </resultMap>
+    <resultMap id="typeMap" type="com.hengyunsoft.platform.warn.entity.domain.FairWarnTypeCountDO">
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="count" jdbcType="BIGINT" property="count" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+    </resultMap>
+    <resultMap id="timeSlotMap" type="com.hengyunsoft.platform.warn.entity.domain.FairWarnNumberCountDO">
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+        <result column="tag" jdbcType="VARCHAR" property="tag" />
+        <result column="confirm_cost_time" jdbcType="VARCHAR" property="confirmCostTime" />
+        <result column="handle_cost_time" jdbcType="VARCHAR" property="handleCostTime" />
+    </resultMap>
+
+    <resultMap id="fairCountMap" type="com.hengyunsoft.platform.warn.entity.domain.FairWarnCountDO">
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="appName" jdbcType="VARCHAR" property="appName" />
+        <result column="appId" jdbcType="VARCHAR" property="appId" />
+        <result column="countNum" jdbcType="INTEGER" property="countNum" />
+    </resultMap>
+
+
+    <select id="getNumberByAppId" parameterType="java.lang.String" resultMap="fairStatusMap">
+        select bw.status,count(bw.id) as count,avg(bw.handle_cost_time) as time
+        from b_warn bw join b_duty bd on bw.id=bd.warn_id
+        where 1=1
+        <if test="appid != null and appid !='' ">
+            and bd.app_id = #{appid}
+        </if>
+        group by bw.status
+    </select>
+    <select id="getLevelByAppId" parameterType="java.lang.String" resultMap="levelMap">
+        select bw.level,count(bw.id) as count
+        from b_warn bw join b_duty bd on bw.id=bd.warn_id
+        where 1=1
+        <if test="appid != null and appid != ''">
+            and bd.app_id = #{appid}
+        </if>
+        group by bw.level
+    </select>
+    <select id="getTypeByAppId" parameterType="map" resultMap="fairCountMap">
+        select bw.type type,bd.app_name appName,bd.app_id appId,count(bw.id) as countNum
+        from b_warn bw join b_duty bd on bw.id=bd.warn_id
+        where 1=1
+        <if test="appid != null and appid !='' ">
+            and bd.app_id = #{appid}
+        </if>
+        group by bw.type,bd.app_name order by countNum desc
+    </select>
+    <select id="getNewCome" parameterType="java.util.Date" resultMap="timeSlotMap">
+        select app_id,app_name,count,tag from (
+        /*#新产生的预警数量*/
+        select bd.app_id,bd.app_name,count(bw.id) count ,'1' tag
+        from b_warn bw
+        left join b_duty bd on bd.warn_id = bw.id
+        where bw.create_time &gt; #{beforeTime} and bw.create_time &lt; #{thisTime}
+        group by bd.app_id
+        UNION  all
+        /*#已处理的数量*/
+        select bd.app_id,bd.app_name,count(bw.id) count,'2' tag
+        from b_warn bw
+        left join b_duty bd on bd.warn_id = bw.id
+        where bw.status in ('3','4')  and bw.han_time &gt; #{beforeTime} and bw.han_time &lt; #{thisTime}
+        group by bd.app_id
+        UNION  all
+       /* #待处理*/
+        select bd.app_id,bd.app_name,count(bw.id) count,'3' tag
+        from b_warn bw
+        left join b_duty bd on bd.warn_id = bw.id
+        where bw.status ='2' and bw.create_time  &gt; #{beforeTime} and bw.create_time &lt; #{thisTime}
+        group by app_id
+        UNION ALL
+        /*#未确认*/
+        select bd.app_id,bd.app_name,count(bw.id) count,'4' tag
+        from b_warn bw
+        left join b_duty bd on bd.warn_id = bw.id
+        where bw.status = '1' and bw.create_time &gt; #{beforeTime} and bw.create_time &lt; #{thisTime}
+        group by app_id
+        UNION ALL
+        /*#已确认*/
+        select bd.app_id,bd.app_name,count(bw.id) count,'5' tag
+        from b_warn bw
+        left join b_duty bd on bd.warn_id = bw.id
+        where bw.status in ('2','3','4') and bw.create_time &gt; #{beforeTime} and bw.create_time &lt; #{thisTime}
+        group by app_id
+        ) as z
+
+    </select>
+    <resultMap id="warnhandlelistMap" type="com.hengyunsoft.platform.warn.entity.domain.GxqptWarnHandlePagingDO">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="warn_id" jdbcType="BIGINT" property="warnId" />
+        <result column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="warntime" jdbcType="TIMESTAMP" property="warntime" />
+        <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+        <result column="result_" jdbcType="BIT" property="result" />
+        <result column="rec_name" jdbcType="VARCHAR" property="recName" />
+        <result column="rec_type" jdbcType="VARCHAR" property="recType" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="handTime" />
+    </resultMap>
+    <select id="findHandleList" parameterType="com.hengyunsoft.platform.warn.entity.domain.QueryWarnHandleDO" resultMap="warnhandlelistMap">
+        SELECT b_warn.id,b_warn.title,b_warn.type,b_warn.level,b_warn.warntime,b_warn.is_handle,b_warn.callback_url,b_sendee.warn_id,b_sendee.result_,b_sendee.remarks,b_sendee.rec_name,b_sendee.rec_type,b_sendee.status,b_sendee.handler_leve,b_sendee.result_,b_sendee.who_handle,b_sendee.update_time,b_duty.app_name,b_duty.app_type,b_warntype.id,b_warntype.type_name
+        FROM b_warn b_warn
+        LEFT JOIN b_sendee b_sendee ON b_warn.id = b_sendee.warn_id
+        LEFT JOIN b_duty b_duty ON b_warn.id = b_duty.warn_id
+        LEFT JOIN b_warntype b_warntype ON b_warntype.id = b_warn.type_id
+        WHERE (b_sendee.result_ = TRUE OR b_sendee.result_ = FALSE )
+        <if test="queryWarnHandleDO.warnId != null ">
+            and b_sendee.warn_id IN
+            <foreach close=")" collection="queryWarnHandleDO.warnId" index="index" item="item" open="(" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="queryWarnHandleDO.userId != null ">
+            and b_sendee.user_id=#{queryWarnHandleDO.userId}
+        </if>
+        <if test="queryWarnHandleDO.appName != null ">
+            and b_duty.app_name LIKE #{queryWarnHandleDO.appName,typeHandler=fullLike}
+        </if>
+        <if test="queryWarnHandleDO.typeList != null ">
+            and b_warn.type_id IN
+            <foreach close=")" collection="queryWarnHandleDO.typeList" index="index" item="item" open="(" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="queryWarnHandleDO.title != null ">
+            and b_warn.title LIKE #{queryWarnHandleDO.title,typeHandler=fullLike}
+        </if>
+        <if test="queryWarnHandleDO.level != null ">
+            and b_warn.level = #{queryWarnHandleDO.level}
+        </if>
+        <if test="queryWarnHandleDO.warntimeStart != null ">
+            and b_warn.warntime &gt; #{queryWarnHandleDO.warntimeStart}
+        </if>
+        <if test="queryWarnHandleDO.warntimeEnd != null ">
+            and b_warn.warntime &lt; #{queryWarnHandleDO.warntimeEnd}
+        </if>
+        ORDER BY b_warn.level desc,b_sendee.update_time desc
+    </select>
+    <select id="findWarnHandleList" parameterType="java.lang.Long" resultMap="warnhandlelistMap">
+        SELECT b_warn.id,b_warn.title,b_warn.type,b_warn.level,b_warn.warntime,b_warn.is_handle,b_warn.callback_url,b_sendee.warn_id,b_sendee.result_,b_sendee.remarks,b_sendee.update_time,b_sendee.rec_name,b_sendee.rec_type,b_sendee.status,b_sendee.handler_leve,b_sendee.result_,b_sendee.who_handle,b_duty.app_name,b_duty.app_type,b_warntype.id,b_warntype.type_name
+        FROM b_warn b_warn
+        LEFT JOIN b_sendee b_sendee ON b_warn.id = b_sendee.warn_id
+        LEFT JOIN b_duty b_duty ON b_warn.id = b_duty.warn_id
+        LEFT JOIN b_warntype b_warntype ON b_warntype.id = b_warn.type_id
+        WHERE  b_sendee.warn_id IN <foreach close=")" collection="warnId" index="index" item="item" open="(" separator=",">
+        #{item}
+    </foreach> AND
+        (b_sendee.result_ = TRUE OR b_sendee.result_ = FALSE )
+        ORDER BY b_warn.level desc,b_sendee.update_time desc
+    </select>
+    <resultMap id="warnresultlistMap" type="com.hengyunsoft.platform.warn.entity.domain.GxqptWarnResultPagingDO">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="warn_id" jdbcType="BIGINT" property="warnId" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+        <result column="result_" jdbcType="BIT" property="result" />
+        <result column="warntime" jdbcType="TIMESTAMP" property="warntime" />
+        <result column="rec_name" jdbcType="VARCHAR" property="dutyName" />
+        <result column="handle_cost_time" jdbcType="VARCHAR" property="hantimeL" />
+        <result column="confirm_cost_time" jdbcType="VARCHAR" property="contimeL" />
+    </resultMap>
+    <select id="findWarnResultList" parameterType="java.lang.Long" resultMap="warnresultlistMap">
+        SELECT b_warn.id,b_warn.title,b_warn.type,b_warn.level,b_warn.warntime,b_warn.is_handle,b_warn.callback_url,b_warn.confirm_cost_time,b_warn.handle_cost_time,b_sendee.warn_id,b_sendee.result_,b_sendee.remarks,b_sendee.rec_name,b_sendee.rec_type,b_sendee.status,b_sendee.handler_leve,b_sendee.result_,b_sendee.who_handle,b_duty.app_name,b_duty.app_type,b_warntype.id,b_warntype.type_name
+        FROM b_warn b_warn
+        LEFT JOIN b_sendee b_sendee ON b_warn.id = b_sendee.warn_id
+        LEFT JOIN b_duty b_duty ON b_warn.id = b_duty.warn_id
+        LEFT JOIN b_warntype b_warntype ON b_warntype.id = b_warn.type_id
+        WHERE (b_warn.status = "4" OR b_warn.status = "3")
+        <if test="userId != null ">
+            and b_sendee.user_id=#{userId}
+        </if>
+        ORDER BY b_warn.warntime desc
+    </select>
+    <select id="findResultList" parameterType="com.hengyunsoft.platform.warn.entity.domain.QueryWarnResultDO" resultMap="warnresultlistMap">
+        SELECT b_warn.id,b_warn.title,b_warn.type,b_warn.level,b_warn.warntime,b_warn.is_handle,b_warn.callback_url,b_warn.confirm_cost_time,b_warn.handle_cost_time,b_sendee.warn_id,b_sendee.result_,b_sendee.remarks,b_sendee.rec_name,b_sendee.rec_type,b_sendee.status,b_sendee.handler_leve,b_sendee.result_,b_sendee.who_handle,b_duty.app_name,b_duty.app_type,b_warntype.id,b_warntype.type_name
+        FROM b_warn b_warn
+        LEFT JOIN b_sendee b_sendee ON b_warn.id = b_sendee.warn_id
+        LEFT JOIN b_duty b_duty ON b_warn.id = b_duty.warn_id
+        LEFT JOIN b_warntype b_warntype ON b_warntype.id = b_warn.type_id
+        WHERE (b_warn.status = "4" OR b_warn.status = "3")
+        <if test="queryWarnResultDO.userId != null ">
+            and b_sendee.user_id=#{queryWarnResultDO.userId}
+        </if>
+        <if test="queryWarnResultDO.appName != null ">
+            and b_duty.app_name LIKE #{queryWarnResultDO.appName,typeHandler=fullLike}
+        </if>
+        <if test="queryWarnResultDO.typeList != null ">
+            and b_warn.type_id IN
+            <foreach close=")" collection="queryWarnResultDO.typeList" index="index" item="item" open="(" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="queryWarnResultDO.title != null ">
+            and b_warn.title LIKE #{queryWarnResultDO.title,typeHandler=fullLike}
+        </if>
+        <if test="queryWarnResultDO.level != null ">
+            and b_warn.level = #{queryWarnResultDO.level}
+        </if>
+        <if test="queryWarnResultDO.warntimeStart != null ">
+            and b_warn.warntime &gt; #{queryWarnResultDO.warntimeStart}
+        </if>
+        <if test="queryWarnResultDO.warntimeEnd != null ">
+            and b_warn.warntime &lt; #{queryWarnResultDO.warntimeEnd}
+        </if>
+        ORDER BY b_warn.warntime desc
+    </select>
+    <resultMap id="LevelMap" type="com.hengyunsoft.platform.warn.entity.domain.WarnLevelDO">
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <select id="findLevelCount" parameterType="java.lang.Long" resultMap="LevelMap">
+        SELECT count(bw.id) AS count,bw.level
+        FROM b_warn bw
+        LEFT JOIN b_sendee bs ON bw.id = bs.warn_id and bs.who_handle in (0,1)
+        WHERE bs.user_id = #{userId,jdbcType=BIGINT}
+--         and b_duty.biz_type = 'personnel'
+        and bs.rec_type = 3
+        GROUP BY bw.level
+        ORDER BY bw.level desc
+    </select>
+    <resultMap id="TypeMap" type="com.hengyunsoft.platform.warn.entity.domain.EmpWarnTypeResDO">
+        <result column="type_name" jdbcType="VARCHAR" property="type" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <select id="findWarnType" parameterType="java.lang.Long" resultMap="TypeMap">
+        SELECT b_warntype.type_name,count(b_warn.id) AS count
+        FROM b_warn b_warn
+        LEFT JOIN b_warntype b_warntype ON b_warn.type_id = b_warntype.id
+        LEFT JOIN b_duty b_duty ON b_warn.id = b_duty.warn_id
+        WHERE b_duty.user_id = #{userId,jdbcType=BIGINT}
+--         and b_duty.biz_type = 'personnel'
+        group by b_warn.type_id
+        order by count desc
+        LIMIT 10
+    </select>
+
+    <!--根级应用查找预警的分值 top 10  一般预警 1分   较重预警2分  严重预警3分  特别严重预警4分-->
+    <select id="findContentTenTop" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.PublicSurveyListReqDTO" resultType="com.hengyunsoft.platform.warn.entity.domain.GxqptPublicTopContentDO">
+        SELECT  bb.name, sum(bb.num) num
+        FROM
+        ( SELECT
+                duty.app_name name,
+                b.LEVEL*count(b.id) num
+            FROM
+              b_warn b
+            join b_duty duty on b.id = duty.warn_id
+            WHERE 1=1
+            <if test="surveyReqDTO.appIds != null">
+                AND duty.app_id in
+            <foreach close=")" collection="surveyReqDTO.appIds" index="index" item="item" open="(" separator=",">
+                #{item}
+            </foreach>
+            </if>
+            <if test="surveyReqDTO.date != null ">
+                AND YEAR (b.warntime) = YEAR(#{surveyReqDTO.date,jdbcType=TIMESTAMP})
+            </if>
+            GROUP BY
+            b. LEVEL, duty.biz_id
+        ) bb
+        GROUP BY bb.name
+        ORDER BY num desc
+    </select>
+</mapper>

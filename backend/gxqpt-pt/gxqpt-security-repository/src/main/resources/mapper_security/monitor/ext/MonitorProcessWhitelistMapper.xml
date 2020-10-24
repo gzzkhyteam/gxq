@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.security.repository.monitor.dao.MonitorProcessWhitelistMapper">
+
+    <select id="pageProcessWhitelist" resultMap="BaseResultMap" parameterType="java.util.Map">
+
+        select <include refid="Base_Column_List" />
+        from se_monitor_process_whitelist
+        where 1=1
+            <if test="null != param">
+                <if test="param.serverIp != null">
+                    <!--<bind name="pattern2" value="'%' + param.serverIp + '%'" />-->
+                    and server_ip like #{param.serverIp}
+                </if>
+            </if>
+    </select>
+</mapper>

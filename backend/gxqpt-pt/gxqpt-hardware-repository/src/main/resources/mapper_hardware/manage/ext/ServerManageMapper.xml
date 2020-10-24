@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.hardware.repository.manage.dao.ServerManageMapper">
+  <resultMap id="ChangeResultMap" type="com.hengyunsoft.platform.hardware.entity.manage.domian.ServerManageChangeDO">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_keyid" jdbcType="BIGINT" property="applyKeyid" />
+    <result column="server_id" jdbcType="VARCHAR" property="serverId" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="orgid" jdbcType="VARCHAR" property="orgid" />
+    <result column="orgname" jdbcType="VARCHAR" property="orgname" />
+    <result column="manage_uid" jdbcType="VARCHAR" property="manageUid" />
+    <result column="manage_uname" jdbcType="VARCHAR" property="manageUname" />
+    <result column="cpu_count" jdbcType="INTEGER" property="cpuCount" />
+    <result column="memory_size" jdbcType="INTEGER" property="memorySize" />
+    <result column="system" jdbcType="VARCHAR" property="system" />
+    <result column="net_scope" jdbcType="VARCHAR" property="netScope" />
+    <result column="open_time" jdbcType="TIMESTAMP" property="openTime" />
+    <result column="net_wide" jdbcType="INTEGER" property="netWide" />
+    <result column="pid" jdbcType="BIGINT" property="pid" />
+    <result column="origin_id" jdbcType="BIGINT" property="originId" />
+    <result column="change_count" jdbcType="INTEGER" property="changeCount" />
+    <result column="change_flag" jdbcType="BIT" property="changeFlag" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="apply_no" jdbcType="VARCHAR" property="applyNo" />
+    <result column="apply_uname" jdbcType="VARCHAR" property="applyUname" />
+    <result column="apply_time" jdbcType="TIMESTAMP" property="applyTime" />
+  </resultMap>
+  <select id="pageNewest" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    b_hd_server_manage
+    RIGHT JOIN (
+    SELECT
+    MAX(
+    b_hd_server_manage.change_count
+    ) change_manage_count,
+    origin_id change_manage_id
+    FROM
+    b_hd_server_manage
+    GROUP BY
+    b_hd_server_manage.origin_id
+    ) change_manage ON b_hd_server_manage.origin_id = change_manage.change_manage_id
+    AND b_hd_server_manage.change_count = change_manage.change_manage_count
+    WHERE
+    1=1 and use_status in(0,1)
+    <if test="obj.cpuCount != null">
+      AND cpu_count = #{obj.cpuCount}
+    </if>
+    <if test="obj.memorySize != null">
+      AND memory_size = #{obj.memorySize}
+    </if>
+    <if test="obj.system != null and obj.system != ''">
+      AND system = #{obj.system}
+    </if>
+    <if test="obj.netScope != null and obj.netScope != ''">
+      AND net_scope = #{obj.netScope}
+    </if>
+      <if test="obj.manageUid != null and obj.manageUid != ''">
+      AND manage_uid = #{obj.manageUid}
+    </if>
+      ORDER BY create_time DESC
+  </select>
+  <select id="findServerManageChange" resultMap="ChangeResultMap">
+    SELECT
+    b_hd_server_manage.id,
+    apply_keyid,
+    server_id,
+    ip,
+    orgid,
+    orgname,
+    manage_uid,
+    manage_uname,
+    cpu_count,
+    memory_size,
+    system,
+    net_scope,
+    open_time,
+    net_wide,
+    pid,
+    origin_id,
+    change_count,
+    change_flag,
+    b_hd_apply_manage.apply_no,
+    b_hd_apply_manage.apply_uname,
+    b_hd_apply_manage.apply_time
+    FROM
+        b_hd_server_manage
+    JOIN b_hd_apply_manage ON b_hd_server_manage.apply_keyid = b_hd_apply_manage.id
+    WHERE
+    1=1
+        <if test="obj.applyUname != null and obj.applyUname != ''">
+          AND apply_uname = #{obj.applyUname}
+        </if>
+        <if test="obj.netScope != null and obj.netScope != ''">
+          AND net_scope = #{obj.netScope}
+        </if>
+        <if test="obj.originId != null and obj.originId != ''">
+          AND origin_id = #{obj.originId}
+        </if>
+        <if test="obj.serverKeyid != null">
+          AND b_hd_server_manage.id = #{obj.serverKeyid}
+        </if>
+    ORDER BY change_count
+  </select>
+
+    <!--查询内存总容量 新增功能，软硬件面板-->
+    <select id="getAllMemorySize" resultType="com.hengyunsoft.platform.hardware.entity.manage.domian.ServerCountDO">
+        SELECT sum(cpu_count) cpuCount,SUM(memory_size) memorySize
+        from b_hd_server_manage servers where servers.use_status=1
+    </select>
+
+    <!--查询磁盘总容量 新增功能，软硬件面板-->
+    <select id="getAllDiskSize" resultType="long">
+       SELECT sum(disk.disk_size) diskSize from b_hd_server_manage servers
+       JOIN b_hd_disk_manage disk on servers.id = disk.server_id  where servers.use_status=1
+    </select>
+    
+    <!--查询各单位服务器数量统计-->
+    <select id="getOrgServersCount" resultType="com.hengyunsoft.platform.hardware.entity.manage.domian.OrgServerCountDO">
+        SELECT orgid orgId,orgname orgName,count(orgid) serverCount
+        from b_hd_server_manage servers WHERE  servers.use_status=1 and orgid is not null
+        GROUP BY orgid
+    </select>
+
+    <!--查询每月服务器及资源等数量-->
+    <select id="getServersCountByMonth" resultType="com.hengyunsoft.platform.hardware.entity.manage.domian.ServersCountByMonthDO" >
+        SELECT
+        date_format(servers.open_time, '%Y-%m') mon,
+        count(*) serverCount,
+        sum(servers.cpu_count) cpuCount,
+        sum(servers.memory_size) memorySize,
+        sum(tmp.disk_size) diskSize
+        FROM
+        b_hd_server_manage servers
+        LEFT JOIN (
+            SELECT servers.id,sum(disk.disk_size) disk_size
+            from b_hd_server_manage servers
+            join b_hd_disk_manage disk on servers.id = disk.server_id
+            and servers.use_status=1
+            GROUP BY servers.id
+        ) tmp on servers.id = tmp.id
+        WHERE servers.use_status=1 and
+        cast(servers.open_time AS date) &gt;= str_to_date(#{startMonth}, '%Y-%m-%d')
+        AND cast(servers.open_time AS date) &lt;= str_to_date(#{endMonth}, '%Y-%m-%d')
+        GROUP BY
+        date_format(servers.open_time, '%Y-%m')
+    </select>
+
+    <!--查询存储管理，计算资源管理，带宽管理等数据-->
+    <select id="getServerManageRes" resultType="com.hengyunsoft.platform.hardware.entity.manage.domian.ServerManageResDO">
+        SELECT servers.id,servers.ip,servers.server_id serverId,servers.orgid ,servers.orgname ,servers.manage_uid manageUid,servers.manage_uname manageUname,servers.memory_size memorySize,
+        servers.memory_percent memoryPercent,servers.cpu_count cpuCount,servers.cpu_percent cpuPercent,servers.net_wide netWide,servers.net_scope netScope,dic.`name` netScopeName,
+        servers.wide_up wideUp,servers.wide_down wideDown,disk.disk_size diskSize,servers.disk_percent diskPercent,servers.create_time createTime
+        from b_hd_server_manage servers
+        LEFT JOIN b_hd_dictionary_type dic on servers.net_scope = dic.`code`
+        LEFT JOIN (
+            SELECT servers.id dis_server_id,SUM(disk.disk_size) disk_size from b_hd_server_manage servers
+            LEFT JOIN b_hd_disk_manage disk on servers.id = disk.server_id
+            GROUP BY servers.id
+        )disk on servers.id = disk.dis_server_id
+        where 1=1
+        and servers.use_status=1
+        <if test="serverId !=null and serverId !=''">
+            and servers.server_id = #{serverId}
+        </if>
+        <if test="ip !=null and ip !=''">
+            and servers.ip = #{ip}
+        </if>
+        <if test="manageUname!=null and manageUname!=''">
+            and servers.manage_uname like CONCAT('%',#{manageUname},'%')
+        </if>
+        <if test="memorySize != null">
+            and servers.memory_size = #{memorySize}
+        </if>
+        <if test="cpuCount !=null">
+            and servers.cpu_count = #{cpuCount}
+        </if>
+        <if test="diskSize !=null ">
+            and disk.disk_size = #{diskSize}
+        </if>
+        <if test="netWide !=null ">
+            and servers.net_wide = #{netWide}
+        </if>
+        and servers.orgid in
+        <foreach collection="orgids" item="orgId" open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+    </select>
+	<!-- 获取所有的部门 -->
+	<select id="getOrgnamelist" resultType="string">
+		select distinct orgname from b_hd_server_manage where orgid is not null
+	</select>
+	<!-- 本月统计 -->
+	<select id="getThisMonthStatistics" resultType="map">
+		select 
+			sum(net_wide) net_wide,"curMonSub" type <!-- 本月回收 -->
+		from b_hd_server_manage 
+			where use_status = 0 and date_format(revert_time,'%y-%m') = date_format(#{thisMonth},'%y-%m')
+		union
+		select 
+			sum(net_wide) as net_wide,"lastMonSub" type<!-- 上月回收 -->
+		from b_hd_server_manage 
+			where use_status = 0 and date_format(revert_time,'%y-%m') = date_format(date_sub(#{thisMonth},interval 1 month),'%y-%m')
+		union
+		select 
+			sum(net_wide) net_wide,"curMonAdd" type <!-- 本月新增 -->
+		from b_hd_server_manage 
+			where use_status = 1 and date_format(create_time,'%y-%m') = date_format(#{thisMonth},'%y-%m')
+		union
+		select 
+			sum(net_wide) net_wide,"lastMonAdd" type <!-- 上月新增 -->
+		from b_hd_server_manage 
+			where use_status = 1 and date_format(create_time,'%y-%m') = date_format(date_sub(#{thisMonth},interval 1 month),'%y-%m')
+			union
+		select 
+			sum(net_wide) net_wide,"total" type <!-- 总数 -->
+		from b_hd_server_manage 
+			where use_status = 1 and date_format(create_time,'%y-%m') &lt;= date_format(#{thisMonth},'%y-%m')
+	</select>
+	<!-- 网络带宽统计 本月 -->
+	<select id="getEachOrgNetWorkBandwidthMonthStatistics" resultType="map">
+		select 
+			sum(net_wide) net_wide,orgname
+		from b_hd_server_manage
+			where use_status = 1 <!--and date_format(create_time,'%Y-%m') = date_format(#{thisMonth},'%Y-%m')-->
+		group by orgid
+		order by net_wide desc
+	</select>
+	
+	<!-- 网络带宽统计 12个月 -->
+	<select id="getEachOrgNetWorkBandwidthYearStatistics" resultType="map">
+		select 
+		ifnull(sum(net_wide),0) net_wide,orgname,date_format(create_time,'%Y-%m') time
+		from b_hd_server_manage where use_status = 1 
+		and date_format(create_time, '%Y-%m') &lt;= date_format(#{thisMonth},'%Y-%m') and orgid is not null
+		group by time,orgid
+		order by time
+	</select>
+    <!--查询cpu总和,查询使用总的和回收的-->
+    <select id="getAllSumOfCpu" resultType="int">
+        select IFNULL(sum(servers.cpu_count),0) from b_hd_server_manage servers where servers.use_status = 1
+    </select>
+
+    <!--查询本月cpu新增数据情况-->
+    <select id="getMonthAddCpuRes"  resultType="int">
+        SELECT IFNULL(sum(servers.cpu_count),0) cpuCount
+        from b_hd_server_manage servers
+        where servers.use_status = 1
+        AND cast(servers.create_time AS date) &gt;= str_to_date(#{startTime}, '%Y-%m-%d')
+        AND cast(servers.create_time AS date) &lt;= str_to_date(#{endTime}, '%Y-%m-%d')
+    </select>
+
+    <!--本月cpu回收情况-->
+    <select id="getMonthSubCpuRes"  resultType="int">
+        SELECT IFNULL(sum(servers.cpu_count),0) cpuCount
+        from b_hd_server_manage servers
+        where servers.use_status = 0
+        AND cast(servers.revert_time AS date) &gt;= str_to_date(#{startTime}, '%Y-%m-%d')
+        AND cast(servers.revert_time AS date) &lt;= str_to_date(#{endTime}, '%Y-%m-%d')
+    </select>
+    
+    <!--查询各单位cpu资源情况-->
+    <select id="getPanelOrgCpuRes" resultType="com.hengyunsoft.platform.hardware.entity.manage.domian.PanelOrgCpuCountDO">
+        SELECT IFNULL(sum(cpu_count),0) cpuCount,orgname,orgid from b_hd_server_manage servers
+        where servers.use_status=1 and orgid is not null
+        GROUP BY orgid
+    </select>
+
+    <!--查询各单位每月cpu资源-->
+    <select id="getPanelMonthOrgCpuRes" resultType="com.hengyunsoft.platform.hardware.entity.manage.domian.PanelOrgMonthCpuDO">
+        SELECT IFNULL(sum(cpu_count),0) cpuCount,orgname,orgid,date_format(create_time,'%Y-%m') mon, date_format(create_time,'%m') num
+        from b_hd_server_manage servers
+        where servers.use_status=1 and orgid is not null
+        and date_format(create_time,'%Y-%m') &gt;=#{startMonth}
+        and date_format(create_time,'%Y-%m') &lt;=#{endMonth}
+        GROUP BY orgid,date_format(create_time,'%Y-%m')
+    </select>
+    <!--获取所有基本的服务器信息-->
+    <select id="findServerManage" resultMap="BaseResultMap">
+        select id,apply_keyid,server_id,ip,orgid,orgname, 
+			manage_uid,manage_uname,cpu_count ,sum(memory_size) memory_size,system,net_scope,
+			open_time,net_wide,pid,origin_id,change_count,change_flag,
+			create_time,create_user,update_time,update_user,use_status,cpu_percent,memory_percent,disk_percent,wide_up,wide_down,revert_time
+		from b_hd_server_manage
+		where manage_uid is not null and use_status =1
+		group by orgid 
+		order by memory_size desc 
+	</select>
+</mapper>

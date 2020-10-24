@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.search.repository.exchange.dao.ShareDataDirectoryMapper">
+    <resultMap id="DirectoryResultMap" type="com.hengyunsoft.platform.search.entity.core.po.ShareDataDirectory">
+
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+        <result column="dir_name" jdbcType="VARCHAR" property="dirName" />
+        <result column="dir_code" jdbcType="VARCHAR" property="dirCode" />
+        <result column="unit_abbr" jdbcType="VARCHAR" property="unitAbbr" />
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+        <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+        <result column="desc_" jdbcType="VARCHAR" property="desc" />
+        <result column="dir_type" jdbcType="INTEGER" property="dirType" />
+        <result column="data_count" jdbcType="INTEGER" property="dataCount" />
+        <result column="see_count" jdbcType="INTEGER" property="seeCount" />
+        <result column="down_count" jdbcType="INTEGER" property="downCount" />
+        <result column="opt_type" jdbcType="INTEGER" property="optType" />
+        <result column="status_" jdbcType="INTEGER" property="status" />
+        <result column="is_bottom" jdbcType="INTEGER" property="isBottom" />
+        <result column="special_type" jdbcType="VARCHAR" property="specialType" />
+        <result column="domain" jdbcType="VARCHAR" property="domain" />
+        <result column="theme_one" jdbcType="VARCHAR" property="themeOne" />
+        <result column="theme_two" jdbcType="VARCHAR" property="themeTwo" />
+        <result column="theme_three" jdbcType="VARCHAR" property="themeThree" />
+        <result column="industry_one" jdbcType="VARCHAR" property="industryOne" />
+        <result column="industry_two" jdbcType="VARCHAR" property="industryTwo" />
+        <result column="industry_three" jdbcType="VARCHAR" property="industryThree" />
+        <result column="service_one" jdbcType="VARCHAR" property="serviceOne" />
+        <result column="service_two" jdbcType="VARCHAR" property="serviceTwo" />
+        <result column="service_three" jdbcType="VARCHAR" property="serviceThree" />
+        <result column="open_way" jdbcType="INTEGER" property="openWay" />
+        <result column="share_way" jdbcType="INTEGER" property="shareWay" />
+        <result column="data_type" jdbcType="INTEGER" property="dataType" />
+        <result column="reason_" jdbcType="LONGVARCHAR" property="reason" />
+        <result column="set_id" jdbcType="BIGINT" property="setId" />
+        <result column="data_sheet" jdbcType="INTEGER" property="dataSheet" />
+        <result column="data_status" jdbcType="INTEGER" property="dataStatus" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, apply_code, dir_name, dir_code, unit_abbr, parent_id, unit_id, desc_, dir_type,
+        data_count, see_count, down_count, opt_type, status_, is_bottom, special_type, domain,
+        theme_one, theme_two, theme_three, industry_one, industry_two, industry_three, service_one,
+        service_two, service_three, open_way, share_way, data_type, reason_, set_id, data_sheet,
+        data_status, create_time, create_user, update_time, update_user
+    </sql>
+    <select id="getAllList"  parameterType="java.util.Map" resultMap="DirectoryResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from b_share_data_directory
+        where data_status!=2 and is_bottom=2
+    </select>
+</mapper>

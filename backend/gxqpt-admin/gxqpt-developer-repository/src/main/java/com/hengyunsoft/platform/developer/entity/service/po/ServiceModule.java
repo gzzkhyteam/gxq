@@ -1,0 +1,563 @@
+package com.hengyunsoft.platform.developer.entity.service.po;
+
+import com.hengyunsoft.base.entity.BaseEntity;
+import com.hengyunsoft.validator.ValidatorGroups.MustNoneNull;
+import com.hengyunsoft.validator.annotation.FieldDesc;
+import java.io.Serializable;
+import java.util.Date;
+import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+
+public class ServiceModule extends BaseEntity<Long> implements Serializable {
+    @Range(min=Long.MIN_VALUE,max=Long.MAX_VALUE)
+    @NotNull(groups=MustNoneNull.class)
+    private Long id;
+
+    /**
+     * 图标
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("图标")
+    @Length(max=100)
+    private String logo;
+
+    /**
+     * 功能名称
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("功能名称")
+    @Length(max=30)
+    private String name;
+
+    /**
+     * 功能编码
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("功能编码")
+    @Length(max=80)
+    private String code;
+
+    /**
+     * 功能描述
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("功能描述")
+    @Length(max=300)
+    private String desc;
+
+    /**
+     * 状态： 1、正常使用中   10、已过时（有新版本取代）     20、停止使用
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("状态： 1、正常使用中   10、已过时（有新版本取代）     20、停止使用")
+    @Range(min=Short.MIN_VALUE,max=Short.MAX_VALUE)
+    private Short status;
+
+    /**
+     * 联系人邮箱
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("联系人邮箱")
+    @Length(max=50)
+    private String email;
+
+    /**
+     * 所属应用appid
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("所属应用appid")
+    @Length(max=64)
+    private String appId;
+
+    /**
+     * 模块类型
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("模块类型")
+    @Length(max=255)
+    private String moduleType;
+
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("创建人id")
+    @Range(min=Long.MIN_VALUE,max=Long.MAX_VALUE)
+    private Long createUser;
+
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("创建时间")
+    private Date createTime;
+
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("更新人id")
+    @Range(min=Long.MIN_VALUE,max=Long.MAX_VALUE)
+    private Long updateUser;
+
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("更新时间")
+    private Date updateTime;
+
+    /**
+     * 是否公有模块 所有人可调用(无需申请)
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("是否公有模块 所有人可调用(无需申请)")
+    private Boolean publicIs;
+
+    /**
+     * 是否公开模块   需要登陆才可以看到。
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("是否公开模块   需要登陆才可以看到。")
+    private Boolean publicLook;
+
+    /**
+     * API接口文档地址
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("API接口文档地址")
+    @Length(max=300)
+    private String apiSyncUrl;
+
+    /**
+     * 资源数量（接口数量）
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("资源数量（接口数量）")
+    @Range(min=Integer.MIN_VALUE,max=Integer.MAX_VALUE)
+    private Integer resourceNum;
+
+    /**
+     * 停用日期（停止使用/维护日期）
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("停用日期（停止使用/维护日期）")
+    private Date stopTime;
+
+    /**
+     * 建议使用模块
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("建议使用模块")
+    @Range(min=Long.MIN_VALUE,max=Long.MAX_VALUE)
+    private Long adviceModule;
+
+    /**
+     * 使用此服务，可以节省多少工期（人/天）
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("使用此服务，可以节省多少工期（人/天）")
+    @Range(min=Long.MIN_VALUE,max=Long.MAX_VALUE)
+    @NotNull(groups=MustNoneNull.class)
+    private Double reduceTime;
+
+    /**
+     * 使用此服务，可以节省多少前（元）
+     *
+     * @mbggenerated
+     */
+    @FieldDesc("使用此服务，可以节省多少前（元）")
+    @Range(min=Integer.MIN_VALUE,max=Integer.MAX_VALUE)
+    @NotNull(groups=MustNoneNull.class)
+    private Integer reduceCost;
+
+    private static final long serialVersionUID = 1L;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * 图标
+     *
+     * @mbggenerated
+     */
+    public String getLogo() {
+        return logo;
+    }
+
+    /**
+     * 图标
+     *
+     * @mbggenerated
+     */
+    public void setLogo(String logo) {
+        this.logo = logo == null ? null : logo.trim();
+    }
+
+    /**
+     * 功能名称
+     *
+     * @mbggenerated
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 功能名称
+     *
+     * @mbggenerated
+     */
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    /**
+     * 功能编码
+     *
+     * @mbggenerated
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * 功能编码
+     *
+     * @mbggenerated
+     */
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
+    }
+
+    /**
+     * 功能描述
+     *
+     * @mbggenerated
+     */
+    public String getDesc() {
+        return desc;
+    }
+
+    /**
+     * 功能描述
+     *
+     * @mbggenerated
+     */
+    public void setDesc(String desc) {
+        this.desc = desc == null ? null : desc.trim();
+    }
+
+    /**
+     * 状态： 1、正常使用中   10、已过时（有新版本取代）     20、停止使用
+     *
+     * @mbggenerated
+     */
+    public Short getStatus() {
+        return status;
+    }
+
+    /**
+     * 状态： 1、正常使用中   10、已过时（有新版本取代）     20、停止使用
+     *
+     * @mbggenerated
+     */
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    /**
+     * 联系人邮箱
+     *
+     * @mbggenerated
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * 联系人邮箱
+     *
+     * @mbggenerated
+     */
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
+
+    /**
+     * 所属应用appid
+     *
+     * @mbggenerated
+     */
+    public String getAppId() {
+        return appId;
+    }
+
+    /**
+     * 所属应用appid
+     *
+     * @mbggenerated
+     */
+    public void setAppId(String appId) {
+        this.appId = appId == null ? null : appId.trim();
+    }
+
+    /**
+     * 模块类型
+     *
+     * @mbggenerated
+     */
+    public String getModuleType() {
+        return moduleType;
+    }
+
+    /**
+     * 模块类型
+     *
+     * @mbggenerated
+     */
+    public void setModuleType(String moduleType) {
+        this.moduleType = moduleType == null ? null : moduleType.trim();
+    }
+
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
+    public Long getCreateUser() {
+        return createUser;
+    }
+
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
+    public void setCreateUser(Long createUser) {
+        this.createUser = createUser;
+    }
+
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
+    public Long getUpdateUser() {
+        return updateUser;
+    }
+
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
+    public void setUpdateUser(Long updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    /**
+     * 是否公有模块 所有人可调用(无需申请)
+     *
+     * @mbggenerated
+     */
+    public Boolean getPublicIs() {
+        return publicIs;
+    }
+
+    /**
+     * 是否公有模块 所有人可调用(无需申请)
+     *
+     * @mbggenerated
+     */
+    public void setPublicIs(Boolean publicIs) {
+        this.publicIs = publicIs;
+    }
+
+    /**
+     * 是否公开模块   需要登陆才可以看到。
+     *
+     * @mbggenerated
+     */
+    public Boolean getPublicLook() {
+        return publicLook;
+    }
+
+    /**
+     * 是否公开模块   需要登陆才可以看到。
+     *
+     * @mbggenerated
+     */
+    public void setPublicLook(Boolean publicLook) {
+        this.publicLook = publicLook;
+    }
+
+    /**
+     * API接口文档地址
+     *
+     * @mbggenerated
+     */
+    public String getApiSyncUrl() {
+        return apiSyncUrl;
+    }
+
+    /**
+     * API接口文档地址
+     *
+     * @mbggenerated
+     */
+    public void setApiSyncUrl(String apiSyncUrl) {
+        this.apiSyncUrl = apiSyncUrl == null ? null : apiSyncUrl.trim();
+    }
+
+    /**
+     * 资源数量（接口数量）
+     *
+     * @mbggenerated
+     */
+    public Integer getResourceNum() {
+        return resourceNum;
+    }
+
+    /**
+     * 资源数量（接口数量）
+     *
+     * @mbggenerated
+     */
+    public void setResourceNum(Integer resourceNum) {
+        this.resourceNum = resourceNum;
+    }
+
+    /**
+     * 停用日期（停止使用/维护日期）
+     *
+     * @mbggenerated
+     */
+    public Date getStopTime() {
+        return stopTime;
+    }
+
+    /**
+     * 停用日期（停止使用/维护日期）
+     *
+     * @mbggenerated
+     */
+    public void setStopTime(Date stopTime) {
+        this.stopTime = stopTime;
+    }
+
+    /**
+     * 建议使用模块
+     *
+     * @mbggenerated
+     */
+    public Long getAdviceModule() {
+        return adviceModule;
+    }
+
+    /**
+     * 建议使用模块
+     *
+     * @mbggenerated
+     */
+    public void setAdviceModule(Long adviceModule) {
+        this.adviceModule = adviceModule;
+    }
+
+    /**
+     * 使用此服务，可以节省多少工期（人/天）
+     *
+     * @mbggenerated
+     */
+    public Double getReduceTime() {
+        return reduceTime;
+    }
+
+    /**
+     * 使用此服务，可以节省多少工期（人/天）
+     *
+     * @mbggenerated
+     */
+    public void setReduceTime(Double reduceTime) {
+        this.reduceTime = reduceTime;
+    }
+
+    /**
+     * 使用此服务，可以节省多少前（元）
+     *
+     * @mbggenerated
+     */
+    public Integer getReduceCost() {
+        return reduceCost;
+    }
+
+    /**
+     * 使用此服务，可以节省多少前（元）
+     *
+     * @mbggenerated
+     */
+    public void setReduceCost(Integer reduceCost) {
+        this.reduceCost = reduceCost;
+    }
+}

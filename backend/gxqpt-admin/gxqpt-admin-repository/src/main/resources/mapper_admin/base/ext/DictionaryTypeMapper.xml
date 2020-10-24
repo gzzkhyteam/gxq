@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.base.dao.DictionaryTypeMapper">
+  <sql id="R_Column_List">
+    r.id,r.app_id, r.parent_id, r.name
+  </sql>
+  <select id="findByParentId"  parameterType="map" resultMap="BaseResultMap">
+    SELECT DISTINCT
+    <include refid="R_Column_List"/>
+    from b_dictionary_type r
+    where  r.parent_id=#{parentId,jdbcType=BIGINT}
+    and r.app_id=#{appId,jdbcType=VARCHAR}
+    and r.is_delete=0
+  </select>
+</mapper>

@@ -1,0 +1,44 @@
+gxqpt:
+  port:
+    nginx: 10087
+    eureka: 10030
+    gate: ${gxqpt.port.nginx}  # 正式环境使用nginx
+  hostname:
+    redis: 192.168.30.165      # 根据环境更改
+    rabbitmq: 192.168.30.165   # 根据环境更改
+    mysql: 192.168.30.165     # 根据环境更改
+    nginx: 127.0.0.1      # 测试不走nginx 就填写本机
+    eureka: 192.168.30.80     # 根据环境更改
+    gate: ${gxqpt.hostname.nginx}      # 正式环境使用nginx
+    auth: 192.168.30.90
+  mysql:
+    admin:
+      database: gxqpt_core_demo      # 根据环境更改
+      max-active: 100
+    port: 3218                  # 根据环境更改
+    username: root              # 数据库密码需要加密： System.out.println(ConfigTools.encrypt("your mysql password"));
+    password: LLm65c0VVd3axid9u+Y7DZeKwcODMjU95FRhxom6ApE2yZ1kbi5YzSsdAIz+edUOZH3Engm17+NyfyNczpaYlw==
+spring:
+  profiles:
+    active: demo
+  redis:
+    key-prefix: demo
+    port: 16379
+    password: SbtyMveYNfLzTks7H0apCmyStPzWJqjy
+    pool:
+      max-active: 100
+      min-idle: 2
+      max-idle: 8
+      max-wait: 100
+  rabbitmq:
+    port: 5672
+    username: gxqpt
+    password: gxqpt
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+
+id-generator:
+  machine-code: 1  # id生成器机器掩码

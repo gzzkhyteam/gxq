@@ -1,0 +1,56 @@
+gxqpt:
+  port:
+    nginx: ${server.port}
+    eureka: 10030
+    gate: 10003         # 开发环境不使用nginx
+  hostname:
+    redis: 127.0.0.1
+    rabbitmq: 192.168.1.204
+#    mysql: 127.0.0.1
+    mysql: 127.0.0.1
+    nginx: 127.0.0.1
+    eureka: 127.0.0.1
+    gate: 127.0.0.1     # eureka 实例界面实现的 statu链接   本地环境不使用nginx
+    exchange: 192.168.1.165
+  mysql:
+    exchange:
+#      database: gxqpt_exchange_test # 根据环境更改
+      database: gxqpt_exchange_prod # 根据环境更改
+    port: 3306                  # 根据环境更改
+    username: root              # 根据环境更改
+#    password: LLm65c0VVd3axid9u+Y7DZeKwcODMjU95FRhxom6ApE2yZ1kbi5YzSsdAIz+edUOZH3Engm17+NyfyNczpaYlw==
+    password: TkOa/u/MQninzDgR/cJvrcdvenaFyCBeDm8yCSzzjEue3tP1y3hsCh25i06PJk7VoUfmSHF8hVkObhZiLWgbwA==
+#    jdbcpwd: r!o@o#t$>?.123
+    jdbcpwd: 1q2w3e,wsbsjtl
+spring:
+  profiles:
+    active: dev
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq}
+    port: 5672               # 根据环境更改
+    password: guest          # 根据环境更改
+    username: guest          # 根据环境更改
+  redis:
+    host: ${gxqpt.hostname.redis}
+    port: 6379
+    key-prefix: test
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}/gxqpt-eureka/eureka/
+
+id-generator:
+  machine-code: 1  # id生成器机器掩码
+
+jdbc:
+  port: 3306
+  ip: 127.0.0.1
+  userName: root
+  dbName: gxqpt_data_warehouse
+  pwd: 1q2w3e,wsbsjtl
+#  pwd: r!o@o#t$>?.123
+
+app:
+  id: 35kj6100
+  name: 共享交换系统

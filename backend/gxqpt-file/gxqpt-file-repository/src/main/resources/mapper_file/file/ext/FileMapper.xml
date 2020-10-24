@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.file.repository.file.dao.FileMapper">
+
+    <update id="removeDirByAppIdAndId">
+        update f_file
+        set is_delete = #{isDelete}
+        where 1=1 and app_id = #{appId}
+        <if test="adminId != null">
+        and admin_id = #{adminId}
+        </if>
+        and id=#{id}
+    </update>
+
+    <update id="recycleFile">
+        UPDATE f_file
+        SET is_delete = #{isDelete}
+        WHERE 1=1 AND app_id = #{appId}
+        AND admin_id = #{adminId}
+        AND is_delete = 1
+        AND (
+            <if test="treePath != null and treePath != ''">
+                id IN (${treePath}) OR
+            </if>
+            id = #{id}
+            OR find_in_set(#{id}, tree_path)
+        )
+    </update>
+
+    <!--永久删除10天后数据-->
+    <delete id="foreverRecycleFile" parameterType="list">
+        delete from f_file where 1=1 and id = #{id}
+    </delete>
+
+    <select id="findRecycleDeleteFile" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from f_file
+        where 1=1 and app_id = #{appId}
+        and admin_id = #{adminId}
+        and is_delete = #{isDelete}
+        and id=#{id}
+    </select>
+
+    <select id="findRecycleFileNoAdmin" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from f_file
+        where 1=1
+        and is_delete = 0
+        and ( find_in_set( #{id}, tree_path) or id=#{id} )
+    </select>
+    <resultMap id="UpMap" type="com.hengyunsoft.platform.file.entity.file.domain.FileUpDO">
+        <result column="count" jdbcType="VARCHAR" property="size" />
+        <result column="up_time" jdbcType="VARCHAR" property="upTime" />
+    </resultMap>
+    <select id="fileUp" parameterType="java.lang.Long" resultMap="UpMap">
+        SELECT sum(size) AS count,DATE_FORMAT(create_time,'%Y-%m-%d') AS up_time
+        FROM f_file
+        WHERE (create_time BETWEEN date_sub(now(),interval 30 DAY ) and now())
+        and admin_id=#{userId,jdbcType=BIGINT}
+        group by up_time
+    </select>
+    <select id="findDataTypeNum" resultType="com.hengyunsoft.platform.file.entity.file.domain.DateTypeNumDO">
+        SELECT data_type dataType,count(data_type) num, sum(size) size
+        from f_file
+        where create_user = #{userId}
+        and data_type &lt;&gt; "DIR"
+        and is_delete = 0
+        and app_id = #{appId}
+        GROUP BY data_type;
+    </select>
+
+</mapper>

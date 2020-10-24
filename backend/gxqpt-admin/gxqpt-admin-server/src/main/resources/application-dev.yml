@@ -1,0 +1,36 @@
+gxqpt:
+  port:
+    nginx: ${server.port}
+    eureka: 10030
+    gate: 10003         # 开发环境不使用nginx
+  hostname:
+    redis: 127.0.0.1
+    rabbitmq: 127.0.0.1
+    mysql: 127.0.0.1
+    nginx: 127.0.0.1
+    eureka: 127.0.0.1
+    gate: 127.0.0.1     # eureka 实例界面实现的 statu链接   本地环境不使用nginx
+    admin: 127.0.0.1
+  mysql:
+    admin:
+      database: gxqpt_core_test  # 根据环境更改
+    port: 3306                  # 根据环境更改
+    username: root              # 数据库密码需要加密： System.out.println(ConfigTools.encrypt("your mysql password"));
+    password: LLm65c0VVd3axid9u+Y7DZeKwcODMjU95FRhxom6ApE2yZ1kbi5YzSsdAIz+edUOZH3Engm17+NyfyNczpaYlw==
+spring:
+  profiles:
+    active: dev
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq}
+    port: 5672               # 根据环境更改
+    password: gxqpt          # 根据环境更改
+    username: gxqpt          # 根据环境更改
+  redis:
+    host: ${gxqpt.hostname.redis}
+    port: 16379
+    key-prefix: test
+
+id-generator:
+  machine-code: 1  # id生成器机器掩码
+
+fast-url: http://127.0.0.1:10017/gxqpt-fast

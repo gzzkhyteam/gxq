@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.core.dao.LoginLogsMapper">
+
+    <!--访问用户数就是当天的登录次数, 停留时间就是退出时间减去登录时间总和-->
+  <select id="getLoginAskCount" resultType="map">
+      SELECT
+      count(*) askCount,
+      sum((TIME_TO_SEC(logout_time) - TIME_TO_SEC(login_time))/60 )as stayTime
+      FROM
+      c_login_logs
+      where
+      login_time &gt;= #{nowDay} and logout_time &lt;= #{nextDay}
+  </select>
+
+    <!--活跃用户数就是当天的登录用户数-->
+    <select id="getLoginCount" resultType="Integer">
+        SELECT count(*) asknum from (
+        SELECT count(user_id) num from c_login_logs
+        where
+        login_time &gt;= #{nowDay} and logout_time &lt;= #{nextDay}
+        GROUP BY account)t
+  </select>
+
+    <!--查询同时登录人数，异常退出计前一天-->
+    <select id="findByAppIdAndLoginDate" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            c_login_logs
+        WHERE
+            app_id = #{appId}
+        AND (
+            login_time >=  #{beginDate}
+            OR (
+                login_time >= date_add(
+                    #{beginDate},
+                    INTERVAL - 1 DAY
+                )
+                AND logout_time IS NULL
+            )
+        )
+    </select>
+
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry location="D:/Maven/repo/m2/mysql/mysql-connector-java/5.1.40/mysql-connector-java-5.1.40.jar"/>
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="false"/>
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1/gxqpt_msgs_dev"
+                        userId="root" password="r!o@o#t$>?.123"></jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--
+         新增7个属性，用于修改Example类生成时的存放路径 by：tangyh
+         [javaModelGenerator]:
+         targetExamplePackage: Example类的存放包名
+         targetExampleProject: Example类的存放项目路径
+         targetExampleSuperClass: Example的父类完整类名
+         targetGeneratedCriteriaSuperClass: Example内部类GeneratedCriteria 的父类完整类名
+         rootClass: 实体父类
+
+         [javaClientGenerator]:
+         targetIsGenMethod: 是否在dao中生成扩展的方法
+         targetSuperClass:  dao父类接口
+         targetSuperGeneric: dao泛型第一个参数
+
+         [table]:
+         enabledGxqptExt 是否在xml中生成扩展的方法
+         -->
+
+        <javaModelGenerator targetPackage="com.hengyunsoft.platform.msgs.entity.msgsmessage.po"
+                            targetProject="src\main\java"
+                            targetExamplePackage="com.hengyunsoft.platform.msgs.repository.msgsmessage.example"
+                            targetExampleProject="src\main\java"
+                            targetExampleSuperClass="com.hengyunsoft.db.example.BaseExample"
+                            targetGeneratedCriteriaSuperClass="com.hengyunsoft.db.example.BaseGeneratedCriteria"
+        >
+            <property name="rootClass" value="com.hengyunsoft.base.entity.BaseEntity&lt;Long&gt;"/>
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <sqlMapGenerator targetPackage="mapper_msgs.msgsmessage.base" targetProject="src\main\resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.hengyunsoft.platform.msgs.repository.msgsmessage.dao"
+                             targetProject="src\main\java"
+                             targetIsGenMethod="false"
+                             targetSuperClass="com.hengyunsoft.base.dao.BaseNormalDao"
+                             targetSuperGeneric="Long"
+        >
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+
+        <!--<table tableName="standard_file" domainObjectName="StandardFile" enabledGxqptExt="true">-->
+        <!--</table>-->
+        <!--<table tableName="standard_classify" domainObjectName="StandardClassify" enabledGxqptExt="false">-->
+        <!--</table>-->
+        <!--渠道-->
+        <!--<table tableName="msgs_channel_type" domainObjectName="MsgsChannel" enabledGxqptExt="false">-->
+        <!--</table>-->
+        <!--渠道类型-->
+        <!--<table tableName="msgs_channel_type" domainObjectName="Msgsattachment" enabledGxqptExt="false">-->
+        <!--</table>
+        <table tableName="msgs_channel_type" domainObjectName="Msgsattachment" enabledGxqptExt="false"></table>--> 
+        <!--<table tableName="sms_template" domainObjectName="SmsTemplate" enabledGxqptExt="false"></table>
+        <table tableName="sms_message_record" domainObjectName="SmsMessageRecord" enabledGxqptExt="false"></table> -->           
+        <!--<table tableName="wechat_message_record" domainObjectName="WeChatMessageRecord" enabledGxqptExt="false"></table> 
+        <table tableName="blog_message_record" domainObjectName="BlogMessageRecord" enabledGxqptExt="false"></table>
+        <table tableName="blog_message_cursor" domainObjectName="BlogMessageCursor" enabledGxqptExt="false"></table>
+        <table tableName="sms_message_cursor" domainObjectName="SmsMessageCursor" enabledGxqptExt="false"></table>
+        <table tableName="wechat_message_cursor" domainObjectName="WeChatMessageCursor" enabledGxqptExt="false"></table>-->
+        <!--<table tableName="blog_send_status" domainObjectName="BlogSendStatus" enabledGxqptExt="false"></table>
+        <table tableName="sms_send_status" domainObjectName="SmsSendStatus" enabledGxqptExt="false"></table>
+        <table tableName="wechat_send_status" domainObjectName="WechatSendStatus" enabledGxqptExt="false"></table> --> 
+        <table tableName="msgs_mobile_record" domainObjectName="MobileMessageRecord" enabledGxqptExt="false"></table>      
+    </context>
+</generatorConfiguration>

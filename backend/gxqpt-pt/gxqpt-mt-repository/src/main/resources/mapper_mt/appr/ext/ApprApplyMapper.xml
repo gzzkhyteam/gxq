@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.appr.dao.ApprApplyMapper">
+    <resultMap id="ApprExtBaseResultMap" type="com.hengyunsoft.platform.mt.entity.appr.po.ApprApply">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="apply_id" jdbcType="BIGINT" property="applyId"/>
+        <result column="cance_reasonl" jdbcType="LONGVARCHAR" property="canceReasonl"/>
+        <result column="unit_id" jdbcType="VARCHAR" property="unitId"/>
+        <result column="apr_code" jdbcType="VARCHAR" property="aprCode"/>
+        <result column="apr_type" jdbcType="VARCHAR" property="aprType"/>
+        <result column="apply_user_id" jdbcType="BIGINT" property="applyUserId"/>
+        <result column="apply_user_name" jdbcType="VARCHAR" property="applyUserName"/>
+        <result column="cur_state" jdbcType="INTEGER" property="curState"/>
+        <result column="cur_user_index" jdbcType="INTEGER" property="curUserIndex"/>
+        <result column="cur_apr_user_id" jdbcType="BIGINT" property="curAprUserId"/>
+        <result column="cur_apr_user_name" jdbcType="VARCHAR" property="curAprUserName"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="isRead" jdbcType="INTEGER" property="is_read"/>
+    </resultMap>
+    <!--查询我发出的申请-->
+    <select id="findPageMyApplyList" parameterType="map" resultMap="ApprExtBaseResultMap">
+        SELECT
+        f.id,
+        f.apply_id,
+        f.cance_reasonl,
+        f.unit_id,
+        f.apr_code,
+        f.apr_type,
+        f.apply_user_id,
+        f.apply_user_name,
+        f.cur_state,
+        f.cur_user_index,
+        f.cur_apr_user_id,
+        f.cur_apr_user_name,
+        f.create_user,
+        f.create_time,
+        f.update_user,
+        f.update_time
+        FROM
+        b_appr_apply AS f
+        <where>
+            AND f.create_user= #{createUser}
+            <if test="unitId != null and  unitId !=''">
+                AND f.unit_id= #{unitId}
+            </if>
+            <if test="aprType != null and aprType !=''">
+                AND f.apr_type= #{aprType}
+            </if>
+            <if test="curState != null and curState !=''">
+                AND f.cur_state= #{curState}
+            </if>
+            <if test="startCreateTime != null">
+                AND f.create_time >=#{startCreateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endCreateTime != null">
+                AND #{endCreateTime,jdbcType=TIMESTAMP}>=f.create_time
+            </if>
+        </where>
+        ORDER BY f.create_time DESC
+    </select>
+    <!--查询我收到的的申请-->
+    <select id="findPageSendMeApplyList" parameterType="map" resultMap="ApprExtBaseResultMap">
+        SELECT
+            f.id,
+            f.apply_id,
+            f.cance_reasonl,
+            f.unit_id,
+            f.apr_code,
+            f.apr_type,
+            f.apply_user_id,
+            f.apply_user_name,
+            f.cur_state,
+            f.cur_user_index,
+            f.cur_apr_user_id,
+            f.cur_apr_user_name,
+            f.create_user,
+            f.create_time,
+            f.update_user,
+            f.update_time
+        FROM
+          b_appr_apply AS f
+        INNER JOIN b_appr_person AS p ON p.apply_id = f.id
+        <where>
+            AND p.appr_user_id = #{personId}
+            <if test="unitId != null and  unitId !=''">
+                AND f.unit_id= #{unitId}
+            </if>
+            <if test="aprType != null and aprType !=''">
+                AND f.apr_type= #{aprType}
+            </if>
+            <if test="curState != null and curState !=''">
+                AND f.cur_state= #{curState}
+            </if>
+            <if test="startCreateTime != null">
+                AND f.create_time >=#{startCreateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endCreateTime != null">
+                AND #{endCreateTime,jdbcType=TIMESTAMP}>=f.create_time
+            </if>
+        </where>
+        GROUP BY  f.id
+        ORDER BY f.create_time DESC
+    </select>
+    <!--查询当前待我审批的申请-->
+    <select id="findPageCurSendMeApplyList" parameterType="map" resultMap="ApprExtBaseResultMap">
+        SELECT
+        f.id,
+        f.apply_id,
+        f.cance_reasonl,
+        f.unit_id,
+        f.apr_code,
+        f.apr_type,
+        f.apply_user_id,
+        f.apply_user_name,
+        f.cur_state,
+        f.cur_user_index,
+        f.cur_apr_user_id,
+        f.cur_apr_user_name,
+        f.create_user,
+        f.create_time,
+        f.update_user,
+        f.update_time,
+        p.is_read
+        FROM
+        b_appr_person AS p
+        INNER JOIN b_appr_apply AS f ON p.apply_id = f.id
+        AND p.appr_user_index = f.cur_user_index
+        <where>
+            AND p.user_type = 1
+            AND p.appr_user_id = #{personId}
+            <if test="unitId != null and  unitId !=''">
+                AND f.unit_id= #{unitId}
+            </if>
+            <if test="aprType != null and aprType !=''">
+                AND f.apr_type= #{aprType}
+            </if>
+            <if test="curState != null and curState !=''">
+                AND f.cur_state= #{curState}
+            </if>
+            <if test="startCreateTime != null">
+                AND f.create_time >=#{startCreateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endCreateTime != null">
+                AND #{endCreateTime,jdbcType=TIMESTAMP}>=f.create_time
+            </if>
+        </where>
+        ORDER BY f.create_time DESC
+    </select>
+    <!--查询我审批过的申请-->
+    <select id="findPagePassSendMeApplyList" parameterType="map" resultMap="ApprExtBaseResultMap">
+        SELECT
+        f.id,
+        f.apply_id,
+        f.cance_reasonl,
+        f.unit_id,
+        f.apr_code,
+        f.apr_type,
+        f.apply_user_id,
+        f.apply_user_name,
+        f.cur_state,
+        f.cur_user_index,
+        f.cur_apr_user_id,
+        f.cur_apr_user_name,
+        f.create_user,
+        f.create_time,
+        f.update_user,
+        f.update_time,
+        p.is_read
+        FROM
+        b_appr_person AS p
+        INNER JOIN b_appr_apply AS f ON p.apply_id = f.id
+        AND ((f.cur_user_index > p.appr_user_index)
+        OR ( f.cur_user_index = p.appr_user_index AND  f.cur_state = 2))
+        <where>
+            AND p.user_type = 1
+            AND p.appr_user_id = #{personId}
+            <if test="unitId != null and  unitId !=''">
+                AND f.unit_id= #{unitId}
+            </if>
+            <if test="aprType != null and aprType !=''">
+                AND f.apr_type= #{aprType}
+            </if>
+            <if test="curState != null and curState !=''">
+                AND f.cur_state= #{curState}
+            </if>
+            <if test="startCreateTime != null">
+                AND f.create_time >=#{startCreateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endCreateTime != null">
+                AND #{endCreateTime,jdbcType=TIMESTAMP}>=f.create_time
+            </if>
+        </where>
+        ORDER BY f.create_time DESC
+    </select>
+
+    <!--根据申请类型查找最后一次申请记录-->
+    <select id="findLastApplyByAprType" parameterType="java.util.Map" resultMap="ApprExtBaseResultMap">
+        SELECT
+            f.id,
+            f.apply_id,
+            f.cance_reasonl,
+            f.unit_id,
+            f.apr_code,
+            f.apr_type,
+            f.apply_user_id,
+            f.apply_user_name,
+            f.cur_state,
+            f.cur_user_index,
+            f.cur_apr_user_id,
+            f.cur_apr_user_name,
+            f.create_user,
+            f.create_time,
+            f.update_user,
+            f.update_time
+        FROM
+          b_appr_apply f
+        WHERE
+            f.apply_user_id = #{applyUserId,jdbcType=BIGINT}
+        AND  f.apr_type = #{aprType,jdbcType=VARCHAR}
+        AND  f.unit_id= #{unitId,jdbcType=VARCHAR}
+        ORDER BY f.create_time DESC LIMIT 1
+    </select>
+    <!--查询当前待我审批的申请的数量-->
+    <select id="getCurSendMeApplyCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT
+        count(*)
+        FROM
+        b_appr_person AS p
+        INNER JOIN b_appr_apply AS f ON p.apply_id = f.id
+        AND p.appr_user_index = f.cur_user_index
+        <where>
+            AND p.user_type = 1
+            AND p.appr_user_id = #{userId}
+            AND f.unit_id= #{unitId}
+        </where>
+        ORDER BY f.create_time DESC
+    </select>
+</mapper>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.modular.repository.modular.dao.ModularMapper">
+    <resultMap id="ModularDOResultMap"
+               type="com.hengyunsoft.platform.modular.entity.modular.domain.ModularDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="rep_name" jdbcType="VARCHAR" property="repName"/>
+        <result column="modular_name" jdbcType="VARCHAR" property="modularName"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="artifact_id" jdbcType="VARCHAR" property="artifactId"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="download_count" jdbcType="INTEGER" property="downloadCount"/>
+        <result column="create_company_id" jdbcType="BIGINT" property="createCompanyId" />
+    	<result column="create_company_name" jdbcType="VARCHAR" property="createCompanyName" />
+    	<result column="version" jdbcType="VARCHAR" property="version" />
+    </resultMap>
+    <!--通过id查询模块对象信息-->
+    <select id="getModularById" resultMap="ModularDOResultMap" parameterType="java.lang.Long">
+        select m.id,m.rep_name,m.modular_name,m.group_id,m.artifact_id,m.description,
+        m.create_time,m.create_company_id,m.create_company_name,m.version,
+        (select count(1) from modular_log l where l.modular_id = m.id) download_count
+        from modular m where m.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!--查询模块列表-->
+    <select id="pageModularQuery" resultMap="ModularDOResultMap"
+            parameterType="com.hengyunsoft.platform.modular.repository.modular.example.ModularQueryEntity">
+        select m.id,m.rep_name,m.modular_name,m.group_id,m.artifact_id,m.description,
+        m.create_time,m.version,
+        (select count(1) from modular_log l where m.id = l.modular_id) download_count
+        from modular m where 1=1
+        <if test="repName != null and repName !=''">
+            and rep_name = #{repName}
+        </if>
+        <if test="createUser != null and createUser !=''">
+            and create_user = #{createUser}
+        </if>
+        <if test=" mateParam != null and mateParam !=''">
+            and (modular_name LIKE CONCAT('%', #{mateParam}, '%') OR group_id LIKE CONCAT('%', #{mateParam}, '%')
+            OR artifact_id LIKE CONCAT('%', #{mateParam}, '%') OR description LIKE CONCAT('%', #{mateParam}, '%'))
+        </if>
+        <if test="groupId != null and groupId !=''">
+            and group_id = #{groupId}
+        </if>
+        <if test="artifactId != null and artifactId !=''">
+            and artifact_id = #{artifactId}
+        </if>
+        <if test="modularType != null and modularType !=''">
+            and EXISTS(select 1 from modular_category c where m.id = c.modular_id AND c.category_id = #{modularType})
+        </if>
+        <if test="modularTag != null and modularTag !=''">
+            and EXISTS(select 1 from modular_tag t where m.id = t.modular_id AND t.tag_id = #{modularTag})
+        </if>
+        ORDER by m.create_time DESC
+    </select>
+
+    <!--通过仓库名称 groupId artifactId查询模块对象-->
+    <select id="getModularByRepNameAndGidAndAid" resultMap="ModularDOResultMap"
+            parameterType="com.hengyunsoft.platform.modular.entity.modular.po.Modular">
+        SELECT m.id,m.rep_name,m.modular_name,m.group_id,m.artifact_id,m.description
+        FROM modular m
+        WHERE m.rep_name = #{repName}
+            and m.group_id = #{groupId}
+            and m.artifact_id = #{artifactId}
+    </select>
+
+    <resultMap id="findRepositoryTop10"
+               type="com.hengyunsoft.platform.modular.entity.modular.domain.ModularRepertoriesTopDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="rep_name" jdbcType="VARCHAR" property="repName"/>
+        <result column="modular_count" jdbcType="INTEGER" property="modularCount"/>
+    </resultMap>
+    <!--查询模块最多的仓库-->
+    <select id="findRepositoryTop10" resultMap="findRepositoryTop10">
+        SELECT  rep_name,COUNT(rep_name) modular_count FROM modular GROUP BY rep_name ORDER BY modular_count  DESC LIMIT 10;
+    </select>
+
+    <resultMap id="ModularCategoryDOResultMap"
+               type="com.hengyunsoft.platform.modular.entity.modular.domain.ModularCategoryAndTagDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+    </resultMap>
+
+    <!--根据模块id查询分类列表信息-->
+    <select id="findCatagoryListByModularId" resultMap="ModularCategoryDOResultMap" parameterType="java.lang.Long">
+      SELECT c.category_id id,cd.name FROM modular_category c,modular_category_def cd WHERE c.category_id=cd.id AND c.modular_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!--根据模块id查询标签列表信息-->
+    <select id="findTagListByModularId" resultMap="ModularCategoryDOResultMap" parameterType="java.lang.Long">
+        SELECT t.tag_id id,td.name FROM modular_tag t,modular_tag_def td WHERE t.tag_id=td.id AND t.modular_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!--模块活跃度榜===============================================================模块使用分析=================-->
+    <resultMap id="findModularUpdateFrequencyTop10"
+               type="com.hengyunsoft.platform.modular.entity.modular.domain.ModularHotDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="modular_name" jdbcType="VARCHAR" property="name"/>
+        <result column="hot_count" jdbcType="INTEGER" property="hotCount"/>
+    </resultMap>
+    <select id="findModularUpdateFrequencyTop10" resultMap="findModularUpdateFrequencyTop10">
+                    SELECT
+                    m.id,
+                    m.modular_name,
+                    count(1) hot_count
+                FROM
+                    modular m,
+                    modular_version mv
+                WHERE
+                    m.rep_name = mv.rep_name
+                AND m.group_id = mv.group_id
+                AND m.artifact_id = mv.artifact_id
+                GROUP BY
+                    m.rep_name,
+                    m.group_id,
+                    m.artifact_id,
+                    m.modular_name,
+                    m.id
+                ORDER BY
+                    hot_count DESC
+                LIMIT 10;
+    </select>
+
+    <!--新jar包排行======================================================================模块使用分析============================-->
+    <resultMap id="findModularLastUploadTop10"
+               type="com.hengyunsoft.platform.modular.entity.modular.domain.ModularHotDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="jar_name" jdbcType="VARCHAR" property="name"/>
+        <result column="new_count" jdbcType="INTEGER" property="hotCount"/>
+    </resultMap>
+    <select id="findModularLastUploadTop10" resultMap="findModularLastUploadTop10">
+          SELECT
+				v.id,
+				CONCAT(
+						v.artifact_id,
+				IF (
+						v.classifier IS NULL,
+						&apos;&apos;,
+						concat(&apos;-&apos;, v.classifier)
+				),
+				&apos;-&apos;,
+				v.version_
+				) AS jar_name,
+		(CASE WHEN v.classifier IS NULL OR v.classifier = &apos;&apos;
+				THEN
+					(SELECT count(1)
+        FROM modular_log l
+					WHERE v.rep_name = l.rep_name
+					AND v.group_id = l.group_id
+					AND v.artifact_id = l.artifact_id
+					AND v.version_ = l.version_
+					AND (l.classifier IS NULL OR l.classifier = &apos;&apos;))
+
+        ELSE
+				(SELECT count(1)
+        FROM modular_log l
+					WHERE v.rep_name = l.rep_name
+					AND v.group_id = l.group_id
+					AND v.artifact_id = l.artifact_id
+					AND v.version_ = l.version_
+					AND v.classifier = l.classifier	)
+				END) new_count
+				FROM modular_version v
+        ORDER BY v.create_time DESC
+        LIMIT 5;
+
+    </select>
+
+    <!--活跃提供商榜=====================================================================模块使用分析============================-->
+    <resultMap id="findSupplierTop10"
+               type="com.hengyunsoft.platform.modular.entity.modular.domain.ModularHotDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="supportname" jdbcType="VARCHAR" property="name"/>
+        <result column="countmany" jdbcType="INTEGER" property="hotCount"/>
+    </resultMap>
+    <select id="findSupplierTop10" resultMap="findSupplierTop10">
+
+    SELECT v.create_company_name supportname,
+    COUNT(1) countmany
+    FROM modular_version v
+    GROUP BY v.create_company_id
+    ORDER BY countmany
+    DESC LIMIT 5
+  </select>
+  
+  <resultMap id="modularNewestMap" type="com.hengyunsoft.platform.modular.entity.modular.dos.ModularNewestDO">
+  	   <id column="id" jdbcType="BIGINT" property="id"/>
+       <result column="modular_name" jdbcType="VARCHAR" property="name"/>
+       <result column="create_time" jdbcType="TIMESTAMP" property="date"/>
+       <result column="tag" jdbcType="VARCHAR" property="tag"/>
+       <result column="count" jdbcType="INTEGER" property="downloadNum"/>
+  </resultMap>
+  <resultMap id="modularDiscardedMap" type="com.hengyunsoft.platform.modular.entity.modular.dos.ModularDiscardedNumDO">
+       <result column="year_" jdbcType="VARCHAR" property="year"/>
+       <result column="month_" jdbcType="VARCHAR" property="month"/>
+       <result column="count" jdbcType="INTEGER" property="modularNum"/>
+  </resultMap>
+  <resultMap id="modularNumAnalysisMap" type="com.hengyunsoft.platform.modular.entity.modular.dos.ModularNumDO">
+       <result column="year_" jdbcType="VARCHAR" property="year"/>
+       <result column="month_" jdbcType="VARCHAR" property="month"/>
+       <result column="count" jdbcType="INTEGER" property="monthAddNum"/>
+  </resultMap>
+  <resultMap id="hotSupportListMap" type="com.hengyunsoft.platform.modular.entity.modular.dos.HotSupportListDO">
+       <result column="name" jdbcType="VARCHAR" property="name"/>
+       <result column="count" jdbcType="INTEGER" property="count"/>
+       <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+       <result column="avgtime" jdbcType="INTEGER" property="avgTime"/>
+  </resultMap>
+  
+  <!-- 新模块榜 -->
+  <select id="getModularNewestRanking" resultMap="modularNewestMap">
+		select a.id,a.modular_name,a.create_time,a.count,if(GROUP_CONCAT(mtd.name SEPARATOR '、') is null,"",GROUP_CONCAT(mtd.name SEPARATOR '、')) as tag from (
+				select m.id,m.modular_name,m.create_time,count(ml.id) as count		
+				from modular m 	left join modular_log ml on m.id=ml.modular_id 
+				group by m.modular_name,m.create_time
+				order by m.create_time desc) a
+		left join modular_tag mt on a.id=mt.modular_id
+		left join modular_tag_def mtd on mt.tag_id=mtd.id
+		where a.create_time between date_sub(now(),interval 6 month) and now()
+		group by a.modular_name,a.create_time
+		order by a.count desc,a.create_time desc
+  </select>
+  <!-- 模块总数 -->
+  <select id="modularNum" resultType="java.lang.Integer">
+	  select count(id) from modular
+  </select>
+  <!-- 本月新增模块数 -->
+  <select id="monthModularNum" parameterType="java.util.Date" resultType="java.lang.Integer">
+	  select count(id) from modular
+	  where create_time &gt; #{date}
+  </select>
+  <!-- 废弃模块总数 -->
+  <select id="getModularDiscardedNum" resultType="java.lang.Integer">
+	 select count(id) from modular
+	  where (update_time is null and create_time &lt; date_sub(now(),interval 1 year)) 
+     	or (update_time &lt; date_sub(now(),interval 1 year))
+  </select>
+  <!-- 本月废弃模块数 -->
+  <select id="getMonthModularDiscardedNum" parameterType="java.util.Date" resultType="java.lang.Integer">	  
+	  select count(id) from modular
+	  where (update_time is null and create_time between date_sub(#{date},interval 1 year) and date_sub(now(),interval 1 year)) 
+     	or (update_time between date_sub(#{date},interval 1 year) and date_sub(now(),interval 1 year))
+  </select> 
+  <!-- 废弃模块数 -->
+  <select id="getModularDiscardedAnalysis" resultMap="modularDiscardedMap">
+	  select date_.year_+1 as year_,date_.month_,count(*) as count from 
+	  	(SELECT YEAR( update_time ) year_,
+				MONTH( update_time ) month_ 
+			FROM
+				modular 
+			WHERE
+				( update_time BETWEEN date_sub( now( ), INTERVAL 2 YEAR ) AND date_sub( now( ), INTERVAL 1 YEAR ) ) 
+			UNION 
+			SELECT YEAR( create_time ) year_,
+				MONTH( create_time ) month_ 
+			FROM
+				modular 
+			WHERE
+				update_time is null and create_time BETWEEN date_sub( now( ), INTERVAL 2 YEAR ) 
+				AND date_sub( now( ), INTERVAL 1 YEAR ) 
+		) date_
+	  GROUP BY date_.year_,date_.month_
+  </select>
+  <!-- 模块数量分析 -->
+  <select id="getModularNumAnalysis" resultMap="modularNumAnalysisMap">
+	  select date_.year_,date_.month_,count(*) as count from 
+		(select YEAR(create_time) year_,month(create_time) month_ from modular where create_time BETWEEN date_sub(#{date},interval 11 month) and now()) date_
+	  GROUP BY date_.year_,date_.month_
+      ORDER BY date_.year_,date_.month_
+  </select>
+  <!--分页废弃模块列表-->
+  <select id="pageDiscarded" parameterType="java.lang.String" resultMap="ModularDOResultMap">
+        select m.id,m.rep_name,m.modular_name,m.group_id,m.artifact_id,m.description,
+        m.create_time,
+        (select count(1) from modular_log l where m.id = l.modular_id) download_count
+        from modular m  
+        where 
+        ((m.update_time is null and m.create_time &lt; date_sub(now(),interval 1 year)) 
+     	or (m.update_time &lt; date_sub(now(),interval 1 year)))
+        <if test="param != null and param !=''">
+            and (modular_name LIKE CONCAT('%', #{param}, '%') OR group_id LIKE CONCAT('%', #{param}, '%')
+            OR artifact_id LIKE CONCAT('%', #{param}, '%') OR description LIKE CONCAT('%', #{param}, '%'))
+        </if>        
+        ORDER by m.create_time DESC
+    </select>
+	<!--活跃提供商列表-->
+    <select id="getSupplierListTop10" resultMap="hotSupportListMap">
+	    SELECT v.create_company_name as name,COUNT(1) count,max(v.update_time) as update_time,ROUND(DATEDIFF(max(v.update_time),min(v.update_time))/COUNT(1),2) as avgtime
+	    FROM modular_version v
+	    GROUP BY v.create_company_id
+	    ORDER BY count
+	    DESC LIMIT 10
+  </select>
+</mapper>

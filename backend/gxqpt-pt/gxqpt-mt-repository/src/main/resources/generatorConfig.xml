@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry location="E:/maven/repertory/mysql/mysql-connector-java/5.1.30/mysql-connector-java-5.1.30.jar"/>
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="false"/>
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1/gxqpt_pt_test"
+                        userId="root" password="r!o@o#t$>?.123"></jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--
+         新增7个属性，用于修改Example类生成时的存放路径 by：tangyh
+         [javaModelGenerator]:
+         targetExamplePackage: Example类的存放包名
+         targetExampleProject: Example类的存放项目路径
+         targetExampleSuperClass: Example的父类完整类名
+         targetGeneratedCriteriaSuperClass: Example内部类GeneratedCriteria 的父类完整类名
+         rootClass: 实体父类
+
+         [javaClientGenerator]:
+         targetIsGenMethod: 是否在dao中生成扩展的方法
+         targetSuperClass:  dao父类接口
+         targetSuperGeneric: dao泛型第一个参数
+
+         [table]:
+         enabledGxqptExt= false时,表示表中没有appId字段，xml中只生成如下方法. EntityMapper 必须继承BaseNormalDao
+         <property name="rootClass" value="com.hengyunsoft.base.entity.BaseEntity&lt;Long&gt;"/>
+		countByExample
+		deleteByExample
+		deleteByPrimaryKey
+		removeByExample
+		removeByPrimaryKey
+		insert
+		insertSelective
+		batchInsert
+		selectByExample
+		selectEntity
+		selectByPrimaryKey
+		updateByExampleSelective
+		updateByPrimaryKeySelective
+		updateByExample
+		updateByPrimaryKey
+
+		enabledGxqptExt= true时,表示表中有appId字段，xml中额外生成如下方法. EntityMapper 必须继承BaseAllDao
+		<property name="rootClass" value="com.hengyunsoft.base.entity.CommonBaseEntity&lt;Long&gt;"/>
+
+		deleteByAppIdAndId
+		deleteByAppIdAndIds
+		removeByAppIdAndIds
+		removeByAppIdAndId
+		selectByAppIdAndId
+		selectAppIdById
+		updateByAppIdAndIdSelective
+		updateByAppIdAndId
+
+
+
+         -->
+
+        <javaModelGenerator targetPackage="com.hengyunsoft.platform.mt.entity.app.po"
+                            targetProject="src/main/java"
+                            targetExamplePackage="com.hengyunsoft.platform.mt.repository.app.example"
+                            targetExampleProject="src/main/java"
+                            targetExampleSuperClass="com.hengyunsoft.db.example.BaseExample"
+                            targetGeneratedCriteriaSuperClass="com.hengyunsoft.db.example.BaseGeneratedCriteria"
+        >
+            <property name="rootClass" value="com.hengyunsoft.base.entity.BaseEntity&lt;Long&gt;"/>
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mapper_mt.app.base" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.hengyunsoft.platform.mt.repository.app.dao"
+                             targetProject="src/main/java"
+                             targetIsGenMethod="false"
+                             targetSuperClass="com.hengyunsoft.base.dao.BaseNormalDao"
+                             targetSuperGeneric="Long"
+        >
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <table tableName="b_application" domainObjectName="Application" enabledGxqptExt="false">
+
+        </table>
+        <!--<table tableName="b_app_call_interface" domainObjectName="AppCallInterface" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!--<table tableName="b_app_component" domainObjectName="AppComponent" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!--<table tableName="b_feedback" domainObjectName="FeedBack" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!-- <table tableName="b_file" domainObjectName="File" enabledGxqptExt="false">
+         </table>-->
+        <!--  <table tableName="b_work_log_detail" domainObjectName="WorkLogDetail" enabledGxqptExt="false">
+            </table>-->
+        <!--<table tableName="b_work_log_look" domainObjectName="WorkLogLook" enabledGxqptExt="false">-->
+        <!--</table>-->
+        <!--<table tableName="f_folder" domainObjectName="Folder" enabledGxqptExt="true">-->
+        <!--</table>-->
+        <!--签到-->
+        <!--<table tableName="b_punch_clock" domainObjectName="PunchClock" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!--<table tableName="b_punch_clock_his" domainObjectName="PunchClockHis" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!--<table tableName="b_punch_clock_rule" domainObjectName="PunchClockRule" enabledGxqptExt="false">-->
+        <!--考勤统计-->
+        <!--</table>-->
+        <!--<table tableName="b_punch_attendance_statics" domainObjectName="PunchAttendanceStatics" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!--考勤审批-->
+        <!--<table tableName="b_appr_apply" domainObjectName="ApprApply" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!--<table tableName="b_appr_person" domainObjectName="ApprPerson" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!-- <table tableName="b_appr_person_order" domainObjectName="ApprPersonOrder" enabledGxqptExt="false">
+
+         </table>-->
+        <!--考勤业务-->
+        <!--<table tableName="b_appr_overtime" domainObjectName="ApprOverTime" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!--<table tableName="b_appr_leave" domainObjectName="ApprLeave" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!--<table tableName="b_appr_business" domainObjectName="ApprBusiness" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!--<table tableName="b_appr_outside" domainObjectName="ApprOutside" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+        <!--<table tableName="b_appr_attence_supply" domainObjectName="ApprAttenceSupply" enabledGxqptExt="false">-->
+
+        <!--</table>-->
+    </context>
+</generatorConfiguration>

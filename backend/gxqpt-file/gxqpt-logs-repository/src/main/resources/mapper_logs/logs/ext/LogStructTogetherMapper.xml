@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogStructTogetherMapper">
+    <resultMap id="LogStructTogetherDOResultMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogStructTogetherDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="document_id" jdbcType="VARCHAR" property="documentId" />
+        <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
+        <result column="log_type" jdbcType="VARCHAR" property="logType" />
+        <result column="detail_content" jdbcType="VARCHAR" property="detailContent" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <!--
+        @mbggenerated
+        -->
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+   <!--分页查询结构化应用系统APP列表-->
+    <select id="pageQueryStructTogether" resultMap="LogStructTogetherDOResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructTogetherExample">
+        select id,log_time,app_id,document_id,log_type,detail_content,create_time from
+            (
+            select id,log_time,app_id,'APP' as log_type,document_id, concat('类名:',IFNULL(class_name,'无'),' 日志级别:', IFNULL(level,'无') , ' 日志内容:',IFNULL(content,'无')) as detail_content,create_time from  log_struct_app3 a
+            union all
+            select id,log_time,app_id,'APACHE' as log_type,document_id,concat('远程主机:',IFNULL(host,'无'),' 请求方法:',IFNULL(method,'无'),' 远程用户:',IFNULL(remote_user,'无')) as detail_content,create_time from log_struct_apache b
+            union all
+            select id,log_time,app_id,'TOMCAT' as log_type,document_id,concat('远程主机:',IFNULL(remote_host,'无'),' 请求方法:',IFNULL(method,'无'),' 远程用户身份验证:',IFNULL(remote_check_user,'无')) as detail_content,create_time from log_struct_tomcat c
+            union all
+            select id,local_time as log_time,app_id,'NGINX' as log_type,document_id,concat('请求地址:',IFNULL(request_url,'无'),' URL跳转来源:',IFNULL(http_referer,'无'),' SS协议版本:',IFNULL(ssl_protocol,'无')) as detail_content,create_time from log_struct_nginx d
+        )abcd
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.api.dao.ShareDataApiSubscriptionMapper"
+       >
+  <resultMap id="SubInfoResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.ApiUseSubscriptionDO">
+    <!--
+    @mbggenerated
+    -->
+    <result column="applyId" jdbcType="BIGINT" property="applyId"/>
+    <result column="tableName" jdbcType="VARCHAR" property="tableName"/>
+    <result column="lastUpdateTime" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+    <result column="subId" jdbcType="BIGINT" property="subId"/>
+    <result column="applyUserId" jdbcType="BIGINT" property="applyUserId"/>
+    <result column="apiName" jdbcType="VARCHAR" property="apiName"/>
+  </resultMap>
+  <select id="selectSubcriptionInfoList" parameterType="map" resultMap="SubInfoResultMap">
+    SELECT dau.id applyId,sds.formal_table_code tableName,das.last_update_time lastUpdateTime,
+                 das.id subId,dau.create_user applyUserId,sda.api_name apiName,sdd.data_type dataType
+     FROM b_share_data_api_user dau
+    INNER JOIN b_share_data_api sda ON dau.api_id = sda.id
+    INNER JOIN b_share_data_directory sdd ON sda.dir_id = sdd.id
+    INNER JOIN b_share_data_set_ware sds ON sdd.set_id = sds.id
+    LEFT JOIN b_share_data_api_subscription das ON dau.id=das.apply_id
+    WHERE dau.is_take = 1
+    AND dau.auth_status = 3
+    AND sdd.data_type  = #{dataType}
+    <if test="setId != null and setId !=''">
+    AND sds.id = #{setId}
+    </if>
+  </select>
+</mapper>

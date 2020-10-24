@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.apply.dao.ServiceAssignModuleApplyMapper">
+
+    <resultMap id="FindMyApplyResultMap" type="com.hengyunsoft.platform.developer.entity.apply.po.domain.ServiceAssignModuleApplyDO">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="module_id" jdbcType="BIGINT" property="moduleId" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="status_" jdbcType="SMALLINT" property="status" />
+        <result column="audit_desc" jdbcType="VARCHAR" property="auditDesc" />
+        <result column="apply_desc" jdbcType="VARCHAR" property="applyDesc" />
+        <result column="audit_user" jdbcType="BIGINT" property="auditUser" />
+        <result column="apply_user" jdbcType="BIGINT" property="applyUser" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="service_assign_module_id" jdbcType="BIGINT" property="serviceAssignModuleId" />
+        <result column="apply_user_name" jdbcType="VARCHAR" property="applyUserName" />
+        <result column="audit_user_name" jdbcType="VARCHAR" property="auditUserName" />
+
+        <result column="logo_" jdbcType="VARCHAR" property="logo" />
+        <result column="name_" jdbcType="VARCHAR" property="name" />
+        <result column="code_" jdbcType="VARCHAR" property="code" />
+        <result column="desc_" jdbcType="VARCHAR" property="desc" />
+    </resultMap>
+
+  <select id="findMyApply" parameterType="com.hengyunsoft.platform.developer.entity.apply.po.ServiceAssignModuleApply" resultMap="FindMyApplyResultMap">
+        SELECT
+            t.id,
+            t.module_id,
+            t.app_id,
+            t.status_,
+            t.audit_desc,
+            t.apply_desc,
+            t.audit_user,
+            t.apply_user,
+            t.create_user,
+            t.create_time,
+            t.update_user,
+            t.update_time,
+            t.service_assign_module_id,
+            t.apply_user_name,
+            t.audit_user_name,
+            t1.logo_,
+            t1.name_,
+            t1.code_,
+            t1.desc_
+        FROM
+            c_service_assign_module_apply t
+        LEFT JOIN c_service_module t1 ON t.module_id = t1.id
+        WHERE
+            1 = 1
+        AND t.app_id = #{appId}
+        AND t.module_id = #{moduleId}
+        AND t.status_ = #{status}
+        <if test="applyUserName !=null and applyUserName != ''">
+            AND t.apply_user_name LIKE #{applyUserName,typeHandler=fullLike}
+        </if>
+
+  </select>
+
+    <select id="getByModuleId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        c_service_assign_module_apply
+        WHERE
+        module_id = #{modId}
+
+    </select>
+</mapper>

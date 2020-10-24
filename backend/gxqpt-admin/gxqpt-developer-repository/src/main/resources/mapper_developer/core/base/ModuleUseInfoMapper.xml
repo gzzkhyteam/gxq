@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.core.dao.ModuleUseInfoMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.developer.entity.core.po.ModuleUseInfo">
+    <!--
+    @mbggenerated
+    -->
+    <id column="combine_id" jdbcType="VARCHAR" property="combineId" />
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="module_id" jdbcType="VARCHAR" property="moduleId" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="use_year" jdbcType="VARCHAR" property="useYear" />
+    <result column="use_month" jdbcType="VARCHAR" property="useMonth" />
+    <result column="use_day" jdbcType="VARCHAR" property="useDay" />
+    <result column="use_hour" jdbcType="VARCHAR" property="useHour" />
+    <result column="use_weekend" jdbcType="VARCHAR" property="useWeekend" />
+    <result column="use_quarter" jdbcType="VARCHAR" property="useQuarter" />
+    <result column="total_num" jdbcType="INTEGER" property="totalNum" />
+    <result column="error_num" jdbcType="INTEGER" property="errorNum" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    combine_id, id, module_id, app_id, use_year, use_month, use_day, use_hour, use_weekend, 
+    use_quarter, total_num, error_num, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.developer.repository.core.example.ModuleUseInfoExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_module_use_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from c_module_use_info
+    where combine_id = #{combineId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.developer.repository.core.example.ModuleUseInfoExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_module_use_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_module_use_info
+    where combine_id = #{combineId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.developer.repository.core.example.ModuleUseInfoExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_module_use_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.developer.entity.core.po.ModuleUseInfo">
+    <!--
+    @mbggenerated
+    -->
+    update c_module_use_info
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.core.po.ModuleUseInfo">
+    <!--
+    @mbggenerated
+    -->
+    update c_module_use_info
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.developer.entity.core.po.ModuleUseInfo">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_module_use_info (combine_id, id, module_id, 
+      app_id, use_year, use_month, 
+      use_day, use_hour, use_weekend, 
+      use_quarter, total_num, error_num, 
+      update_time)
+    values (#{combineId,jdbcType=VARCHAR}, #{id,jdbcType=BIGINT}, #{moduleId,jdbcType=VARCHAR}, 
+      #{appId,jdbcType=VARCHAR}, #{useYear,jdbcType=VARCHAR}, #{useMonth,jdbcType=VARCHAR}, 
+      #{useDay,jdbcType=VARCHAR}, #{useHour,jdbcType=VARCHAR}, #{useWeekend,jdbcType=VARCHAR}, 
+      #{useQuarter,jdbcType=VARCHAR}, #{totalNum,jdbcType=INTEGER}, #{errorNum,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_module_use_info (combine_id, id, module_id, app_id, use_year, use_month, use_day, use_hour, use_weekend, use_quarter, total_num, error_num, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.combineId,jdbcType=VARCHAR}, #{item.id,jdbcType=BIGINT}, #{item.moduleId,jdbcType=VARCHAR}, 
+        #{item.appId,jdbcType=VARCHAR}, #{item.useYear,jdbcType=VARCHAR}, #{item.useMonth,jdbcType=VARCHAR}, 
+        #{item.useDay,jdbcType=VARCHAR}, #{item.useHour,jdbcType=VARCHAR}, #{item.useWeekend,jdbcType=VARCHAR}, 
+        #{item.useQuarter,jdbcType=VARCHAR}, #{item.totalNum,jdbcType=INTEGER}, #{item.errorNum,jdbcType=INTEGER}, 
+        #{item.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.developer.entity.core.po.ModuleUseInfo">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_module_use_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="combineId != null">
+        combine_id,
+      </if>
+      <if test="id != null">
+        id,
+      </if>
+      <if test="moduleId != null">
+        module_id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="useYear != null">
+        use_year,
+      </if>
+      <if test="useMonth != null">
+        use_month,
+      </if>
+      <if test="useDay != null">
+        use_day,
+      </if>
+      <if test="useHour != null">
+        use_hour,
+      </if>
+      <if test="useWeekend != null">
+        use_weekend,
+      </if>
+      <if test="useQuarter != null">
+        use_quarter,
+      </if>
+      <if test="totalNum != null">
+        total_num,
+      </if>
+      <if test="errorNum != null">
+        error_num,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="combineId != null">
+        #{combineId,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="moduleId != null">
+        #{moduleId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="useYear != null">
+        #{useYear,jdbcType=VARCHAR},
+      </if>
+      <if test="useMonth != null">
+        #{useMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="useDay != null">
+        #{useDay,jdbcType=VARCHAR},
+      </if>
+      <if test="useHour != null">
+        #{useHour,jdbcType=VARCHAR},
+      </if>
+      <if test="useWeekend != null">
+        #{useWeekend,jdbcType=VARCHAR},
+      </if>
+      <if test="useQuarter != null">
+        #{useQuarter,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNum != null">
+        #{totalNum,jdbcType=INTEGER},
+      </if>
+      <if test="errorNum != null">
+        #{errorNum,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.developer.repository.core.example.ModuleUseInfoExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from c_module_use_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_module_use_info
+    <set>
+      <if test="record.combineId != null">
+        combine_id = #{record.combineId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.moduleId != null">
+        module_id = #{record.moduleId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useYear != null">
+        use_year = #{record.useYear,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useMonth != null">
+        use_month = #{record.useMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useDay != null">
+        use_day = #{record.useDay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useHour != null">
+        use_hour = #{record.useHour,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useWeekend != null">
+        use_weekend = #{record.useWeekend,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useQuarter != null">
+        use_quarter = #{record.useQuarter,jdbcType=VARCHAR},
+      </if>
+      <if test="record.totalNum != null">
+        total_num = #{record.totalNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.errorNum != null">
+        error_num = #{record.errorNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_module_use_info
+    set combine_id = #{record.combineId,jdbcType=VARCHAR},
+      id = #{record.id,jdbcType=BIGINT},
+      module_id = #{record.moduleId,jdbcType=VARCHAR},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      use_year = #{record.useYear,jdbcType=VARCHAR},
+      use_month = #{record.useMonth,jdbcType=VARCHAR},
+      use_day = #{record.useDay,jdbcType=VARCHAR},
+      use_hour = #{record.useHour,jdbcType=VARCHAR},
+      use_weekend = #{record.useWeekend,jdbcType=VARCHAR},
+      use_quarter = #{record.useQuarter,jdbcType=VARCHAR},
+      total_num = #{record.totalNum,jdbcType=INTEGER},
+      error_num = #{record.errorNum,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.developer.entity.core.po.ModuleUseInfo">
+    <!--
+    @mbggenerated
+    -->
+    update c_module_use_info
+    <set>
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="moduleId != null">
+        module_id = #{moduleId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="useYear != null">
+        use_year = #{useYear,jdbcType=VARCHAR},
+      </if>
+      <if test="useMonth != null">
+        use_month = #{useMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="useDay != null">
+        use_day = #{useDay,jdbcType=VARCHAR},
+      </if>
+      <if test="useHour != null">
+        use_hour = #{useHour,jdbcType=VARCHAR},
+      </if>
+      <if test="useWeekend != null">
+        use_weekend = #{useWeekend,jdbcType=VARCHAR},
+      </if>
+      <if test="useQuarter != null">
+        use_quarter = #{useQuarter,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNum != null">
+        total_num = #{totalNum,jdbcType=INTEGER},
+      </if>
+      <if test="errorNum != null">
+        error_num = #{errorNum,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where combine_id = #{combineId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.core.po.ModuleUseInfo">
+    <!--
+    @mbggenerated
+    -->
+    update c_module_use_info
+    set id = #{id,jdbcType=BIGINT},
+      module_id = #{moduleId,jdbcType=VARCHAR},
+      app_id = #{appId,jdbcType=VARCHAR},
+      use_year = #{useYear,jdbcType=VARCHAR},
+      use_month = #{useMonth,jdbcType=VARCHAR},
+      use_day = #{useDay,jdbcType=VARCHAR},
+      use_hour = #{useHour,jdbcType=VARCHAR},
+      use_weekend = #{useWeekend,jdbcType=VARCHAR},
+      use_quarter = #{useQuarter,jdbcType=VARCHAR},
+      total_num = #{totalNum,jdbcType=INTEGER},
+      error_num = #{errorNum,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where combine_id = #{combineId,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

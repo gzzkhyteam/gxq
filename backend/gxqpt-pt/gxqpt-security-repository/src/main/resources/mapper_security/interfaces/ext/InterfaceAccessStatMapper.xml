@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.security.repository.interfaces.dao.InterfaceAccessStatMapper">
+
+
+    <select id="getApiAccessStatisticList" resultMap="BaseResultMap">
+          select stat_hour ,stat_sum
+          from se_interface_access_stat
+          where stat_date = #{statDate,jdbcType=VARCHAR}
+          and interface_config_id = #{interfaceConfigId,jdbcType=BIGINT}
+    </select>
+
+    <insert id="saveOrUpdate"
+            parameterType="com.hengyunsoft.platform.security.entity.interfaces.po.InterfaceAccessStat">
+        insert into se_interface_access_stat (interface_config_id, stat_hour,
+          stat_date, stat_sum, create_time
+          )
+        values ( #{interfaceConfigId,jdbcType=BIGINT}, #{statHour,jdbcType=INTEGER},
+          #{statDate,jdbcType=VARCHAR}, #{statSum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+          )
+          on duplicate key update
+          stat_sum = stat_sum + #{statSum,jdbcType=INTEGER}
+
+    </insert>
+</mapper>

@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.fast.document.dao.FastAppDocExtraAdviceMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocExtraAdvice">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+    <result column="lead_name" jdbcType="VARCHAR" property="leadName" />
+    <result column="lead_id" jdbcType="BIGINT" property="leadId" />
+    <result column="coordination_name" jdbcType="VARCHAR" property="coordinationName" />
+    <result column="coordination_id" jdbcType="BIGINT" property="coordinationId" />
+    <result column="undertake_room" jdbcType="VARCHAR" property="undertakeRoom" />
+    <result column="coordination_room" jdbcType="VARCHAR" property="coordinationRoom" />
+    <result column="agent_" jdbcType="VARCHAR" property="agent" />
+    <result column="urgency_degree" jdbcType="VARCHAR" property="urgencyDegree" />
+    <result column="finish_time_limit" jdbcType="TIMESTAMP" property="finishTimeLimit" />
+    <result column="content_" jdbcType="LONGVARCHAR" property="content" />
+    <result column="attachment_url" jdbcType="VARCHAR" property="attachmentUrl" />
+    <result column="desc_" jdbcType="LONGVARCHAR" property="desc" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, task_id, task_type, task_name, lead_name, lead_id, coordination_name, coordination_id, 
+    undertake_room, coordination_room, agent_, urgency_degree, finish_time_limit, content_, 
+    attachment_url, desc_, create_user, create_time, update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.document.example.FastAppDocExtraAdviceExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_fast_app_doc_extra_advice
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_fast_app_doc_extra_advice
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.developer.repository.fast.document.example.FastAppDocExtraAdviceExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_fast_app_doc_extra_advice
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="map" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_fast_app_doc_extra_advice
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_fast_app_doc_extra_advice
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.document.example.FastAppDocExtraAdviceExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_fast_app_doc_extra_advice
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_fast_app_doc_extra_advice where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_fast_app_doc_extra_advice
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_fast_app_doc_extra_advice where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocExtraAdvice">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_app_doc_extra_advice
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocExtraAdvice">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_app_doc_extra_advice
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocExtraAdvice">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_app_doc_extra_advice
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocExtraAdvice">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_app_doc_extra_advice
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocExtraAdvice">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_fast_app_doc_extra_advice (id, task_id, task_type, 
+      task_name, lead_name, lead_id, 
+      coordination_name, coordination_id, undertake_room, 
+      coordination_room, agent_, urgency_degree, 
+      finish_time_limit, content_, attachment_url, 
+      desc_, create_user, create_time, 
+      update_user, update_time)
+    values (#{id,jdbcType=BIGINT}, #{taskId,jdbcType=BIGINT}, #{taskType,jdbcType=VARCHAR}, 
+      #{taskName,jdbcType=VARCHAR}, #{leadName,jdbcType=VARCHAR}, #{leadId,jdbcType=BIGINT}, 
+      #{coordinationName,jdbcType=VARCHAR}, #{coordinationId,jdbcType=BIGINT}, #{undertakeRoom,jdbcType=VARCHAR}, 
+      #{coordinationRoom,jdbcType=VARCHAR}, #{agent,jdbcType=VARCHAR}, #{urgencyDegree,jdbcType=VARCHAR}, 
+      #{finishTimeLimit,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR}, #{attachmentUrl,jdbcType=VARCHAR}, 
+      #{desc,jdbcType=LONGVARCHAR}, #{createUser,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_fast_app_doc_extra_advice (id, task_id, task_type, task_name, lead_name, lead_id, coordination_name, coordination_id, undertake_room, coordination_room, agent_, urgency_degree, finish_time_limit, content_, attachment_url, desc_, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.taskId,jdbcType=BIGINT}, #{item.taskType,jdbcType=VARCHAR}, 
+        #{item.taskName,jdbcType=VARCHAR}, #{item.leadName,jdbcType=VARCHAR}, #{item.leadId,jdbcType=BIGINT}, 
+        #{item.coordinationName,jdbcType=VARCHAR}, #{item.coordinationId,jdbcType=BIGINT}, 
+        #{item.undertakeRoom,jdbcType=VARCHAR}, #{item.coordinationRoom,jdbcType=VARCHAR}, 
+        #{item.agent,jdbcType=VARCHAR}, #{item.urgencyDegree,jdbcType=VARCHAR}, #{item.finishTimeLimit,jdbcType=TIMESTAMP}, 
+        #{item.content,jdbcType=LONGVARCHAR}, #{item.attachmentUrl,jdbcType=VARCHAR}, #{item.desc,jdbcType=LONGVARCHAR}, 
+        #{item.createUser,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocExtraAdvice">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_fast_app_doc_extra_advice
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="taskType != null">
+        task_type,
+      </if>
+      <if test="taskName != null">
+        task_name,
+      </if>
+      <if test="leadName != null">
+        lead_name,
+      </if>
+      <if test="leadId != null">
+        lead_id,
+      </if>
+      <if test="coordinationName != null">
+        coordination_name,
+      </if>
+      <if test="coordinationId != null">
+        coordination_id,
+      </if>
+      <if test="undertakeRoom != null">
+        undertake_room,
+      </if>
+      <if test="coordinationRoom != null">
+        coordination_room,
+      </if>
+      <if test="agent != null">
+        agent_,
+      </if>
+      <if test="urgencyDegree != null">
+        urgency_degree,
+      </if>
+      <if test="finishTimeLimit != null">
+        finish_time_limit,
+      </if>
+      <if test="content != null">
+        content_,
+      </if>
+      <if test="attachmentUrl != null">
+        attachment_url,
+      </if>
+      <if test="desc != null">
+        desc_,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="taskType != null">
+        #{taskType,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null">
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="leadName != null">
+        #{leadName,jdbcType=VARCHAR},
+      </if>
+      <if test="leadId != null">
+        #{leadId,jdbcType=BIGINT},
+      </if>
+      <if test="coordinationName != null">
+        #{coordinationName,jdbcType=VARCHAR},
+      </if>
+      <if test="coordinationId != null">
+        #{coordinationId,jdbcType=BIGINT},
+      </if>
+      <if test="undertakeRoom != null">
+        #{undertakeRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="coordinationRoom != null">
+        #{coordinationRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="agent != null">
+        #{agent,jdbcType=VARCHAR},
+      </if>
+      <if test="urgencyDegree != null">
+        #{urgencyDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTimeLimit != null">
+        #{finishTimeLimit,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="attachmentUrl != null">
+        #{attachmentUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        #{desc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.document.example.FastAppDocExtraAdviceExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_fast_app_doc_extra_advice
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_app_doc_extra_advice
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.taskId != null">
+        task_id = #{record.taskId,jdbcType=BIGINT},
+      </if>
+      <if test="record.taskType != null">
+        task_type = #{record.taskType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskName != null">
+        task_name = #{record.taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.leadName != null">
+        lead_name = #{record.leadName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.leadId != null">
+        lead_id = #{record.leadId,jdbcType=BIGINT},
+      </if>
+      <if test="record.coordinationName != null">
+        coordination_name = #{record.coordinationName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.coordinationId != null">
+        coordination_id = #{record.coordinationId,jdbcType=BIGINT},
+      </if>
+      <if test="record.undertakeRoom != null">
+        undertake_room = #{record.undertakeRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="record.coordinationRoom != null">
+        coordination_room = #{record.coordinationRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="record.agent != null">
+        agent_ = #{record.agent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urgencyDegree != null">
+        urgency_degree = #{record.urgencyDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="record.finishTimeLimit != null">
+        finish_time_limit = #{record.finishTimeLimit,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.content != null">
+        content_ = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.attachmentUrl != null">
+        attachment_url = #{record.attachmentUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.desc != null">
+        desc_ = #{record.desc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_app_doc_extra_advice
+    set id = #{record.id,jdbcType=BIGINT},
+      task_id = #{record.taskId,jdbcType=BIGINT},
+      task_type = #{record.taskType,jdbcType=VARCHAR},
+      task_name = #{record.taskName,jdbcType=VARCHAR},
+      lead_name = #{record.leadName,jdbcType=VARCHAR},
+      lead_id = #{record.leadId,jdbcType=BIGINT},
+      coordination_name = #{record.coordinationName,jdbcType=VARCHAR},
+      coordination_id = #{record.coordinationId,jdbcType=BIGINT},
+      undertake_room = #{record.undertakeRoom,jdbcType=VARCHAR},
+      coordination_room = #{record.coordinationRoom,jdbcType=VARCHAR},
+      agent_ = #{record.agent,jdbcType=VARCHAR},
+      urgency_degree = #{record.urgencyDegree,jdbcType=VARCHAR},
+      finish_time_limit = #{record.finishTimeLimit,jdbcType=TIMESTAMP},
+      content_ = #{record.content,jdbcType=LONGVARCHAR},
+      attachment_url = #{record.attachmentUrl,jdbcType=VARCHAR},
+      desc_ = #{record.desc,jdbcType=LONGVARCHAR},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocExtraAdvice">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_app_doc_extra_advice
+    <set>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="taskType != null">
+        task_type = #{taskType,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null">
+        task_name = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="leadName != null">
+        lead_name = #{leadName,jdbcType=VARCHAR},
+      </if>
+      <if test="leadId != null">
+        lead_id = #{leadId,jdbcType=BIGINT},
+      </if>
+      <if test="coordinationName != null">
+        coordination_name = #{coordinationName,jdbcType=VARCHAR},
+      </if>
+      <if test="coordinationId != null">
+        coordination_id = #{coordinationId,jdbcType=BIGINT},
+      </if>
+      <if test="undertakeRoom != null">
+        undertake_room = #{undertakeRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="coordinationRoom != null">
+        coordination_room = #{coordinationRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="agent != null">
+        agent_ = #{agent,jdbcType=VARCHAR},
+      </if>
+      <if test="urgencyDegree != null">
+        urgency_degree = #{urgencyDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTimeLimit != null">
+        finish_time_limit = #{finishTimeLimit,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content_ = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="attachmentUrl != null">
+        attachment_url = #{attachmentUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        desc_ = #{desc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocExtraAdvice">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_app_doc_extra_advice
+    <set>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="taskType != null">
+        task_type = #{taskType,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null">
+        task_name = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="leadName != null">
+        lead_name = #{leadName,jdbcType=VARCHAR},
+      </if>
+      <if test="leadId != null">
+        lead_id = #{leadId,jdbcType=BIGINT},
+      </if>
+      <if test="coordinationName != null">
+        coordination_name = #{coordinationName,jdbcType=VARCHAR},
+      </if>
+      <if test="coordinationId != null">
+        coordination_id = #{coordinationId,jdbcType=BIGINT},
+      </if>
+      <if test="undertakeRoom != null">
+        undertake_room = #{undertakeRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="coordinationRoom != null">
+        coordination_room = #{coordinationRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="agent != null">
+        agent_ = #{agent,jdbcType=VARCHAR},
+      </if>
+      <if test="urgencyDegree != null">
+        urgency_degree = #{urgencyDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTimeLimit != null">
+        finish_time_limit = #{finishTimeLimit,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content_ = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="attachmentUrl != null">
+        attachment_url = #{attachmentUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        desc_ = #{desc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocExtraAdvice">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_app_doc_extra_advice
+    set task_id = #{taskId,jdbcType=BIGINT},
+      task_type = #{taskType,jdbcType=VARCHAR},
+      task_name = #{taskName,jdbcType=VARCHAR},
+      lead_name = #{leadName,jdbcType=VARCHAR},
+      lead_id = #{leadId,jdbcType=BIGINT},
+      coordination_name = #{coordinationName,jdbcType=VARCHAR},
+      coordination_id = #{coordinationId,jdbcType=BIGINT},
+      undertake_room = #{undertakeRoom,jdbcType=VARCHAR},
+      coordination_room = #{coordinationRoom,jdbcType=VARCHAR},
+      agent_ = #{agent,jdbcType=VARCHAR},
+      urgency_degree = #{urgencyDegree,jdbcType=VARCHAR},
+      finish_time_limit = #{finishTimeLimit,jdbcType=TIMESTAMP},
+      content_ = #{content,jdbcType=LONGVARCHAR},
+      attachment_url = #{attachmentUrl,jdbcType=VARCHAR},
+      desc_ = #{desc,jdbcType=LONGVARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocExtraAdvice">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_app_doc_extra_advice
+    set task_id = #{taskId,jdbcType=BIGINT},
+      task_type = #{taskType,jdbcType=VARCHAR},
+      task_name = #{taskName,jdbcType=VARCHAR},
+      lead_name = #{leadName,jdbcType=VARCHAR},
+      lead_id = #{leadId,jdbcType=BIGINT},
+      coordination_name = #{coordinationName,jdbcType=VARCHAR},
+      coordination_id = #{coordinationId,jdbcType=BIGINT},
+      undertake_room = #{undertakeRoom,jdbcType=VARCHAR},
+      coordination_room = #{coordinationRoom,jdbcType=VARCHAR},
+      agent_ = #{agent,jdbcType=VARCHAR},
+      urgency_degree = #{urgencyDegree,jdbcType=VARCHAR},
+      finish_time_limit = #{finishTimeLimit,jdbcType=TIMESTAMP},
+      content_ = #{content,jdbcType=LONGVARCHAR},
+      attachment_url = #{attachmentUrl,jdbcType=VARCHAR},
+      desc_ = #{desc,jdbcType=LONGVARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.modular.repository.modular.dao.ModularLogMapper">
+
+    <resultMap id="ModularModularAnalysisCategoryTopDOResultMap"
+               type="com.hengyunsoft.platform.modular.entity.modular.domain.ModularAnalysisCategoryTopDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="download_count" jdbcType="INTEGER" property="downloadCount"/>
+    </resultMap>
+    <!--查询下载量最多的CategoryTop10-->
+    <select id="findCategoryDownTop10" resultMap="ModularModularAnalysisCategoryTopDOResultMap">
+        SELECT mcd.id,mcd.name,COUNT(1) download_count
+            FROM modular AS m
+            INNER JOIN modular_log AS ml ON ml.modular_id = m.id
+            INNER JOIN modular_category AS mc ON m.id = mc.modular_id
+            INNER JOIN modular_category_def AS mcd ON mc.category_id = mcd.id
+            WHERE m.id = ml.modular_id AND m.id = mc.modular_id
+            GROUP BY mcd.id
+            ORDER BY download_count DESC
+            LIMIT 10
+    </select>
+
+    <resultMap id="ModularDOResultMap"
+               type="com.hengyunsoft.platform.modular.entity.modular.domain.ModularDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="rep_name" jdbcType="VARCHAR" property="repName"/>
+        <result column="modular_name" jdbcType="VARCHAR" property="modularName"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="artifact_id" jdbcType="VARCHAR" property="artifactId"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="download_count" jdbcType="INTEGER" property="downloadCount"/>
+    </resultMap>
+    <!--查询使用量最多的模块Top10-->
+    <select id="findModularDownTop10" resultMap="ModularDOResultMap">
+            SELECT
+            ml.modular_id id,m.modular_name modular_name,
+            COUNT(ml.modular_id) download_count
+          FROM modular m,modular_log ml
+          WHERE m.id = ml.modular_id
+          AND m.rep_name = ml.rep_name
+          GROUP BY ml.modular_id,m.modular_name
+          ORDER BY download_count
+          DESC LIMIT 10;
+
+    </select>
+    <!--模块日志解析更新模块日志表的模块id-->
+    <update id="updateModularId">
+        update modular_log l set l.modular_id = (select m.id from modular m
+        where m.group_id = l.group_id
+        and m.artifact_id = l.artifact_id
+        and m.rep_name = l.rep_name)
+        where l.modular_id is null or l.modular_id = '';
+    </update>
+
+
+
+    <resultMap id="downloadTop20Map" type="com.hengyunsoft.platform.modular.entity.modular.dos.ModularDownloadNumDO">
+        <result column="modular_name" jdbcType="VARCHAR" property="name"/>
+        <result column="download_count" jdbcType="INTEGER" property="count"/>
+    </resultMap>
+
+    <!--模块下载top20-->
+    <select id="getModularDownloadTop20" resultMap="downloadTop20Map">
+         SELECT
+            ml.modular_id id,m.modular_name modular_name,
+            COUNT(ml.modular_id) download_count
+          FROM modular m,modular_log ml
+          WHERE m.id = ml.modular_id
+          AND m.rep_name = ml.rep_name
+          GROUP BY ml.modular_id,m.modular_name
+          ORDER BY download_count
+          DESC LIMIT 20;
+    </select>
+    <!--模块使用量-->
+    <select id="getModularUsedNum" resultType="java.lang.Integer">
+        select count(id) from modular_log
+    </select>
+    <!--本月模块使用量-->
+    <select id="getMonthModularUsedNum" parameterType="java.util.Date" resultType="java.lang.Integer">
+        select count(id) from modular_log
+        where create_time &gt; #{date}
+    </select>
+    <!--模块使用率-->
+    <select id="getModularUsedRate" resultType="java.lang.Integer">
+        select count(if(id is null,null,1)) from (
+			select id from modular_log group by modular_id) a
+    </select>
+    <!--本月模块使用率-->
+    <select id="getMonthModularUsedRate" parameterType="java.util.Date" resultType="java.lang.Integer">
+        select count(id) from (
+			select id from modular_log 
+			where create_time &gt; #{date}
+			group by modular_id) a
+    </select>
+
+    <select id="getModularRatioSum" resultType="java.lang.Integer">
+        SELECT COUNT(*)FROM(SELECT
+        *
+        FROM
+        `modular_log`
+        WHERE <!--modular_id IN
+        <foreach collection="idLists" item="ids" index="index" open="(" close=")" separator=",">
+            #{ids}
+        </foreach>
+        AND--> create_time <![CDATA[ <= ]]> #{endDate,jdbcType=TIMESTAMP}
+        AND create_time <![CDATA[ >= ]]> #{startDate,jdbcType=TIMESTAMP}
+        GROUP BY modular_id) a
+    </select>
+
+</mapper>

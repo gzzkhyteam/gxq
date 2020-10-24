@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.security.repository.assess.dao.SafetyAssessmentMapper">
+  <resultMap id="ResultAssessmentList" type="com.hengyunsoft.platform.security.entity.assess.domain.AssessmentListDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="application_name" jdbcType="VARCHAR" property="applicationName" />
+    <result column="company" jdbcType="VARCHAR" property="company" />
+    <result column="contractor" jdbcType="VARCHAR" property="contractor" />
+    <result column="level" jdbcType="VARCHAR" property="level" />
+    <result column="assessment_time" jdbcType="TIMESTAMP" property="assessmentTime" />
+    <result column="assessment_file_name" jdbcType="VARCHAR" property="assessmentFileName" />
+    <result column="rectification_file_name" jdbcType="VARCHAR" property="rectificationFileName" />
+  </resultMap>
+
+  <select id="findAssessmentList" parameterType="java.lang.String" resultMap="ResultAssessmentList">
+    SELECT
+      a.id,
+      a.company,
+      a.application_name,
+      a.contractor,
+      b.level,
+      b.assessment_time,
+      b.assessment_file_name,
+      b.rectification_file_name
+      FROM
+      se_safety_assessment a
+      LEFT JOIN
+      (SELECT
+      *
+      FROM
+      se_safety_assessment_report
+      WHERE assessment_time IN
+      (SELECT
+      MAX(assessment_time)
+      FROM
+      se_safety_assessment_report
+      GROUP BY assessment_id)) b
+      ON a.id = b.assessment_id
+      <where>
+        <if test="name!=null and name!='' ">and a.application_name=#{name,jdbcType=VARCHAR}</if>
+        <if test="level!=null and level!='' ">and b.level = #{level,jdbcType=VARCHAR}</if>
+      </where>
+  </select>
+
+  <resultMap id="AssessmentReportMap" type="com.hengyunsoft.platform.security.entity.assess.po.SafetyAssessmentReport">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="assessment_id" jdbcType="BIGINT" property="assessmentId" />
+    <result column="level" jdbcType="VARCHAR" property="level" />
+    <result column="assessment_time" jdbcType="TIMESTAMP" property="assessmentTime" />
+    <result column="assessment_file_id" jdbcType="BIGINT" property="assessmentFileId" />
+    <result column="assessment_file_name" jdbcType="VARCHAR" property="assessmentFileName" />
+    <result column="assessment_file_url" jdbcType="VARCHAR" property="assessmentFileUrl" />
+    <result column="rectification_file_id" jdbcType="BIGINT" property="rectificationFileId" />
+    <result column="rectification_file_name" jdbcType="VARCHAR" property="rectificationFileName" />
+    <result column="rectification_file_url" jdbcType="VARCHAR" property="rectificationFileUrl" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+
+  <select id="getReportAssessmentId" parameterType="java.lang.Long" resultMap="AssessmentReportMap">
+    SELECT
+    id, assessment_id, level, assessment_time, assessment_file_id, assessment_file_name,
+    assessment_file_url, rectification_file_id, rectification_file_name, rectification_file_url,
+    remarks, create_time, create_user, update_time, update_user
+    FROM
+    se_safety_assessment_report
+    WHERE assessment_id = #{assessmentId,jdbcType=BIGINT}
+    ORDER BY assessment_time DESC LIMIT 1
+  </select>
+
+</mapper>

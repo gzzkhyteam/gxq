@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.component.dao.AppComponentMapper">
+  <select id="selectByApplicationId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT c.* FROM b_app_call_interface ci
+    INNER JOIN b_app_component c ON ci.component_id = c.id
+    WHERE ci.application_id = #{applicationId}
+  </select>
+  <select id="selectByApplicationIdTemp" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT c.* FROM b_app_call_interface_temp ci
+    INNER JOIN b_app_component c ON ci.component_id = c.id
+    WHERE ci.application_id = #{applicationId}
+  </select>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.msgs.repository.channelgroup.dao.ChannelGroupRelationMapper">
+  <resultMap id="channelNamesMap" type="com.hengyunsoft.platform.msgs.entity.msgsmessage.dos.ChannelNamesDO">
+  	  <id column="channel_group_id" jdbcType="BIGINT" property="id" />
+  	  <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <resultMap id="channelMap" type="com.hengyunsoft.platform.msgs.entity.channel.po.MsgsChannel">
+  	  <id column="id" jdbcType="BIGINT" property="id" />
+  	  <result column="channel_type" jdbcType="INTEGER" property="channelType" />
+  	  <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <!-- 获取渠道群组包含渠道名称 -->
+  <select id="getChannelNames" resultMap="channelNamesMap">
+  	select cgr.channel_group_id,mc.name 
+  	from msgs_channel_group_relation cgr left join msgs_channel mc on cgr.channel_id = mc.id
+  	where cgr.channel_group_id in 
+    <foreach close=")" collection="set" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach>  
+  </select>
+  <!-- 删除渠道群组 -->
+  <delete id="deleteByGroupId">
+  	delete from msgs_channel_group_relation where channel_group_id = #{id}
+  </delete>
+  <!-- 获取群组包含子渠道 -->
+  <select id="getByGroupId" resultMap="channelMap">
+  	select mc.id,mc.channel_type,mc.name 
+  	from msgs_channel_group_relation cgr left join msgs_channel mc on cgr.channel_id = mc.id
+  	where cgr.channel_group_id = #{id} 
+  </select>
+  <!-- 根据渠道id删除渠道群组关系 -->
+  <delete id="deleteByChannelId">
+  	delete from msgs_channel_group_relation where channel_id = #{id}
+  </delete>
+</mapper>

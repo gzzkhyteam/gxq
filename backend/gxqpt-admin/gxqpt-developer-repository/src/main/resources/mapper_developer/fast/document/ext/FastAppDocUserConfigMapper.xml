@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.fast.document.dao.FastAppDocUserConfigMapper">
+  <resultMap id="BaseResultMap1" type="com.hengyunsoft.platform.developer.entity.fast.po.document.FastAppDocUserConfig">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_type" jdbcType="VARCHAR" property="userType" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List1">
+    <!--
+    @mbggenerated
+    -->
+    id, user_type, user_id, user_name, create_user, create_time, update_user, update_time
+  </sql>
+  <select id="getByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap1">
+    <!--
+     @mbggenerated
+     -->
+    SELECT
+    <include refid="Base_Column_List1"/>
+    FROM b_fast_app_doc_user_config
+    WHERE user_id = #{userId}
+  </select>
+</mapper>

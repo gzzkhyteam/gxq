@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.fault.dao.LogManagementMapper">
+  <resultMap id="PageResultMap" type="com.hengyunsoft.platform.ops.faultdto.LogManagementPageDTO">
+
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="log_type" jdbcType="VARCHAR" property="logType" />
+    <result column="log_record" jdbcType="VARCHAR" property="logRecord" />
+    <result column="fault_level" jdbcType="VARCHAR" property="faultLevel" />
+    <result column="fault_classification" jdbcType="VARCHAR" property="faultClassification" />
+    <result column="deal_user" jdbcType="BIGINT" property="dealUser" />
+    <result column="deal_time" jdbcType="TIMESTAMP" property="dealTime" />
+  </resultMap>
+  <!--查询运维日志分页信息-->
+  <select id="findPage"  parameterType="java.util.Map" resultMap="PageResultMap">
+    SELECT c.id,c.code, c.log_type,
+    c.log_record,c.fault_level,
+    c.fault_classification,c.deal_user,
+    c.deal_time
+    FROM b_yw_log_management c
+    <where>
+      <if test="logType!= null and logType!=''">
+        and  c.log_type =#{logType,jdbcType=VARCHAR}
+      </if>
+      <if test="faultClassification!= null and faultClassification!=''">
+        and  c.fault_classification =#{faultClassification,jdbcType=VARCHAR}
+      </if>
+      <if test="dealUser!= null and dealUser!=''">
+        and  c.deal_user =#{dealUser,jdbcType=BIGINT}
+      </if>
+    </where>
+    order by c.create_time desc
+  </select>
+
+</mapper>

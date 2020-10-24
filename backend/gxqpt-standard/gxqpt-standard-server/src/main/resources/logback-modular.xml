@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+
+    <appender name="ROOT_APPENDER_MODULAR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/root_modular.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/root_modular-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SERVICE_APPENDER_MODULAR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/service_modular.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/service_modular-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="IMPL_APPENDER_MODULAR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/impl_modular.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/impl_modular-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SQL_APPENDER_MODULAR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/sql_modular.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/sql_modular-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+
+
+    <root level="${log.level.console}" >
+        <appender-ref ref="CONSOLE_APPENDER"/>
+        <appender-ref ref="ROOT_APPENDER_MODULAR"/>
+    </root>
+
+    <logger name="com.hengyunsoft.platform.modular.repository" additivity="true" level="${log.level.service}">
+        <appender-ref ref = "SERVICE_APPENDER_MODULAR"/>
+    </logger>
+    <logger name="com.hengyunsoft.platform.modular.impl" additivity="true" level="${log.level.impl}">
+        <appender-ref ref = "IMPL_APPENDER_MODULAR"/>
+    </logger>
+
+    <logger name="com.hengyunsoft.platform.modular.repository.modular.dao" additivity="false" level="${log.level.sql}">
+        <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+        <appender-ref ref = "SQL_APPENDER_MODULAR"/>
+    </logger>
+
+</included>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.core.dao.UserMapper">
+    <resultMap id="UserManagerResultMap" type="com.hengyunsoft.platform.admin.entity.core.domain.UserManagerDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="account_" jdbcType="VARCHAR" property="account"/>
+        <result column="password_" jdbcType="VARCHAR" property="password"/>
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="sex_" jdbcType="CHAR" property="sex"/>
+        <result column="birthday_" jdbcType="TIMESTAMP" property="birthday"/>
+        <result column="nation_" jdbcType="VARCHAR" property="nation"/>
+        <result column="photo" jdbcType="VARCHAR" property="photo"/>
+        <result column="officetel" jdbcType="VARCHAR" property="officetel"/>
+        <result column="phone_" jdbcType="VARCHAR" property="phone"/>
+        <result column="work_desc" jdbcType="VARCHAR" property="workDesc"/>
+        <result column="work_status" jdbcType="VARCHAR" property="workStatus"/>
+        <result column="loginable" jdbcType="BIT" property="loginable"/>
+        <result column="own_system" jdbcType="VARCHAR" property="ownSystem"/>
+        <result column="descrption" jdbcType="VARCHAR" property="descrption"/>
+        <result column="type_" jdbcType="VARCHAR" property="type"/>
+        <result column="sort_value" jdbcType="INTEGER" property="sortValue"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="tag" jdbcType="VARCHAR" property="tag"/>
+        <result column="relate" jdbcType="VARCHAR" property="relate"/>
+        <result column="assignId" jdbcType="BIGINT" property="assignId"/>
+        <result column="roleId" jdbcType="BIGINT" property="roleId"/>
+    </resultMap>
+    <sql id="Extend_Column_List">
+        <!--
+        @mbggenerated
+        -->
+        u.id, u.account_, u.password_, u.name_, u.sex_,
+        u.birthday_, u.nation_, u.photo, u.officetel, u.phone_,
+        u.work_desc, u.work_status, u.loginable, u.own_system,
+        u.descrption, u.type_, u.sort_value, u.create_user,
+        u.create_time, u.update_user, u.update_time
+    </sql>
+    <!--判断是否平台管理员
+    @wz-->
+    <select id="isAdminManager" parameterType="Long" resultType="java.lang.Integer">
+    select count(c_assign_role.id)
+    from c_assign_role
+    join c_user on c_assign_role.user_id=c_user.id
+    join c_role on c_assign_role.role_id=c_role.id
+    where 1=1
+    and c_role.code_='gxq_pt_admin'
+    and c_user.id=#{id,jdbcType=BIGINT}
+  </select>
+
+    <select id="seleteUserByAppIdAndCode"
+            parameterType="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.GxqptUserDO"
+            resultMap="BaseResultMap">
+    SELECT * FROM c_user u
+    INNER JOIN c_assign_role ar ON u.id = ar.user_id AND role_id in(SELECT id FROM c_role
+    WHERE code_ = #{code}
+    AND app_id = #{appId})
+  </select>
+
+    <!--根据emp的id查询对应user(暂未用)
+    @wz-->
+    <select id="findUserByEmp" parameterType="String" resultMap="BaseResultMap">
+        select
+        <include refid="Extend_Column_List"/>
+        from c_user u
+        join c_gxqpt_emp on u.id=c_gxqpt_emp.gxqpt_emp_id
+        where c_gxqpt_emp.id=#{id,jdbcType=VARCHAR}
+    </select>
+
+    <!--查询应用的所有管理员
+    @wz-->
+    <select id="findUserManagerByApp" parameterType="String" resultMap="UserManagerResultMap">
+        select distinct
+        <include refid="Extend_Column_List"/>,
+        if(c_role.app_id!='',1,0) tag
+        from c_user u
+        left join ( c_assign_role
+        join c_role on c_assign_role.role_id=c_role.id
+        and c_role.app_id=#{appId,jdbcType=VARCHAR} and c_role.code_='app_admin' ) on u.id= c_assign_role.user_id
+        where 1=1
+        <if test="account!= null and account!= ''">
+            and u.account_=#{account,jdbcType=VARCHAR}
+        </if>
+        <if test="name!= null and name!= ''">
+            and u.name_ like #{name,typeHandler=fullLike}
+        </if>
+        order by tag desc,u.sort_value
+    </select>
+
+    <!--查询应用的当前有管理员
+    @wz-->
+    <select id="findUserManagerByAppId" parameterType="String" resultMap="UserManagerResultMap">
+        select distinct
+        <include refid="Extend_Column_List"/>
+        from c_user u
+        left join ( c_assign_role
+        join c_role on c_assign_role.role_id=c_role.id
+        and c_role.app_id=#{appId,jdbcType=VARCHAR} and c_role.code_='app_admin' ) on u.id= c_assign_role.user_id
+        where c_role.app_id is not NULL LIMIT 1
+    </select>
+
+    <!--查询应用的所有管理员,过滤掉非管理员的user
+    @wz-->
+    <select id="findUserOnlyManagerByApp" parameterType="String" resultMap="UserManagerResultMap">
+        select
+        <include refid="Extend_Column_List"/>
+        from c_user u
+        join c_assign_role on u.id= c_assign_role.user_id
+        join c_role on c_assign_role.role_id=c_role.id
+        and c_role.app_id=#{appId,jdbcType=VARCHAR}
+        group by u.id
+        order by u.sort_value
+    </select>
+    <!--查询主机管理员列表-->
+    <select id="hostAdminList" parameterType="String" resultMap="UserManagerResultMap">
+        select cu.id,cu.name_,cu.account_,cu.phone_,cu.officetel, NOT ISNULL(cr.id) as relate, car.id as assignId,cr.id as roleId
+        from c_role cr join c_assign_role car on cr.id = car.role_id
+        RIGHT JOIN c_user cu on cu.id = car.user_id
+        <if test="hostId != null and hostId != ''">
+            and cr.biz_flag = #{hostId}
+        </if>
+        <where>
+            <if test="name != null and name != ''">
+                cu.name_ LIKE #{name,typeHandler=fullLike}
+            </if>
+            <if test="userId != null and userId != ''">
+                and cu.id=#{userId}
+            </if>
+            <if test="account != null and account != ''">
+                and cu.account_ = #{account}
+            </if>
+        </where>
+    </select>
+    <!--获取主机创建人 -->
+    <select id="findHostCreateUser" resultMap="BaseResultMap">
+        SELECT cu.id,cu.name_ from c_host ch JOIN c_user cu on cu.id =ch.create_user
+    </select>
+    <!--管理员分页查询，0：不是管理员;1：是管理员-->
+    <select id="pageManagerByOrg" resultMap="UserManagerResultMap">
+        SELECT DISTINCT
+        <include refid="Extend_Column_List"/>,
+
+        IF (
+        c_role.biz_flag = #{orgId,jdbcType=VARCHAR},
+        1,
+        0
+        ) tag
+        FROM
+        c_user u
+        JOIN c_gxqpt_emp_identity cei ON cei.org_id = #{orgId,jdbcType=VARCHAR} and cei.isdelete='0' and cei.isenable='1'
+        AND u.id = cei.user_id
+        LEFT JOIN (
+        c_assign_role
+        JOIN c_role ON c_assign_role.role_id = c_role.id
+        AND c_role.biz_flag = #{orgId,jdbcType=VARCHAR}
+        ) ON u.id = c_assign_role.user_id
+        UNION
+        SELECT DISTINCT
+        u2.id,
+        u2.account_,
+        u2.password_,
+        u2.name_,
+        u2.sex_,
+        u2.birthday_,
+        u2.nation_,
+        u2.photo,
+        u2.officetel,
+        u2.phone_,
+        u2.work_desc,
+        u2.work_status,
+        u2.loginable,
+        u2.own_system,
+        u2.descrption,
+        u2.type_,
+        u2.sort_value,
+        u2.create_user,
+        u2.create_time,
+        u2.update_user,
+        u2.update_time,
+
+        IF (
+        c_role.biz_flag = #{orgId,jdbcType=VARCHAR},
+        1,
+        0
+        ) tag
+        FROM
+        c_user u2
+        JOIN c_gxqpt_emp ON u2.id = c_gxqpt_emp.gxqpt_emp_id and c_gxqpt_emp.isdelete='0' and c_gxqpt_emp.isenable='1'
+        AND c_gxqpt_emp.mainorgid = #{orgId,jdbcType=VARCHAR}
+        LEFT JOIN (
+        c_assign_role
+        JOIN c_role ON c_assign_role.role_id = c_role.id
+        AND c_role.biz_flag = #{orgId,jdbcType=VARCHAR}
+        ) ON u2.id = c_assign_role.user_id
+        ORDER BY
+        tag DESC,
+        sort_value
+    </select>
+
+	<update id="andSyncFlag">
+		update c_user
+		set sync_flag = sync_flag &amp; #{andBit,jdbcType=BIGINT}
+		where update_time &gt;= #{minUpdateTime}
+	</update>
+	<update id="orSyncFlag">
+		update c_user
+		set sync_flag = sync_flag | #{orBit,jdbcType=BIGINT}
+		where 
+			`id` in (
+			 <foreach collection="userIds" item="userId" separator=",">
+				#{userId}
+			 </foreach>
+			 )
+	</update>
+	<select id="selectSyncList" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from c_user
+		where sync_flag &amp; #{syncFlag} = 0 and update_time &gt;= #{minUpdateTime}
+		limit #{limit}
+	</select>
+	<select id="getIdsAbstract" resultType="string">
+		select MD5(GROUP_CONCAT(id ORDER BY id)) from  c_user 
+	</select>
+	
+	<select id="getExistIds" resultType="long">
+		select *
+		from c_user
+		where id in (
+			<foreach collection="userIds" item="userId" separator=",">
+				#{userId}
+			 </foreach>
+		)
+	</select>
+</mapper>

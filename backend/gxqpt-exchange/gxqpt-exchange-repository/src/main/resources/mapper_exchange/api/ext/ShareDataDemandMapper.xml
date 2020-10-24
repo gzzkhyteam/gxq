@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.api.dao.ShareDataDemandMapper">
+  <resultMap id="ListResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.ShareDataDemandListDO">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+    <result column="unitName" jdbcType="VARCHAR" property="unitName" />
+    <result column="unitType" jdbcType="VARCHAR" property="unitType" />
+    <result column="cont_name" jdbcType="VARCHAR" property="contName" />
+    <result column="cont_tel" jdbcType="VARCHAR" property="contTel" />
+    <result column="cont_email" jdbcType="VARCHAR" property="contEmail" />
+    <result column="credit_code" jdbcType="VARCHAR" property="creditCode" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="purpose" jdbcType="VARCHAR" property="purpose" />
+    <result column="apply_reason" jdbcType="LONGVARCHAR" property="applyReason" />
+    <result column="hdOrgName" jdbcType="VARCHAR" property="hdOrgName" />
+    <result column="status_" jdbcType="INTEGER" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="createUserName" jdbcType="VARCHAR" property="createUserName" />
+    <result column="hdContent" jdbcType="VARCHAR" property="hdContent" />
+    <result column="api_id" jdbcType="VARCHAR" property="apiId" />
+  </resultMap>
+    <select id="selectList" parameterType="map" resultMap="ListResultMap">
+        SELECT dm.id,
+        dm.apply_code,
+        dm.api_id,
+        org1.name_ unitName,
+        dm.unit_type unitType,
+        cont_name,
+        cont_tel,
+        cont_email,
+        credit_code,
+        dm.content content,
+        dm.purpose purpose,
+        apply_reason,
+        org.name_ hdOrgName,
+        dm.status_,
+        dm.create_time,
+        u.name_ createUserName,
+        audit.content hdContent
+        FROM b_share_data_demand dm
+        INNER JOIN v_emp u ON dm.create_user = u.gxqpt_emp_id
+        INNER JOIN v_org org ON dm.org_id = org.id
+        INNER JOIN v_org org1 ON dm.unit_id = org1.id
+        LEFT JOIN b_share_flow_audit audit ON dm.apply_code = audit.apply_code
+        <where>
+            <if test="startTime != null ">
+                AND dm.create_time >=#{startTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endTime != null ">
+                AND #{endTime,jdbcType=TIMESTAMP}>=dm.create_time
+            </if>
+            <if test="status != null and status !=''">
+                AND dm.status_= #{status}
+            </if>
+            <if test="orgName != null and orgName !=''">
+               AND org.name_ LIKE #{orgName,typeHandler=fullLike}
+            </if>
+            <if test="unitId != null and unitId !=''">
+                AND dm.unit_id = #{unitId}
+            </if>
+            <if test="createUser != null and createUser !=''">
+                AND dm.create_user = #{createUser}
+            </if>
+            <if test="orgName != null and orgName !=''">
+                AND  org1.name_ LIKE #{orgName,typeHandler=fullLike}
+            </if>
+        </where>
+        ORDER BY  dm.create_time DESC
+    </select>
+
+
+
+</mapper>

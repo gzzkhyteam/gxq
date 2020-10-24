@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.feedback.dao.FeedBackMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.mt.entity.feedback.po.FeedBack">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="appli_id" jdbcType="BIGINT" property="appliId" />
+    <result column="fb_title" jdbcType="VARCHAR" property="fbTitle" />
+    <result column="fb_content" jdbcType="VARCHAR" property="fbContent" />
+    <result column="fb_emergency" jdbcType="INTEGER" property="fbEmergency" />
+    <result column="fb_state" jdbcType="INTEGER" property="fbState" />
+    <result column="fb_close_id" jdbcType="BIGINT" property="fbCloseId" />
+    <result column="fb_close_name" jdbcType="VARCHAR" property="fbCloseName" />
+    <result column="fb_close_time" jdbcType="TIMESTAMP" property="fbCloseTime" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, appli_id, fb_title, fb_content, fb_emergency, fb_state, fb_close_id, fb_close_name, 
+    fb_close_time, create_user_name, create_time, create_user, update_time, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.mt.repository.feedback.example.FeedBackExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_feedback
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_feedback
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.mt.repository.feedback.example.FeedBackExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_feedback
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_feedback
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.mt.repository.feedback.example.FeedBackExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_feedback
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.mt.entity.feedback.po.FeedBack">
+    <!--
+    @mbggenerated
+    -->
+    update b_feedback
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_feedback
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.mt.entity.feedback.po.FeedBack">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_feedback (id, appli_id, fb_title, 
+      fb_content, fb_emergency, fb_state, 
+      fb_close_id, fb_close_name, fb_close_time, 
+      create_user_name, create_time, create_user, 
+      update_time, update_user)
+    values (#{id,jdbcType=BIGINT}, #{appliId,jdbcType=BIGINT}, #{fbTitle,jdbcType=VARCHAR}, 
+      #{fbContent,jdbcType=VARCHAR}, #{fbEmergency,jdbcType=INTEGER}, #{fbState,jdbcType=INTEGER}, 
+      #{fbCloseId,jdbcType=BIGINT}, #{fbCloseName,jdbcType=VARCHAR}, #{fbCloseTime,jdbcType=TIMESTAMP}, 
+      #{createUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_feedback (id, appli_id, fb_title, fb_content, fb_emergency, fb_state, fb_close_id, fb_close_name, fb_close_time, create_user_name, create_time, create_user, update_time, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.appliId,jdbcType=BIGINT}, #{item.fbTitle,jdbcType=VARCHAR}, 
+        #{item.fbContent,jdbcType=VARCHAR}, #{item.fbEmergency,jdbcType=INTEGER}, #{item.fbState,jdbcType=INTEGER}, 
+        #{item.fbCloseId,jdbcType=BIGINT}, #{item.fbCloseName,jdbcType=VARCHAR}, #{item.fbCloseTime,jdbcType=TIMESTAMP}, 
+        #{item.createUserName,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.createUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.mt.entity.feedback.po.FeedBack">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_feedback
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appliId != null">
+        appli_id,
+      </if>
+      <if test="fbTitle != null">
+        fb_title,
+      </if>
+      <if test="fbContent != null">
+        fb_content,
+      </if>
+      <if test="fbEmergency != null">
+        fb_emergency,
+      </if>
+      <if test="fbState != null">
+        fb_state,
+      </if>
+      <if test="fbCloseId != null">
+        fb_close_id,
+      </if>
+      <if test="fbCloseName != null">
+        fb_close_name,
+      </if>
+      <if test="fbCloseTime != null">
+        fb_close_time,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appliId != null">
+        #{appliId,jdbcType=BIGINT},
+      </if>
+      <if test="fbTitle != null">
+        #{fbTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="fbContent != null">
+        #{fbContent,jdbcType=VARCHAR},
+      </if>
+      <if test="fbEmergency != null">
+        #{fbEmergency,jdbcType=INTEGER},
+      </if>
+      <if test="fbState != null">
+        #{fbState,jdbcType=INTEGER},
+      </if>
+      <if test="fbCloseId != null">
+        #{fbCloseId,jdbcType=BIGINT},
+      </if>
+      <if test="fbCloseName != null">
+        #{fbCloseName,jdbcType=VARCHAR},
+      </if>
+      <if test="fbCloseTime != null">
+        #{fbCloseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.mt.repository.feedback.example.FeedBackExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_feedback
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_feedback
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appliId != null">
+        appli_id = #{record.appliId,jdbcType=BIGINT},
+      </if>
+      <if test="record.fbTitle != null">
+        fb_title = #{record.fbTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fbContent != null">
+        fb_content = #{record.fbContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fbEmergency != null">
+        fb_emergency = #{record.fbEmergency,jdbcType=INTEGER},
+      </if>
+      <if test="record.fbState != null">
+        fb_state = #{record.fbState,jdbcType=INTEGER},
+      </if>
+      <if test="record.fbCloseId != null">
+        fb_close_id = #{record.fbCloseId,jdbcType=BIGINT},
+      </if>
+      <if test="record.fbCloseName != null">
+        fb_close_name = #{record.fbCloseName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fbCloseTime != null">
+        fb_close_time = #{record.fbCloseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUserName != null">
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_feedback
+    set id = #{record.id,jdbcType=BIGINT},
+      appli_id = #{record.appliId,jdbcType=BIGINT},
+      fb_title = #{record.fbTitle,jdbcType=VARCHAR},
+      fb_content = #{record.fbContent,jdbcType=VARCHAR},
+      fb_emergency = #{record.fbEmergency,jdbcType=INTEGER},
+      fb_state = #{record.fbState,jdbcType=INTEGER},
+      fb_close_id = #{record.fbCloseId,jdbcType=BIGINT},
+      fb_close_name = #{record.fbCloseName,jdbcType=VARCHAR},
+      fb_close_time = #{record.fbCloseTime,jdbcType=TIMESTAMP},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.mt.entity.feedback.po.FeedBack">
+    <!--
+    @mbggenerated
+    -->
+    update b_feedback
+    <set>
+      <if test="appliId != null">
+        appli_id = #{appliId,jdbcType=BIGINT},
+      </if>
+      <if test="fbTitle != null">
+        fb_title = #{fbTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="fbContent != null">
+        fb_content = #{fbContent,jdbcType=VARCHAR},
+      </if>
+      <if test="fbEmergency != null">
+        fb_emergency = #{fbEmergency,jdbcType=INTEGER},
+      </if>
+      <if test="fbState != null">
+        fb_state = #{fbState,jdbcType=INTEGER},
+      </if>
+      <if test="fbCloseId != null">
+        fb_close_id = #{fbCloseId,jdbcType=BIGINT},
+      </if>
+      <if test="fbCloseName != null">
+        fb_close_name = #{fbCloseName,jdbcType=VARCHAR},
+      </if>
+      <if test="fbCloseTime != null">
+        fb_close_time = #{fbCloseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.mt.entity.feedback.po.FeedBack">
+    <!--
+    @mbggenerated
+    -->
+    update b_feedback
+    set appli_id = #{appliId,jdbcType=BIGINT},
+      fb_title = #{fbTitle,jdbcType=VARCHAR},
+      fb_content = #{fbContent,jdbcType=VARCHAR},
+      fb_emergency = #{fbEmergency,jdbcType=INTEGER},
+      fb_state = #{fbState,jdbcType=INTEGER},
+      fb_close_id = #{fbCloseId,jdbcType=BIGINT},
+      fb_close_name = #{fbCloseName,jdbcType=VARCHAR},
+      fb_close_time = #{fbCloseTime,jdbcType=TIMESTAMP},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

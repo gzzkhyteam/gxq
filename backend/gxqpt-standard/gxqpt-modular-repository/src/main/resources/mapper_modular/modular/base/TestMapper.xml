@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.modular.repository.dao.TestMapper">
+    <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.modular.entity.test.po.Test">
+
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <select id="get" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        *
+        from test
+        where id = 1
+    </select>
+    <insert id="insert"  >
+       insert into test()
+        values (1, '123', 'aaa', sysdate(), sysdate())
+    </insert>
+    <insert id="insert2"  >
+       insert into test()
+        values (2, '1232', '2aaa', sysdate(), sysdate())
+    </insert>
+</mapper>

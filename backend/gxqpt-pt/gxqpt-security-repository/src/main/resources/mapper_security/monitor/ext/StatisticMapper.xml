@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.security.repository.statistic.dao.StatisticMapper">
+
+    <resultMap id="statResultMap" type="com.hengyunsoft.platform.security.entity.statistic.po.StatisticResultDTO">
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="num" jdbcType="INTEGER" property="num" />
+        <result column="stat_date" jdbcType="TIMESTAMP" property="statDate" />
+    </resultMap>
+
+    <select id="statisticInterfaceConfig" resultType="java.util.Map">
+        select t1.all_num,t2.set_num
+        from ( select count(id) as all_num
+			    from se_interface_config ) t1,
+		      ( select count(id) as set_num
+		        from se_interface_config
+			    where status = '1' ) t2
+    </select>
+
+    <select id="statisticExceptionProcess" resultType="java.util.Map">
+        select t1.all_process,t2.month_process
+        from  (select count(*) as all_process from se_monitor_process) t1,
+              ( select count(*) as month_process from se_monitor_process
+                where create_time > DATE_ADD(curdate(),interval -day(curdate())+1 day)) t2
+    </select>
+    <select id="statisticExceptionServer" resultType="java.util.Map">
+        select t1.all_server,t2.month_server
+        from  ( select count(*) as all_server from se_monitor_server) t1,
+              ( select count(*) as month_server from se_monitor_server
+                where create_time > DATE_ADD(curdate(),interval -day(curdate())+1 day)) t2
+    </select>
+    <select id="statisticInterfaceExecuteTop10" resultType="java.util.Map">
+        select t.*,i.api_name from (
+            select interface_config_id as id,count(id) as num
+            from se_interface_access_stat
+            group by interface_config_id
+        ) t left join se_interface_config i
+          on t.id = i.id
+          order by t.num desc limit 10
+    </select>
+    <select id="statisticExceptionServerIntervalToToday" resultMap="statResultMap" parameterType="java.lang.Integer">
+        select count(*) as num,DATE_SUB(curdate(),interval #{days} day) as stat_date from se_monitor_server
+        where create_time > DATE_SUB(curdate(),interval #{days} day)
+        and create_time <![CDATA[ < ]]>  DATE_SUB(curdate(),interval #{days}-1 day)
+    </select>
+
+    <select id="statisticExceptionProcessIntervalToToday" resultMap="statResultMap" parameterType="java.lang.Integer">
+        select count(*) as num,DATE_SUB(curdate(),interval #{days} day) as stat_date from se_monitor_process
+        where create_time > DATE_SUB(curdate(),interval #{days} day)
+        and create_time <![CDATA[ < ]]>  DATE_SUB(curdate(),interval #{days}-1 day)
+    </select>
+    <select id="statisticAllBackupsAndYesterday" resultType="java.util.Map">
+        select t1.all_num,t2.yesterday_num
+        from  ( select count(*) as all_num from se_backups_log) t1,
+              ( select count(*) as yesterday_num
+                from se_backups_log
+                where create_time <![CDATA[ >= ]]> DATE_SUB(curdate(),interval 1 day)
+                and create_time <![CDATA[ < ]]> curdate() ) t2
+    </select>
+
+</mapper>

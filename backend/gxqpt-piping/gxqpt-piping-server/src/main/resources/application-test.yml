@@ -1,0 +1,40 @@
+gxqpt:
+  port:
+    nginx: 10086
+    eureka: 10030
+    gate: ${gxqpt.port.nginx}     # 测试环境使用nginx
+  hostname:
+    redis: 192.168.1.204
+    rabbitmq: 192.168.1.204
+    mysql: 127.0.0.1
+    nginx: 127.0.0.1
+    eureka: 192.168.1.204
+    gate: ${gxqpt.hostname.nginx}     # 测试环境使用nginx
+    piping: 192.168.1.204
+  mysql:
+    piping:
+      database: gxqpt_piping_test       # 根据环境更改
+    port: 3306                  # 根据环境更改
+    username: root              # 根据环境更改
+    password: LLm65c0VVd3axid9u+Y7DZeKwcODMjU95FRhxom6ApE2yZ1kbi5YzSsdAIz+edUOZH3Engm17+NyfyNczpaYlw==
+
+spring:
+  profiles:
+    active: test
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq:gxqpt.rabbitmq}     # 根据环境更改
+    port: 5672               # 根据环境更改
+    password: guest          # 根据环境更改
+    username: guest          # 根据环境更改
+  redis:
+    host: ${gxqpt.hostname.redis:gxqpt.redis}
+    port: 6379
+    key-prefix: test
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+
+id-generator:
+  machine-code: 1  # id生成器机器掩码

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.service.dao.ServiceManageMapper">
+  <resultMap id="PageResultMap" type="com.hengyunsoft.platform.ops.entity.service.po.ServiceManage">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="service_type" jdbcType="VARCHAR" property="serviceType" />
+    <result column="service_obj" jdbcType="VARCHAR" property="serviceObj" />
+    <result column="service_class" jdbcType="VARCHAR" property="serviceClass" />
+    <result column="service_name" jdbcType="VARCHAR" property="serviceName" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="report_time" jdbcType="TIMESTAMP" property="reportTime" />
+    <result column="service_process" jdbcType="VARCHAR" property="serviceProcess" />
+    <result column="result" jdbcType="VARCHAR" property="result" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="apply_user" jdbcType="VARCHAR" property="applyUser" />
+    <result column="apply_org" jdbcType="VARCHAR" property="applyOrg" />
+    <result column="audit_opinion" jdbcType="VARCHAR" property="auditOpinion" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="service_attitude" jdbcType="DECIMAL" property="serviceAttitude" />
+    <result column="service_efficiency" jdbcType="DECIMAL" property="serviceEfficiency" />
+    <result column="service_evaluation" jdbcType="DECIMAL" property="serviceEvaluation" />
+    <result column="score" jdbcType="DECIMAL" property="score" />
+    <result column="service_advice" jdbcType="VARCHAR" property="serviceAdvice" />
+    <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <!--查询服务申请分页信息-->
+  <select id="getPageList"  parameterType="java.util.Map" resultMap="PageResultMap">
+    SELECT  c.id, d.type as service_type, e.type as  service_obj,f.type as  service_class,j.service_name as service_name, c.start_time, c.end_time,
+    c.report_time, c.service_process, c.result, c.remark, c.apply_user, c.apply_org, c.audit_opinion,
+    c.status, c.service_attitude, c.service_efficiency, c.service_evaluation, c.score, c.service_advice,
+    c.apply_code,c.create_time, c.create_user, c.update_time, c.update_user
+    FROM b_yw_service_manage c
+    LEFT JOIN  b_yw_service_directory d on d.id=c.service_type
+    LEFT JOIN  b_yw_service_directory e on e.id=c.service_obj
+    LEFT JOIN  b_yw_service_directory f on f.id=c.service_class
+    LEFT JOIN  b_yw_service_directory j on j.id=c.service_name
+    <where>
+         AND c.apply_user =#{applyUser,jdbcType=VARCHAR}
+      <if test="serviceType!= null and serviceType!=''">
+        and  c.service_type =#{serviceType,jdbcType=VARCHAR}
+      </if>
+      <if test="startTime!= null">
+        AND c.create_time>=#{startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime!= null">
+        AND #{endTime,jdbcType=TIMESTAMP}>=c.create_time
+      </if>
+      <if test="startScore!= null and startScore!=''" >
+        AND c.score>=#{startScore,jdbcType=DECIMAL}
+      </if>
+      <if test="endScore!= null  and endScore!=''">
+        AND #{endScore,jdbcType=DECIMAL}>=c.score
+      </if>
+      <if test="status!= null and status!=''">
+       AND c.status =#{status,jdbcType=INTEGER}
+      </if>
+      <if test="applyCode!= null and applyCode!=''">
+        AND c.apply_code =#{applyCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+    order by c.create_time desc
+  </select>
+  <!--查询服务审核分页信息-->
+  <select id="getAuditList"  parameterType="java.util.Map" resultMap="PageResultMap">
+    SELECT  c.id, d.type as service_type, e.type as  service_obj,f.type as  service_class,j.service_name as service_name, c.start_time, c.end_time,
+    c.report_time, c.service_process, c.result, c.remark, c.apply_user, c.apply_org, c.audit_opinion,
+    c.status, c.service_attitude, c.service_efficiency, c.service_evaluation, c.score, c.service_advice,
+    c.apply_code,c.create_time, c.create_user, c.update_time, c.update_user
+    FROM b_yw_service_manage c
+    LEFT JOIN  b_yw_service_directory d on d.id=c.service_type
+    LEFT JOIN  b_yw_service_directory e on e.id=c.service_obj
+    LEFT JOIN  b_yw_service_directory f on f.id=c.service_class
+    LEFT JOIN  b_yw_service_directory j on j.id=c.service_name
+    <where>
+      <if test="serviceType!= null and serviceType!=''">
+        and  c.service_type =#{serviceType,jdbcType=VARCHAR}
+      </if>
+      <if test="startTime!= null">
+        AND c.create_time>=#{startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime!= null">
+        AND #{endTime,jdbcType=TIMESTAMP}>=c.create_time
+      </if>
+      <if test="startScore!= null and startScore!=''" >
+        AND c.score>=#{startScore,jdbcType=DECIMAL}
+      </if>
+      <if test="endScore!= null  and endScore!=''">
+        AND #{endScore,jdbcType=DECIMAL}>=c.score
+      </if>
+      <if test="status!= null and status!=''">
+        AND c.status =#{status,jdbcType=INTEGER}
+      </if>
+      <if test="applyCode!= null and applyCode!=''">
+        AND c.apply_code LIKE #{applyCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+    order by c.create_time desc
+  </select>
+  <!--查询服务处理分页信息-->
+  <select id="getDealList"  parameterType="java.util.Map" resultMap="PageResultMap">
+    SELECT  c.id, d.type as service_type, e.type as  service_obj,f.type as  service_class,j.service_name as service_name, c.start_time, c.end_time,
+    c.report_time, c.service_process, c.result, c.remark, c.apply_user, c.apply_org, c.audit_opinion,
+    c.status, c.service_attitude, c.service_efficiency, c.service_evaluation, c.score, c.service_advice,
+    c.apply_code,c.create_time, c.create_user, c.update_time, c.update_user
+    FROM b_yw_service_manage c
+    LEFT JOIN  b_yw_service_directory d on d.id=c.service_type
+    LEFT JOIN  b_yw_service_directory e on e.id=c.service_obj
+    LEFT JOIN  b_yw_service_directory f on f.id=c.service_class
+    LEFT JOIN  b_yw_service_directory j on j.id=c.service_name
+    <where>
+        and c.status >2
+      <if test="serviceType!= null and serviceType!=''">
+        and  c.service_type =#{serviceType,jdbcType=VARCHAR}
+      </if>
+      <if test="startTime!= null">
+        AND c.create_time>=#{startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime!= null">
+        AND #{endTime,jdbcType=TIMESTAMP}>=c.create_time
+      </if>
+      <if test="startScore!= null and startScore!=''" >
+        AND c.score>=#{startScore,jdbcType=DECIMAL}
+      </if>
+      <if test="endScore!= null  and endScore!=''">
+        AND #{endScore,jdbcType=DECIMAL}>=c.score
+      </if>
+      <if test="status!= null and status!=''">
+        AND c.status =#{status,jdbcType=INTEGER}
+      </if>
+      <if test="applyCode!= null and applyCode!=''">
+        AND c.apply_code LIKE #{applyCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+    order by c.create_time desc
+  </select>
+  <!--查询当前用户负责的服务处理分页信息-->
+  <select id="getByDealUserList"  parameterType="java.util.Map" resultMap="PageResultMap">
+    SELECT  c.id, d.type as service_type, e.type as  service_obj,f.type as  service_class,j.service_name as service_name, c.start_time, c.end_time,
+    c.report_time, c.service_process, c.result, c.remark, c.apply_user, c.apply_org, c.audit_opinion,
+    c.status, c.service_attitude, c.service_efficiency, c.service_evaluation, c.score, c.service_advice,
+    c.apply_code,c.create_time, c.create_user, c.update_time, c.update_user
+    FROM  b_yw_service_manage   c
+    LEFT JOIN b_yw_deal_user b on b.buss_id=c.id
+    LEFT JOIN  b_yw_service_directory d on d.id=c.service_type
+    LEFT JOIN  b_yw_service_directory e on e.id=c.service_obj
+    LEFT JOIN  b_yw_service_directory f on f.id=c.service_class
+    LEFT JOIN  b_yw_service_directory j on j.id=c.service_name
+    <where>
+      and c.status >2 and  b.person_id=#{userId,jdbcType=BIGINT}
+      <if test="serviceType!= null and serviceType!=''">
+        and  c.service_type =#{serviceType,jdbcType=VARCHAR}
+      </if>
+      <if test="startTime!= null">
+        AND c.create_time>=#{startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime!= null">
+        AND #{endTime,jdbcType=TIMESTAMP}>=c.create_time
+      </if>
+      <if test="startScore!= null and startScore!=''" >
+        AND c.score>=#{startScore,jdbcType=DECIMAL}
+      </if>
+      <if test="endScore!= null  and endScore!=''">
+        AND #{endScore,jdbcType=DECIMAL}>=c.score
+      </if>
+      <if test="status!= null and status!=''">
+        AND c.status =#{status,jdbcType=INTEGER}
+      </if>
+      <if test="applyCode!= null and applyCode!=''">
+        AND c.apply_code LIKE #{applyCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+    GROUP BY  c.id
+    order by c.create_time desc
+  </select>
+
+  <!--查询当前时间下待审核服务申请信息-->
+  <resultMap id="AlarmResultMap" type="com.hengyunsoft.platform.ops.entity.alarm.po.domain.ServiceManageAlarmDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="applyCode" jdbcType="VARCHAR" property="applyCode" />
+    <result column="day" jdbcType="INTEGER" property="day" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <select id="findServiceAudit"  parameterType="java.util.Map" resultMap="AlarmResultMap">
+    SELECT id,apply_code as applyCode, SUM(TIMESTAMPDIFF(Day,create_time,now())) as day,status
+    FROM b_yw_service_manage
+    where STATUS=1
+  </select>
+
+  <!--查询当前时间下待处理服务申请信息-->
+  <select id="findServiceDeal"  parameterType="java.util.Map" resultMap="AlarmResultMap">
+    SELECT id,apply_code as applyCode, SUM(TIMESTAMPDIFF(Day,create_time,now())) as day,status
+    FROM b_yw_service_manage
+    where STATUS=3
+  </select>
+
+  <!-- ......................................................................................................... -->
+  <!--查询当前时间下待审核培训申请信息-->
+  <select id="findTrainAudit"  parameterType="java.util.Map" resultMap="AlarmResultMap">
+    SELECT id,apply_code as applyCode, SUM(TIMESTAMPDIFF(Day,create_time,now())) as day,status
+    FROM b_yw_train_manage
+    where STATUS=1
+  </select>
+
+  <!--查询当前时间下未处理培训申请信息-->
+  <select id="findTrainDeal"  parameterType="java.util.Map" resultMap="AlarmResultMap">
+    SELECT id,apply_code as applyCode, SUM(TIMESTAMPDIFF(Day,create_time,now())) as day,status
+    FROM b_yw_train_manage
+    where STATUS=3
+  </select>
+
+ <!-- ......................................................................................................... -->
+  <!--查询当前时间下待审核咨询申请信息-->
+  <select id="findConsultAudit"  parameterType="java.util.Map" resultMap="AlarmResultMap">
+    SELECT id,apply_code as applyCode, SUM(TIMESTAMPDIFF(Day,create_time,now())) as day,status
+    FROM b_yw_consult_manage
+    where STATUS=1
+  </select>
+
+  <!--查询当前时间下未处理咨询申请信息-->
+  <select id="findConsultDeal"  parameterType="java.util.Map" resultMap="AlarmResultMap">
+    SELECT id,apply_code as applyCode, SUM(TIMESTAMPDIFF(Day,create_time,now())) as day,status
+    FROM b_yw_consult_manage
+    where STATUS=3
+  </select>
+</mapper>

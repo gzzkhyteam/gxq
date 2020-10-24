@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.version.dao.ClientVersionMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.mt.entity.version.po.ClientVersion">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="ver_name" jdbcType="VARCHAR" property="verName" />
+    <result column="ver_number" jdbcType="INTEGER" property="verNumber" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="down_qr_code" jdbcType="VARCHAR" property="downQrCode" />
+    <result column="pw_update" jdbcType="INTEGER" property="pwUpdate" />
+    <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime" />
+    <result column="apk_file_id" jdbcType="VARCHAR" property="apkFileId" />
+    <result column="apk_file_name" jdbcType="VARCHAR" property="apkFileName" />
+    <result column="apk_file_path" jdbcType="VARCHAR" property="apkFilePath" />
+    <result column="apk_file_size" jdbcType="VARCHAR" property="apkFileSize" />
+    <result column="update_content" jdbcType="LONGVARCHAR" property="updateContent" />
+    <result column="update_num" jdbcType="INTEGER" property="updateNum" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, ver_name, ver_number, state, down_qr_code, pw_update, publish_time, apk_file_id, 
+    apk_file_name, apk_file_path, apk_file_size, update_content, update_num, create_time, 
+    create_user, update_time, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.mt.repository.version.example.ClientVersionExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_client_version
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_client_version
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.mt.repository.version.example.ClientVersionExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_client_version
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_client_version
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.mt.repository.version.example.ClientVersionExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_client_version
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.mt.entity.version.po.ClientVersion">
+    <!--
+    @mbggenerated
+    -->
+    update b_client_version
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_client_version
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.mt.entity.version.po.ClientVersion">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_client_version (id, ver_name, ver_number, 
+      state, down_qr_code, pw_update, 
+      publish_time, apk_file_id, apk_file_name, 
+      apk_file_path, apk_file_size, update_content, 
+      update_num, create_time, create_user, 
+      update_time, update_user)
+    values (#{id,jdbcType=BIGINT}, #{verName,jdbcType=VARCHAR}, #{verNumber,jdbcType=INTEGER}, 
+      #{state,jdbcType=INTEGER}, #{downQrCode,jdbcType=VARCHAR}, #{pwUpdate,jdbcType=INTEGER}, 
+      #{publishTime,jdbcType=TIMESTAMP}, #{apkFileId,jdbcType=VARCHAR}, #{apkFileName,jdbcType=VARCHAR}, 
+      #{apkFilePath,jdbcType=VARCHAR}, #{apkFileSize,jdbcType=VARCHAR}, #{updateContent,jdbcType=LONGVARCHAR}, 
+      #{updateNum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_client_version (id, ver_name, ver_number, state, down_qr_code, pw_update, publish_time, apk_file_id, apk_file_name, apk_file_path, apk_file_size, update_content, update_num, create_time, create_user, update_time, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.verName,jdbcType=VARCHAR}, #{item.verNumber,jdbcType=INTEGER}, 
+        #{item.state,jdbcType=INTEGER}, #{item.downQrCode,jdbcType=VARCHAR}, #{item.pwUpdate,jdbcType=INTEGER}, 
+        #{item.publishTime,jdbcType=TIMESTAMP}, #{item.apkFileId,jdbcType=VARCHAR}, #{item.apkFileName,jdbcType=VARCHAR}, 
+        #{item.apkFilePath,jdbcType=VARCHAR}, #{item.apkFileSize,jdbcType=VARCHAR}, #{item.updateContent,jdbcType=LONGVARCHAR}, 
+        #{item.updateNum,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.mt.entity.version.po.ClientVersion">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_client_version
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="verName != null">
+        ver_name,
+      </if>
+      <if test="verNumber != null">
+        ver_number,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="downQrCode != null">
+        down_qr_code,
+      </if>
+      <if test="pwUpdate != null">
+        pw_update,
+      </if>
+      <if test="publishTime != null">
+        publish_time,
+      </if>
+      <if test="apkFileId != null">
+        apk_file_id,
+      </if>
+      <if test="apkFileName != null">
+        apk_file_name,
+      </if>
+      <if test="apkFilePath != null">
+        apk_file_path,
+      </if>
+      <if test="apkFileSize != null">
+        apk_file_size,
+      </if>
+      <if test="updateContent != null">
+        update_content,
+      </if>
+      <if test="updateNum != null">
+        update_num,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="verName != null">
+        #{verName,jdbcType=VARCHAR},
+      </if>
+      <if test="verNumber != null">
+        #{verNumber,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="downQrCode != null">
+        #{downQrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pwUpdate != null">
+        #{pwUpdate,jdbcType=INTEGER},
+      </if>
+      <if test="publishTime != null">
+        #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="apkFileId != null">
+        #{apkFileId,jdbcType=VARCHAR},
+      </if>
+      <if test="apkFileName != null">
+        #{apkFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="apkFilePath != null">
+        #{apkFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="apkFileSize != null">
+        #{apkFileSize,jdbcType=VARCHAR},
+      </if>
+      <if test="updateContent != null">
+        #{updateContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="updateNum != null">
+        #{updateNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.mt.repository.version.example.ClientVersionExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_client_version
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_client_version
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.verName != null">
+        ver_name = #{record.verName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.verNumber != null">
+        ver_number = #{record.verNumber,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.downQrCode != null">
+        down_qr_code = #{record.downQrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pwUpdate != null">
+        pw_update = #{record.pwUpdate,jdbcType=INTEGER},
+      </if>
+      <if test="record.publishTime != null">
+        publish_time = #{record.publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.apkFileId != null">
+        apk_file_id = #{record.apkFileId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apkFileName != null">
+        apk_file_name = #{record.apkFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apkFilePath != null">
+        apk_file_path = #{record.apkFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apkFileSize != null">
+        apk_file_size = #{record.apkFileSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateContent != null">
+        update_content = #{record.updateContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.updateNum != null">
+        update_num = #{record.updateNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_client_version
+    set id = #{record.id,jdbcType=BIGINT},
+      ver_name = #{record.verName,jdbcType=VARCHAR},
+      ver_number = #{record.verNumber,jdbcType=INTEGER},
+      state = #{record.state,jdbcType=INTEGER},
+      down_qr_code = #{record.downQrCode,jdbcType=VARCHAR},
+      pw_update = #{record.pwUpdate,jdbcType=INTEGER},
+      publish_time = #{record.publishTime,jdbcType=TIMESTAMP},
+      apk_file_id = #{record.apkFileId,jdbcType=VARCHAR},
+      apk_file_name = #{record.apkFileName,jdbcType=VARCHAR},
+      apk_file_path = #{record.apkFilePath,jdbcType=VARCHAR},
+      apk_file_size = #{record.apkFileSize,jdbcType=VARCHAR},
+      update_content = #{record.updateContent,jdbcType=LONGVARCHAR},
+      update_num = #{record.updateNum,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.mt.entity.version.po.ClientVersion">
+    <!--
+    @mbggenerated
+    -->
+    update b_client_version
+    <set>
+      <if test="verName != null">
+        ver_name = #{verName,jdbcType=VARCHAR},
+      </if>
+      <if test="verNumber != null">
+        ver_number = #{verNumber,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="downQrCode != null">
+        down_qr_code = #{downQrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pwUpdate != null">
+        pw_update = #{pwUpdate,jdbcType=INTEGER},
+      </if>
+      <if test="publishTime != null">
+        publish_time = #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="apkFileId != null">
+        apk_file_id = #{apkFileId,jdbcType=VARCHAR},
+      </if>
+      <if test="apkFileName != null">
+        apk_file_name = #{apkFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="apkFilePath != null">
+        apk_file_path = #{apkFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="apkFileSize != null">
+        apk_file_size = #{apkFileSize,jdbcType=VARCHAR},
+      </if>
+      <if test="updateContent != null">
+        update_content = #{updateContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="updateNum != null">
+        update_num = #{updateNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.mt.entity.version.po.ClientVersion">
+    <!--
+    @mbggenerated
+    -->
+    update b_client_version
+    set ver_name = #{verName,jdbcType=VARCHAR},
+      ver_number = #{verNumber,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      down_qr_code = #{downQrCode,jdbcType=VARCHAR},
+      pw_update = #{pwUpdate,jdbcType=INTEGER},
+      publish_time = #{publishTime,jdbcType=TIMESTAMP},
+      apk_file_id = #{apkFileId,jdbcType=VARCHAR},
+      apk_file_name = #{apkFileName,jdbcType=VARCHAR},
+      apk_file_path = #{apkFilePath,jdbcType=VARCHAR},
+      apk_file_size = #{apkFileSize,jdbcType=VARCHAR},
+      update_content = #{updateContent,jdbcType=LONGVARCHAR},
+      update_num = #{updateNum,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

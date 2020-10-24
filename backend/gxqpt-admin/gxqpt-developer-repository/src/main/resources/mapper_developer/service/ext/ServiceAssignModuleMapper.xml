@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.service.dao.ServiceAssignModuleMapper">
+
+    <resultMap id="PageMyResultMap" type="com.hengyunsoft.platform.developer.entity.service.po.domain.QueryConsummerAssignModule">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <id column="assignModuleId" jdbcType="BIGINT" property="assignModuleId" />
+        <result column="logo_" jdbcType="VARCHAR" property="logo" />
+        <result column="name_" jdbcType="VARCHAR" property="name" />
+        <result column="code_" jdbcType="VARCHAR" property="code" />
+        <result column="desc_" jdbcType="VARCHAR" property="desc" />
+        <result column="status_" jdbcType="SMALLINT" property="status" />
+        <result column="email_" jdbcType="VARCHAR" property="email" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="module_type" jdbcType="VARCHAR" property="moduleType" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="public_is" jdbcType="BIT" property="publicIs" />
+        <result column="public_look" jdbcType="BIT" property="publicLook" />
+        <result column="api_sync_url" jdbcType="VARCHAR" property="apiSyncUrl" />
+        <result column="resource_num" jdbcType="INTEGER" property="resourceNum" />
+        <result column="stop_time" jdbcType="TIMESTAMP" property="stopTime" />
+        <result column="advice_module" jdbcType="BIGINT" property="adviceModule" />
+    </resultMap>
+
+    <resultMap id="ModuleConsumeMap" type="com.hengyunsoft.platform.developer.entity.service.po.domain.ServiceAssignModuleDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="public_is" jdbcType="BIT" property="publicIs" />
+        <result column="module_id" jdbcType="BIGINT" property="moduleId" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="status_" jdbcType="BIT" property="status" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="disable_desc" jdbcType="VARCHAR" property="disableDesc" />
+    </resultMap>
+
+    <!--查看我某个应用所消费的所有功能-->
+    <select id="pageMy" parameterType="com.hengyunsoft.platform.developer.entity.service.po.domain.QueryConsummerAssignModule" resultMap="PageMyResultMap">
+        SELECT
+            t1.id,t1.logo_,t1.name_,t1.code_,t1.desc_,t1.status_,t1.email_,t1.app_id,t1.module_type,t1.create_user,
+            t1.create_time,t1.update_user,t1.update_time,t1.public_is,t1.public_look,t1.api_sync_url,t1.resource_num,
+            t1.stop_time,t1.advice_module
+        FROM
+             c_service_assign_module t
+        JOIN c_service_module t1 ON t.module_id = t1.id AND t1.app_id = #{appId}
+        <if test="moduleType != null and moduleType != ''">
+            AND t1.module_type = #{moduleType}
+        </if>
+        WHERE
+            1 = 1
+        AND t.status_ = #{assignStatus}
+        AND t.app_id = #{appId}
+    </select>
+
+    <!--查看我消费的所有功能-->
+    <select id="page" parameterType="com.hengyunsoft.platform.developer.entity.service.po.domain.QueryConsummerAssignModule" resultMap="PageMyResultMap">
+        SELECT
+            t1.id,t1.logo_,t1.name_,t1.code_,t1.desc_,t1.status_,t1.email_,t1.app_id,t1.module_type,t1.create_user,
+            t1.create_time,t1.update_user,t1.update_time,t1.public_is,t1.public_look,t1.api_sync_url,t1.resource_num,
+            t1.stop_time,t1.advice_module
+        FROM
+             c_service_assign_module t
+        JOIN c_service_module t1 ON t.module_id = t1.id
+        AND t1.app_id in
+        <foreach collection="applist" open="(" close=")" separator="," item="app">
+            #{app.appId}
+        </foreach>
+        <if test="assignModule.moduleType != null and assignModule.moduleType != ''">
+            AND t1.module_type = #{assignModule.moduleType}
+        </if>
+        WHERE
+            1 = 1
+        AND t.status_ = #{assignModule.assignStatus}
+    </select>
+
+    <!--查看消费的所有功能，2018-4-11修改，减少返回字段-->
+    <select id="findNoPage" parameterType="com.hengyunsoft.platform.developer.entity.service.po.domain.QueryConsummerAssignModule" resultMap="PageMyResultMap">
+        SELECT
+            t1.id,t.id as AssignModuleId,t1.logo_,
+            case when application.name_ is null then t1.name_ else CONCAT(t1.name_,'(',application.name_,')') end AS name_,
+            t1.desc_,t1.module_type
+        FROM
+             c_service_assign_module t
+        JOIN c_service_module t1 ON t.module_id = t1.id
+        LEFT JOIN c_application application on t.app_id = application.app_id
+        AND t.app_id in
+        <foreach collection="applist" open="(" close=")" separator="," item="app">
+            #{app.appId}
+        </foreach>
+        <if test="assignModule.moduleType != null and assignModule.moduleType != ''">
+            AND t1.module_type = #{assignModule.moduleType}
+        </if>
+        WHERE
+            1 = 1
+        <if test="assignModule.assignStatus != null">
+        	AND t.status_ = #{assignModule.assignStatus}
+        </if>
+        ORDER BY t1.status_
+    </select>
+
+    <!--根据ID查询功能详情-->
+    <select id="findMoudleById" resultType="com.hengyunsoft.platform.developer.entity.service.po.domain.QueryConsumAssignModuleInfo">
+         SELECT
+         t1.id,t1.logo_,t1.name_,t1.code_,t1.desc_,t1.status_,t1.email_,t1.app_id,t1.module_type,t1.create_user,
+         t1.create_time,t1.update_user,t1.update_time,t1.public_is,t1.public_look,t1.api_sync_url,t1.resource_num,
+         t1.stop_time,t1.advice_module
+         FROM
+              c_service_assign_module t
+         JOIN c_service_module t1 ON t.module_id = t1.id and t.id=#{id}
+    </select>
+
+    <!--2018-5-25根据ID查询功能详情,申请功能时填写的页面字段及值,禅道BUG号2930-->
+    <select id="findApplyMoudleInfoById" resultType="com.hengyunsoft.platform.developer.entity.service.po.domain.QueryConsumAssignModuleInfo">
+        SELECT module.id,module.advice_module as adviceModule,module.status_ as moduleStatus,asmoudle.id assignModuleId,dic.`name` moduleTypeName,
+        module.name_ `name`,module.code_ `code`,app.name_ appName ,apply.apply_desc applyDesc
+        from c_service_assign_module asmoudle
+        join  c_service_module module on asmoudle.module_id = module.id
+        join  c_application app on asmoudle.app_id = app.app_id
+        LEFT JOIN b_dictionary dic on module.module_type = dic.`code`
+        AND dic.dictionary_type_code = 'module.type'
+        LEFT JOIN c_service_assign_module_apply apply
+        on asmoudle.id = apply.service_assign_module_id
+        where asmoudle.id = #{id}
+    </select>
+
+    <select id="moduleConsumePage" parameterType="java.lang.Long" resultMap="ModuleConsumeMap">
+        SELECT
+            modu.id,
+            modu.public_is,
+            modu.module_id,
+            modu.app_id,
+            app.name_ as app_name,
+            modu.status_,
+            modu.create_user,
+            modu.create_time,
+            modu.update_user,
+            modu.update_time,
+            modu.disable_desc
+        FROM
+            c_service_assign_module modu
+        LEFT JOIN c_application app
+        ON modu.app_id = app.app_id
+        WHERE modu.module_id=#{moduleId}
+    </select>
+
+ </mapper>

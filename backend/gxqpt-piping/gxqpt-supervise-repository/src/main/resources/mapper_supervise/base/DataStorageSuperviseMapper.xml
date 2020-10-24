@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.supervise.repository.dao.DataStorageSuperviseMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.supervise.entity.po.DataStorageSupervise">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="app_type" jdbcType="SMALLINT" property="appType" />
+    <result column="db_space_num" jdbcType="DOUBLE" property="dbSpaceNum" />
+    <result column="log_space_num" jdbcType="DOUBLE" property="logSpaceNum" />
+    <result column="file_space_num" jdbcType="DOUBLE" property="fileSpaceNum" />
+    <result column="db_space_limit" jdbcType="DOUBLE" property="dbSpaceLimit" />
+    <result column="log_space_limit" jdbcType="DOUBLE" property="logSpaceLimit" />
+    <result column="file_space_limit" jdbcType="DOUBLE" property="fileSpaceLimit" />
+    <result column="file_space_url" jdbcType="VARCHAR" property="fileSpaceUrl" />
+    <result column="log_space_url" jdbcType="VARCHAR" property="logSpaceUrl" />
+    <result column="db_space_url" jdbcType="VARCHAR" property="dbSpaceUrl" />
+    <result column="duty_user" jdbcType="VARCHAR" property="dutyUser" />
+    <result column="confirm_user" jdbcType="LONGVARCHAR" property="confirmUser" />
+    <result column="copy_user" jdbcType="LONGVARCHAR" property="copyUser" />
+    <result column="scheduled_time" jdbcType="TIMESTAMP" property="scheduledTime" />
+    <result column="supervise_type" jdbcType="SMALLINT" property="superviseType" />
+    <result column="remind_type" jdbcType="SMALLINT" property="remindType" />
+    <result column="run_status" jdbcType="BIT" property="runStatus" />
+    <result column="desc_" jdbcType="VARCHAR" property="desc" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, app_id, app_type, db_space_num, log_space_num, file_space_num, db_space_limit, 
+    log_space_limit, file_space_limit, file_space_url, log_space_url, db_space_url, duty_user, 
+    confirm_user, copy_user, scheduled_time, supervise_type, remind_type, run_status, 
+    desc_, create_user, create_time, update_user, update_time, level
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.supervise.repository.example.DataStorageSuperviseExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_data_storage_supervise
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_data_storage_supervise
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.supervise.repository.example.DataStorageSuperviseExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_data_storage_supervise
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_data_storage_supervise
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.supervise.repository.example.DataStorageSuperviseExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_data_storage_supervise
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.supervise.entity.po.DataStorageSupervise">
+    <!--
+    @mbggenerated
+    -->
+    update b_data_storage_supervise
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_data_storage_supervise
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.supervise.entity.po.DataStorageSupervise">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_data_storage_supervise (id, app_id, app_type, 
+      db_space_num, log_space_num, file_space_num, 
+      db_space_limit, log_space_limit, file_space_limit, 
+      file_space_url, log_space_url, db_space_url, 
+      duty_user, confirm_user, copy_user, 
+      scheduled_time, supervise_type, remind_type, 
+      run_status, desc_, create_user, 
+      create_time, update_user, update_time, 
+      level)
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{appType,jdbcType=SMALLINT}, 
+      #{dbSpaceNum,jdbcType=DOUBLE}, #{logSpaceNum,jdbcType=DOUBLE}, #{fileSpaceNum,jdbcType=DOUBLE}, 
+      #{dbSpaceLimit,jdbcType=DOUBLE}, #{logSpaceLimit,jdbcType=DOUBLE}, #{fileSpaceLimit,jdbcType=DOUBLE}, 
+      #{fileSpaceUrl,jdbcType=VARCHAR}, #{logSpaceUrl,jdbcType=VARCHAR}, #{dbSpaceUrl,jdbcType=VARCHAR}, 
+      #{dutyUser,jdbcType=VARCHAR}, #{confirmUser,jdbcType=LONGVARCHAR}, #{copyUser,jdbcType=LONGVARCHAR}, 
+      #{scheduledTime,jdbcType=TIMESTAMP}, #{superviseType,jdbcType=SMALLINT}, #{remindType,jdbcType=SMALLINT}, 
+      #{runStatus,jdbcType=BIT}, #{desc,jdbcType=VARCHAR}, #{createUser,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{level,jdbcType=INTEGER})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_data_storage_supervise (id, app_id, app_type, db_space_num, log_space_num, file_space_num, db_space_limit, log_space_limit, file_space_limit, file_space_url, log_space_url, db_space_url, duty_user, confirm_user, copy_user, scheduled_time, supervise_type, remind_type, run_status, desc_, create_user, create_time, update_user, update_time, level ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.appId,jdbcType=VARCHAR}, #{item.appType,jdbcType=SMALLINT}, 
+        #{item.dbSpaceNum,jdbcType=DOUBLE}, #{item.logSpaceNum,jdbcType=DOUBLE}, #{item.fileSpaceNum,jdbcType=DOUBLE}, 
+        #{item.dbSpaceLimit,jdbcType=DOUBLE}, #{item.logSpaceLimit,jdbcType=DOUBLE}, #{item.fileSpaceLimit,jdbcType=DOUBLE}, 
+        #{item.fileSpaceUrl,jdbcType=VARCHAR}, #{item.logSpaceUrl,jdbcType=VARCHAR}, #{item.dbSpaceUrl,jdbcType=VARCHAR}, 
+        #{item.dutyUser,jdbcType=VARCHAR}, #{item.confirmUser,jdbcType=LONGVARCHAR}, #{item.copyUser,jdbcType=LONGVARCHAR}, 
+        #{item.scheduledTime,jdbcType=TIMESTAMP}, #{item.superviseType,jdbcType=SMALLINT}, 
+        #{item.remindType,jdbcType=SMALLINT}, #{item.runStatus,jdbcType=BIT}, #{item.desc,jdbcType=VARCHAR}, 
+        #{item.createUser,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.level,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.supervise.entity.po.DataStorageSupervise">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_data_storage_supervise
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="appType != null">
+        app_type,
+      </if>
+      <if test="dbSpaceNum != null">
+        db_space_num,
+      </if>
+      <if test="logSpaceNum != null">
+        log_space_num,
+      </if>
+      <if test="fileSpaceNum != null">
+        file_space_num,
+      </if>
+      <if test="dbSpaceLimit != null">
+        db_space_limit,
+      </if>
+      <if test="logSpaceLimit != null">
+        log_space_limit,
+      </if>
+      <if test="fileSpaceLimit != null">
+        file_space_limit,
+      </if>
+      <if test="fileSpaceUrl != null">
+        file_space_url,
+      </if>
+      <if test="logSpaceUrl != null">
+        log_space_url,
+      </if>
+      <if test="dbSpaceUrl != null">
+        db_space_url,
+      </if>
+      <if test="dutyUser != null">
+        duty_user,
+      </if>
+      <if test="confirmUser != null">
+        confirm_user,
+      </if>
+      <if test="copyUser != null">
+        copy_user,
+      </if>
+      <if test="scheduledTime != null">
+        scheduled_time,
+      </if>
+      <if test="superviseType != null">
+        supervise_type,
+      </if>
+      <if test="remindType != null">
+        remind_type,
+      </if>
+      <if test="runStatus != null">
+        run_status,
+      </if>
+      <if test="desc != null">
+        desc_,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        #{appType,jdbcType=SMALLINT},
+      </if>
+      <if test="dbSpaceNum != null">
+        #{dbSpaceNum,jdbcType=DOUBLE},
+      </if>
+      <if test="logSpaceNum != null">
+        #{logSpaceNum,jdbcType=DOUBLE},
+      </if>
+      <if test="fileSpaceNum != null">
+        #{fileSpaceNum,jdbcType=DOUBLE},
+      </if>
+      <if test="dbSpaceLimit != null">
+        #{dbSpaceLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="logSpaceLimit != null">
+        #{logSpaceLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="fileSpaceLimit != null">
+        #{fileSpaceLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="fileSpaceUrl != null">
+        #{fileSpaceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="logSpaceUrl != null">
+        #{logSpaceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="dbSpaceUrl != null">
+        #{dbSpaceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="dutyUser != null">
+        #{dutyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="confirmUser != null">
+        #{confirmUser,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="copyUser != null">
+        #{copyUser,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="scheduledTime != null">
+        #{scheduledTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="superviseType != null">
+        #{superviseType,jdbcType=SMALLINT},
+      </if>
+      <if test="remindType != null">
+        #{remindType,jdbcType=SMALLINT},
+      </if>
+      <if test="runStatus != null">
+        #{runStatus,jdbcType=BIT},
+      </if>
+      <if test="desc != null">
+        #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.supervise.repository.example.DataStorageSuperviseExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_data_storage_supervise
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_data_storage_supervise
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appType != null">
+        app_type = #{record.appType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.dbSpaceNum != null">
+        db_space_num = #{record.dbSpaceNum,jdbcType=DOUBLE},
+      </if>
+      <if test="record.logSpaceNum != null">
+        log_space_num = #{record.logSpaceNum,jdbcType=DOUBLE},
+      </if>
+      <if test="record.fileSpaceNum != null">
+        file_space_num = #{record.fileSpaceNum,jdbcType=DOUBLE},
+      </if>
+      <if test="record.dbSpaceLimit != null">
+        db_space_limit = #{record.dbSpaceLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="record.logSpaceLimit != null">
+        log_space_limit = #{record.logSpaceLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="record.fileSpaceLimit != null">
+        file_space_limit = #{record.fileSpaceLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="record.fileSpaceUrl != null">
+        file_space_url = #{record.fileSpaceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logSpaceUrl != null">
+        log_space_url = #{record.logSpaceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dbSpaceUrl != null">
+        db_space_url = #{record.dbSpaceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dutyUser != null">
+        duty_user = #{record.dutyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.confirmUser != null">
+        confirm_user = #{record.confirmUser,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.copyUser != null">
+        copy_user = #{record.copyUser,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.scheduledTime != null">
+        scheduled_time = #{record.scheduledTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.superviseType != null">
+        supervise_type = #{record.superviseType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.remindType != null">
+        remind_type = #{record.remindType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.runStatus != null">
+        run_status = #{record.runStatus,jdbcType=BIT},
+      </if>
+      <if test="record.desc != null">
+        desc_ = #{record.desc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.level != null">
+        level = #{record.level,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_data_storage_supervise
+    set id = #{record.id,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      app_type = #{record.appType,jdbcType=SMALLINT},
+      db_space_num = #{record.dbSpaceNum,jdbcType=DOUBLE},
+      log_space_num = #{record.logSpaceNum,jdbcType=DOUBLE},
+      file_space_num = #{record.fileSpaceNum,jdbcType=DOUBLE},
+      db_space_limit = #{record.dbSpaceLimit,jdbcType=DOUBLE},
+      log_space_limit = #{record.logSpaceLimit,jdbcType=DOUBLE},
+      file_space_limit = #{record.fileSpaceLimit,jdbcType=DOUBLE},
+      file_space_url = #{record.fileSpaceUrl,jdbcType=VARCHAR},
+      log_space_url = #{record.logSpaceUrl,jdbcType=VARCHAR},
+      db_space_url = #{record.dbSpaceUrl,jdbcType=VARCHAR},
+      duty_user = #{record.dutyUser,jdbcType=VARCHAR},
+      confirm_user = #{record.confirmUser,jdbcType=LONGVARCHAR},
+      copy_user = #{record.copyUser,jdbcType=LONGVARCHAR},
+      scheduled_time = #{record.scheduledTime,jdbcType=TIMESTAMP},
+      supervise_type = #{record.superviseType,jdbcType=SMALLINT},
+      remind_type = #{record.remindType,jdbcType=SMALLINT},
+      run_status = #{record.runStatus,jdbcType=BIT},
+      desc_ = #{record.desc,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      level = #{record.level,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.supervise.entity.po.DataStorageSupervise">
+    <!--
+    @mbggenerated
+    -->
+    update b_data_storage_supervise
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        app_type = #{appType,jdbcType=SMALLINT},
+      </if>
+      <if test="dbSpaceNum != null">
+        db_space_num = #{dbSpaceNum,jdbcType=DOUBLE},
+      </if>
+      <if test="logSpaceNum != null">
+        log_space_num = #{logSpaceNum,jdbcType=DOUBLE},
+      </if>
+      <if test="fileSpaceNum != null">
+        file_space_num = #{fileSpaceNum,jdbcType=DOUBLE},
+      </if>
+      <if test="dbSpaceLimit != null">
+        db_space_limit = #{dbSpaceLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="logSpaceLimit != null">
+        log_space_limit = #{logSpaceLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="fileSpaceLimit != null">
+        file_space_limit = #{fileSpaceLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="fileSpaceUrl != null">
+        file_space_url = #{fileSpaceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="logSpaceUrl != null">
+        log_space_url = #{logSpaceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="dbSpaceUrl != null">
+        db_space_url = #{dbSpaceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="dutyUser != null">
+        duty_user = #{dutyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="confirmUser != null">
+        confirm_user = #{confirmUser,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="copyUser != null">
+        copy_user = #{copyUser,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="scheduledTime != null">
+        scheduled_time = #{scheduledTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="superviseType != null">
+        supervise_type = #{superviseType,jdbcType=SMALLINT},
+      </if>
+      <if test="remindType != null">
+        remind_type = #{remindType,jdbcType=SMALLINT},
+      </if>
+      <if test="runStatus != null">
+        run_status = #{runStatus,jdbcType=BIT},
+      </if>
+      <if test="desc != null">
+        desc_ = #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.supervise.entity.po.DataStorageSupervise">
+    <!--
+    @mbggenerated
+    -->
+    update b_data_storage_supervise
+    set app_id = #{appId,jdbcType=VARCHAR},
+      app_type = #{appType,jdbcType=SMALLINT},
+      db_space_num = #{dbSpaceNum,jdbcType=DOUBLE},
+      log_space_num = #{logSpaceNum,jdbcType=DOUBLE},
+      file_space_num = #{fileSpaceNum,jdbcType=DOUBLE},
+      db_space_limit = #{dbSpaceLimit,jdbcType=DOUBLE},
+      log_space_limit = #{logSpaceLimit,jdbcType=DOUBLE},
+      file_space_limit = #{fileSpaceLimit,jdbcType=DOUBLE},
+      file_space_url = #{fileSpaceUrl,jdbcType=VARCHAR},
+      log_space_url = #{logSpaceUrl,jdbcType=VARCHAR},
+      db_space_url = #{dbSpaceUrl,jdbcType=VARCHAR},
+      duty_user = #{dutyUser,jdbcType=VARCHAR},
+      confirm_user = #{confirmUser,jdbcType=LONGVARCHAR},
+      copy_user = #{copyUser,jdbcType=LONGVARCHAR},
+      scheduled_time = #{scheduledTime,jdbcType=TIMESTAMP},
+      supervise_type = #{superviseType,jdbcType=SMALLINT},
+      remind_type = #{remindType,jdbcType=SMALLINT},
+      run_status = #{runStatus,jdbcType=BIT},
+      desc_ = #{desc,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      level = #{level,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

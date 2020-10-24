@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry location="E:/maven/repertory/mysql/mysql-connector-java/5.1.40/mysql-connector-java-5.1.40.jar"/>
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="false"/>
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1/gxqpt_standard_dev"
+                        userId="root" password="r!o@o#t$>?.123"></jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--
+         新增7个属性，用于修改Example类生成时的存放路径 by：tangyh
+         [javaModelGenerator]:
+         targetExamplePackage: Example类的存放包名
+         targetExampleProject: Example类的存放项目路径
+         targetExampleSuperClass: Example的父类完整类名
+         targetGeneratedCriteriaSuperClass: Example内部类GeneratedCriteria 的父类完整类名
+         rootClass: 实体父类
+
+         [javaClientGenerator]:
+         targetIsGenMethod: 是否在dao中生成扩展的方法
+         targetSuperClass:  dao父类接口
+         targetSuperGeneric: dao泛型第一个参数
+
+         [table]:
+         enabledGxqptExt 是否在xml中生成扩展的方法
+         -->
+
+        <javaModelGenerator targetPackage="com.hengyunsoft.platform.modular.entity.modular.po"
+                            targetProject="src\main\java"
+                            targetExamplePackage="com.hengyunsoft.platform.modular.repository.modular.example"
+                            targetExampleProject="src\main\java"
+                            targetExampleSuperClass="com.hengyunsoft.db.example.BaseExample"
+                            targetGeneratedCriteriaSuperClass="com.hengyunsoft.db.example.BaseGeneratedCriteria"
+        >
+            <property name="rootClass" value="com.hengyunsoft.base.entity.BaseEntity&lt;Long&gt;"/>
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <sqlMapGenerator targetPackage="mapper_modular.modular.base" targetProject="src\main\resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.hengyunsoft.platform.modular.repository.modular.dao"
+                             targetProject="src\main\java"
+                             targetIsGenMethod="false"
+                             targetSuperClass="com.hengyunsoft.base.dao.BaseNormalDao"
+                             targetSuperGeneric="Long"
+        >
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+
+        <!--<table tableName="modular_version" domainObjectName="ModularVersion" enabledGxqptExt="false">
+        </table>-->
+        <table tableName="modular" domainObjectName="Modular" enabledGxqptExt="false">
+        </table>
+    </context>
+</generatorConfiguration>

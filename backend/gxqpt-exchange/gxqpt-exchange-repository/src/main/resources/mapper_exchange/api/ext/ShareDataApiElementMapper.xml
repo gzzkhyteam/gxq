@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.api.dao.ShareDataApiElementMapper">
+    <resultMap id="ElementResultMap" type="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataElement">
+        <!--
+        @mbggenerated
+        -->
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="field_name" jdbcType="VARCHAR" property="fieldName"/>
+        <result column="field_name" jdbcType="VARCHAR" property="fieldName"/>
+        <result column="field_type" jdbcType="VARCHAR" property="fieldType"/>
+        <result column="field_code" jdbcType="VARCHAR" property="fieldCode"/>
+        <result column="desc_" jdbcType="VARCHAR" property="desc"/>
+    </resultMap>
+    <select id="selectElementInfoByApiId" parameterType="java.lang.Long" resultMap="ElementResultMap">
+        SELECT w.id,w.field_name,w.field_type,w.desc_,field_code FROM b_share_data_api_element e
+        INNER JOIN b_share_data_element w ON e.field_id = w.id
+        WHERE api_id = #{apiId};
+    </select>
+
+    <resultMap id="FilterResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.FiledSelectDO">
+        <!--
+        @mbggenerated
+        -->
+        <result column="aliasName" jdbcType="VARCHAR" property="aliasName"/>
+        <result column="selectName" jdbcType="VARCHAR" property="selectName"/>
+    </resultMap>
+
+    <!--  根据API id查找api查询字段-->
+    <select id="selectFiled" resultMap="FilterResultMap" parameterType="java.lang.Long">
+        SELECT de.field_code aliasName,de.set_field selectName FROM b_share_data_api_element ae
+        INNER JOIN b_share_data_element de ON ae.field_id = de.id
+        WHERE ae.api_id =#{apiId}
+    </select>
+
+</mapper>

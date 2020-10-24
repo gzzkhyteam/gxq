@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.core.dao.HostMapper">
+
+  <!--查询主机列表-->
+  <select id="findHostList"  resultMap="BaseResultMap">
+	    <!--<if test="host.hostName !=null and host.hostName != ''">
+	      <bind name="pattern" value="'%' + host.hostName + '%'" />
+	    </if>-->
+	    SELECT DISTINCT ch.id, ch.domain_name, ch.ip_addr_public, ch.ip_addr, ch.host_name, ch.os_type, ch.os_version, ch.cpu_info,
+	    ch.cpu_count, ch.server_provider, ch.mem, ch.harddisk, ch.virtual_host, ch.physical_host_id, ch.create_user,
+		ch.remark, ch.status FROM  c_host ch JOIN c_role  cr  on ch.id=cr.biz_flag join c_assign_role car on cr.id=car.role_id  and car.user_id=#{hostAdmin}
+		<where>
+			  <if test="host.hostName !=null and host.hostName != ''">
+			    ch.host_name like #{host.hostName,typeHandler=fullLike}
+			  </if>
+		</where>
+  </select>
+</mapper>

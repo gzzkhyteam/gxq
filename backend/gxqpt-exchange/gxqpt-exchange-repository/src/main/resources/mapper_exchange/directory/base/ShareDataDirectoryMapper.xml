@@ -1,0 +1,1043 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.directory.dao.ShareDataDirectoryMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataDirectory">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+    <result column="dir_name" jdbcType="VARCHAR" property="dirName" />
+    <result column="dir_code" jdbcType="VARCHAR" property="dirCode" />
+    <result column="unit_abbr" jdbcType="VARCHAR" property="unitAbbr" />
+    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+    <result column="desc_" jdbcType="VARCHAR" property="desc" />
+    <result column="dir_type" jdbcType="INTEGER" property="dirType" />
+    <result column="data_count" jdbcType="INTEGER" property="dataCount" />
+    <result column="see_count" jdbcType="INTEGER" property="seeCount" />
+    <result column="down_count" jdbcType="INTEGER" property="downCount" />
+    <result column="opt_type" jdbcType="INTEGER" property="optType" />
+    <result column="status_" jdbcType="INTEGER" property="status" />
+    <result column="is_bottom" jdbcType="INTEGER" property="isBottom" />
+    <result column="special_type" jdbcType="VARCHAR" property="specialType" />
+    <result column="domain" jdbcType="VARCHAR" property="domain" />
+    <result column="theme_one" jdbcType="VARCHAR" property="themeOne" />
+    <result column="theme_two" jdbcType="VARCHAR" property="themeTwo" />
+    <result column="theme_three" jdbcType="VARCHAR" property="themeThree" />
+    <result column="industry_one" jdbcType="VARCHAR" property="industryOne" />
+    <result column="industry_two" jdbcType="VARCHAR" property="industryTwo" />
+    <result column="industry_three" jdbcType="VARCHAR" property="industryThree" />
+    <result column="service_one" jdbcType="VARCHAR" property="serviceOne" />
+    <result column="service_two" jdbcType="VARCHAR" property="serviceTwo" />
+    <result column="service_three" jdbcType="VARCHAR" property="serviceThree" />
+    <result column="open_way" jdbcType="INTEGER" property="openWay" />
+    <result column="share_way" jdbcType="INTEGER" property="shareWay" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
+    <result column="reason_" jdbcType="LONGVARCHAR" property="reason" />
+    <result column="set_id" jdbcType="BIGINT" property="setId" />
+    <result column="data_sheet" jdbcType="INTEGER" property="dataSheet" />
+    <result column="data_status" jdbcType="INTEGER" property="dataStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, apply_code, dir_name, dir_code, unit_abbr, parent_id, unit_id, desc_, dir_type, 
+    data_count, see_count, down_count, opt_type, status_, is_bottom, special_type, domain, 
+    theme_one, theme_two, theme_three, industry_one, industry_two, industry_three, service_one, 
+    service_two, service_three, open_way, share_way, data_type, reason_, set_id, data_sheet, 
+    data_status, create_time, create_user, update_time, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.exchange.repository.directory.example.ShareDataDirectoryExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_share_data_directory
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_share_data_directory
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.exchange.repository.directory.example.ShareDataDirectoryExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_share_data_directory
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_share_data_directory
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_directory
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.exchange.repository.directory.example.ShareDataDirectoryExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_directory
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_share_data_directory where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_directory
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_share_data_directory where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataDirectory">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_directory
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_directory
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_directory
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_directory
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataDirectory">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_directory (id, apply_code, dir_name, 
+      dir_code, unit_abbr, parent_id, 
+      unit_id, desc_, dir_type, 
+      data_count, see_count, down_count, 
+      opt_type, status_, is_bottom, 
+      special_type, domain, theme_one, 
+      theme_two, theme_three, industry_one, 
+      industry_two, industry_three, service_one, 
+      service_two, service_three, open_way, 
+      share_way, data_type, reason_, 
+      set_id, data_sheet, data_status, 
+      create_time, create_user, update_time, 
+      update_user)
+    values (#{id,jdbcType=BIGINT}, #{applyCode,jdbcType=VARCHAR}, #{dirName,jdbcType=VARCHAR}, 
+      #{dirCode,jdbcType=VARCHAR}, #{unitAbbr,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
+      #{unitId,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{dirType,jdbcType=INTEGER}, 
+      #{dataCount,jdbcType=INTEGER}, #{seeCount,jdbcType=INTEGER}, #{downCount,jdbcType=INTEGER}, 
+      #{optType,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{isBottom,jdbcType=INTEGER}, 
+      #{specialType,jdbcType=VARCHAR}, #{domain,jdbcType=VARCHAR}, #{themeOne,jdbcType=VARCHAR}, 
+      #{themeTwo,jdbcType=VARCHAR}, #{themeThree,jdbcType=VARCHAR}, #{industryOne,jdbcType=VARCHAR}, 
+      #{industryTwo,jdbcType=VARCHAR}, #{industryThree,jdbcType=VARCHAR}, #{serviceOne,jdbcType=VARCHAR}, 
+      #{serviceTwo,jdbcType=VARCHAR}, #{serviceThree,jdbcType=VARCHAR}, #{openWay,jdbcType=INTEGER}, 
+      #{shareWay,jdbcType=INTEGER}, #{dataType,jdbcType=INTEGER}, #{reason,jdbcType=LONGVARCHAR}, 
+      #{setId,jdbcType=BIGINT}, #{dataSheet,jdbcType=INTEGER}, #{dataStatus,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_directory (id, apply_code, dir_name, dir_code, unit_abbr, parent_id, unit_id, desc_, dir_type, data_count, see_count, down_count, opt_type, status_, is_bottom, special_type, domain, theme_one, theme_two, theme_three, industry_one, industry_two, industry_three, service_one, service_two, service_three, open_way, share_way, data_type, reason_, set_id, data_sheet, data_status, create_time, create_user, update_time, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.applyCode,jdbcType=VARCHAR}, #{item.dirName,jdbcType=VARCHAR}, 
+        #{item.dirCode,jdbcType=VARCHAR}, #{item.unitAbbr,jdbcType=VARCHAR}, #{item.parentId,jdbcType=VARCHAR}, 
+        #{item.unitId,jdbcType=VARCHAR}, #{item.desc,jdbcType=VARCHAR}, #{item.dirType,jdbcType=INTEGER}, 
+        #{item.dataCount,jdbcType=INTEGER}, #{item.seeCount,jdbcType=INTEGER}, #{item.downCount,jdbcType=INTEGER}, 
+        #{item.optType,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER}, #{item.isBottom,jdbcType=INTEGER}, 
+        #{item.specialType,jdbcType=VARCHAR}, #{item.domain,jdbcType=VARCHAR}, #{item.themeOne,jdbcType=VARCHAR}, 
+        #{item.themeTwo,jdbcType=VARCHAR}, #{item.themeThree,jdbcType=VARCHAR}, #{item.industryOne,jdbcType=VARCHAR}, 
+        #{item.industryTwo,jdbcType=VARCHAR}, #{item.industryThree,jdbcType=VARCHAR}, #{item.serviceOne,jdbcType=VARCHAR}, 
+        #{item.serviceTwo,jdbcType=VARCHAR}, #{item.serviceThree,jdbcType=VARCHAR}, #{item.openWay,jdbcType=INTEGER}, 
+        #{item.shareWay,jdbcType=INTEGER}, #{item.dataType,jdbcType=INTEGER}, #{item.reason,jdbcType=LONGVARCHAR}, 
+        #{item.setId,jdbcType=BIGINT}, #{item.dataSheet,jdbcType=INTEGER}, #{item.dataStatus,jdbcType=INTEGER}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataDirectory">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_directory
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="applyCode != null">
+        apply_code,
+      </if>
+      <if test="dirName != null">
+        dir_name,
+      </if>
+      <if test="dirCode != null">
+        dir_code,
+      </if>
+      <if test="unitAbbr != null">
+        unit_abbr,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="desc != null">
+        desc_,
+      </if>
+      <if test="dirType != null">
+        dir_type,
+      </if>
+      <if test="dataCount != null">
+        data_count,
+      </if>
+      <if test="seeCount != null">
+        see_count,
+      </if>
+      <if test="downCount != null">
+        down_count,
+      </if>
+      <if test="optType != null">
+        opt_type,
+      </if>
+      <if test="status != null">
+        status_,
+      </if>
+      <if test="isBottom != null">
+        is_bottom,
+      </if>
+      <if test="specialType != null">
+        special_type,
+      </if>
+      <if test="domain != null">
+        domain,
+      </if>
+      <if test="themeOne != null">
+        theme_one,
+      </if>
+      <if test="themeTwo != null">
+        theme_two,
+      </if>
+      <if test="themeThree != null">
+        theme_three,
+      </if>
+      <if test="industryOne != null">
+        industry_one,
+      </if>
+      <if test="industryTwo != null">
+        industry_two,
+      </if>
+      <if test="industryThree != null">
+        industry_three,
+      </if>
+      <if test="serviceOne != null">
+        service_one,
+      </if>
+      <if test="serviceTwo != null">
+        service_two,
+      </if>
+      <if test="serviceThree != null">
+        service_three,
+      </if>
+      <if test="openWay != null">
+        open_way,
+      </if>
+      <if test="shareWay != null">
+        share_way,
+      </if>
+      <if test="dataType != null">
+        data_type,
+      </if>
+      <if test="reason != null">
+        reason_,
+      </if>
+      <if test="setId != null">
+        set_id,
+      </if>
+      <if test="dataSheet != null">
+        data_sheet,
+      </if>
+      <if test="dataStatus != null">
+        data_status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="applyCode != null">
+        #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dirName != null">
+        #{dirName,jdbcType=VARCHAR},
+      </if>
+      <if test="dirCode != null">
+        #{dirCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unitAbbr != null">
+        #{unitAbbr,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="dirType != null">
+        #{dirType,jdbcType=INTEGER},
+      </if>
+      <if test="dataCount != null">
+        #{dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="seeCount != null">
+        #{seeCount,jdbcType=INTEGER},
+      </if>
+      <if test="downCount != null">
+        #{downCount,jdbcType=INTEGER},
+      </if>
+      <if test="optType != null">
+        #{optType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isBottom != null">
+        #{isBottom,jdbcType=INTEGER},
+      </if>
+      <if test="specialType != null">
+        #{specialType,jdbcType=VARCHAR},
+      </if>
+      <if test="domain != null">
+        #{domain,jdbcType=VARCHAR},
+      </if>
+      <if test="themeOne != null">
+        #{themeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="themeTwo != null">
+        #{themeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="themeThree != null">
+        #{themeThree,jdbcType=VARCHAR},
+      </if>
+      <if test="industryOne != null">
+        #{industryOne,jdbcType=VARCHAR},
+      </if>
+      <if test="industryTwo != null">
+        #{industryTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="industryThree != null">
+        #{industryThree,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceOne != null">
+        #{serviceOne,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceTwo != null">
+        #{serviceTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceThree != null">
+        #{serviceThree,jdbcType=VARCHAR},
+      </if>
+      <if test="openWay != null">
+        #{openWay,jdbcType=INTEGER},
+      </if>
+      <if test="shareWay != null">
+        #{shareWay,jdbcType=INTEGER},
+      </if>
+      <if test="dataType != null">
+        #{dataType,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="setId != null">
+        #{setId,jdbcType=BIGINT},
+      </if>
+      <if test="dataSheet != null">
+        #{dataSheet,jdbcType=INTEGER},
+      </if>
+      <if test="dataStatus != null">
+        #{dataStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.exchange.repository.directory.example.ShareDataDirectoryExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_share_data_directory
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_directory
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.applyCode != null">
+        apply_code = #{record.applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dirName != null">
+        dir_name = #{record.dirName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dirCode != null">
+        dir_code = #{record.dirCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitAbbr != null">
+        unit_abbr = #{record.unitAbbr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentId != null">
+        parent_id = #{record.parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitId != null">
+        unit_id = #{record.unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.desc != null">
+        desc_ = #{record.desc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dirType != null">
+        dir_type = #{record.dirType,jdbcType=INTEGER},
+      </if>
+      <if test="record.dataCount != null">
+        data_count = #{record.dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.seeCount != null">
+        see_count = #{record.seeCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.downCount != null">
+        down_count = #{record.downCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.optType != null">
+        opt_type = #{record.optType,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        status_ = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.isBottom != null">
+        is_bottom = #{record.isBottom,jdbcType=INTEGER},
+      </if>
+      <if test="record.specialType != null">
+        special_type = #{record.specialType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.domain != null">
+        domain = #{record.domain,jdbcType=VARCHAR},
+      </if>
+      <if test="record.themeOne != null">
+        theme_one = #{record.themeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="record.themeTwo != null">
+        theme_two = #{record.themeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.themeThree != null">
+        theme_three = #{record.themeThree,jdbcType=VARCHAR},
+      </if>
+      <if test="record.industryOne != null">
+        industry_one = #{record.industryOne,jdbcType=VARCHAR},
+      </if>
+      <if test="record.industryTwo != null">
+        industry_two = #{record.industryTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.industryThree != null">
+        industry_three = #{record.industryThree,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceOne != null">
+        service_one = #{record.serviceOne,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceTwo != null">
+        service_two = #{record.serviceTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceThree != null">
+        service_three = #{record.serviceThree,jdbcType=VARCHAR},
+      </if>
+      <if test="record.openWay != null">
+        open_way = #{record.openWay,jdbcType=INTEGER},
+      </if>
+      <if test="record.shareWay != null">
+        share_way = #{record.shareWay,jdbcType=INTEGER},
+      </if>
+      <if test="record.dataType != null">
+        data_type = #{record.dataType,jdbcType=INTEGER},
+      </if>
+      <if test="record.reason != null">
+        reason_ = #{record.reason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.setId != null">
+        set_id = #{record.setId,jdbcType=BIGINT},
+      </if>
+      <if test="record.dataSheet != null">
+        data_sheet = #{record.dataSheet,jdbcType=INTEGER},
+      </if>
+      <if test="record.dataStatus != null">
+        data_status = #{record.dataStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_directory
+    set id = #{record.id,jdbcType=BIGINT},
+      apply_code = #{record.applyCode,jdbcType=VARCHAR},
+      dir_name = #{record.dirName,jdbcType=VARCHAR},
+      dir_code = #{record.dirCode,jdbcType=VARCHAR},
+      unit_abbr = #{record.unitAbbr,jdbcType=VARCHAR},
+      parent_id = #{record.parentId,jdbcType=VARCHAR},
+      unit_id = #{record.unitId,jdbcType=VARCHAR},
+      desc_ = #{record.desc,jdbcType=VARCHAR},
+      dir_type = #{record.dirType,jdbcType=INTEGER},
+      data_count = #{record.dataCount,jdbcType=INTEGER},
+      see_count = #{record.seeCount,jdbcType=INTEGER},
+      down_count = #{record.downCount,jdbcType=INTEGER},
+      opt_type = #{record.optType,jdbcType=INTEGER},
+      status_ = #{record.status,jdbcType=INTEGER},
+      is_bottom = #{record.isBottom,jdbcType=INTEGER},
+      special_type = #{record.specialType,jdbcType=VARCHAR},
+      domain = #{record.domain,jdbcType=VARCHAR},
+      theme_one = #{record.themeOne,jdbcType=VARCHAR},
+      theme_two = #{record.themeTwo,jdbcType=VARCHAR},
+      theme_three = #{record.themeThree,jdbcType=VARCHAR},
+      industry_one = #{record.industryOne,jdbcType=VARCHAR},
+      industry_two = #{record.industryTwo,jdbcType=VARCHAR},
+      industry_three = #{record.industryThree,jdbcType=VARCHAR},
+      service_one = #{record.serviceOne,jdbcType=VARCHAR},
+      service_two = #{record.serviceTwo,jdbcType=VARCHAR},
+      service_three = #{record.serviceThree,jdbcType=VARCHAR},
+      open_way = #{record.openWay,jdbcType=INTEGER},
+      share_way = #{record.shareWay,jdbcType=INTEGER},
+      data_type = #{record.dataType,jdbcType=INTEGER},
+      reason_ = #{record.reason,jdbcType=LONGVARCHAR},
+      set_id = #{record.setId,jdbcType=BIGINT},
+      data_sheet = #{record.dataSheet,jdbcType=INTEGER},
+      data_status = #{record.dataStatus,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataDirectory">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_directory
+    <set>
+      <if test="applyCode != null">
+        apply_code = #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dirName != null">
+        dir_name = #{dirName,jdbcType=VARCHAR},
+      </if>
+      <if test="dirCode != null">
+        dir_code = #{dirCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unitAbbr != null">
+        unit_abbr = #{unitAbbr,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        desc_ = #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="dirType != null">
+        dir_type = #{dirType,jdbcType=INTEGER},
+      </if>
+      <if test="dataCount != null">
+        data_count = #{dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="seeCount != null">
+        see_count = #{seeCount,jdbcType=INTEGER},
+      </if>
+      <if test="downCount != null">
+        down_count = #{downCount,jdbcType=INTEGER},
+      </if>
+      <if test="optType != null">
+        opt_type = #{optType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isBottom != null">
+        is_bottom = #{isBottom,jdbcType=INTEGER},
+      </if>
+      <if test="specialType != null">
+        special_type = #{specialType,jdbcType=VARCHAR},
+      </if>
+      <if test="domain != null">
+        domain = #{domain,jdbcType=VARCHAR},
+      </if>
+      <if test="themeOne != null">
+        theme_one = #{themeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="themeTwo != null">
+        theme_two = #{themeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="themeThree != null">
+        theme_three = #{themeThree,jdbcType=VARCHAR},
+      </if>
+      <if test="industryOne != null">
+        industry_one = #{industryOne,jdbcType=VARCHAR},
+      </if>
+      <if test="industryTwo != null">
+        industry_two = #{industryTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="industryThree != null">
+        industry_three = #{industryThree,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceOne != null">
+        service_one = #{serviceOne,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceTwo != null">
+        service_two = #{serviceTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceThree != null">
+        service_three = #{serviceThree,jdbcType=VARCHAR},
+      </if>
+      <if test="openWay != null">
+        open_way = #{openWay,jdbcType=INTEGER},
+      </if>
+      <if test="shareWay != null">
+        share_way = #{shareWay,jdbcType=INTEGER},
+      </if>
+      <if test="dataType != null">
+        data_type = #{dataType,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null">
+        reason_ = #{reason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="setId != null">
+        set_id = #{setId,jdbcType=BIGINT},
+      </if>
+      <if test="dataSheet != null">
+        data_sheet = #{dataSheet,jdbcType=INTEGER},
+      </if>
+      <if test="dataStatus != null">
+        data_status = #{dataStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataDirectory">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_directory
+    <set>
+      <if test="applyCode != null">
+        apply_code = #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dirName != null">
+        dir_name = #{dirName,jdbcType=VARCHAR},
+      </if>
+      <if test="dirCode != null">
+        dir_code = #{dirCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unitAbbr != null">
+        unit_abbr = #{unitAbbr,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        desc_ = #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="dirType != null">
+        dir_type = #{dirType,jdbcType=INTEGER},
+      </if>
+      <if test="dataCount != null">
+        data_count = #{dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="seeCount != null">
+        see_count = #{seeCount,jdbcType=INTEGER},
+      </if>
+      <if test="downCount != null">
+        down_count = #{downCount,jdbcType=INTEGER},
+      </if>
+      <if test="optType != null">
+        opt_type = #{optType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isBottom != null">
+        is_bottom = #{isBottom,jdbcType=INTEGER},
+      </if>
+      <if test="specialType != null">
+        special_type = #{specialType,jdbcType=VARCHAR},
+      </if>
+      <if test="domain != null">
+        domain = #{domain,jdbcType=VARCHAR},
+      </if>
+      <if test="themeOne != null">
+        theme_one = #{themeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="themeTwo != null">
+        theme_two = #{themeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="themeThree != null">
+        theme_three = #{themeThree,jdbcType=VARCHAR},
+      </if>
+      <if test="industryOne != null">
+        industry_one = #{industryOne,jdbcType=VARCHAR},
+      </if>
+      <if test="industryTwo != null">
+        industry_two = #{industryTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="industryThree != null">
+        industry_three = #{industryThree,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceOne != null">
+        service_one = #{serviceOne,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceTwo != null">
+        service_two = #{serviceTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceThree != null">
+        service_three = #{serviceThree,jdbcType=VARCHAR},
+      </if>
+      <if test="openWay != null">
+        open_way = #{openWay,jdbcType=INTEGER},
+      </if>
+      <if test="shareWay != null">
+        share_way = #{shareWay,jdbcType=INTEGER},
+      </if>
+      <if test="dataType != null">
+        data_type = #{dataType,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null">
+        reason_ = #{reason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="setId != null">
+        set_id = #{setId,jdbcType=BIGINT},
+      </if>
+      <if test="dataSheet != null">
+        data_sheet = #{dataSheet,jdbcType=INTEGER},
+      </if>
+      <if test="dataStatus != null">
+        data_status = #{dataStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataDirectory">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_directory
+    set apply_code = #{applyCode,jdbcType=VARCHAR},
+      dir_name = #{dirName,jdbcType=VARCHAR},
+      dir_code = #{dirCode,jdbcType=VARCHAR},
+      unit_abbr = #{unitAbbr,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=VARCHAR},
+      desc_ = #{desc,jdbcType=VARCHAR},
+      dir_type = #{dirType,jdbcType=INTEGER},
+      data_count = #{dataCount,jdbcType=INTEGER},
+      see_count = #{seeCount,jdbcType=INTEGER},
+      down_count = #{downCount,jdbcType=INTEGER},
+      opt_type = #{optType,jdbcType=INTEGER},
+      status_ = #{status,jdbcType=INTEGER},
+      is_bottom = #{isBottom,jdbcType=INTEGER},
+      special_type = #{specialType,jdbcType=VARCHAR},
+      domain = #{domain,jdbcType=VARCHAR},
+      theme_one = #{themeOne,jdbcType=VARCHAR},
+      theme_two = #{themeTwo,jdbcType=VARCHAR},
+      theme_three = #{themeThree,jdbcType=VARCHAR},
+      industry_one = #{industryOne,jdbcType=VARCHAR},
+      industry_two = #{industryTwo,jdbcType=VARCHAR},
+      industry_three = #{industryThree,jdbcType=VARCHAR},
+      service_one = #{serviceOne,jdbcType=VARCHAR},
+      service_two = #{serviceTwo,jdbcType=VARCHAR},
+      service_three = #{serviceThree,jdbcType=VARCHAR},
+      open_way = #{openWay,jdbcType=INTEGER},
+      share_way = #{shareWay,jdbcType=INTEGER},
+      data_type = #{dataType,jdbcType=INTEGER},
+      reason_ = #{reason,jdbcType=LONGVARCHAR},
+      set_id = #{setId,jdbcType=BIGINT},
+      data_sheet = #{dataSheet,jdbcType=INTEGER},
+      data_status = #{dataStatus,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataDirectory">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_directory
+    set apply_code = #{applyCode,jdbcType=VARCHAR},
+      dir_name = #{dirName,jdbcType=VARCHAR},
+      dir_code = #{dirCode,jdbcType=VARCHAR},
+      unit_abbr = #{unitAbbr,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=VARCHAR},
+      desc_ = #{desc,jdbcType=VARCHAR},
+      dir_type = #{dirType,jdbcType=INTEGER},
+      data_count = #{dataCount,jdbcType=INTEGER},
+      see_count = #{seeCount,jdbcType=INTEGER},
+      down_count = #{downCount,jdbcType=INTEGER},
+      opt_type = #{optType,jdbcType=INTEGER},
+      status_ = #{status,jdbcType=INTEGER},
+      is_bottom = #{isBottom,jdbcType=INTEGER},
+      special_type = #{specialType,jdbcType=VARCHAR},
+      domain = #{domain,jdbcType=VARCHAR},
+      theme_one = #{themeOne,jdbcType=VARCHAR},
+      theme_two = #{themeTwo,jdbcType=VARCHAR},
+      theme_three = #{themeThree,jdbcType=VARCHAR},
+      industry_one = #{industryOne,jdbcType=VARCHAR},
+      industry_two = #{industryTwo,jdbcType=VARCHAR},
+      industry_three = #{industryThree,jdbcType=VARCHAR},
+      service_one = #{serviceOne,jdbcType=VARCHAR},
+      service_two = #{serviceTwo,jdbcType=VARCHAR},
+      service_three = #{serviceThree,jdbcType=VARCHAR},
+      open_way = #{openWay,jdbcType=INTEGER},
+      share_way = #{shareWay,jdbcType=INTEGER},
+      data_type = #{dataType,jdbcType=INTEGER},
+      reason_ = #{reason,jdbcType=LONGVARCHAR},
+      set_id = #{setId,jdbcType=BIGINT},
+      data_sheet = #{dataSheet,jdbcType=INTEGER},
+      data_status = #{dataStatus,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

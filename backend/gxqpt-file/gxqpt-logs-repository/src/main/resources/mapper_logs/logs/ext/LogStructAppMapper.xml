@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogStructAppMapper">
+
+    <resultMap id="MonthErrorMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogMonthErrorDO">
+        <result column="month" property="month"></result>
+        <result column="count" property="count"></result>
+        <result column="year" property="year"></result>
+    </resultMap>
+    <resultMap id="logTypeMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogTypeDO">
+        <result column="month" property="month"></result>
+        <result column="count" property="count"></result>
+        <result column="log_type" property="logType"></result>
+        <result column="year" property="year"></result>
+    </resultMap>
+    <resultMap id="logSortMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogSortDO">
+        <result column="count" property="count"></result>
+        <result column="level" property="level"></result>
+    </resultMap>
+    <resultMap id="LogLevelMonthMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogLevelMonthDO">
+        <result column="count" property="count"></result>
+        <result column="level" property="level"></result>
+        <result column="year" property="year"></result>
+        <result column="month" property="month"></result>
+    </resultMap>
+    <!--分页查询结构化应用系统APP列表-->
+    <select id="pageQueryApp" resultMap="BaseResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructAppExample">
+        select id, document_id, app_id, log_name, log_time, class_name, source_file_name, level,
+        content, thread, method, line, system_live_time, log_business_type, data_channel,
+        create_time, create_user, update_time, update_user, create_user_name, update_user_name
+        from log_struct_app3
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <!--查询结构化应用系统APP列表-->
+    <select id="pageQueryWarningApp" resultMap="BaseResultMap"
+            parameterType="Long">
+        select lsa.id, lsa.document_id, lsa.app_id, lsa.log_name, lsa.log_time, lsa.class_name, lsa.source_file_name, lsa.level,
+        lsa.content, lsa.thread, lsa.method, lsa.line, lsa.system_live_time, lsa.log_business_type, lsa.data_channel,
+        lsa.create_time, lsa.create_user, lsa.update_time, lsa.update_user, lsa.create_user_name, lsa.update_user_name
+        from log_warning_struct lws,log_struct_app3 lsa where lws.log_struct_id = lsa.id and lws.log_type='APP' and lws.log_warning_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!--查询结构化应用系统APP需要告警的记录-->
+    <select id="queryAppWarn" resultMap="BaseResultMap"
+            parameterType="Long">
+        select lsa.id, lsa.document_id, lsa.app_id, lsa.log_name, lsa.log_time, lsa.class_name, lsa.source_file_name, lsa.level,
+        lsa.content, lsa.thread, lsa.method, lsa.line, lsa.system_live_time, lsa.log_business_type, lsa.data_channel,
+        lsa.create_time, lsa.create_user, lsa.update_time, lsa.update_user, lsa.create_user_name, lsa.update_user_name
+        from log_struct_app3 lsa  where not exists (
+        SELECT 1
+        FROM log_warn_check lwc
+        WHERE lwc.log_type='APP' and  lwc.log_struct_id = lsa.id ) order by lsa.log_time asc limit #{pageSize,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByDocumentIds" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogFileInterfaceExample">
+        delete from log_struct_app3
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <!--查询当前月error统计数量-->
+<select id="currentCount" resultType="int">
+select count(la.`level`) as currentCount  FROM log_struct_app3 la WHERE la.`level`="ERROR" and MONTH(la.create_time)=MONTH(NOW())
+</select>
+    <!--查询每月error日志数量-->
+    <select id="findErrorLogMonthCount" parameterType="String" resultMap="MonthErrorMap">
+
+        select YEAR(la.create_time) as year,MONTH(la.create_time) as month, COUNT(MONTH(la.create_time)) as count from log_struct_app3 la where la.level='ERROR' and la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time)
+    </select>
+    <!--统计前十二月数据-->
+    <select id="findMonthCount" parameterType="String" resultMap="logTypeMap">
+         select  YEAR(la.create_time) as year,MONTH(la.create_time) as month, COUNT(MONTH(la.create_time)) as count from log_struct_app3 la where la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time)
+    </select>
+    <!--查询日志分类数量-->
+    <select id="findLogSortCount" resultMap="logSortMap">
+SELECT la.level,COUNT(la.level) as count FROM log_struct_app3 la GROUP BY la.level
+    </select>
+    <select id="findLogLevelMonthCount" parameterType="String" resultMap="LogLevelMonthMap">
+        SELECT YEAR(la.create_time) as year , MONTH(la.create_time) as month, la.level,COUNT(la.level) as count FROM log_struct_app3 la WHERE la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time),la.level
+    </select>
+</mapper>

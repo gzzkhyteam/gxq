@@ -1,0 +1,33 @@
+package com.hengyunsoft.platform.mail.dto.core;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+/**
+ * 用户签名
+ *
+ * @auth wt
+ * @date 2018/07/30
+ */
+@Data
+@ApiModel(value = "RequestUserSign", description = "用户签名请求")
+public class RequestUserSignDTO {
+
+    /**
+     * 签名标题
+     *
+     * @mbggenerated
+     */
+    @ApiModelProperty(value = "签名标题")
+    private String signTitle;
+
+    /**
+     * 签名内容
+     *
+     * @mbggenerated
+     */
+    @ApiModelProperty(value = "签名内容")
+    private String signContent;
+
+}

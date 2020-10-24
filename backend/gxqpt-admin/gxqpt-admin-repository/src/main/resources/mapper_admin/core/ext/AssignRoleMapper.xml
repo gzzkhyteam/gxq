@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.core.dao.AssignRoleMapper">
+    <!--维护应用管理员(删)
+    @wz-->
+    <delete id="deleteAssignRoleByAppAndUser">
+    delete from c_assign_role
+    where c_assign_role.id=
+    (select n.max_id from
+    (select max(c_assign_role.id) max_id
+    from c_assign_role
+    join c_user on c_user.id= c_assign_role.user_id
+    join c_role on c_assign_role.role_id=c_role.id
+    and c_role.app_id=#{appId,jdbcType=VARCHAR}
+    and c_role.code_='app_admin'
+    where c_assign_role.user_id = #{userId,jdbcType=BIGINT}) as n)
+    and
+    1 &lt; (
+        select
+        n2.value_
+        from
+        (
+            select
+            count(*) value_
+            from
+            c_assign_role
+            join c_role on c_assign_role.role_id = c_role.id
+            and c_role.app_id = #{appId,jdbcType=VARCHAR}
+            and c_role.code_ = 'app_admin'
+        ) as n2
+    )
+  </delete>
+    <!--维护应用管理员(增)
+    @wz-->
+    <insert id="insertAssignRoleByAppAndUser"
+            parameterType="com.hengyunsoft.platform.admin.entity.core.domain.AssignRoleManagerDO">
+    insert into c_assign_role (id, role_id, user_id, create_user, create_time )
+    values (#{id,jdbcType=BIGINT},
+      (select c_role.id from c_role where c_role.app_id=#{appId,jdbcType=VARCHAR}
+      and c_role.code_='app_admin'),
+      #{userId,jdbcType=BIGINT},
+      #{createUser,jdbcType=BIGINT},
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+    <!--单位管理员维护(取消关联)
+    @wz-->
+    <delete id="deleteAssignRoleByOrgAndUser">
+        delete from c_assign_role
+        where c_assign_role.id=
+        (select n.max_id from
+        (select max(c_assign_role.id) max_id
+        from c_assign_role
+        join c_user on c_user.id= c_assign_role.user_id
+        join c_role on c_assign_role.role_id=c_role.id
+        and c_role.biz_flag=#{orgId,jdbcType=VARCHAR}
+        where c_assign_role.user_id = #{userId,jdbcType=BIGINT}) as n)
+    </delete>
+    <!--单位管理员维护(关联)
+    @wz-->
+    <insert id="insertAssignRoleByOrgAndUser"
+            parameterType="com.hengyunsoft.platform.admin.entity.core.domain.AssignRoleManagerDO">
+        insert into c_assign_role (id, role_id, user_id, create_user, create_time )
+    values (#{id,jdbcType=BIGINT},
+      (select c_role.id from c_role where c_role.biz_flag=#{appId,jdbcType=VARCHAR}),
+      #{userId,jdbcType=BIGINT},
+      #{createUser,jdbcType=BIGINT},
+      #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+</mapper>

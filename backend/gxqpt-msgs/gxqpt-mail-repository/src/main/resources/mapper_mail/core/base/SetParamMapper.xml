@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mail.repository.core.dao.SetParamMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.mail.entity.core.po.SetParam">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="is_receipt" jdbcType="INTEGER" property="isReceipt" />
+    <result column="default_code" jdbcType="VARCHAR" property="defaultCode" />
+    <result column="login_page" jdbcType="VARCHAR" property="loginPage" />
+    <result column="clear_trash_gap" jdbcType="INTEGER" property="clearTrashGap" />
+    <result column="clear_viruse_gap" jdbcType="INTEGER" property="clearViruseGap" />
+    <result column="auto_forward" jdbcType="INTEGER" property="autoForward" />
+    <result column="forward_address" jdbcType="VARCHAR" property="forwardAddress" />
+    <result column="save_copy_local" jdbcType="INTEGER" property="saveCopyLocal" />
+    <result column="auto_reply" jdbcType="INTEGER" property="autoReply" />
+    <result column="reply_content" jdbcType="VARCHAR" property="replyContent" />
+    <result column="curr_sign" jdbcType="BIGINT" property="currSign" />
+    <result column="is_logged" jdbcType="BIT" property="isLogged" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, is_receipt, default_code, login_page, clear_trash_gap, clear_viruse_gap, auto_forward, 
+    forward_address, save_copy_local, auto_reply, reply_content, curr_sign, is_logged, 
+    create_time, create_user, update_time, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.mail.repository.core.example.SetParamExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mail_set_param
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from mail_set_param
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.mail.repository.core.example.SetParamExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mail_set_param
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from mail_set_param
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.mail.repository.core.example.SetParamExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from mail_set_param
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.mail.entity.core.po.SetParam">
+    <!--
+    @mbggenerated
+    -->
+    update mail_set_param
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update mail_set_param
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.mail.entity.core.po.SetParam">
+    <!--
+    @mbggenerated
+    -->
+    insert into mail_set_param (id, is_receipt, default_code, 
+      login_page, clear_trash_gap, clear_viruse_gap, 
+      auto_forward, forward_address, save_copy_local, 
+      auto_reply, reply_content, curr_sign, 
+      is_logged, create_time, create_user, 
+      update_time, update_user)
+    values (#{id,jdbcType=BIGINT}, #{isReceipt,jdbcType=INTEGER}, #{defaultCode,jdbcType=VARCHAR}, 
+      #{loginPage,jdbcType=VARCHAR}, #{clearTrashGap,jdbcType=INTEGER}, #{clearViruseGap,jdbcType=INTEGER}, 
+      #{autoForward,jdbcType=INTEGER}, #{forwardAddress,jdbcType=VARCHAR}, #{saveCopyLocal,jdbcType=INTEGER}, 
+      #{autoReply,jdbcType=INTEGER}, #{replyContent,jdbcType=VARCHAR}, #{currSign,jdbcType=BIGINT}, 
+      #{isLogged,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into mail_set_param (id, is_receipt, default_code, login_page, clear_trash_gap, clear_viruse_gap, auto_forward, forward_address, save_copy_local, auto_reply, reply_content, curr_sign, is_logged, create_time, create_user, update_time, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.isReceipt,jdbcType=INTEGER}, #{item.defaultCode,jdbcType=VARCHAR}, 
+        #{item.loginPage,jdbcType=VARCHAR}, #{item.clearTrashGap,jdbcType=INTEGER}, #{item.clearViruseGap,jdbcType=INTEGER}, 
+        #{item.autoForward,jdbcType=INTEGER}, #{item.forwardAddress,jdbcType=VARCHAR}, 
+        #{item.saveCopyLocal,jdbcType=INTEGER}, #{item.autoReply,jdbcType=INTEGER}, #{item.replyContent,jdbcType=VARCHAR}, 
+        #{item.currSign,jdbcType=BIGINT}, #{item.isLogged,jdbcType=BIT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.createUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.mail.entity.core.po.SetParam">
+    <!--
+    @mbggenerated
+    -->
+    insert into mail_set_param
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="isReceipt != null">
+        is_receipt,
+      </if>
+      <if test="defaultCode != null">
+        default_code,
+      </if>
+      <if test="loginPage != null">
+        login_page,
+      </if>
+      <if test="clearTrashGap != null">
+        clear_trash_gap,
+      </if>
+      <if test="clearViruseGap != null">
+        clear_viruse_gap,
+      </if>
+      <if test="autoForward != null">
+        auto_forward,
+      </if>
+      <if test="forwardAddress != null">
+        forward_address,
+      </if>
+      <if test="saveCopyLocal != null">
+        save_copy_local,
+      </if>
+      <if test="autoReply != null">
+        auto_reply,
+      </if>
+      <if test="replyContent != null">
+        reply_content,
+      </if>
+      <if test="currSign != null">
+        curr_sign,
+      </if>
+      <if test="isLogged != null">
+        is_logged,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="isReceipt != null">
+        #{isReceipt,jdbcType=INTEGER},
+      </if>
+      <if test="defaultCode != null">
+        #{defaultCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPage != null">
+        #{loginPage,jdbcType=VARCHAR},
+      </if>
+      <if test="clearTrashGap != null">
+        #{clearTrashGap,jdbcType=INTEGER},
+      </if>
+      <if test="clearViruseGap != null">
+        #{clearViruseGap,jdbcType=INTEGER},
+      </if>
+      <if test="autoForward != null">
+        #{autoForward,jdbcType=INTEGER},
+      </if>
+      <if test="forwardAddress != null">
+        #{forwardAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="saveCopyLocal != null">
+        #{saveCopyLocal,jdbcType=INTEGER},
+      </if>
+      <if test="autoReply != null">
+        #{autoReply,jdbcType=INTEGER},
+      </if>
+      <if test="replyContent != null">
+        #{replyContent,jdbcType=VARCHAR},
+      </if>
+      <if test="currSign != null">
+        #{currSign,jdbcType=BIGINT},
+      </if>
+      <if test="isLogged != null">
+        #{isLogged,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.mail.repository.core.example.SetParamExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from mail_set_param
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update mail_set_param
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.isReceipt != null">
+        is_receipt = #{record.isReceipt,jdbcType=INTEGER},
+      </if>
+      <if test="record.defaultCode != null">
+        default_code = #{record.defaultCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginPage != null">
+        login_page = #{record.loginPage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clearTrashGap != null">
+        clear_trash_gap = #{record.clearTrashGap,jdbcType=INTEGER},
+      </if>
+      <if test="record.clearViruseGap != null">
+        clear_viruse_gap = #{record.clearViruseGap,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoForward != null">
+        auto_forward = #{record.autoForward,jdbcType=INTEGER},
+      </if>
+      <if test="record.forwardAddress != null">
+        forward_address = #{record.forwardAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.saveCopyLocal != null">
+        save_copy_local = #{record.saveCopyLocal,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoReply != null">
+        auto_reply = #{record.autoReply,jdbcType=INTEGER},
+      </if>
+      <if test="record.replyContent != null">
+        reply_content = #{record.replyContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currSign != null">
+        curr_sign = #{record.currSign,jdbcType=BIGINT},
+      </if>
+      <if test="record.isLogged != null">
+        is_logged = #{record.isLogged,jdbcType=BIT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update mail_set_param
+    set id = #{record.id,jdbcType=BIGINT},
+      is_receipt = #{record.isReceipt,jdbcType=INTEGER},
+      default_code = #{record.defaultCode,jdbcType=VARCHAR},
+      login_page = #{record.loginPage,jdbcType=VARCHAR},
+      clear_trash_gap = #{record.clearTrashGap,jdbcType=INTEGER},
+      clear_viruse_gap = #{record.clearViruseGap,jdbcType=INTEGER},
+      auto_forward = #{record.autoForward,jdbcType=INTEGER},
+      forward_address = #{record.forwardAddress,jdbcType=VARCHAR},
+      save_copy_local = #{record.saveCopyLocal,jdbcType=INTEGER},
+      auto_reply = #{record.autoReply,jdbcType=INTEGER},
+      reply_content = #{record.replyContent,jdbcType=VARCHAR},
+      curr_sign = #{record.currSign,jdbcType=BIGINT},
+      is_logged = #{record.isLogged,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.mail.entity.core.po.SetParam">
+    <!--
+    @mbggenerated
+    -->
+    update mail_set_param
+    <set>
+      <if test="isReceipt != null">
+        is_receipt = #{isReceipt,jdbcType=INTEGER},
+      </if>
+      <if test="defaultCode != null">
+        default_code = #{defaultCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPage != null">
+        login_page = #{loginPage,jdbcType=VARCHAR},
+      </if>
+      <if test="clearTrashGap != null">
+        clear_trash_gap = #{clearTrashGap,jdbcType=INTEGER},
+      </if>
+      <if test="clearViruseGap != null">
+        clear_viruse_gap = #{clearViruseGap,jdbcType=INTEGER},
+      </if>
+      <if test="autoForward != null">
+        auto_forward = #{autoForward,jdbcType=INTEGER},
+      </if>
+      <if test="forwardAddress != null">
+        forward_address = #{forwardAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="saveCopyLocal != null">
+        save_copy_local = #{saveCopyLocal,jdbcType=INTEGER},
+      </if>
+      <if test="autoReply != null">
+        auto_reply = #{autoReply,jdbcType=INTEGER},
+      </if>
+      <if test="replyContent != null">
+        reply_content = #{replyContent,jdbcType=VARCHAR},
+      </if>
+      <if test="currSign != null">
+        curr_sign = #{currSign,jdbcType=BIGINT},
+      </if>
+      <if test="isLogged != null">
+        is_logged = #{isLogged,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.mail.entity.core.po.SetParam">
+    <!--
+    @mbggenerated
+    -->
+    update mail_set_param
+    set is_receipt = #{isReceipt,jdbcType=INTEGER},
+      default_code = #{defaultCode,jdbcType=VARCHAR},
+      login_page = #{loginPage,jdbcType=VARCHAR},
+      clear_trash_gap = #{clearTrashGap,jdbcType=INTEGER},
+      clear_viruse_gap = #{clearViruseGap,jdbcType=INTEGER},
+      auto_forward = #{autoForward,jdbcType=INTEGER},
+      forward_address = #{forwardAddress,jdbcType=VARCHAR},
+      save_copy_local = #{saveCopyLocal,jdbcType=INTEGER},
+      auto_reply = #{autoReply,jdbcType=INTEGER},
+      reply_content = #{replyContent,jdbcType=VARCHAR},
+      curr_sign = #{currSign,jdbcType=BIGINT},
+      is_logged = #{isLogged,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

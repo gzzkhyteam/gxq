@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.hardware.repository.apply.dao.ApplyServerMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyServer">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_keyid" jdbcType="BIGINT" property="applyKeyid" />
+    <result column="cpu_count" jdbcType="INTEGER" property="cpuCount" />
+    <result column="memory_size" jdbcType="BIGINT" property="memorySize" />
+    <result column="system" jdbcType="VARCHAR" property="system" />
+    <result column="sys_disksize" jdbcType="INTEGER" property="sysDisksize" />
+    <result column="net_scope" jdbcType="VARCHAR" property="netScope" />
+    <result column="net_wide" jdbcType="INTEGER" property="netWide" />
+    <result column="gateway_desc" jdbcType="LONGVARCHAR" property="gatewayDesc" />
+    <result column="apply_count" jdbcType="INTEGER" property="applyCount" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, apply_keyid, cpu_count, memory_size, system, sys_disksize, net_scope, net_wide, 
+    gateway_desc, apply_count, create_user, create_time, update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyServerExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_hd_apply_server
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_hd_apply_server
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyServerExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_hd_apply_server
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_hd_apply_server
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_apply_server
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyServerExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_apply_server
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_hd_apply_server where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_apply_server
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_hd_apply_server where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyServer">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_server
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_server
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_server
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_server
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyServer">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_apply_server (id, apply_keyid, cpu_count, 
+      memory_size, system, sys_disksize, 
+      net_scope, net_wide, gateway_desc, 
+      apply_count, create_user, create_time, 
+      update_user, update_time)
+    values (#{id,jdbcType=BIGINT}, #{applyKeyid,jdbcType=BIGINT}, #{cpuCount,jdbcType=INTEGER}, 
+      #{memorySize,jdbcType=BIGINT}, #{system,jdbcType=VARCHAR}, #{sysDisksize,jdbcType=INTEGER}, 
+      #{netScope,jdbcType=VARCHAR}, #{netWide,jdbcType=INTEGER}, #{gatewayDesc,jdbcType=LONGVARCHAR}, 
+      #{applyCount,jdbcType=INTEGER}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_apply_server (id, apply_keyid, cpu_count, memory_size, system, sys_disksize, net_scope, net_wide, gateway_desc, apply_count, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.applyKeyid,jdbcType=BIGINT}, #{item.cpuCount,jdbcType=INTEGER}, 
+        #{item.memorySize,jdbcType=BIGINT}, #{item.system,jdbcType=VARCHAR}, #{item.sysDisksize,jdbcType=INTEGER}, 
+        #{item.netScope,jdbcType=VARCHAR}, #{item.netWide,jdbcType=INTEGER}, #{item.gatewayDesc,jdbcType=LONGVARCHAR}, 
+        #{item.applyCount,jdbcType=INTEGER}, #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyServer">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_apply_server
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="applyKeyid != null">
+        apply_keyid,
+      </if>
+      <if test="cpuCount != null">
+        cpu_count,
+      </if>
+      <if test="memorySize != null">
+        memory_size,
+      </if>
+      <if test="system != null">
+        system,
+      </if>
+      <if test="sysDisksize != null">
+        sys_disksize,
+      </if>
+      <if test="netScope != null">
+        net_scope,
+      </if>
+      <if test="netWide != null">
+        net_wide,
+      </if>
+      <if test="gatewayDesc != null">
+        gateway_desc,
+      </if>
+      <if test="applyCount != null">
+        apply_count,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="applyKeyid != null">
+        #{applyKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="cpuCount != null">
+        #{cpuCount,jdbcType=INTEGER},
+      </if>
+      <if test="memorySize != null">
+        #{memorySize,jdbcType=BIGINT},
+      </if>
+      <if test="system != null">
+        #{system,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDisksize != null">
+        #{sysDisksize,jdbcType=INTEGER},
+      </if>
+      <if test="netScope != null">
+        #{netScope,jdbcType=VARCHAR},
+      </if>
+      <if test="netWide != null">
+        #{netWide,jdbcType=INTEGER},
+      </if>
+      <if test="gatewayDesc != null">
+        #{gatewayDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="applyCount != null">
+        #{applyCount,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyServerExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_hd_apply_server
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_server
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.applyKeyid != null">
+        apply_keyid = #{record.applyKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="record.cpuCount != null">
+        cpu_count = #{record.cpuCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.memorySize != null">
+        memory_size = #{record.memorySize,jdbcType=BIGINT},
+      </if>
+      <if test="record.system != null">
+        system = #{record.system,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sysDisksize != null">
+        sys_disksize = #{record.sysDisksize,jdbcType=INTEGER},
+      </if>
+      <if test="record.netScope != null">
+        net_scope = #{record.netScope,jdbcType=VARCHAR},
+      </if>
+      <if test="record.netWide != null">
+        net_wide = #{record.netWide,jdbcType=INTEGER},
+      </if>
+      <if test="record.gatewayDesc != null">
+        gateway_desc = #{record.gatewayDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.applyCount != null">
+        apply_count = #{record.applyCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_server
+    set id = #{record.id,jdbcType=BIGINT},
+      apply_keyid = #{record.applyKeyid,jdbcType=BIGINT},
+      cpu_count = #{record.cpuCount,jdbcType=INTEGER},
+      memory_size = #{record.memorySize,jdbcType=BIGINT},
+      system = #{record.system,jdbcType=VARCHAR},
+      sys_disksize = #{record.sysDisksize,jdbcType=INTEGER},
+      net_scope = #{record.netScope,jdbcType=VARCHAR},
+      net_wide = #{record.netWide,jdbcType=INTEGER},
+      gateway_desc = #{record.gatewayDesc,jdbcType=LONGVARCHAR},
+      apply_count = #{record.applyCount,jdbcType=INTEGER},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyServer">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_server
+    <set>
+      <if test="applyKeyid != null">
+        apply_keyid = #{applyKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="cpuCount != null">
+        cpu_count = #{cpuCount,jdbcType=INTEGER},
+      </if>
+      <if test="memorySize != null">
+        memory_size = #{memorySize,jdbcType=BIGINT},
+      </if>
+      <if test="system != null">
+        system = #{system,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDisksize != null">
+        sys_disksize = #{sysDisksize,jdbcType=INTEGER},
+      </if>
+      <if test="netScope != null">
+        net_scope = #{netScope,jdbcType=VARCHAR},
+      </if>
+      <if test="netWide != null">
+        net_wide = #{netWide,jdbcType=INTEGER},
+      </if>
+      <if test="gatewayDesc != null">
+        gateway_desc = #{gatewayDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="applyCount != null">
+        apply_count = #{applyCount,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyServer">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_server
+    <set>
+      <if test="applyKeyid != null">
+        apply_keyid = #{applyKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="cpuCount != null">
+        cpu_count = #{cpuCount,jdbcType=INTEGER},
+      </if>
+      <if test="memorySize != null">
+        memory_size = #{memorySize,jdbcType=BIGINT},
+      </if>
+      <if test="system != null">
+        system = #{system,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDisksize != null">
+        sys_disksize = #{sysDisksize,jdbcType=INTEGER},
+      </if>
+      <if test="netScope != null">
+        net_scope = #{netScope,jdbcType=VARCHAR},
+      </if>
+      <if test="netWide != null">
+        net_wide = #{netWide,jdbcType=INTEGER},
+      </if>
+      <if test="gatewayDesc != null">
+        gateway_desc = #{gatewayDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="applyCount != null">
+        apply_count = #{applyCount,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyServer">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_server
+    set apply_keyid = #{applyKeyid,jdbcType=BIGINT},
+      cpu_count = #{cpuCount,jdbcType=INTEGER},
+      memory_size = #{memorySize,jdbcType=BIGINT},
+      system = #{system,jdbcType=VARCHAR},
+      sys_disksize = #{sysDisksize,jdbcType=INTEGER},
+      net_scope = #{netScope,jdbcType=VARCHAR},
+      net_wide = #{netWide,jdbcType=INTEGER},
+      gateway_desc = #{gatewayDesc,jdbcType=LONGVARCHAR},
+      apply_count = #{applyCount,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyServer">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_apply_server
+    set apply_keyid = #{applyKeyid,jdbcType=BIGINT},
+      cpu_count = #{cpuCount,jdbcType=INTEGER},
+      memory_size = #{memorySize,jdbcType=BIGINT},
+      system = #{system,jdbcType=VARCHAR},
+      sys_disksize = #{sysDisksize,jdbcType=INTEGER},
+      net_scope = #{netScope,jdbcType=VARCHAR},
+      net_wide = #{netWide,jdbcType=INTEGER},
+      gateway_desc = #{gatewayDesc,jdbcType=LONGVARCHAR},
+      apply_count = #{applyCount,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.supervise.repository.dao.PowerSuperviseTempMapper">
+
+    <resultMap id="ExtResultMap" type="com.hengyunsoft.platform.supervise.entity.domain.PowerSuperviseTempDO">
+        <!--
+        @mbggenerated
+        -->
+        <result column="tempId" jdbcType="BIGINT" property="tempId" />
+        <result column="tempCode" jdbcType="VARCHAR" property="tempCode" />
+        <result column="tempName" jdbcType="VARCHAR" property="tempName" />
+        <result column="tempDesc" jdbcType="VARCHAR" property="tempDesc" />
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+
+        <result column="linkId" jdbcType="BIGINT" property="linkId" />
+        <result column="power_supervise_id" jdbcType="BIGINT" property="powerSuperviseId" />
+        <result column="linkCode" jdbcType="VARCHAR" property="linkCode" />
+        <result column="linkName" jdbcType="VARCHAR" property="linkName" />
+        <result column="time_limit" jdbcType="INTEGER" property="timeLimit" />
+        <result column="duty_user" jdbcType="VARCHAR" property="dutyUser" />
+        <result column="confirm_user" jdbcType="LONGVARCHAR" property="confirmUser" />
+        <result column="copy_user" jdbcType="LONGVARCHAR" property="copyUser" />
+        <result column="remind_type" jdbcType="SMALLINT" property="remindType" />
+        <result column="sort_num" jdbcType="INTEGER" property="sortNum" />
+        <result column="linkDesc" jdbcType="VARCHAR" property="linkDesc" />
+        <result column="system_id" jdbcType="VARCHAR" property="systemId" />
+        <result column="system_name" jdbcType="VARCHAR" property="systemName" />
+
+    </resultMap>
+
+    <select id="getNotHandleLink" resultMap="ExtResultMap">
+        SELECT
+           bpst.id as tempId, bpst.code_ as tempCode, bpst.name_ as tempName,
+           bpst.desc_ as tempDesc,bpst.start_time, bpst.end_time,
+           bpst.app_id, bpst.app_name,
+
+           bpsl.id as linkId, bpsl.power_supervise_id, bpsl.code_ as linkCode, bpsl.name_ as linkName,
+           bpsl.time_limit, bpsl.duty_user, bpsl.confirm_user, bpsl.copy_user,
+           bpsl.remind_type, bpsl.desc_ as linkDesc, bpsm.system_id , bpsm.system_name
+        FROM b_power_supervise_temp bpst
+        LEFT JOIN b_power_supervise_link bpsl on bpst.code_ = bpsl.code_
+        LEFT JOIN b_power_supervise bpsm on bpsm.id = bpsl.power_supervise_id
+        WHERE bpst.is_send = FALSE and bpst.is_finish = FALSE and bpsm.run_status = TRUE
+    </select>
+
+</mapper>

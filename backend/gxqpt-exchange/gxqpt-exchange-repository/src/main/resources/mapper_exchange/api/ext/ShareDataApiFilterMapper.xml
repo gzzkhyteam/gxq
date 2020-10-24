@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.api.dao.ShareDataApiFilterMapper">
+    <resultMap id="FilterResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.ShareDataApiFilterDO">
+        <!--
+        @mbggenerated
+        -->
+        <result column="scr_rule" jdbcType="INTEGER" property="scrRule"/>
+        <result column="scr_value" jdbcType="LONGVARCHAR" property="scrValue"/>
+        <result column="field_name" jdbcType="VARCHAR" property="fieldName"/>
+        <result column="field_type" jdbcType="VARCHAR" property="fieldType"/>
+        <result column="field_code" jdbcType="VARCHAR" property="fieldCode"/>
+        <result column="desc_" jdbcType="VARCHAR" property="desc"/>
+    </resultMap>
+    <select id="selectFilterInfoByApiId" parameterType="java.lang.Long" resultMap="FilterResultMap">
+        SELECT e.field_name,e.field_type,e.desc_,f.scr_rule,f.scr_value,e.field_code FROM b_share_data_api_filter f
+        INNER JOIN b_share_data_element e ON f.field_id = e.id
+        WHERE f.api_id = #{apiId}
+    </select>
+
+
+    <resultMap id="FilterResultMap1" type="com.hengyunsoft.platform.exchange.entity.api.domain.FiledFilterDO" >
+        <!--
+        @mbggenerated
+        -->
+        <result column="field_code" jdbcType="VARCHAR" property="aliasName"/>
+        <result column="set_field" jdbcType="VARCHAR" property="selectName"/>
+        <result column="scr_rule" jdbcType="INTEGER" property="scrRule"/>
+        <result column="scr_value" jdbcType="VARCHAR" property="scrValue"/>
+    </resultMap>
+
+    <!--  根据API id查找api过滤条件字段-->
+    <select id="selectFilterFiled" resultMap="FilterResultMap1" parameterType="java.lang.Long">
+        SELECT af.scr_rule,af.scr_value,de.field_code,de.set_field FROM b_share_data_api_filter af
+        INNER JOIN b_share_data_element de ON af.field_id = de.id
+        WHERE af.api_id = #{apiId}
+    </select>
+</mapper>

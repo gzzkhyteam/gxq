@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.set.dao.ShareDataSetMapper">
+    <resultMap id="ElementResultMap" type="com.hengyunsoft.platform.exchange.entity.set.domain.ShareDataSetDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="apply_code" jdbcType="VARCHAR" property="applyCode"/>
+        <result column="unit_id" jdbcType="VARCHAR" property="unitId"/>
+        <result column="set_name" jdbcType="VARCHAR" property="setName"/>
+        <result column="set_code" jdbcType="VARCHAR" property="setCode"/>
+        <result column="set_type" jdbcType="INTEGER" property="setType"/>
+        <result column="data_count" jdbcType="REAL" property="dataCount"/>
+        <result column="update_rate" jdbcType="INTEGER" property="updateRate"/>
+        <result column="api_name" jdbcType="VARCHAR" property="apiName"/>
+        <result column="api_url" jdbcType="LONGVARCHAR" property="apiUrl"/>
+        <result column="api_data_type" jdbcType="INTEGER" property="apiDataType"/>
+        <result column="acq_time" jdbcType="TIMESTAMP" property="acqTime"/>
+        <result column="update_type" jdbcType="INTEGER" property="updateType"/>
+        <result column="set_mode" jdbcType="INTEGER" property="setMode"/>
+        <result column="table_code" jdbcType="VARCHAR" property="tableCode"/>
+        <result column="sql_code" jdbcType="LONGVARCHAR" property="sqlCode"/>
+        <result column="data_type" jdbcType="INTEGER" property="dataType"/>
+        <result column="reason" jdbcType="LONGVARCHAR" property="reason"/>
+        <result column="db_id" jdbcType="BIGINT" property="dbId"/>
+        <result column="status_" jdbcType="INTEGER" property="status"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="name_" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="related_dic_cunt" jdbcType="VARCHAR" property="relatedDicCunt"/>
+        <result column="apply_code" jdbcType="VARCHAR" property="applyCode"/>
+        <result column="type" jdbcType="INTEGER" property="applyType"/>
+        <result column="apply_time" jdbcType="TIMESTAMP" property="applyTime"/>
+        <result column="task_id" jdbcType="BIGINT" property="taskId"/>
+        <result column="candelete" jdbcType="INTEGER" property="canDelete"/>
+        <result column="deal_context" jdbcType="VARCHAR" property="dealContext"/>
+    </resultMap>
+    <!--流程详情对象-->
+    <resultMap id="DSFlowTaskInfoResultMap" type="com.hengyunsoft.platform.exchange.entity.set.domain.DSFlowTaskInfoDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="data_set_id" jdbcType="BIGINT" property="dataSetId"/>
+        <result column="apply_code" jdbcType="VARCHAR" property="applyCode"/>
+        <result column="set_name" jdbcType="VARCHAR" property="setName"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+    </resultMap>
+    <!--数据集流程审批列表-->
+    <select id="findAuditList" parameterType="map" resultMap="ElementResultMap">
+        SELECT
+        s.id,
+        s.apply_code,
+        s.unit_id,
+        s.set_name,
+        s.set_code,
+        s.set_type,
+        s.data_count,
+        s.update_rate,
+        s.api_name,
+        s.api_url,
+        s.api_data_type,
+        s.acq_time,
+        s.update_type,
+        s.set_mode,
+        s.table_code,
+        s.sql_code,
+        s.data_type,
+        s.reason,
+        s.db_id,
+        s.status_,
+        s.create_time,
+        s.create_user,
+
+        s.update_time,
+        s.update_user,
+        (SELECT c.name_ from v_emp c where c.gxqpt_emp_id =f.create_user) name_,
+        f.type,
+        (SELECT fa.content from b_share_flow_audit fa WHERE fa.apply_code = s.apply_code LIMIT 1) deal_context,
+        f.create_time AS apply_time,
+        (SELECT COUNT(d.set_id) FROM b_share_data_directory d WHERE s.id = d.set_id) AS related_dic_cunt,
+        (
+        CASE s.status_
+        WHEN 1 THEN
+        ( SELECT
+        fs.id
+        FROM
+        b_share_flow_task fs
+        WHERE
+        fs.apply_code = s.apply_code limit 1
+
+        )
+        ELSE
+        (
+        SELECT
+        fh.id
+        FROM
+        b_share_flow_hi_task fh
+        WHERE
+        fh.apply_code = s.apply_code limit 1
+        )
+        END
+        ) AS task_id,
+        ((s.status_ = -1) or (f.type = 1 and s.status_ = 2) ) AS candelete
+        FROM
+        b_share_data_set AS s
+        LEFT JOIN b_share_data_set_flow AS f ON s.apply_code = f.apply_code
+        LEFT JOIN  b_share_data_directory AS sd ON sd.set_id = s.id
+        <where>
+            AND s.status_  BETWEEN 1 AND 3
+            <if test="status != null and status !=''">
+                AND s.status_ = #{status}
+            </if>
+            <if test="setName != null and setName !=''">
+                AND s.set_name LIKE #{setName,typeHandler=fullLike}
+            </if>
+            <if test="setType != null and setType !=''">
+                AND s.set_type = #{setType}
+            </if>
+            <if test="status != null and status !=''">
+                AND s.status_= #{status}
+            </if>
+            <if test="dirName != null and dirName !=''">
+                AND sd.dir_name LIKE #{dirName,typeHandler=fullLike}
+            </if>
+            <if test="createUserId != null and createUserId !=''">
+                AND s.create_user = #{createUserId}
+            </if>
+            <if test="applyType != null">
+                AND f.type = #{applyType}
+            </if>
+            <if test="unitId != null and unitId !=''">
+                AND s.unit_id = #{unitId}
+            </if>
+            <if test="startTime != null ">
+                AND f.create_time >=#{startTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endTime != null ">
+                AND #{endTime,jdbcType=TIMESTAMP}>=f.create_time
+            </if>
+        </where>
+        GROUP BY s.id
+        ORDER BY f.create_time DESC
+    </select>
+    <!--查询数据集正在执行的流程详情-->
+    <select id="getNowFlowTsakInfo" parameterType="Long" resultMap="DSFlowTaskInfoResultMap">
+        SELECT
+        ds.id data_set_id,
+        fs.apply_code,
+        (SELECT c.name_ from v_emp c where c.gxqpt_emp_id =fs.create_user) user_name,
+        ds.set_name,
+        ds.reason
+        FROM
+        b_share_flow_task AS fs
+        INNER JOIN b_share_data_set AS ds ON fs.apply_code = ds.apply_code
+        <where>
+            AND fs.id = #{taskId}
+        </where>
+    </select>
+    <!--查询数据集已经执行完毕的流程详情-->
+    <select id="getHiFlowTsakInfo" parameterType="Long" resultMap="DSFlowTaskInfoResultMap">
+        SELECT
+        ds.id data_set_id,
+        fs.apply_code,
+        (SELECT c.name_ from v_emp c where c.gxqpt_emp_id = df.update_user) user_name,
+        ds.set_name,
+        ds.reason
+        FROM
+        b_share_flow_hi_task AS fs
+        INNER JOIN b_share_data_set AS ds ON fs.apply_code = ds.apply_code
+        LEFT JOIN b_share_data_set_flow df ON fs.apply_code = df.apply_code
+        <where>
+            AND fs.id = #{taskId}
+        </where>
+    </select>
+    <!--查询数据列表((s.status_ = -1) or (f.type = 1 and s.status_ = 2) ) AS candelete-->
+    <select id="findAllDataSetList" parameterType="map" resultMap="ElementResultMap">
+        SELECT
+        s.id,
+        s.apply_code,
+        s.unit_id,
+        s.set_name,
+        s.set_code,
+        s.set_type,
+        s.data_count,
+        s.update_rate,
+        s.api_name,
+        s.api_url,
+        s.api_data_type,
+        s.acq_time,
+        s.update_type,
+        s.set_mode,
+        s.table_code,
+        s.sql_code,
+        s.data_type,
+        s.reason,
+        s.db_id,
+        s.status_,
+        s.create_time,
+        s.create_user,
+        s.update_time,
+        c.name_,
+        s.update_user,
+        (SELECT COUNT(d.set_id) FROM b_share_data_directory d WHERE s.id = d.set_id) AS related_dic_cunt,
+        s.status_ = -1 AS candelete
+        FROM
+        b_share_data_set AS s
+        LEFT JOIN v_emp AS c ON s.create_user = c.gxqpt_emp_id
+        LEFT JOIN b_share_data_set_flow AS f ON s.apply_code = f.apply_code
+        <where>
+            <if test="setName != null and setName !=''">
+                AND s.set_name LIKE #{setName,typeHandler=fullLike}
+            </if>
+            <if test="setType != null and setType !=''">
+                AND s.set_type = #{setType}
+            </if>
+            <if test="status != null and status !=''">
+                AND s.status_= #{status}
+            </if>
+            <if test="createUserName != null and createUserName !=''">
+                AND c.name_ LIKE #{createUserName,typeHandler=fullLike}
+            </if>
+            <if test="type != null and type !=''">
+                AND f.type = #{type}
+            </if>
+            <if test="unitId != null and unitId !=''">
+                AND s.unit_id = #{unitId}
+            </if>
+            <if test="startTime != null">
+                AND s.create_time >=#{startTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endTime != null">
+                AND #{endTime,jdbcType=TIMESTAMP}>=s.create_time
+            </if>
+        </where>
+        ORDER BY s.create_time DESC
+    </select>
+    <!-- 根据单位查询数据量 -->
+    <select id="getSetCountByUnitId" parameterType="java.util.Map" resultType="int">
+        SELECT IFNULL(sum(data_count),0)
+        FROM b_share_data_set
+        <where>
+            status_=3
+            <if test="unitId!=null and unitId!='' ">AND unit_id=#{unitId}</if>
+        </where>
+    </select>
+
+</mapper>

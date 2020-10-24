@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.punchstatics.dao.PunchAttendanceStaticsMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.mt.entity.punchstatics.po.PunchAttendanceStaticsExt">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+    <result column="att_year" jdbcType="VARCHAR" property="attYear" />
+    <result column="att_month" jdbcType="VARCHAR" property="attMonth" />
+    <result column="att_day" jdbcType="VARCHAR" property="attDay" />
+    <result column="isholiday" jdbcType="INTEGER" property="isholiday" />
+    <result column="out_hous" jdbcType="DOUBLE" property="outHous" />
+    <result column="work_hous" jdbcType="DOUBLE" property="workHous" />
+    <result column="leave_hous" jdbcType="DOUBLE" property="leaveHous" />
+    <result column="travel_hous" jdbcType="DOUBLE" property="travelHous" />
+    <result column="late_hour" jdbcType="DOUBLE" property="lateHour" />
+    <result column="early_hour" jdbcType="DOUBLE" property="earlyHour" />
+    <result column="miner_count" jdbcType="INTEGER" property="minerCount" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, user_id, unit_id, att_year, att_month, att_day, isholiday, out_hous, work_hous, 
+    leave_hous, travel_hous, late_hour, early_hour, miner_count, create_user, create_time, 
+    update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.mt.repository.punchstatics.example.PunchAttendanceStaticsExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_punch_attendance_statics
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_punch_attendance_statics
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.mt.repository.punchstatics.example.PunchAttendanceStaticsExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_punch_attendance_statics
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_punch_attendance_statics
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.mt.repository.punchstatics.example.PunchAttendanceStaticsExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_punch_attendance_statics
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.mt.entity.punchstatics.po.PunchAttendanceStatics">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_attendance_statics
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_attendance_statics
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.mt.entity.punchstatics.po.PunchAttendanceStatics">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_punch_attendance_statics (id, user_id, unit_id, 
+      att_year, att_month, att_day, 
+      isholiday, out_hous, work_hous, 
+      leave_hous, travel_hous, late_hour, 
+      early_hour, miner_count, create_user, 
+      create_time, update_user, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{unitId,jdbcType=VARCHAR}, 
+      #{attYear,jdbcType=VARCHAR}, #{attMonth,jdbcType=VARCHAR}, #{attDay,jdbcType=VARCHAR}, 
+      #{isholiday,jdbcType=INTEGER}, #{outHous,jdbcType=DOUBLE}, #{workHous,jdbcType=DOUBLE}, 
+      #{leaveHous,jdbcType=DOUBLE}, #{travelHous,jdbcType=DOUBLE}, #{lateHour,jdbcType=DOUBLE}, 
+      #{earlyHour,jdbcType=DOUBLE}, #{minerCount,jdbcType=INTEGER}, #{createUser,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_punch_attendance_statics (id, user_id, unit_id, att_year, att_month, att_day, isholiday, out_hous, work_hous, leave_hous, travel_hous, late_hour, early_hour, miner_count, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.unitId,jdbcType=VARCHAR}, 
+        #{item.attYear,jdbcType=VARCHAR}, #{item.attMonth,jdbcType=VARCHAR}, #{item.attDay,jdbcType=VARCHAR}, 
+        #{item.isholiday,jdbcType=INTEGER}, #{item.outHous,jdbcType=DOUBLE}, #{item.workHous,jdbcType=DOUBLE}, 
+        #{item.leaveHous,jdbcType=DOUBLE}, #{item.travelHous,jdbcType=DOUBLE}, #{item.lateHour,jdbcType=DOUBLE}, 
+        #{item.earlyHour,jdbcType=DOUBLE}, #{item.minerCount,jdbcType=INTEGER}, #{item.createUser,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.mt.entity.punchstatics.po.PunchAttendanceStatics">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_punch_attendance_statics
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="attYear != null">
+        att_year,
+      </if>
+      <if test="attMonth != null">
+        att_month,
+      </if>
+      <if test="attDay != null">
+        att_day,
+      </if>
+      <if test="isholiday != null">
+        isholiday,
+      </if>
+      <if test="outHous != null">
+        out_hous,
+      </if>
+      <if test="workHous != null">
+        work_hous,
+      </if>
+      <if test="leaveHous != null">
+        leave_hous,
+      </if>
+      <if test="travelHous != null">
+        travel_hous,
+      </if>
+      <if test="lateHour != null">
+        late_hour,
+      </if>
+      <if test="earlyHour != null">
+        early_hour,
+      </if>
+      <if test="minerCount != null">
+        miner_count,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="attYear != null">
+        #{attYear,jdbcType=VARCHAR},
+      </if>
+      <if test="attMonth != null">
+        #{attMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="attDay != null">
+        #{attDay,jdbcType=VARCHAR},
+      </if>
+      <if test="isholiday != null">
+        #{isholiday,jdbcType=INTEGER},
+      </if>
+      <if test="outHous != null">
+        #{outHous,jdbcType=DOUBLE},
+      </if>
+      <if test="workHous != null">
+        #{workHous,jdbcType=DOUBLE},
+      </if>
+      <if test="leaveHous != null">
+        #{leaveHous,jdbcType=DOUBLE},
+      </if>
+      <if test="travelHous != null">
+        #{travelHous,jdbcType=DOUBLE},
+      </if>
+      <if test="lateHour != null">
+        #{lateHour,jdbcType=DOUBLE},
+      </if>
+      <if test="earlyHour != null">
+        #{earlyHour,jdbcType=DOUBLE},
+      </if>
+      <if test="minerCount != null">
+        #{minerCount,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.mt.repository.punchstatics.example.PunchAttendanceStaticsExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_punch_attendance_statics
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_attendance_statics
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.unitId != null">
+        unit_id = #{record.unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attYear != null">
+        att_year = #{record.attYear,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attMonth != null">
+        att_month = #{record.attMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attDay != null">
+        att_day = #{record.attDay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isholiday != null">
+        isholiday = #{record.isholiday,jdbcType=INTEGER},
+      </if>
+      <if test="record.outHous != null">
+        out_hous = #{record.outHous,jdbcType=DOUBLE},
+      </if>
+      <if test="record.workHous != null">
+        work_hous = #{record.workHous,jdbcType=DOUBLE},
+      </if>
+      <if test="record.leaveHous != null">
+        leave_hous = #{record.leaveHous,jdbcType=DOUBLE},
+      </if>
+      <if test="record.travelHous != null">
+        travel_hous = #{record.travelHous,jdbcType=DOUBLE},
+      </if>
+      <if test="record.lateHour != null">
+        late_hour = #{record.lateHour,jdbcType=DOUBLE},
+      </if>
+      <if test="record.earlyHour != null">
+        early_hour = #{record.earlyHour,jdbcType=DOUBLE},
+      </if>
+      <if test="record.minerCount != null">
+        miner_count = #{record.minerCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_attendance_statics
+    set id = #{record.id,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      unit_id = #{record.unitId,jdbcType=VARCHAR},
+      att_year = #{record.attYear,jdbcType=VARCHAR},
+      att_month = #{record.attMonth,jdbcType=VARCHAR},
+      att_day = #{record.attDay,jdbcType=VARCHAR},
+      isholiday = #{record.isholiday,jdbcType=INTEGER},
+      out_hous = #{record.outHous,jdbcType=DOUBLE},
+      work_hous = #{record.workHous,jdbcType=DOUBLE},
+      leave_hous = #{record.leaveHous,jdbcType=DOUBLE},
+      travel_hous = #{record.travelHous,jdbcType=DOUBLE},
+      late_hour = #{record.lateHour,jdbcType=DOUBLE},
+      early_hour = #{record.earlyHour,jdbcType=DOUBLE},
+      miner_count = #{record.minerCount,jdbcType=INTEGER},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.mt.entity.punchstatics.po.PunchAttendanceStatics">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_attendance_statics
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="attYear != null">
+        att_year = #{attYear,jdbcType=VARCHAR},
+      </if>
+      <if test="attMonth != null">
+        att_month = #{attMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="attDay != null">
+        att_day = #{attDay,jdbcType=VARCHAR},
+      </if>
+      <if test="isholiday != null">
+        isholiday = #{isholiday,jdbcType=INTEGER},
+      </if>
+      <if test="outHous != null">
+        out_hous = #{outHous,jdbcType=DOUBLE},
+      </if>
+      <if test="workHous != null">
+        work_hous = #{workHous,jdbcType=DOUBLE},
+      </if>
+      <if test="leaveHous != null">
+        leave_hous = #{leaveHous,jdbcType=DOUBLE},
+      </if>
+      <if test="travelHous != null">
+        travel_hous = #{travelHous,jdbcType=DOUBLE},
+      </if>
+      <if test="lateHour != null">
+        late_hour = #{lateHour,jdbcType=DOUBLE},
+      </if>
+      <if test="earlyHour != null">
+        early_hour = #{earlyHour,jdbcType=DOUBLE},
+      </if>
+      <if test="minerCount != null">
+        miner_count = #{minerCount,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.mt.entity.punchstatics.po.PunchAttendanceStatics">
+    <!--
+    @mbggenerated
+    -->
+    update b_punch_attendance_statics
+    set user_id = #{userId,jdbcType=BIGINT},
+      unit_id = #{unitId,jdbcType=VARCHAR},
+      att_year = #{attYear,jdbcType=VARCHAR},
+      att_month = #{attMonth,jdbcType=VARCHAR},
+      att_day = #{attDay,jdbcType=VARCHAR},
+      isholiday = #{isholiday,jdbcType=INTEGER},
+      out_hous = #{outHous,jdbcType=DOUBLE},
+      work_hous = #{workHous,jdbcType=DOUBLE},
+      leave_hous = #{leaveHous,jdbcType=DOUBLE},
+      travel_hous = #{travelHous,jdbcType=DOUBLE},
+      late_hour = #{lateHour,jdbcType=DOUBLE},
+      early_hour = #{earlyHour,jdbcType=DOUBLE},
+      miner_count = #{minerCount,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.standard.repository.standard.dao.StandardFileLogMapper">
+    <resultMap id="StandardFileDOResultMap" type="com.hengyunsoft.platform.standard.entity.standard.domain.StandardFileLogDO">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="document_id" jdbcType="BIGINT" property="documentId" />
+        <result column="operator_user_id" jdbcType="BIGINT" property="operatorUserId" />
+        <result column="operator_user_name" jdbcType="VARCHAR" property="operatorUserName" />
+        <result column="operator_company_id" jdbcType="BIGINT" property="operatorCompanyId" />
+        <result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+        <result column="ip" jdbcType="VARCHAR" property="ip" />
+        <result column="operator_type" jdbcType="VARCHAR" property="operatorType" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="classify_name" jdbcType="VARCHAR" property="classifyName" />
+        <result column="down_count" jdbcType="BIT" property="downloadCount" />
+    </resultMap>
+    <select id="statDownloadTop10" resultMap="StandardFileDOResultMap">
+        select f.id, f.name, f.code, f.document_id, f.file_type, f.classify_id, f.version, f.description, f.is_enable,
+        f.is_delete, f.create_user, f.create_time, f.update_user, f.update_time, f.company_id, f.create_user_name,
+        f.update_user_name,c.name classify_name,count(1) down_count
+        from standard_file f,standard_file_log l,standard_classify c
+        where l.document_id = f.document_id and f.classify_id = c.id and l.operator_type in ('view','down')
+        and f.is_delete = '0'
+        and l.create_time BETWEEN #{startDate,jdbcType=TIMESTAMP} and #{endDate,jdbcType=TIMESTAMP}
+        group by f.id, f.name, f.code, f.document_id, f.file_type, f.classify_id, f.version, f.description, f.is_enable,
+        f.is_delete, f.create_user, f.create_time, f.update_user, f.update_time, f.company_id, f.create_user_name,
+        f.update_user_name,c.name
+        order by down_count desc
+    </select>
+
+    <select id="statByClassify" resultMap="StandardFileDOResultMap">
+        <if test="parentId == '-1'">
+            select pc.id,pc.name classify_name,count(1) down_count
+            from standard_file f,standard_file_log l,standard_classify c,standard_classify pc
+            where l.document_id = f.document_id and f.classify_id = c.id
+            and c.parent_id = pc.id and l.operator_type in ('view','down')
+            and f.is_delete = '0'
+            and l.create_time BETWEEN #{startDate,jdbcType=TIMESTAMP} and #{endDate,jdbcType=TIMESTAMP}
+            group by pc.id,pc.name
+            order by pc.name
+        </if>
+        <if test="parentId != '-1'">
+            select c.id,c.name classify_name,count(1) down_count
+            from standard_file f,standard_file_log l,standard_classify c
+            where l.document_id = f.document_id and f.classify_id = c.id and l.operator_type in ('view','down')
+            and f.is_delete = '0'
+            and c.parent_id = #{parentId,jdbcType=VARCHAR}
+            and l.create_time BETWEEN #{startDate,jdbcType=TIMESTAMP} and #{endDate,jdbcType=TIMESTAMP}
+            group by c.id,c.name
+            order by c.name
+        </if>
+    </select>
+    
+       
+    <!-- 最新标准管理系统统计 -->
+    <resultMap id="downloadMap" type="com.hengyunsoft.platform.standard.entity.standard.dos.StandardDownloadDO">
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="downloadTypeMap" type="com.hengyunsoft.platform.standard.dto.StandardDownloadDTO">
+    	<id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="downloadTrendMap" type="com.hengyunsoft.platform.standard.entity.standard.dos.StandardMonthDO">
+    	<result column="year_" jdbcType="VARCHAR" property="year"/>
+        <result column="month_" jdbcType="VARCHAR" property="month"/>
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    
+    <select id="getDownloadTop20" resultMap="downloadMap">
+		select sf.id,sf.name,count(sfl.id) as count
+		from standard_file_log sfl left join standard_file sf on sfl.document_id = sf.document_id
+		where sf.id is not null and sf.name is not null and sfl.operator_type = 'down'
+		group by sf.id,sf.name order by count DESC limit 20
+    </select>
+    <select id="getDownloadType" resultMap="downloadTypeMap">
+		select sc.id,sc.name,count(sfl.id) as count
+		from standard_file_log sfl left join standard_file sf on sfl.document_id = sf.document_id
+		left join standard_classify sc on sf.classify_id = sc.id
+		where sc.id is not null and sc.name is not null and sfl.operator_type = 'down'
+		group by sc.id,sc.name order by count
+    </select>
+    <select id="getDownloadTop10" parameterType="java.lang.Long" resultMap="downloadMap">
+		select sf.id,sf.name,count(sfl.id) as count
+		from standard_file_log sfl left join standard_file sf on sfl.document_id = sf.document_id
+		left join standard_classify sc on sf.classify_id = sc.id
+		where sf.id is not null and sf.name is not null 
+		and sfl.operator_type = 'down' and sf.is_enable = 1 and sc.id in 
+		<foreach collection="nodeIds" open="(" close=")" item="power" separator=",">
+		    '${power}'
+		</foreach>
+		group by sf.id,sf.name order by count DESC limit 10
+    </select>
+    <select id="getDownloadTrend" resultMap="downloadTrendMap">
+		select date_.year_,date_.month_,count(*) as count from 
+			(select YEAR(sfl.create_time) year_,month(sfl.create_time) month_ 
+			from standard_file_log sfl left join standard_file sf on sfl.document_id = sf.document_id
+			left join standard_classify sc on sf.classify_id = sc.id
+			where (sfl.create_time BETWEEN #{date} and CURRENT_TIME()) 
+			and sf.is_enable = 1 and sc.id in 
+			<foreach collection="nodeIds" open="(" close=")" item="power" separator=",">
+				'${power}'
+			</foreach> 
+			 and sfl.operator_type = 'down') date_
+		GROUP BY date_.year_,date_.month_
+    </select>
+    <select id="getStandardDownloadNum" resultType="java.lang.Integer">
+		<!-- select count(id) from standard_file_log
+		where operator_type='down' -->
+		select 
+			count(file_log.id) 
+		from 
+			standard_file file  
+		join standard_file_log file_log on file.document_id = file_log.document_id
+		where operator_type='down' and file.is_enable = 1
+    </select>
+    <select id="getMonthStandardDownloadNum" parameterType="java.util.Date" resultType="java.lang.Integer">
+		<!-- select count(month_) from 
+		(select month(create_time) month_ from standard_file_log 
+		  where create_time BETWEEN #{date} and CURRENT_TIME() and operator_type='down') month_ -->
+		    select
+				count(month_)
+			from
+				(
+					select month (file_log.create_time) month_ from standard_file file  join 
+			standard_file_log file_log on 
+			file.document_id = file_log.document_id
+			where
+				file_log.create_time between #{date}
+			and current_time ()
+			and file_log.operator_type = 'down' and file.is_enable = 1
+			) month_
+    </select>
+    <select id="getStandardClassifyFirstLevelDirectory" resultType="map">
+    	<!-- select id,name from standard_classify where parent_id in (select id from standard_classify where parent_id = '-1' ) -->
+    	select id,name from standard_classify where parent_id = '-1' 
+    </select>
+    <select id="getParentIdChildId" resultType="Long" parameterType="Long">
+    	select id from standard_classify where parent_id = #{pId}
+    </select>
+    <select id="getALLCount" resultType="map" parameterType="Long">
+	    select sc.id,sc.parent_id 
+		from standard_file_log sfl  join standard_file sf on sfl.document_id = sf.document_id
+		 join standard_classify sc on sf.classify_id = sc.id
+		where sc.id is not null and sc.name is not null and sfl.operator_type = 'down' 
+		and sf.is_enable = 1 and sc.id in
+		<foreach collection="list" open="(" close=")" item="power" separator=",">
+		    '${power}'
+		</foreach>
+    </select>
+    <select id="getAtandardClassifyByIdCount" resultType="java.lang.Integer" parameterType="Long">
+	    select count(sc.id)
+		from standard_file_log sfl  join standard_file sf on sfl.document_id = sf.document_id
+		 join standard_classify sc on sf.classify_id = sc.id
+		where sc.id is not null and sc.name is not null and sfl.operator_type = 'down' 
+		and sf.is_enable = 1 and sc.id = #{id}
+    </select>
+</mapper>

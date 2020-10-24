@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.system.dao.ShareFlowTaskMapper">
+    <resultMap id="DemandResultMap" type="com.hengyunsoft.platform.exchange.entity.system.domain.FlowDemanListDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <id column="demandId" jdbcType="BIGINT" property="demandId"/>
+        <id column="api_id" jdbcType="BIGINT" property="apiId"/>
+        <result column="unit_name" jdbcType="VARCHAR" property="name"/>
+        <result column="unit_type" jdbcType="VARCHAR" property="unitType"/>
+        <result column="credit_code" jdbcType="VARCHAR" property="creditCode"/>
+        <result column="cont_name" jdbcType="VARCHAR" property="contName"/>
+        <result column="cont_tel" jdbcType="VARCHAR" property="contTel"/>
+        <result column="cont_email" jdbcType="VARCHAR" property="contEmail"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="purpose" jdbcType="VARCHAR" property="purpose"/>
+        <result column="apply_reason" jdbcType="VARCHAR" property="applyReason"/>
+        <result column="hdStatus" jdbcType="VARCHAR" property="hdStatus"/>
+        <result column="status_" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
+    <resultMap id="ShareApplyApiResultMap" type="com.hengyunsoft.platform.exchange.entity.system.domain.FlowApiListDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <id column="apply_code" jdbcType="VARCHAR" property="applyCode"/>
+        <id column="applyId" jdbcType="BIGINT" property="applyId"/>
+        <id column="applyCode" jdbcType="VARCHAR" property="applyCode"/>
+        <id column="apiCode" jdbcType="VARCHAR" property="apiCode"/>
+        <id column="api_name" jdbcType="VARCHAR" property="apiName"/>
+        <id column="apiId" jdbcType="VARCHAR" property="apiId"/>
+        <result column="dirName" jdbcType="VARCHAR" property="dirName"/>
+        <result column="unitName" jdbcType="VARCHAR" property="unitName"/>
+        <result column="createUserName" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="applyReason" jdbcType="VARCHAR" property="applyReason"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="dateTerm" jdbcType="INTEGER" property="dateTerm"/>
+        <result column="applyType" jdbcType="INTEGER" property="applyType"/>
+        <result column="applyTypeName" jdbcType="VARCHAR" property="applyTypeName"/>
+        <result column="auditStatus" jdbcType="INTEGER" property="auditStatus"/>
+        <result column="data_type" jdbcType="INTEGER" property="dataType"/>
+    </resultMap>
+    <!--查询api需求申请任务列表-->
+    <select id="selectDemandList" parameterType="map" resultMap="DemandResultMap">
+        SELECT
+        task.id,
+        task.apply_code,
+        demand.unit_name ,
+        demand.id demandId,
+        demand.api_id,
+        demand.unit_type,
+        demand.credit_code,
+        demand.cont_name,
+        demand.cont_tel,
+        demand.cont_email,
+        demand.create_time,
+        demand.content,
+        demand.purpose,
+        demand.apply_reason,
+        (
+        CASE
+        WHEN demand.status_ = 1 THEN
+        '待处理'
+        WHEN demand.status_ = 2 THEN
+        '已驳回'
+        WHEN demand.status_ = 3 THEN
+        '已通过,待封装API'
+        ELSE
+        '已封装API'
+        END
+        ) hdStatus,
+        demand.status_
+        FROM b_share_flow_task task
+        INNER JOIN b_share_data_demand demand ON task.apply_code = demand.apply_code
+        LEFT JOIN b_share_flow_audit audit ON task.apply_code = audit.apply_code
+        INNER JOIN v_org org ON task.unit_id = org.id
+        <where>
+            <if test="unitName != null and unitName !=''">
+                AND demand.unit_name LIKE #{unitName,typeHandler=fullLike}
+            </if>
+            <if test="orgId != null and orgId !=''">
+                AND demand.org_id = #{orgId}
+            </if>
+            <if test="startTime != null">
+                AND demand.create_time >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND demand.create_time &lt;= #{endTime}
+            </if>
+            <if test="authStatus != null and authStatus !=''">
+                AND demand.status_ = #{authStatus}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectApiApplyList" parameterType="map" resultMap="ShareApplyApiResultMap">
+        SELECT
+        task.id,
+        apiUser.id applyId,
+        api.api_code apiCode,
+        api.id apiId,
+        api.api_name,
+        dir.dir_name dirName,
+        org.name_ unitName,
+        u.name_ createUserName,
+        applyReason,
+        apiUser.create_time createTime,
+        apiUser.apply_code applyCode,
+        applyTypeName,
+        apiUser.applyType,
+        date_term dateTerm,
+        IFNULL(audit.status_,0) auditStatus,
+        dir.data_type
+        FROM
+        b_share_flow_task task
+        INNER JOIN (
+        SELECT id,api_id,unit_id,create_user,reason applyReason,date_term,create_time,apply_code,api_type
+        applyType,(CASE api_type WHEN 2 THEN '目录新增api' WHEN 3 THEN '已封装API申请' END) applyTypeName
+        FROM b_share_data_api_user
+        WHERE api_type in(2,3)
+        UNION
+        SELECT id,api_id,unit_id,create_user,rewal_reason applyReason,date_term,create_time,apply_code,1
+        applyType,'已有API延续' applyTypeName
+        FROM b_share_data_api_renewal) apiUser ON task.apply_code = apiUser.apply_code
+        INNER JOIN b_share_data_api api ON apiUser.api_id = api.id
+        INNER JOIN b_share_data_directory dir ON api.dir_id = dir.id
+        INNER JOIN v_org org ON apiUser.unit_id = org.id
+        INNER JOIN v_emp u ON apiUser.create_user = u.gxqpt_emp_id
+        LEFT JOIN b_share_flow_audit audit ON task.apply_code = audit.apply_code
+        <where>
+            <if test="apiName != null and apiName !=''">
+                AND api.api_name LIKE #{apiName,typeHandler=fullLike}
+            </if>
+            <if test="dirName != null and dirName !=''">
+                AND dir.dir_name LIKE #{dirName,typeHandler=fullLike}
+            </if>
+            <if test="dirId != null and dirId !=''">
+                AND dir.id =#{dirId}
+            </if>
+            <if test="applyType != null and applyType !=''">
+                AND applyType = #{applyType}
+            </if>
+            <if test="authStatus != null and authStatus !=''">
+                <choose>
+                    <when test="authStatus == 3">
+                        AND audit.status_ IS NULL
+                    </when>
+                    <otherwise>
+                        AND audit.status_ = #{authStatus}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="startTime != null">
+                AND apiUser.create_time>= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND apiUser.create_time &lt;= #{endTime}
+            </if>
+            <if test="unitId != null and unitId !=''">
+                AND api.unit_id = #{unitId}
+            </if>
+        </where>
+        ORDER BY apiUser.create_time DESC
+    </select>
+</mapper>

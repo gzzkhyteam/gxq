@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.hardware.repository.equipmentMonitor.dao.EquipmentMonitorMapper">
+  <resultMap id="BaseResultMaps" type="com.hengyunsoft.platform.hardware.entity.equipmentMonitor.domain.EquipmentMonitorDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="room_number" jdbcType="VARCHAR" property="roomNumber" />
+    <result column="room_admin" jdbcType="VARCHAR" property="roomAdmin" />
+    <result column="contact_number" jdbcType="VARCHAR" property="contactNumber" />
+    <result column="host_num" jdbcType="INTEGER" property="hostNum" />
+    <result column="router_num" jdbcType="INTEGER" property="routerNum" />
+    <result column="air_con_num" jdbcType="INTEGER" property="airConNum" />
+    <result column="cabinet_num" jdbcType="INTEGER" property="cabinetNum" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+ <!--  <sql id="Base_Column_List">
+    id, room_number, room_admin, contact_number, host_num, router_num, air_con_num, cabinet_num, 
+    is_delete, create_user, create_time, update_user, update_time
+  </sql> -->
+  <select id="pageNewest" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from b_hd_equipment_monitor
+		where is_delete = 0 
+		<if test="dto.roomNumber != null and dto.roomNumber != ''">
+			and room_number like concat('%',#{dto.roomNumber},'%')
+		</if>
+		<if test="dto.roomAdmin !=null and dto.roomAdmin !=''">
+			and room_admin like concat('%',#{dto.roomAdmin},'%')
+		</if>
+		<if test="dto.contactNumber != null and dto.contactNumber !=''">
+			and contact_number like concat('%',#{dto.contactNumber},'%')
+		</if>
+		<if test="dto.hostNum != null">
+			and host_num = ${dto.hostNum}
+		</if>
+		<if test="dto.routerNum != null">
+			and router_num = ${dto.routerNum}
+		</if>
+		<if test="dto.airConNum != null">
+			and air_con_num = ${dto.airConNum}
+		</if>
+		<if test="dto.cabinetNum != null">
+			and cabinet_num = ${dto.cabinetNum}
+		</if>
+		order by create_time desc
+	</select>
+  
+</mapper>

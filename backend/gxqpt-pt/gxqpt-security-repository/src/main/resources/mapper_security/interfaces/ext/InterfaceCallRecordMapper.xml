@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.security.repository.interfaces.dao.InterfaceCallRecordMapper">
+  <!--<resultMap id="BaseResultMap" type="com.hengyunsoft.platform.security.entity.interfaces.po.InterfaceCallRecord">-->
+    <!--<id column="id" jdbcType="BIGINT" property="id" />-->
+    <!--<result column="interface_config_id" jdbcType="BIGINT" property="interfaceConfigId" />-->
+    <!--<result column="app_id" jdbcType="VARCHAR" property="appId" />-->
+    <!--<result column="modular_name" jdbcType="VARCHAR" property="modularName" />-->
+    <!--<result column="caller_app_id" jdbcType="VARCHAR" property="callerAppId" />-->
+    <!--<result column="name" jdbcType="VARCHAR" property="name" />-->
+    <!--<result column="uri" jdbcType="VARCHAR" property="uri" />-->
+    <!--<result column="zuul_uri" jdbcType="VARCHAR" property="zuulUri" />-->
+    <!--<result column="url" jdbcType="VARCHAR" property="url" />-->
+    <!--<result column="ip" jdbcType="VARCHAR" property="ip" />-->
+    <!--<result column="cookies" jdbcType="VARCHAR" property="cookies" />-->
+    <!--<result column="headers" jdbcType="VARCHAR" property="headers" />-->
+    <!--<result column="query_string" jdbcType="VARCHAR" property="queryString" />-->
+    <!--<result column="request_query_params" jdbcType="VARCHAR" property="requestQueryParams" />-->
+    <!--<result column="content_length" jdbcType="VARCHAR" property="contentLength" />-->
+    <!--<result column="content_type" jdbcType="VARCHAR" property="contentType" />-->
+    <!--<result column="method" jdbcType="VARCHAR" property="method" />-->
+    <!--<result column="request_body" jdbcType="VARCHAR" property="requestBody" />-->
+    <!--<result column="response_body" jdbcType="VARCHAR" property="responseBody" />-->
+    <!--<result column="create_date" jdbcType="VARCHAR" property="createDate" />-->
+    <!--<result column="create_month" jdbcType="VARCHAR" property="createMonth" />-->
+    <!--<result column="create_hour" jdbcType="VARCHAR" property="createHour" />-->
+    <!--<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />-->
+    <!--<result column="status" jdbcType="INTEGER" property="status" />-->
+    <!--<result column="err_msg" jdbcType="LONGVARCHAR" property="errMsg" />-->
+  <!--</resultMap>-->
+  <resultMap id="InterCallMonthMap" type="com.hengyunsoft.platform.security.entity.interfaces.domain.InterCallMonthDO">
+    <result column="year" property="year"></result>
+    <result column="month" property="month"></result>
+    <result column="count" property="count"></result>
+  </resultMap>
+ <select id="findInterCallMonthCount" parameterType="String" resultMap="InterCallMonthMap">
+  select  YEAR(la.create_time) as year,MONTH(la.create_time) as month, COUNT(MONTH(la.create_time)) as count from se_interface_call_record la where la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time)
+ </select>
+    <select id="pageInterCallList" parameterType="String" resultMap="BaseResultMap">
+SELECT sr.account,sr.app_id,sr.user_name,sr.`name`,sr.create_time FROM  se_interface_call_record sr
+<where>
+    <if test="userName !=null and userName!= ''">
+      and  sr.user_name like CONCAT(CONCAT('%',#{userName}),'%')
+    </if>
+    <if test="appId !=null and appId!= ''">
+        and sr.app_id = #{appId}
+    </if>
+    <if test="account !=null and account!= ''">
+        and sr.account LIKE CONCAT(CONCAT('%',#{account}),'%')
+    </if>
+    <if test="startTime !=null and startTime != ''">
+        and sr.create_time &gt;=#{startTime}
+    </if>
+    <if test="endTime !=null and endTime != ''">
+        and sr.create_time &lt;=#{endTime}
+    </if>
+</where>
+    </select>
+</mapper>

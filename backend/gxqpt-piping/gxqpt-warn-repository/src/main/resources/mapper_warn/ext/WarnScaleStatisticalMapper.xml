@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.warn.repository.dao.WarnScaleStatisticalMapper">
+  
+  <resultMap id="scaleMap" type="com.hengyunsoft.platform.supervise.dto.analysis.WarnScaleCountDTO">
+    <result column="pending" jdbcType="INTEGER" property="pending" />
+    <result column="new_come" jdbcType="INTEGER" property="newCome" />
+    <result column="handled" jdbcType="INTEGER" property="handled" />
+    <result column="statistical_scale" jdbcType="VARCHAR" property="month" />
+    <result column="avg_confirm_time" jdbcType="VARCHAR" property="avgConfirmTime" />
+    <result column="avg_handle_time" jdbcType="VARCHAR" property="avgHandleTime" />
+  </resultMap>
+  <!-- mdengb 219-4-26 部门预警产生、处理情况 -->
+  <select id="getScaleByDepId" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.ScaleReqDTO" resultMap="scaleMap">
+      SELECT
+          bws.pending_num AS pending,
+          bws.new_come_num AS new_come,
+          bws.handled_num AS handled,
+          bws.statistical_scale,
+          bws.avg_handle_time,
+          bws.avg_confirm_time
+      FROM
+        b_warn_scale_statistical bws
+      WHERE  1 = 1
+      <if test="scaleReqDTO.year != null and scaleReqDTO.year != '' ">
+          AND substr(bws.statistical_scale,1,4) = #{scaleReqDTO.year}
+      </if>
+      <if test="scaleReqDTO.id != null and scaleReqDTO.id != '' ">
+          AND bws.object_id = #{scaleReqDTO.id}
+      </if>
+      AND bws.object_type = 2
+      ORDER BY
+          bws.statistical_scale DESC
+          LIMIT 12
+  </select>
+  <!--  mdengb 219-4-26 单位预警产生、处理情况 -->
+  <select id="getScaleByOrgId" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.ScaleReqDTO" resultMap="scaleMap">
+      SELECT
+          bws.pending_num AS pending,
+          bws.new_come_num AS new_come,
+          bws.handled_num AS handled,
+          bws.statistical_scale,
+          bws.avg_handle_time,
+          bws.avg_confirm_time
+      FROM
+        b_warn_scale_statistical bws
+      WHERE  1 = 1
+      <if test="scaleReqDTO.year != null and scaleReqDTO.year != '' ">
+          AND substr(bws.statistical_scale,1,4) = #{scaleReqDTO.year}
+      </if>
+      <if test="scaleReqDTO.id != null and scaleReqDTO.id != '' ">
+          AND bws.object_id = #{scaleReqDTO.id}
+      </if>
+      AND bws.object_type = 1
+      ORDER BY
+        bws.statistical_scale DESC
+        LIMIT 12
+  </select>
+  <!--  mdengb 219-4-26 个人预警分析 个人预警产生处理情况年份统计 -->
+  <select id="getScaleByEmpId" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.ScaleReqDTO" resultMap="scaleMap">
+      SELECT
+          bws.pending_num AS pending,
+          bws.new_come_num AS new_come,
+          bws.handled_num AS handled,
+          bws.statistical_scale,
+          bws.avg_handle_time,
+          bws.avg_confirm_time
+      FROM
+        b_warn_scale_statistical bws
+      WHERE  1 = 1
+      <if test="scaleReqDTO.year != null and scaleReqDTO.year != '' ">
+          AND substr(bws.statistical_scale,1,4) = #{scaleReqDTO.year}
+      </if>
+      <if test="scaleReqDTO.id != null and scaleReqDTO.id != '' ">
+          AND bws.object_id = #{scaleReqDTO.id}
+      </if>
+      AND bws.object_type = 3
+      ORDER BY
+        bws.statistical_scale DESC
+        LIMIT 12
+
+  </select>
+    <resultMap id="ScaleMap" type="com.hengyunsoft.platform.warn.entity.domain.WarnScaleCountDO">
+        <result column="pending" jdbcType="INTEGER" property="pending" />
+        <result column="new_come" jdbcType="INTEGER" property="newCome" />
+        <result column="handled" jdbcType="INTEGER" property="handled" />
+        <result column="month_time" jdbcType="VARCHAR" property="month" />
+        <result column="avg_confirm_time" jdbcType="VARCHAR" property="avgConfirmTime" />
+        <result column="avg_handle_time" jdbcType="VARCHAR" property="avgHandleTime" />
+    </resultMap>
+    <!--mdengb 219-4-26 首页个人预警产生处理情况 近一年的统计-->
+    <select id="getScaleByUserId" parameterType="java.lang.Long" resultMap="ScaleMap">
+        SELECT
+            /*未确认*/
+            bws.new_come_num AS pending,
+            /*已确认*/
+            bws.confirm_num AS new_come,
+            /*已处理*/
+            bws.handled_num AS handled,
+            CONCAT(substr(bws.statistical_scale,1,4),'-',substr(bws.statistical_scale,5,7)) AS month_time,
+            bws.avg_confirm_time,
+            bws.avg_handle_time
+        FROM
+            b_warn_scale_statistical bws
+        WHERE
+            1 = 1
+        AND (
+            bws.create_time BETWEEN date_sub(now(), INTERVAL 12 MONTH)
+            AND now()
+        )
+        AND object_id = #{userId,jdbcType=BIGINT}
+        AND object_type = 3
+    </select>
+</mapper>

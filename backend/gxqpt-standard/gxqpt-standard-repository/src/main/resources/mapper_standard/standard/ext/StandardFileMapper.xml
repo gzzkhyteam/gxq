@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.standard.repository.standard.dao.StandardFileMapper">
+    <resultMap id="StandardFileDOResultMap"
+               type="com.hengyunsoft.platform.standard.entity.standard.domain.StandardFileDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="document_id" jdbcType="VARCHAR" property="documentId"/>
+        <result column="file_type" jdbcType="VARCHAR" property="fileType"/>
+        <result column="classify_id" jdbcType="VARCHAR" property="classifyId"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="is_enable" jdbcType="BIT" property="isEnable"/>
+        <result column="is_delete" jdbcType="BIT" property="isDelete"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="company_id" jdbcType="VARCHAR" property="companyId"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName"/>
+        <result column="classify_name" jdbcType="VARCHAR" property="classifyName"/>
+        <result column="down_count" jdbcType="BIT" property="downloadCount"/>
+    </resultMap>
+    <select id="queryStandardFileByPage" resultMap="StandardFileDOResultMap"
+            parameterType="com.hengyunsoft.platform.standard.repository.standard.example.StandardClassifyExample">
+        select f.id, f.name, f.code, f.document_id, f.file_type, f.classify_id, f.version, f.description, f.is_enable,
+        f.is_delete, f.create_user, f.create_time, f.update_user, f.update_time, f.company_id, f.create_user_name,
+        f.update_user_name,c.name classify_name,
+        (select count(1) from standard_file_log l where l.document_id = f.document_id and l.operator_type in
+        ('view','down')) down_count
+        from standard_file f,standard_classify c
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="getStandardFileDO" resultMap="StandardFileDOResultMap">
+        select f.id, f.name, f.code, f.document_id, f.file_type, f.classify_id, f.version, f.description, f.is_enable,
+        f.is_delete, f.create_user, f.create_time, f.update_user, f.update_time, f.company_id, f.create_user_name,
+        f.update_user_name,c.name classify_name,
+        (select count(1) from standard_file_log l where l.document_id = f.document_id and l.operator_type in
+        ('view','down')) down_count
+        from standard_file f,standard_classify c
+        where f.classify_id = c.id
+        and f.id = #{id,jdbcType=VARCHAR}
+
+    </select>
+
+    <resultMap id="StandardClassifyDOResultMap"
+               type="com.hengyunsoft.platform.standard.entity.standard.domain.StandardClassifyDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="parentId" jdbcType="BIGINT" property="parentId" />
+        <result column="parentName" jdbcType="VARCHAR" property="parentName"/>
+        <result column="fileCount" jdbcType="BIT" property="fileCount"/>
+    </resultMap>
+
+    <select id="findAllFileCount" resultMap="StandardClassifyDOResultMap">
+        SELECT pc.id parentId,pc.name parentName,sc.id,sc.name,COUNT(1) fileCount
+        FROM standard_file sf,standard_classify sc ,standard_classify pc
+        WHERE sf.classify_id = sc.id AND sc.parent_id = pc.id
+        GROUP BY pc.id,pc.name,sc.id,sc.name ORDER BY sc.parent_id
+    </select>
+    
+      
+    <!-- 最新标准管理系统统计 -->
+    <resultMap id="uploadCompanyMap" type="com.hengyunsoft.platform.standard.entity.standard.dos.UploadCompanyDO">
+        <result column="company_name" jdbcType="VARCHAR" property="name"/>
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+        <resultMap id="typeMap" type="com.hengyunsoft.platform.standard.entity.standard.dos.StandardTypeDO">
+        <result column="name" jdbcType="VARCHAR" property="type"/>
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="downloadTrendMap" type="com.hengyunsoft.platform.standard.entity.standard.dos.StandardMonthDO">
+    	<result column="year_" jdbcType="VARCHAR" property="year"/>
+        <result column="month_" jdbcType="VARCHAR" property="month"/>
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    
+    <!--标准上传单位TOP10-->
+    <select id="uploadCompanyTop10" resultMap="uploadCompanyMap">
+		select company_id,company_name,count(id) as count 
+		from standard_file WHERE is_delete = 0
+		group by company_id,company_name order by count desc,CONVERT(company_name USING gbk) limit 10
+    </select>
+    <!--类别标准数量TOP5-->
+    <select id="getTypeTop5" resultMap="typeMap">
+		select sc.id,sc.name,count(sf.id) as count from 
+		standard_file sf left join standard_classify sc on sf.classify_id = sc.id
+		where sc.name is not null and sc.id is not null
+		group by sc.id,sc.name order by count desc limit 5		
+    </select>   
+    <!--XX标准文档上传单位top10-->
+    <select id="getUploadCompanyTop10" parameterType="java.lang.Long" resultMap="uploadCompanyMap">
+		select company_id,company_name,count(id) as count 
+		from standard_file 
+		where is_delete = 0 and is_enable = 1 AND classify_id in 
+		<foreach collection="nodeIds" open="(" close=")" item="power" separator=",">
+			'${power}'
+		</foreach> 
+		group by company_id,company_name order by count desc limit 10
+    </select>
+    <!--XX标准数量分析-->
+    <select id="getTypeCount" resultMap="downloadTrendMap">
+		select date_.year_,date_.month_,count(*) as count from 
+			(select YEAR(create_time) year_,month(create_time) month_ 
+			from standard_file
+			where (create_time BETWEEN #{date} and CURRENT_TIME())
+			and is_enable = 1 and classify_id in 
+			<foreach collection="nodeIds" open="(" close=")" item="power" separator=",">
+				'${power}'
+			</foreach> 
+			) date_ 
+		GROUP BY date_.year_,date_.month_
+    </select>
+    <!-- 获取现有标准数量-->
+    <select id="getStandardNum" resultType="java.lang.Integer">
+		select count(id) from standard_file
+		where is_delete=0
+    </select>
+    <!-- 获取本月新增标准数量 -->
+    <select id="getMonthStandardNum" parameterType="java.util.Date" resultType="java.lang.Integer">
+		select count(month_) from 
+		(select month(create_time) month_ from standard_file 
+		  where create_time BETWEEN #{date} and CURRENT_TIME() and is_delete=0) month_
+    </select>
+    <!-- 获取现有标准失效数量 -->
+    <select id="getStandardInvalidNum" resultType="java.lang.Integer">
+		select count(id) from standard_file
+		where is_delete=0 and is_enable=0
+    </select>
+    <!-- 获取本月标准失效数量 -->
+    <select id="getMonthStandardInvalidNum" parameterType="java.util.Date" resultType="java.lang.Integer">
+		select count(month_) from 
+		(select month(create_time) month_ from standard_file 
+		  where create_time BETWEEN #{date} and CURRENT_TIME() and is_delete=0 and is_enable=0) month_
+    </select>
+</mapper>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.hengyunsoft.gxqpt</groupId>
+        <artifactId>gxqpt-backend</artifactId>
+        <version>1.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.hengyunsoft.gxqpt</groupId>
+    <artifactId>gxqpt-admin</artifactId>
+    <name>${project.artifactId}</name>
+
+    <description>一体化平台中心平台</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>gxqpt-admin-api</module>
+        <module>gxqpt-admin-api-impl</module>
+        <module>gxqpt-admin-repository</module>
+        <module>gxqpt-admin-server</module>
+        <module>gxqpt-developer-api</module>
+        <module>gxqpt-developer-api-impl</module>
+        <module>gxqpt-developer-repository</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.hengyunsoft.gxqpt</groupId>
+                <artifactId>gxqpt-admin-repository</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hengyunsoft.gxqpt</groupId>
+                <artifactId>gxqpt-admin-api-impl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hengyunsoft.gxqpt</groupId>
+                <artifactId>gxqpt-admin-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hengyunsoft.gxqpt</groupId>
+                <artifactId>gxqpt-developer-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hengyunsoft.gxqpt</groupId>
+                <artifactId>gxqpt-sms-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hengyunsoft.gxqpt</groupId>
+                <artifactId>gxqpt-developer-api-impl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hengyunsoft.gxqpt</groupId>
+                <artifactId>gxqpt-developer-repository</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <plugins>
+            <!-- 此插件用来生成通用mapper的代码 -->
+            <plugin>
+                <groupId>com.hengyunsoft.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>${mybatis.generator.version}</version>
+                <configuration>
+                    <configurationFile>${basedir}/src/main/resources/generatorConfig.xml</configurationFile>
+                    <overwrite>false</overwrite>
+                    <verbose>true</verbose>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.30</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>

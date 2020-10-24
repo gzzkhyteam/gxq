@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.core.dao.ResourceMapper">
+
+    <select id="selectUserRes" resultMap="BaseResultMap" parameterType="map">
+    SELECT * FROM c_resource WHERE id in(
+    SELECT biz_id FROM c_role_power WHERE role_id in(
+    SELECT role_id FROM c_assign_role
+    WHERE user_id =#{userId}))
+    AND app_id = #{appId}
+  </select>
+    
+    
+    
+    <resultMap id="ResourceDOMap" type="com.hengyunsoft.platform.admin.entity.core.domain.ResourceDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="desc_" jdbcType="VARCHAR" property="desc"/>
+        <result column="code_" jdbcType="VARCHAR" property="code"/>
+        <result column="type_" jdbcType="SMALLINT" property="type"/>
+        <result column="url_" jdbcType="VARCHAR" property="url"/>
+        <result column="target_" jdbcType="VARCHAR" property="target"/>
+        <result column="status_" jdbcType="SMALLINT" property="status"/>
+        <result column="order_no" jdbcType="INTEGER" property="orderNo"/>
+        <result column="icon_" jdbcType="VARCHAR" property="icon"/>
+        <result column="group_" jdbcType="VARCHAR" property="group"/>
+        <result column="leve" jdbcType="VARCHAR" property="leve"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="app_id" jdbcType="VARCHAR" property="appId"/>
+        <result column="public_is" jdbcType="BIT" property="publicIs" />
+    </resultMap>
+    <resultMap id="TreeResultMap" type="com.hengyunsoft.platform.admin.entity.core.domain.ResourceDO" extends="ResourceDOMap">
+        <association property="children"
+                     select="com.hengyunsoft.platform.admin.repository.core.dao.ResourceMapper.selectByParentId"
+                     column="{parentId=id,appId=app_id,userId=user_id}">
+
+        </association>
+    </resultMap>
+
+    <select id="selectByParentId" resultMap="TreeResultMap" parameterType="map">
+      select c.*,  #{userId} as user_id from c_resource c where c.app_id = #{appId,jdbcType=VARCHAR}
+    and c.parent_id = #{parentId,jdbcType=BIGINT}
+    and c.id in(
+    SELECT biz_id FROM c_role_power WHERE role_id in(
+    SELECT role_id FROM c_assign_role
+    WHERE user_id =#{userId}))
+    order by order_no asc
+  </select>
+
+    <select id="selectTree" resultMap="TreeResultMap" parameterType="map">
+        select c.*, #{userId} as user_id from c_resource c
+        where c.app_id = #{appId}
+        and c.id in(
+        SELECT biz_id FROM c_role_power WHERE role_id in(
+        SELECT role_id FROM c_assign_role
+        WHERE user_id =#{userId}))
+        and c.parent_id = -1
+        <if test="status != null and  status != ''">
+            and status_ = #{status}
+        </if>
+        <if test="type != null and type != ''">
+            AND type_ =#{type}
+        </if>
+        <if test="group != null and group != ''">
+            AND group_ = #{group}
+        </if>
+        order by order_no asc
+    </select>
+
+    <select id="selectButtonList" resultMap="BaseResultMap" parameterType="map">
+        SELECT * FROM c_resource
+        WHERE  (id in(
+				        SELECT biz_id FROM c_role_power WHERE role_id in(
+				        SELECT role_id FROM c_assign_role
+				        WHERE  user_id =#{userId})
+				        AND biz_type = 1
+				      ) 
+				    OR public_is = 1 
+				)
+		        AND app_id = #{appId}
+		        AND type_ = 2
+		        <if test="status != null and  status != ''">
+		            and status_ = #{status}
+		        </if>
+		        <if test="group != null and group !=''">
+		            AND group_ = #{group}
+		        </if>
+		        <if test="parentId != '' and parentId != null">
+		            AND parent_id = #{parentId}
+		        </if>
+		        order by order_no asc
+    </select>
+
+    <!--
+    查询用户拥有的指定菜单id
+     @tangyh
+     -->
+    <select id="findMenuIdByUserId" parameterType="map" resultType="java.lang.Long">
+        SELECT id FROM c_resource WHERE id in(
+        SELECT biz_id FROM c_role_power WHERE role_id in(
+        SELECT role_id FROM c_assign_role
+        WHERE user_id =#{userId,jdbcType=BIGINT} ))
+        and type_ = 1
+        and status_ = 1
+        and id in
+        <foreach collection="menuIdList" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    
+    
+    <select id="findUserVisibleResource" resultMap="ResourceDOMap">
+			select *
+			from c_resource
+			where (public_is =1 
+			      or id in (
+						SELECT c.id
+						FROM c_role_power pw join   c_assign_role aro on  pw.role_id = aro.role_id and user_id= #{userId}
+									 join c_role on aro.role_id=c_role.id and c_role.status_= 1   JOIN  c_resource c on pw.biz_id=c.id
+			
+			))
+			<trim prefixOverrides="where" prefix="and">
+			   <include refid="Update_By_Example_Where_Clause" />
+			</trim>
+		   <if test="example != null">
+		       <if test="example.groupByClause != null">
+			      group by ${example.groupByClause}
+			   </if>
+			   <if test="example.orderByClause != null">
+			      order by ${example.orderByClause}
+			   </if>
+			   <if test="example.limitValue != null">
+			      limit ${example.limitValue}
+			   </if>
+		   </if>
+    </select>
+</mapper>

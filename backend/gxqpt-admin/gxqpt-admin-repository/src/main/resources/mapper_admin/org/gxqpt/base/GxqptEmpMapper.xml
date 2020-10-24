@@ -1,0 +1,1145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.org.gxqpt.dao.GxqptEmpMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.admin.entity.org.gxqpt.po.GxqptEmp">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name_" jdbcType="VARCHAR" property="name" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="passwordmd5" jdbcType="VARCHAR" property="passwordmd5" />
+    <result column="passwordsha" jdbcType="VARCHAR" property="passwordsha" />
+    <result column="sex_" jdbcType="VARCHAR" property="sex" />
+    <result column="birthday_" jdbcType="VARCHAR" property="birthday" />
+    <result column="nation_" jdbcType="VARCHAR" property="nation" />
+    <result column="photo" jdbcType="VARCHAR" property="photo" />
+    <result column="mainorgid" jdbcType="VARCHAR" property="mainorgid" />
+    <result column="mainorgname" jdbcType="VARCHAR" property="mainorgname" />
+    <result column="maindeptid" jdbcType="VARCHAR" property="maindeptid" />
+    <result column="maindeptname" jdbcType="VARCHAR" property="maindeptname" />
+    <result column="mainduty" jdbcType="VARCHAR" property="mainduty" />
+    <result column="maindutyname" jdbcType="VARCHAR" property="maindutyname" />
+    <result column="mainpost" jdbcType="VARCHAR" property="mainpost" />
+    <result column="mainpostname" jdbcType="VARCHAR" property="mainpostname" />
+    <result column="officetel" jdbcType="VARCHAR" property="officetel" />
+    <result column="mainmobile" jdbcType="VARCHAR" property="mainmobile" />
+    <result column="submobile" jdbcType="VARCHAR" property="submobile" />
+    <result column="isorgadmin" jdbcType="VARCHAR" property="isorgadmin" />
+    <result column="isdelete" jdbcType="VARCHAR" property="isdelete" />
+    <result column="isenable" jdbcType="VARCHAR" property="isenable" />
+    <result column="usertype" jdbcType="VARCHAR" property="usertype" />
+    <result column="status_" jdbcType="VARCHAR" property="status" />
+    <result column="descrption" jdbcType="VARCHAR" property="descrption" />
+    <result column="iscommittee" jdbcType="VARCHAR" property="iscommittee" />
+    <result column="isdeputy" jdbcType="VARCHAR" property="isdeputy" />
+    <result column="isheader" jdbcType="VARCHAR" property="isheader" />
+    <result column="isleader" jdbcType="VARCHAR" property="isleader" />
+    <result column="userduty" jdbcType="VARCHAR" property="userduty" />
+    <result column="sortvalue" jdbcType="INTEGER" property="sortvalue" />
+    <result column="dutylevel" jdbcType="VARCHAR" property="dutylevel" />
+    <result column="otherid" jdbcType="VARCHAR" property="otherid" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="logid" jdbcType="VARCHAR" property="logid" />
+    <result column="gxqpt_emp_id" jdbcType="BIGINT" property="gxqptEmpId" />
+    <result column="education" jdbcType="VARCHAR" property="education" />
+    <result column="emp_no" jdbcType="VARCHAR" property="empNo" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, name_, nickname, passwordmd5, passwordsha, sex_, birthday_, nation_, photo, mainorgid, 
+    mainorgname, maindeptid, maindeptname, mainduty, maindutyname, mainpost, mainpostname, 
+    officetel, mainmobile, submobile, isorgadmin, isdelete, isenable, usertype, status_, 
+    descrption, iscommittee, isdeputy, isheader, isleader, userduty, sortvalue, dutylevel, 
+    otherid, create_user, create_time, update_user, update_time, logid, gxqpt_emp_id, 
+    education, emp_no
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.admin.repository.org.gxqpt.example.GxqptEmpExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_gxqpt_emp
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from c_gxqpt_emp
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.admin.repository.org.gxqpt.example.GxqptEmpExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_gxqpt_emp
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from c_gxqpt_emp
+    where 1=1 and id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_gxqpt_emp
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.admin.repository.org.gxqpt.example.GxqptEmpExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_gxqpt_emp
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_gxqpt_emp where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_gxqpt_emp
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_gxqpt_emp where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.admin.entity.org.gxqpt.po.GxqptEmp">
+    <!--
+    @mbggenerated
+    -->
+    update c_gxqpt_emp
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_gxqpt_emp
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update c_gxqpt_emp
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_gxqpt_emp
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.admin.entity.org.gxqpt.po.GxqptEmp">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_gxqpt_emp (id, name_, nickname, 
+      passwordmd5, passwordsha, sex_, 
+      birthday_, nation_, photo, 
+      mainorgid, mainorgname, maindeptid, 
+      maindeptname, mainduty, maindutyname, 
+      mainpost, mainpostname, officetel, 
+      mainmobile, submobile, isorgadmin, 
+      isdelete, isenable, usertype, 
+      status_, descrption, iscommittee, 
+      isdeputy, isheader, isleader, 
+      userduty, sortvalue, dutylevel, 
+      otherid, create_user, create_time, 
+      update_user, update_time, logid, 
+      gxqpt_emp_id, education, emp_no
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
+      #{passwordmd5,jdbcType=VARCHAR}, #{passwordsha,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{birthday,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR}, 
+      #{mainorgid,jdbcType=VARCHAR}, #{mainorgname,jdbcType=VARCHAR}, #{maindeptid,jdbcType=VARCHAR}, 
+      #{maindeptname,jdbcType=VARCHAR}, #{mainduty,jdbcType=VARCHAR}, #{maindutyname,jdbcType=VARCHAR}, 
+      #{mainpost,jdbcType=VARCHAR}, #{mainpostname,jdbcType=VARCHAR}, #{officetel,jdbcType=VARCHAR}, 
+      #{mainmobile,jdbcType=VARCHAR}, #{submobile,jdbcType=VARCHAR}, #{isorgadmin,jdbcType=VARCHAR}, 
+      #{isdelete,jdbcType=VARCHAR}, #{isenable,jdbcType=VARCHAR}, #{usertype,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{descrption,jdbcType=VARCHAR}, #{iscommittee,jdbcType=VARCHAR}, 
+      #{isdeputy,jdbcType=VARCHAR}, #{isheader,jdbcType=VARCHAR}, #{isleader,jdbcType=VARCHAR}, 
+      #{userduty,jdbcType=VARCHAR}, #{sortvalue,jdbcType=INTEGER}, #{dutylevel,jdbcType=VARCHAR}, 
+      #{otherid,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{logid,jdbcType=VARCHAR}, 
+      #{gxqptEmpId,jdbcType=BIGINT}, #{education,jdbcType=VARCHAR}, #{empNo,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_gxqpt_emp (id, name_, nickname, passwordmd5, passwordsha, sex_, birthday_, nation_, photo, mainorgid, mainorgname, maindeptid, maindeptname, mainduty, maindutyname, mainpost, mainpostname, officetel, mainmobile, submobile, isorgadmin, isdelete, isenable, usertype, status_, descrption, iscommittee, isdeputy, isheader, isleader, userduty, sortvalue, dutylevel, otherid, create_user, create_time, update_user, update_time, logid, gxqpt_emp_id, education, emp_no ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.nickname,jdbcType=VARCHAR}, 
+        #{item.passwordmd5,jdbcType=VARCHAR}, #{item.passwordsha,jdbcType=VARCHAR}, #{item.sex,jdbcType=VARCHAR}, 
+        #{item.birthday,jdbcType=VARCHAR}, #{item.nation,jdbcType=VARCHAR}, #{item.photo,jdbcType=VARCHAR}, 
+        #{item.mainorgid,jdbcType=VARCHAR}, #{item.mainorgname,jdbcType=VARCHAR}, #{item.maindeptid,jdbcType=VARCHAR}, 
+        #{item.maindeptname,jdbcType=VARCHAR}, #{item.mainduty,jdbcType=VARCHAR}, #{item.maindutyname,jdbcType=VARCHAR}, 
+        #{item.mainpost,jdbcType=VARCHAR}, #{item.mainpostname,jdbcType=VARCHAR}, #{item.officetel,jdbcType=VARCHAR}, 
+        #{item.mainmobile,jdbcType=VARCHAR}, #{item.submobile,jdbcType=VARCHAR}, #{item.isorgadmin,jdbcType=VARCHAR}, 
+        #{item.isdelete,jdbcType=VARCHAR}, #{item.isenable,jdbcType=VARCHAR}, #{item.usertype,jdbcType=VARCHAR}, 
+        #{item.status,jdbcType=VARCHAR}, #{item.descrption,jdbcType=VARCHAR}, #{item.iscommittee,jdbcType=VARCHAR}, 
+        #{item.isdeputy,jdbcType=VARCHAR}, #{item.isheader,jdbcType=VARCHAR}, #{item.isleader,jdbcType=VARCHAR}, 
+        #{item.userduty,jdbcType=VARCHAR}, #{item.sortvalue,jdbcType=INTEGER}, #{item.dutylevel,jdbcType=VARCHAR}, 
+        #{item.otherid,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.logid,jdbcType=VARCHAR}, 
+        #{item.gxqptEmpId,jdbcType=BIGINT}, #{item.education,jdbcType=VARCHAR}, #{item.empNo,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.admin.entity.org.gxqpt.po.GxqptEmp">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_gxqpt_emp
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name_,
+      </if>
+      <if test="nickname != null">
+        nickname,
+      </if>
+      <if test="passwordmd5 != null">
+        passwordmd5,
+      </if>
+      <if test="passwordsha != null">
+        passwordsha,
+      </if>
+      <if test="sex != null">
+        sex_,
+      </if>
+      <if test="birthday != null">
+        birthday_,
+      </if>
+      <if test="nation != null">
+        nation_,
+      </if>
+      <if test="photo != null">
+        photo,
+      </if>
+      <if test="mainorgid != null">
+        mainorgid,
+      </if>
+      <if test="mainorgname != null">
+        mainorgname,
+      </if>
+      <if test="maindeptid != null">
+        maindeptid,
+      </if>
+      <if test="maindeptname != null">
+        maindeptname,
+      </if>
+      <if test="mainduty != null">
+        mainduty,
+      </if>
+      <if test="maindutyname != null">
+        maindutyname,
+      </if>
+      <if test="mainpost != null">
+        mainpost,
+      </if>
+      <if test="mainpostname != null">
+        mainpostname,
+      </if>
+      <if test="officetel != null">
+        officetel,
+      </if>
+      <if test="mainmobile != null">
+        mainmobile,
+      </if>
+      <if test="submobile != null">
+        submobile,
+      </if>
+      <if test="isorgadmin != null">
+        isorgadmin,
+      </if>
+      <if test="isdelete != null">
+        isdelete,
+      </if>
+      <if test="isenable != null">
+        isenable,
+      </if>
+      <if test="usertype != null">
+        usertype,
+      </if>
+      <if test="status != null">
+        status_,
+      </if>
+      <if test="descrption != null">
+        descrption,
+      </if>
+      <if test="iscommittee != null">
+        iscommittee,
+      </if>
+      <if test="isdeputy != null">
+        isdeputy,
+      </if>
+      <if test="isheader != null">
+        isheader,
+      </if>
+      <if test="isleader != null">
+        isleader,
+      </if>
+      <if test="userduty != null">
+        userduty,
+      </if>
+      <if test="sortvalue != null">
+        sortvalue,
+      </if>
+      <if test="dutylevel != null">
+        dutylevel,
+      </if>
+      <if test="otherid != null">
+        otherid,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="logid != null">
+        logid,
+      </if>
+      <if test="gxqptEmpId != null">
+        gxqpt_emp_id,
+      </if>
+      <if test="education != null">
+        education,
+      </if>
+      <if test="empNo != null">
+        emp_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordmd5 != null">
+        #{passwordmd5,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordsha != null">
+        #{passwordsha,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null">
+        #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="mainorgid != null">
+        #{mainorgid,jdbcType=VARCHAR},
+      </if>
+      <if test="mainorgname != null">
+        #{mainorgname,jdbcType=VARCHAR},
+      </if>
+      <if test="maindeptid != null">
+        #{maindeptid,jdbcType=VARCHAR},
+      </if>
+      <if test="maindeptname != null">
+        #{maindeptname,jdbcType=VARCHAR},
+      </if>
+      <if test="mainduty != null">
+        #{mainduty,jdbcType=VARCHAR},
+      </if>
+      <if test="maindutyname != null">
+        #{maindutyname,jdbcType=VARCHAR},
+      </if>
+      <if test="mainpost != null">
+        #{mainpost,jdbcType=VARCHAR},
+      </if>
+      <if test="mainpostname != null">
+        #{mainpostname,jdbcType=VARCHAR},
+      </if>
+      <if test="officetel != null">
+        #{officetel,jdbcType=VARCHAR},
+      </if>
+      <if test="mainmobile != null">
+        #{mainmobile,jdbcType=VARCHAR},
+      </if>
+      <if test="submobile != null">
+        #{submobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isorgadmin != null">
+        #{isorgadmin,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="isenable != null">
+        #{isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="usertype != null">
+        #{usertype,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="descrption != null">
+        #{descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="iscommittee != null">
+        #{iscommittee,jdbcType=VARCHAR},
+      </if>
+      <if test="isdeputy != null">
+        #{isdeputy,jdbcType=VARCHAR},
+      </if>
+      <if test="isheader != null">
+        #{isheader,jdbcType=VARCHAR},
+      </if>
+      <if test="isleader != null">
+        #{isleader,jdbcType=VARCHAR},
+      </if>
+      <if test="userduty != null">
+        #{userduty,jdbcType=VARCHAR},
+      </if>
+      <if test="sortvalue != null">
+        #{sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="dutylevel != null">
+        #{dutylevel,jdbcType=VARCHAR},
+      </if>
+      <if test="otherid != null">
+        #{otherid,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logid != null">
+        #{logid,jdbcType=VARCHAR},
+      </if>
+      <if test="gxqptEmpId != null">
+        #{gxqptEmpId,jdbcType=BIGINT},
+      </if>
+      <if test="education != null">
+        #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="empNo != null">
+        #{empNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.admin.repository.org.gxqpt.example.GxqptEmpExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from c_gxqpt_emp
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_gxqpt_emp
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name_ = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nickname != null">
+        nickname = #{record.nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.passwordmd5 != null">
+        passwordmd5 = #{record.passwordmd5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.passwordsha != null">
+        passwordsha = #{record.passwordsha,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null">
+        sex_ = #{record.sex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birthday != null">
+        birthday_ = #{record.birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nation != null">
+        nation_ = #{record.nation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.photo != null">
+        photo = #{record.photo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mainorgid != null">
+        mainorgid = #{record.mainorgid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mainorgname != null">
+        mainorgname = #{record.mainorgname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.maindeptid != null">
+        maindeptid = #{record.maindeptid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.maindeptname != null">
+        maindeptname = #{record.maindeptname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mainduty != null">
+        mainduty = #{record.mainduty,jdbcType=VARCHAR},
+      </if>
+      <if test="record.maindutyname != null">
+        maindutyname = #{record.maindutyname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mainpost != null">
+        mainpost = #{record.mainpost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mainpostname != null">
+        mainpostname = #{record.mainpostname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.officetel != null">
+        officetel = #{record.officetel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mainmobile != null">
+        mainmobile = #{record.mainmobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.submobile != null">
+        submobile = #{record.submobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isorgadmin != null">
+        isorgadmin = #{record.isorgadmin,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isdelete != null">
+        isdelete = #{record.isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isenable != null">
+        isenable = #{record.isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usertype != null">
+        usertype = #{record.usertype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status_ = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.descrption != null">
+        descrption = #{record.descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="record.iscommittee != null">
+        iscommittee = #{record.iscommittee,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isdeputy != null">
+        isdeputy = #{record.isdeputy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isheader != null">
+        isheader = #{record.isheader,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isleader != null">
+        isleader = #{record.isleader,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userduty != null">
+        userduty = #{record.userduty,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sortvalue != null">
+        sortvalue = #{record.sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="record.dutylevel != null">
+        dutylevel = #{record.dutylevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherid != null">
+        otherid = #{record.otherid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.logid != null">
+        logid = #{record.logid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gxqptEmpId != null">
+        gxqpt_emp_id = #{record.gxqptEmpId,jdbcType=BIGINT},
+      </if>
+      <if test="record.education != null">
+        education = #{record.education,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empNo != null">
+        emp_no = #{record.empNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_gxqpt_emp
+    set id = #{record.id,jdbcType=VARCHAR},
+      name_ = #{record.name,jdbcType=VARCHAR},
+      nickname = #{record.nickname,jdbcType=VARCHAR},
+      passwordmd5 = #{record.passwordmd5,jdbcType=VARCHAR},
+      passwordsha = #{record.passwordsha,jdbcType=VARCHAR},
+      sex_ = #{record.sex,jdbcType=VARCHAR},
+      birthday_ = #{record.birthday,jdbcType=VARCHAR},
+      nation_ = #{record.nation,jdbcType=VARCHAR},
+      photo = #{record.photo,jdbcType=VARCHAR},
+      mainorgid = #{record.mainorgid,jdbcType=VARCHAR},
+      mainorgname = #{record.mainorgname,jdbcType=VARCHAR},
+      maindeptid = #{record.maindeptid,jdbcType=VARCHAR},
+      maindeptname = #{record.maindeptname,jdbcType=VARCHAR},
+      mainduty = #{record.mainduty,jdbcType=VARCHAR},
+      maindutyname = #{record.maindutyname,jdbcType=VARCHAR},
+      mainpost = #{record.mainpost,jdbcType=VARCHAR},
+      mainpostname = #{record.mainpostname,jdbcType=VARCHAR},
+      officetel = #{record.officetel,jdbcType=VARCHAR},
+      mainmobile = #{record.mainmobile,jdbcType=VARCHAR},
+      submobile = #{record.submobile,jdbcType=VARCHAR},
+      isorgadmin = #{record.isorgadmin,jdbcType=VARCHAR},
+      isdelete = #{record.isdelete,jdbcType=VARCHAR},
+      isenable = #{record.isenable,jdbcType=VARCHAR},
+      usertype = #{record.usertype,jdbcType=VARCHAR},
+      status_ = #{record.status,jdbcType=VARCHAR},
+      descrption = #{record.descrption,jdbcType=VARCHAR},
+      iscommittee = #{record.iscommittee,jdbcType=VARCHAR},
+      isdeputy = #{record.isdeputy,jdbcType=VARCHAR},
+      isheader = #{record.isheader,jdbcType=VARCHAR},
+      isleader = #{record.isleader,jdbcType=VARCHAR},
+      userduty = #{record.userduty,jdbcType=VARCHAR},
+      sortvalue = #{record.sortvalue,jdbcType=INTEGER},
+      dutylevel = #{record.dutylevel,jdbcType=VARCHAR},
+      otherid = #{record.otherid,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      logid = #{record.logid,jdbcType=VARCHAR},
+      gxqpt_emp_id = #{record.gxqptEmpId,jdbcType=BIGINT},
+      education = #{record.education,jdbcType=VARCHAR},
+      emp_no = #{record.empNo,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.admin.entity.org.gxqpt.po.GxqptEmp">
+    <!--
+    @mbggenerated
+    -->
+    update c_gxqpt_emp
+    <set>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordmd5 != null">
+        passwordmd5 = #{passwordmd5,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordsha != null">
+        passwordsha = #{passwordsha,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex_ = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        birthday_ = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null">
+        nation_ = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="mainorgid != null">
+        mainorgid = #{mainorgid,jdbcType=VARCHAR},
+      </if>
+      <if test="mainorgname != null">
+        mainorgname = #{mainorgname,jdbcType=VARCHAR},
+      </if>
+      <if test="maindeptid != null">
+        maindeptid = #{maindeptid,jdbcType=VARCHAR},
+      </if>
+      <if test="maindeptname != null">
+        maindeptname = #{maindeptname,jdbcType=VARCHAR},
+      </if>
+      <if test="mainduty != null">
+        mainduty = #{mainduty,jdbcType=VARCHAR},
+      </if>
+      <if test="maindutyname != null">
+        maindutyname = #{maindutyname,jdbcType=VARCHAR},
+      </if>
+      <if test="mainpost != null">
+        mainpost = #{mainpost,jdbcType=VARCHAR},
+      </if>
+      <if test="mainpostname != null">
+        mainpostname = #{mainpostname,jdbcType=VARCHAR},
+      </if>
+      <if test="officetel != null">
+        officetel = #{officetel,jdbcType=VARCHAR},
+      </if>
+      <if test="mainmobile != null">
+        mainmobile = #{mainmobile,jdbcType=VARCHAR},
+      </if>
+      <if test="submobile != null">
+        submobile = #{submobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isorgadmin != null">
+        isorgadmin = #{isorgadmin,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        isdelete = #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="isenable != null">
+        isenable = #{isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="usertype != null">
+        usertype = #{usertype,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="descrption != null">
+        descrption = #{descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="iscommittee != null">
+        iscommittee = #{iscommittee,jdbcType=VARCHAR},
+      </if>
+      <if test="isdeputy != null">
+        isdeputy = #{isdeputy,jdbcType=VARCHAR},
+      </if>
+      <if test="isheader != null">
+        isheader = #{isheader,jdbcType=VARCHAR},
+      </if>
+      <if test="isleader != null">
+        isleader = #{isleader,jdbcType=VARCHAR},
+      </if>
+      <if test="userduty != null">
+        userduty = #{userduty,jdbcType=VARCHAR},
+      </if>
+      <if test="sortvalue != null">
+        sortvalue = #{sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="dutylevel != null">
+        dutylevel = #{dutylevel,jdbcType=VARCHAR},
+      </if>
+      <if test="otherid != null">
+        otherid = #{otherid,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logid != null">
+        logid = #{logid,jdbcType=VARCHAR},
+      </if>
+      <if test="gxqptEmpId != null">
+        gxqpt_emp_id = #{gxqptEmpId,jdbcType=BIGINT},
+      </if>
+      <if test="education != null">
+        education = #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="empNo != null">
+        emp_no = #{empNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.admin.entity.org.gxqpt.po.GxqptEmp">
+    <!--
+    @mbggenerated
+    -->
+    update c_gxqpt_emp
+    <set>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordmd5 != null">
+        passwordmd5 = #{passwordmd5,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordsha != null">
+        passwordsha = #{passwordsha,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex_ = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        birthday_ = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null">
+        nation_ = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="mainorgid != null">
+        mainorgid = #{mainorgid,jdbcType=VARCHAR},
+      </if>
+      <if test="mainorgname != null">
+        mainorgname = #{mainorgname,jdbcType=VARCHAR},
+      </if>
+      <if test="maindeptid != null">
+        maindeptid = #{maindeptid,jdbcType=VARCHAR},
+      </if>
+      <if test="maindeptname != null">
+        maindeptname = #{maindeptname,jdbcType=VARCHAR},
+      </if>
+      <if test="mainduty != null">
+        mainduty = #{mainduty,jdbcType=VARCHAR},
+      </if>
+      <if test="maindutyname != null">
+        maindutyname = #{maindutyname,jdbcType=VARCHAR},
+      </if>
+      <if test="mainpost != null">
+        mainpost = #{mainpost,jdbcType=VARCHAR},
+      </if>
+      <if test="mainpostname != null">
+        mainpostname = #{mainpostname,jdbcType=VARCHAR},
+      </if>
+      <if test="officetel != null">
+        officetel = #{officetel,jdbcType=VARCHAR},
+      </if>
+      <if test="mainmobile != null">
+        mainmobile = #{mainmobile,jdbcType=VARCHAR},
+      </if>
+      <if test="submobile != null">
+        submobile = #{submobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isorgadmin != null">
+        isorgadmin = #{isorgadmin,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        isdelete = #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="isenable != null">
+        isenable = #{isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="usertype != null">
+        usertype = #{usertype,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="descrption != null">
+        descrption = #{descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="iscommittee != null">
+        iscommittee = #{iscommittee,jdbcType=VARCHAR},
+      </if>
+      <if test="isdeputy != null">
+        isdeputy = #{isdeputy,jdbcType=VARCHAR},
+      </if>
+      <if test="isheader != null">
+        isheader = #{isheader,jdbcType=VARCHAR},
+      </if>
+      <if test="isleader != null">
+        isleader = #{isleader,jdbcType=VARCHAR},
+      </if>
+      <if test="userduty != null">
+        userduty = #{userduty,jdbcType=VARCHAR},
+      </if>
+      <if test="sortvalue != null">
+        sortvalue = #{sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="dutylevel != null">
+        dutylevel = #{dutylevel,jdbcType=VARCHAR},
+      </if>
+      <if test="otherid != null">
+        otherid = #{otherid,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logid != null">
+        logid = #{logid,jdbcType=VARCHAR},
+      </if>
+      <if test="gxqptEmpId != null">
+        gxqpt_emp_id = #{gxqptEmpId,jdbcType=BIGINT},
+      </if>
+      <if test="education != null">
+        education = #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="empNo != null">
+        emp_no = #{empNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.admin.entity.org.gxqpt.po.GxqptEmp">
+    <!--
+    @mbggenerated
+    -->
+    update c_gxqpt_emp
+    set name_ = #{name,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      passwordmd5 = #{passwordmd5,jdbcType=VARCHAR},
+      passwordsha = #{passwordsha,jdbcType=VARCHAR},
+      sex_ = #{sex,jdbcType=VARCHAR},
+      birthday_ = #{birthday,jdbcType=VARCHAR},
+      nation_ = #{nation,jdbcType=VARCHAR},
+      photo = #{photo,jdbcType=VARCHAR},
+      mainorgid = #{mainorgid,jdbcType=VARCHAR},
+      mainorgname = #{mainorgname,jdbcType=VARCHAR},
+      maindeptid = #{maindeptid,jdbcType=VARCHAR},
+      maindeptname = #{maindeptname,jdbcType=VARCHAR},
+      mainduty = #{mainduty,jdbcType=VARCHAR},
+      maindutyname = #{maindutyname,jdbcType=VARCHAR},
+      mainpost = #{mainpost,jdbcType=VARCHAR},
+      mainpostname = #{mainpostname,jdbcType=VARCHAR},
+      officetel = #{officetel,jdbcType=VARCHAR},
+      mainmobile = #{mainmobile,jdbcType=VARCHAR},
+      submobile = #{submobile,jdbcType=VARCHAR},
+      isorgadmin = #{isorgadmin,jdbcType=VARCHAR},
+      isdelete = #{isdelete,jdbcType=VARCHAR},
+      isenable = #{isenable,jdbcType=VARCHAR},
+      usertype = #{usertype,jdbcType=VARCHAR},
+      status_ = #{status,jdbcType=VARCHAR},
+      descrption = #{descrption,jdbcType=VARCHAR},
+      iscommittee = #{iscommittee,jdbcType=VARCHAR},
+      isdeputy = #{isdeputy,jdbcType=VARCHAR},
+      isheader = #{isheader,jdbcType=VARCHAR},
+      isleader = #{isleader,jdbcType=VARCHAR},
+      userduty = #{userduty,jdbcType=VARCHAR},
+      sortvalue = #{sortvalue,jdbcType=INTEGER},
+      dutylevel = #{dutylevel,jdbcType=VARCHAR},
+      otherid = #{otherid,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      logid = #{logid,jdbcType=VARCHAR},
+      gxqpt_emp_id = #{gxqptEmpId,jdbcType=BIGINT},
+      education = #{education,jdbcType=VARCHAR},
+      emp_no = #{empNo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.admin.entity.org.gxqpt.po.GxqptEmp">
+    <!--
+    @mbggenerated
+    -->
+    update c_gxqpt_emp
+    set name_ = #{name,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      passwordmd5 = #{passwordmd5,jdbcType=VARCHAR},
+      passwordsha = #{passwordsha,jdbcType=VARCHAR},
+      sex_ = #{sex,jdbcType=VARCHAR},
+      birthday_ = #{birthday,jdbcType=VARCHAR},
+      nation_ = #{nation,jdbcType=VARCHAR},
+      photo = #{photo,jdbcType=VARCHAR},
+      mainorgid = #{mainorgid,jdbcType=VARCHAR},
+      mainorgname = #{mainorgname,jdbcType=VARCHAR},
+      maindeptid = #{maindeptid,jdbcType=VARCHAR},
+      maindeptname = #{maindeptname,jdbcType=VARCHAR},
+      mainduty = #{mainduty,jdbcType=VARCHAR},
+      maindutyname = #{maindutyname,jdbcType=VARCHAR},
+      mainpost = #{mainpost,jdbcType=VARCHAR},
+      mainpostname = #{mainpostname,jdbcType=VARCHAR},
+      officetel = #{officetel,jdbcType=VARCHAR},
+      mainmobile = #{mainmobile,jdbcType=VARCHAR},
+      submobile = #{submobile,jdbcType=VARCHAR},
+      isorgadmin = #{isorgadmin,jdbcType=VARCHAR},
+      isdelete = #{isdelete,jdbcType=VARCHAR},
+      isenable = #{isenable,jdbcType=VARCHAR},
+      usertype = #{usertype,jdbcType=VARCHAR},
+      status_ = #{status,jdbcType=VARCHAR},
+      descrption = #{descrption,jdbcType=VARCHAR},
+      iscommittee = #{iscommittee,jdbcType=VARCHAR},
+      isdeputy = #{isdeputy,jdbcType=VARCHAR},
+      isheader = #{isheader,jdbcType=VARCHAR},
+      isleader = #{isleader,jdbcType=VARCHAR},
+      userduty = #{userduty,jdbcType=VARCHAR},
+      sortvalue = #{sortvalue,jdbcType=INTEGER},
+      dutylevel = #{dutylevel,jdbcType=VARCHAR},
+      otherid = #{otherid,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      logid = #{logid,jdbcType=VARCHAR},
+      gxqpt_emp_id = #{gxqptEmpId,jdbcType=BIGINT},
+      education = #{education,jdbcType=VARCHAR},
+      emp_no = #{empNo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mail.repository.dao.JamesUserMapper">
+
+
+    <insert id="insert" parameterType="com.hengyunsoft.platform.mail.entity.po.JamesUser">
+        INSERT INTO `JAMES_USER`(`NAME`, `ALG`, `ENABLE`, `PASSWORD`, `PASSWORD_HASH_ALGORITHM`, `USER_NAME`, `VERSION`)
+        SELECT
+        #{name, jdbcType=VARCHAR},#{alg, jdbcType=VARCHAR},#{enable, jdbcType=BIT},#{password, jdbcType=VARCHAR},
+        #{passwordHashAlgorithm, jdbcType=VARCHAR},#{userName, jdbcType=VARCHAR},1
+        FROM DUAL
+        WHERE NOT EXISTS (SELECT `NAME` FROM JAMES_USER WHERE NAME = #{name, jdbcType=VARCHAR})
+    </insert>
+
+    <select id="count" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select COUNT(name) from JAMES_USER where `NAME` = #{name, jdbcType=VARCHAR}
+    </select>
+
+    <select id="getAllCount" resultType="java.lang.Integer">
+        select COUNT(name) from JAMES_USER
+    </select>
+
+    <select id="getCopyAccount" resultType="java.lang.String">
+        SELECT DISTINCT *FROM (
+            SELECT SUBSTRING_INDEX(account_, '@', 1) AS account FROM copy_core_c_user
+            WHERE account_ IS NOT NULL
+            UNION ALL
+            SELECT SUBSTRING_INDEX(nickname, '@', 1) AS account FROM copy_core_c_gxqpt_emp
+            WHERE nickname IS NOT NULL
+        ) A WHERE account NOT IN(SELECT NAME FROM JAMES_USER)
+    </select>
+</mapper>

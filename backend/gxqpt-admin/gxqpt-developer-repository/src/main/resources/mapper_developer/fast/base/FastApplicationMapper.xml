@@ -1,0 +1,737 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.fast.dao.FastApplicationMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.developer.entity.fast.po.FastApplication">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="biz_config_id" jdbcType="BIGINT" property="bizConfigId" />
+    <result column="app_secret" jdbcType="VARCHAR" property="appSecret" />
+    <result column="app_flag" jdbcType="VARCHAR" property="appFlag" />
+    <result column="index_url" jdbcType="VARCHAR" property="indexUrl" />
+    <result column="name_" jdbcType="VARCHAR" property="name" />
+    <result column="logo_url" jdbcType="VARCHAR" property="logoUrl" />
+    <result column="desc_" jdbcType="VARCHAR" property="desc" />
+    <result column="code_" jdbcType="VARCHAR" property="code" />
+    <result column="order_no" jdbcType="INTEGER" property="orderNo" />
+    <result column="app_type" jdbcType="SMALLINT" property="appType" />
+    <result column="type_" jdbcType="VARCHAR" property="type" />
+    <result column="provider_" jdbcType="VARCHAR" property="provider" />
+    <result column="status_" jdbcType="BIT" property="status" />
+    <result column="random_str" jdbcType="VARCHAR" property="randomStr" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="hots_count" jdbcType="INTEGER" property="hotsCount" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, app_id, biz_config_id, app_secret, app_flag, index_url, name_, logo_url, desc_, 
+    code_, order_no, app_type, type_, provider_, status_, random_str, create_user, create_time, 
+    update_user, update_time, hots_count
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.example.FastApplicationExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_fast_application
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_fast_application
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.developer.repository.fast.example.FastApplicationExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_fast_application
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectByAppIdAndId" parameterType="map" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <include refid="Base_Column_List" />
+    from b_fast_application
+    where 1=1 and app_id = #{appId,jdbcType=VARCHAR} and id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAppIdById" parameterType="map" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_fast_application
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_fast_application
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.example.FastApplicationExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_fast_application
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_fast_application where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_fast_application
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_fast_application where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.FastApplication">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_application
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.FastApplication">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_application
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.FastApplication">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_application
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.FastApplication">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_application
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.FastApplication">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_fast_application (id, app_id, biz_config_id, 
+      app_secret, app_flag, index_url, 
+      name_, logo_url, desc_, 
+      code_, order_no, app_type, 
+      type_, provider_, status_, 
+      random_str, create_user, create_time, 
+      update_user, update_time, hots_count
+      )
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{bizConfigId,jdbcType=BIGINT}, 
+      #{appSecret,jdbcType=VARCHAR}, #{appFlag,jdbcType=VARCHAR}, #{indexUrl,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{logoUrl,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{orderNo,jdbcType=INTEGER}, #{appType,jdbcType=SMALLINT}, 
+      #{type,jdbcType=VARCHAR}, #{provider,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, 
+      #{randomStr,jdbcType=VARCHAR}, #{createUser,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{hotsCount,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_fast_application (id, app_id, biz_config_id, app_secret, app_flag, index_url, name_, logo_url, desc_, code_, order_no, app_type, type_, provider_, status_, random_str, create_user, create_time, update_user, update_time, hots_count ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.appId,jdbcType=VARCHAR}, #{item.bizConfigId,jdbcType=BIGINT}, 
+        #{item.appSecret,jdbcType=VARCHAR}, #{item.appFlag,jdbcType=VARCHAR}, #{item.indexUrl,jdbcType=VARCHAR}, 
+        #{item.name,jdbcType=VARCHAR}, #{item.logoUrl,jdbcType=VARCHAR}, #{item.desc,jdbcType=VARCHAR}, 
+        #{item.code,jdbcType=VARCHAR}, #{item.orderNo,jdbcType=INTEGER}, #{item.appType,jdbcType=SMALLINT}, 
+        #{item.type,jdbcType=VARCHAR}, #{item.provider,jdbcType=VARCHAR}, #{item.status,jdbcType=BIT}, 
+        #{item.randomStr,jdbcType=VARCHAR}, #{item.createUser,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.hotsCount,jdbcType=INTEGER}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.FastApplication">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_fast_application
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="bizConfigId != null">
+        biz_config_id,
+      </if>
+      <if test="appSecret != null">
+        app_secret,
+      </if>
+      <if test="appFlag != null">
+        app_flag,
+      </if>
+      <if test="indexUrl != null">
+        index_url,
+      </if>
+      <if test="name != null">
+        name_,
+      </if>
+      <if test="logoUrl != null">
+        logo_url,
+      </if>
+      <if test="desc != null">
+        desc_,
+      </if>
+      <if test="code != null">
+        code_,
+      </if>
+      <if test="orderNo != null">
+        order_no,
+      </if>
+      <if test="appType != null">
+        app_type,
+      </if>
+      <if test="type != null">
+        type_,
+      </if>
+      <if test="provider != null">
+        provider_,
+      </if>
+      <if test="status != null">
+        status_,
+      </if>
+      <if test="randomStr != null">
+        random_str,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="hotsCount != null">
+        hots_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="bizConfigId != null">
+        #{bizConfigId,jdbcType=BIGINT},
+      </if>
+      <if test="appSecret != null">
+        #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="appFlag != null">
+        #{appFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="indexUrl != null">
+        #{indexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null">
+        #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="appType != null">
+        #{appType,jdbcType=SMALLINT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="provider != null">
+        #{provider,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="randomStr != null">
+        #{randomStr,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hotsCount != null">
+        #{hotsCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.example.FastApplicationExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_fast_application
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_application
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bizConfigId != null">
+        biz_config_id = #{record.bizConfigId,jdbcType=BIGINT},
+      </if>
+      <if test="record.appSecret != null">
+        app_secret = #{record.appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appFlag != null">
+        app_flag = #{record.appFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.indexUrl != null">
+        index_url = #{record.indexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name_ = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logoUrl != null">
+        logo_url = #{record.logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.desc != null">
+        desc_ = #{record.desc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.code != null">
+        code_ = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderNo != null">
+        order_no = #{record.orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.appType != null">
+        app_type = #{record.appType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.type != null">
+        type_ = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.provider != null">
+        provider_ = #{record.provider,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status_ = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.randomStr != null">
+        random_str = #{record.randomStr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.hotsCount != null">
+        hots_count = #{record.hotsCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_application
+    set id = #{record.id,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      biz_config_id = #{record.bizConfigId,jdbcType=BIGINT},
+      app_secret = #{record.appSecret,jdbcType=VARCHAR},
+      app_flag = #{record.appFlag,jdbcType=VARCHAR},
+      index_url = #{record.indexUrl,jdbcType=VARCHAR},
+      name_ = #{record.name,jdbcType=VARCHAR},
+      logo_url = #{record.logoUrl,jdbcType=VARCHAR},
+      desc_ = #{record.desc,jdbcType=VARCHAR},
+      code_ = #{record.code,jdbcType=VARCHAR},
+      order_no = #{record.orderNo,jdbcType=INTEGER},
+      app_type = #{record.appType,jdbcType=SMALLINT},
+      type_ = #{record.type,jdbcType=VARCHAR},
+      provider_ = #{record.provider,jdbcType=VARCHAR},
+      status_ = #{record.status,jdbcType=BIT},
+      random_str = #{record.randomStr,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      hots_count = #{record.hotsCount,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.FastApplication">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_application
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="bizConfigId != null">
+        biz_config_id = #{bizConfigId,jdbcType=BIGINT},
+      </if>
+      <if test="appSecret != null">
+        app_secret = #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="appFlag != null">
+        app_flag = #{appFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="indexUrl != null">
+        index_url = #{indexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null">
+        logo_url = #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        desc_ = #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code_ = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="appType != null">
+        app_type = #{appType,jdbcType=SMALLINT},
+      </if>
+      <if test="type != null">
+        type_ = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="provider != null">
+        provider_ = #{provider,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=BIT},
+      </if>
+      <if test="randomStr != null">
+        random_str = #{randomStr,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hotsCount != null">
+        hots_count = #{hotsCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.FastApplication">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_application
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="bizConfigId != null">
+        biz_config_id = #{bizConfigId,jdbcType=BIGINT},
+      </if>
+      <if test="appSecret != null">
+        app_secret = #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="appFlag != null">
+        app_flag = #{appFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="indexUrl != null">
+        index_url = #{indexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null">
+        logo_url = #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        desc_ = #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code_ = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="appType != null">
+        app_type = #{appType,jdbcType=SMALLINT},
+      </if>
+      <if test="type != null">
+        type_ = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="provider != null">
+        provider_ = #{provider,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=BIT},
+      </if>
+      <if test="randomStr != null">
+        random_str = #{randomStr,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hotsCount != null">
+        hots_count = #{hotsCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.FastApplication">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_application
+    set app_id = #{appId,jdbcType=VARCHAR},
+      biz_config_id = #{bizConfigId,jdbcType=BIGINT},
+      app_secret = #{appSecret,jdbcType=VARCHAR},
+      app_flag = #{appFlag,jdbcType=VARCHAR},
+      index_url = #{indexUrl,jdbcType=VARCHAR},
+      name_ = #{name,jdbcType=VARCHAR},
+      logo_url = #{logoUrl,jdbcType=VARCHAR},
+      desc_ = #{desc,jdbcType=VARCHAR},
+      code_ = #{code,jdbcType=VARCHAR},
+      order_no = #{orderNo,jdbcType=INTEGER},
+      app_type = #{appType,jdbcType=SMALLINT},
+      type_ = #{type,jdbcType=VARCHAR},
+      provider_ = #{provider,jdbcType=VARCHAR},
+      status_ = #{status,jdbcType=BIT},
+      random_str = #{randomStr,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      hots_count = #{hotsCount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.FastApplication">
+    <!--
+    @mbggenerated
+    -->
+    update b_fast_application
+    set app_id = #{appId,jdbcType=VARCHAR},
+      biz_config_id = #{bizConfigId,jdbcType=BIGINT},
+      app_secret = #{appSecret,jdbcType=VARCHAR},
+      app_flag = #{appFlag,jdbcType=VARCHAR},
+      index_url = #{indexUrl,jdbcType=VARCHAR},
+      name_ = #{name,jdbcType=VARCHAR},
+      logo_url = #{logoUrl,jdbcType=VARCHAR},
+      desc_ = #{desc,jdbcType=VARCHAR},
+      code_ = #{code,jdbcType=VARCHAR},
+      order_no = #{orderNo,jdbcType=INTEGER},
+      app_type = #{appType,jdbcType=SMALLINT},
+      type_ = #{type,jdbcType=VARCHAR},
+      provider_ = #{provider,jdbcType=VARCHAR},
+      status_ = #{status,jdbcType=BIT},
+      random_str = #{randomStr,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      hots_count = #{hotsCount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+</mapper>

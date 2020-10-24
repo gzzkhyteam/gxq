@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.system.dao.ShareSystemMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.exchange.entity.system.po.ShareSystem">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="sys_name" jdbcType="VARCHAR" property="sysName" />
+    <result column="contractor" jdbcType="VARCHAR" property="contractor" />
+    <result column="cont_name" jdbcType="VARCHAR" property="contName" />
+    <result column="cont_tel" jdbcType="VARCHAR" property="contTel" />
+    <result column="status_" jdbcType="INTEGER" property="status" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="user_reft" jdbcType="INTEGER" property="userReft" />
+    <result column="network" jdbcType="INTEGER" property="network" />
+    <result column="has_key" jdbcType="INTEGER" property="hasKey" />
+    <result column="has_vpn" jdbcType="INTEGER" property="hasVpn" />
+    <result column="sys_arch" jdbcType="INTEGER" property="sysArch" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="lange_frwork" jdbcType="VARCHAR" property="langeFrwork" />
+    <result column="has_instruction" jdbcType="INTEGER" property="hasInstruction" />
+    <result column="sys_run_envent" jdbcType="VARCHAR" property="sysRunEnvent" />
+    <result column="data_address" jdbcType="VARCHAR" property="dataAddress" />
+    <result column="db_type" jdbcType="VARCHAR" property="dbType" />
+    <result column="data_count" jdbcType="INTEGER" property="dataCount" />
+    <result column="has_dict" jdbcType="INTEGER" property="hasDict" />
+    <result column="share_chain" jdbcType="INTEGER" property="shareChain" />
+    <result column="data_demand" jdbcType="VARCHAR" property="dataDemand" />
+    <result column="major_data" jdbcType="VARCHAR" property="majorData" />
+    <result column="sys_purpose" jdbcType="VARCHAR" property="sysPurpose" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, unit_id, org_id, sys_name, contractor, cont_name, cont_tel, status_, url, user_reft, 
+    network, has_key, has_vpn, sys_arch, account, password, lange_frwork, has_instruction, 
+    sys_run_envent, data_address, db_type, data_count, has_dict, share_chain, data_demand, 
+    major_data, sys_purpose, create_time, create_user, update_time, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.exchange.repository.system.example.ShareSystemExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_share_system
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_share_system
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.exchange.repository.system.example.ShareSystemExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_share_system
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_share_system
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_system
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.exchange.repository.system.example.ShareSystemExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_system
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_share_system where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_system
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_share_system where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.exchange.entity.system.po.ShareSystem">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_system
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_system
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_system
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_system
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.exchange.entity.system.po.ShareSystem">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_system (id, unit_id, org_id, 
+      sys_name, contractor, cont_name, 
+      cont_tel, status_, url, 
+      user_reft, network, has_key, 
+      has_vpn, sys_arch, account, 
+      password, lange_frwork, has_instruction, 
+      sys_run_envent, data_address, db_type, 
+      data_count, has_dict, share_chain, 
+      data_demand, major_data, sys_purpose, 
+      create_time, create_user, update_time, 
+      update_user)
+    values (#{id,jdbcType=BIGINT}, #{unitId,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR}, 
+      #{sysName,jdbcType=VARCHAR}, #{contractor,jdbcType=VARCHAR}, #{contName,jdbcType=VARCHAR}, 
+      #{contTel,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, 
+      #{userReft,jdbcType=INTEGER}, #{network,jdbcType=INTEGER}, #{hasKey,jdbcType=INTEGER}, 
+      #{hasVpn,jdbcType=INTEGER}, #{sysArch,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{langeFrwork,jdbcType=VARCHAR}, #{hasInstruction,jdbcType=INTEGER}, 
+      #{sysRunEnvent,jdbcType=VARCHAR}, #{dataAddress,jdbcType=VARCHAR}, #{dbType,jdbcType=VARCHAR}, 
+      #{dataCount,jdbcType=INTEGER}, #{hasDict,jdbcType=INTEGER}, #{shareChain,jdbcType=INTEGER}, 
+      #{dataDemand,jdbcType=VARCHAR}, #{majorData,jdbcType=VARCHAR}, #{sysPurpose,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_system (id, unit_id, org_id, sys_name, contractor, cont_name, cont_tel, status_, url, user_reft, network, has_key, has_vpn, sys_arch, account, password, lange_frwork, has_instruction, sys_run_envent, data_address, db_type, data_count, has_dict, share_chain, data_demand, major_data, sys_purpose, create_time, create_user, update_time, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.unitId,jdbcType=VARCHAR}, #{item.orgId,jdbcType=VARCHAR}, 
+        #{item.sysName,jdbcType=VARCHAR}, #{item.contractor,jdbcType=VARCHAR}, #{item.contName,jdbcType=VARCHAR}, 
+        #{item.contTel,jdbcType=VARCHAR}, #{item.status,jdbcType=INTEGER}, #{item.url,jdbcType=VARCHAR}, 
+        #{item.userReft,jdbcType=INTEGER}, #{item.network,jdbcType=INTEGER}, #{item.hasKey,jdbcType=INTEGER}, 
+        #{item.hasVpn,jdbcType=INTEGER}, #{item.sysArch,jdbcType=INTEGER}, #{item.account,jdbcType=VARCHAR}, 
+        #{item.password,jdbcType=VARCHAR}, #{item.langeFrwork,jdbcType=VARCHAR}, #{item.hasInstruction,jdbcType=INTEGER}, 
+        #{item.sysRunEnvent,jdbcType=VARCHAR}, #{item.dataAddress,jdbcType=VARCHAR}, #{item.dbType,jdbcType=VARCHAR}, 
+        #{item.dataCount,jdbcType=INTEGER}, #{item.hasDict,jdbcType=INTEGER}, #{item.shareChain,jdbcType=INTEGER}, 
+        #{item.dataDemand,jdbcType=VARCHAR}, #{item.majorData,jdbcType=VARCHAR}, #{item.sysPurpose,jdbcType=VARCHAR}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.exchange.entity.system.po.ShareSystem">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_system
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="sysName != null">
+        sys_name,
+      </if>
+      <if test="contractor != null">
+        contractor,
+      </if>
+      <if test="contName != null">
+        cont_name,
+      </if>
+      <if test="contTel != null">
+        cont_tel,
+      </if>
+      <if test="status != null">
+        status_,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="userReft != null">
+        user_reft,
+      </if>
+      <if test="network != null">
+        network,
+      </if>
+      <if test="hasKey != null">
+        has_key,
+      </if>
+      <if test="hasVpn != null">
+        has_vpn,
+      </if>
+      <if test="sysArch != null">
+        sys_arch,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="langeFrwork != null">
+        lange_frwork,
+      </if>
+      <if test="hasInstruction != null">
+        has_instruction,
+      </if>
+      <if test="sysRunEnvent != null">
+        sys_run_envent,
+      </if>
+      <if test="dataAddress != null">
+        data_address,
+      </if>
+      <if test="dbType != null">
+        db_type,
+      </if>
+      <if test="dataCount != null">
+        data_count,
+      </if>
+      <if test="hasDict != null">
+        has_dict,
+      </if>
+      <if test="shareChain != null">
+        share_chain,
+      </if>
+      <if test="dataDemand != null">
+        data_demand,
+      </if>
+      <if test="majorData != null">
+        major_data,
+      </if>
+      <if test="sysPurpose != null">
+        sys_purpose,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysName != null">
+        #{sysName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractor != null">
+        #{contractor,jdbcType=VARCHAR},
+      </if>
+      <if test="contName != null">
+        #{contName,jdbcType=VARCHAR},
+      </if>
+      <if test="contTel != null">
+        #{contTel,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="userReft != null">
+        #{userReft,jdbcType=INTEGER},
+      </if>
+      <if test="network != null">
+        #{network,jdbcType=INTEGER},
+      </if>
+      <if test="hasKey != null">
+        #{hasKey,jdbcType=INTEGER},
+      </if>
+      <if test="hasVpn != null">
+        #{hasVpn,jdbcType=INTEGER},
+      </if>
+      <if test="sysArch != null">
+        #{sysArch,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="langeFrwork != null">
+        #{langeFrwork,jdbcType=VARCHAR},
+      </if>
+      <if test="hasInstruction != null">
+        #{hasInstruction,jdbcType=INTEGER},
+      </if>
+      <if test="sysRunEnvent != null">
+        #{sysRunEnvent,jdbcType=VARCHAR},
+      </if>
+      <if test="dataAddress != null">
+        #{dataAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="dbType != null">
+        #{dbType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCount != null">
+        #{dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="hasDict != null">
+        #{hasDict,jdbcType=INTEGER},
+      </if>
+      <if test="shareChain != null">
+        #{shareChain,jdbcType=INTEGER},
+      </if>
+      <if test="dataDemand != null">
+        #{dataDemand,jdbcType=VARCHAR},
+      </if>
+      <if test="majorData != null">
+        #{majorData,jdbcType=VARCHAR},
+      </if>
+      <if test="sysPurpose != null">
+        #{sysPurpose,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.exchange.repository.system.example.ShareSystemExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_share_system
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_system
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.unitId != null">
+        unit_id = #{record.unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgId != null">
+        org_id = #{record.orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sysName != null">
+        sys_name = #{record.sysName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractor != null">
+        contractor = #{record.contractor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contName != null">
+        cont_name = #{record.contName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contTel != null">
+        cont_tel = #{record.contTel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status_ = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.url != null">
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userReft != null">
+        user_reft = #{record.userReft,jdbcType=INTEGER},
+      </if>
+      <if test="record.network != null">
+        network = #{record.network,jdbcType=INTEGER},
+      </if>
+      <if test="record.hasKey != null">
+        has_key = #{record.hasKey,jdbcType=INTEGER},
+      </if>
+      <if test="record.hasVpn != null">
+        has_vpn = #{record.hasVpn,jdbcType=INTEGER},
+      </if>
+      <if test="record.sysArch != null">
+        sys_arch = #{record.sysArch,jdbcType=INTEGER},
+      </if>
+      <if test="record.account != null">
+        account = #{record.account,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.langeFrwork != null">
+        lange_frwork = #{record.langeFrwork,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hasInstruction != null">
+        has_instruction = #{record.hasInstruction,jdbcType=INTEGER},
+      </if>
+      <if test="record.sysRunEnvent != null">
+        sys_run_envent = #{record.sysRunEnvent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataAddress != null">
+        data_address = #{record.dataAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dbType != null">
+        db_type = #{record.dbType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataCount != null">
+        data_count = #{record.dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.hasDict != null">
+        has_dict = #{record.hasDict,jdbcType=INTEGER},
+      </if>
+      <if test="record.shareChain != null">
+        share_chain = #{record.shareChain,jdbcType=INTEGER},
+      </if>
+      <if test="record.dataDemand != null">
+        data_demand = #{record.dataDemand,jdbcType=VARCHAR},
+      </if>
+      <if test="record.majorData != null">
+        major_data = #{record.majorData,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sysPurpose != null">
+        sys_purpose = #{record.sysPurpose,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_system
+    set id = #{record.id,jdbcType=BIGINT},
+      unit_id = #{record.unitId,jdbcType=VARCHAR},
+      org_id = #{record.orgId,jdbcType=VARCHAR},
+      sys_name = #{record.sysName,jdbcType=VARCHAR},
+      contractor = #{record.contractor,jdbcType=VARCHAR},
+      cont_name = #{record.contName,jdbcType=VARCHAR},
+      cont_tel = #{record.contTel,jdbcType=VARCHAR},
+      status_ = #{record.status,jdbcType=INTEGER},
+      url = #{record.url,jdbcType=VARCHAR},
+      user_reft = #{record.userReft,jdbcType=INTEGER},
+      network = #{record.network,jdbcType=INTEGER},
+      has_key = #{record.hasKey,jdbcType=INTEGER},
+      has_vpn = #{record.hasVpn,jdbcType=INTEGER},
+      sys_arch = #{record.sysArch,jdbcType=INTEGER},
+      account = #{record.account,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      lange_frwork = #{record.langeFrwork,jdbcType=VARCHAR},
+      has_instruction = #{record.hasInstruction,jdbcType=INTEGER},
+      sys_run_envent = #{record.sysRunEnvent,jdbcType=VARCHAR},
+      data_address = #{record.dataAddress,jdbcType=VARCHAR},
+      db_type = #{record.dbType,jdbcType=VARCHAR},
+      data_count = #{record.dataCount,jdbcType=INTEGER},
+      has_dict = #{record.hasDict,jdbcType=INTEGER},
+      share_chain = #{record.shareChain,jdbcType=INTEGER},
+      data_demand = #{record.dataDemand,jdbcType=VARCHAR},
+      major_data = #{record.majorData,jdbcType=VARCHAR},
+      sys_purpose = #{record.sysPurpose,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.exchange.entity.system.po.ShareSystem">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_system
+    <set>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysName != null">
+        sys_name = #{sysName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractor != null">
+        contractor = #{contractor,jdbcType=VARCHAR},
+      </if>
+      <if test="contName != null">
+        cont_name = #{contName,jdbcType=VARCHAR},
+      </if>
+      <if test="contTel != null">
+        cont_tel = #{contTel,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="userReft != null">
+        user_reft = #{userReft,jdbcType=INTEGER},
+      </if>
+      <if test="network != null">
+        network = #{network,jdbcType=INTEGER},
+      </if>
+      <if test="hasKey != null">
+        has_key = #{hasKey,jdbcType=INTEGER},
+      </if>
+      <if test="hasVpn != null">
+        has_vpn = #{hasVpn,jdbcType=INTEGER},
+      </if>
+      <if test="sysArch != null">
+        sys_arch = #{sysArch,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="langeFrwork != null">
+        lange_frwork = #{langeFrwork,jdbcType=VARCHAR},
+      </if>
+      <if test="hasInstruction != null">
+        has_instruction = #{hasInstruction,jdbcType=INTEGER},
+      </if>
+      <if test="sysRunEnvent != null">
+        sys_run_envent = #{sysRunEnvent,jdbcType=VARCHAR},
+      </if>
+      <if test="dataAddress != null">
+        data_address = #{dataAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="dbType != null">
+        db_type = #{dbType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCount != null">
+        data_count = #{dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="hasDict != null">
+        has_dict = #{hasDict,jdbcType=INTEGER},
+      </if>
+      <if test="shareChain != null">
+        share_chain = #{shareChain,jdbcType=INTEGER},
+      </if>
+      <if test="dataDemand != null">
+        data_demand = #{dataDemand,jdbcType=VARCHAR},
+      </if>
+      <if test="majorData != null">
+        major_data = #{majorData,jdbcType=VARCHAR},
+      </if>
+      <if test="sysPurpose != null">
+        sys_purpose = #{sysPurpose,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.exchange.entity.system.po.ShareSystem">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_system
+    <set>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysName != null">
+        sys_name = #{sysName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractor != null">
+        contractor = #{contractor,jdbcType=VARCHAR},
+      </if>
+      <if test="contName != null">
+        cont_name = #{contName,jdbcType=VARCHAR},
+      </if>
+      <if test="contTel != null">
+        cont_tel = #{contTel,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="userReft != null">
+        user_reft = #{userReft,jdbcType=INTEGER},
+      </if>
+      <if test="network != null">
+        network = #{network,jdbcType=INTEGER},
+      </if>
+      <if test="hasKey != null">
+        has_key = #{hasKey,jdbcType=INTEGER},
+      </if>
+      <if test="hasVpn != null">
+        has_vpn = #{hasVpn,jdbcType=INTEGER},
+      </if>
+      <if test="sysArch != null">
+        sys_arch = #{sysArch,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="langeFrwork != null">
+        lange_frwork = #{langeFrwork,jdbcType=VARCHAR},
+      </if>
+      <if test="hasInstruction != null">
+        has_instruction = #{hasInstruction,jdbcType=INTEGER},
+      </if>
+      <if test="sysRunEnvent != null">
+        sys_run_envent = #{sysRunEnvent,jdbcType=VARCHAR},
+      </if>
+      <if test="dataAddress != null">
+        data_address = #{dataAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="dbType != null">
+        db_type = #{dbType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCount != null">
+        data_count = #{dataCount,jdbcType=INTEGER},
+      </if>
+      <if test="hasDict != null">
+        has_dict = #{hasDict,jdbcType=INTEGER},
+      </if>
+      <if test="shareChain != null">
+        share_chain = #{shareChain,jdbcType=INTEGER},
+      </if>
+      <if test="dataDemand != null">
+        data_demand = #{dataDemand,jdbcType=VARCHAR},
+      </if>
+      <if test="majorData != null">
+        major_data = #{majorData,jdbcType=VARCHAR},
+      </if>
+      <if test="sysPurpose != null">
+        sys_purpose = #{sysPurpose,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.exchange.entity.system.po.ShareSystem">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_system
+    set unit_id = #{unitId,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      sys_name = #{sysName,jdbcType=VARCHAR},
+      contractor = #{contractor,jdbcType=VARCHAR},
+      cont_name = #{contName,jdbcType=VARCHAR},
+      cont_tel = #{contTel,jdbcType=VARCHAR},
+      status_ = #{status,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      user_reft = #{userReft,jdbcType=INTEGER},
+      network = #{network,jdbcType=INTEGER},
+      has_key = #{hasKey,jdbcType=INTEGER},
+      has_vpn = #{hasVpn,jdbcType=INTEGER},
+      sys_arch = #{sysArch,jdbcType=INTEGER},
+      account = #{account,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      lange_frwork = #{langeFrwork,jdbcType=VARCHAR},
+      has_instruction = #{hasInstruction,jdbcType=INTEGER},
+      sys_run_envent = #{sysRunEnvent,jdbcType=VARCHAR},
+      data_address = #{dataAddress,jdbcType=VARCHAR},
+      db_type = #{dbType,jdbcType=VARCHAR},
+      data_count = #{dataCount,jdbcType=INTEGER},
+      has_dict = #{hasDict,jdbcType=INTEGER},
+      share_chain = #{shareChain,jdbcType=INTEGER},
+      data_demand = #{dataDemand,jdbcType=VARCHAR},
+      major_data = #{majorData,jdbcType=VARCHAR},
+      sys_purpose = #{sysPurpose,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.exchange.entity.system.po.ShareSystem">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_system
+    set unit_id = #{unitId,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      sys_name = #{sysName,jdbcType=VARCHAR},
+      contractor = #{contractor,jdbcType=VARCHAR},
+      cont_name = #{contName,jdbcType=VARCHAR},
+      cont_tel = #{contTel,jdbcType=VARCHAR},
+      status_ = #{status,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      user_reft = #{userReft,jdbcType=INTEGER},
+      network = #{network,jdbcType=INTEGER},
+      has_key = #{hasKey,jdbcType=INTEGER},
+      has_vpn = #{hasVpn,jdbcType=INTEGER},
+      sys_arch = #{sysArch,jdbcType=INTEGER},
+      account = #{account,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      lange_frwork = #{langeFrwork,jdbcType=VARCHAR},
+      has_instruction = #{hasInstruction,jdbcType=INTEGER},
+      sys_run_envent = #{sysRunEnvent,jdbcType=VARCHAR},
+      data_address = #{dataAddress,jdbcType=VARCHAR},
+      db_type = #{dbType,jdbcType=VARCHAR},
+      data_count = #{dataCount,jdbcType=INTEGER},
+      has_dict = #{hasDict,jdbcType=INTEGER},
+      share_chain = #{shareChain,jdbcType=INTEGER},
+      data_demand = #{dataDemand,jdbcType=VARCHAR},
+      major_data = #{majorData,jdbcType=VARCHAR},
+      sys_purpose = #{sysPurpose,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

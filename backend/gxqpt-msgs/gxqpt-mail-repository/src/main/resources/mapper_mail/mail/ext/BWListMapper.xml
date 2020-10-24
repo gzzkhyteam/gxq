@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mail.repository.dao.BWListMapper">
+  <select id="findBWList" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT id,value,current_email FROM mail_bwllist WHERE 1=1
+    <if test="bw.bwType!=null">
+      AND mail_bwllist.bw_type=#{bw.bwType}
+    </if>
+    <if test="bw.locateType!=null">
+      AND mail_bwllist.locate_type=#{bw.locateType}
+    </if>
+    <if test="bw.currentEmail!=null">
+      AND mail_bwllist.current_email=#{bw.currentEmail}
+    </if>
+  </select>
+  <select id="getList" resultType="java.lang.String">
+    SELECT value FROM mail_bwllist WHERE bw_type = #{bwType,jdbcType=VARCHAR} and locate_type = #{localType,jdbcType=VARCHAR} and current_email = #{currentEmail,jdbcType=VARCHAR}
+  </select>
+
+  <insert id="insertFilterKeyWord" >
+    insert into mail_filter_keyword(id, filter_word, create_time, create_user)
+    values(#{fk.id}, #{fk.filterWord}, #{fk.createTime}, #{fk.createUser})
+  </insert>
+
+  <delete id="deleteFilterKeyWord" parameterType="java.lang.Long">
+    DELETE FROM mail_filter_keyword WHERE id = #{id}
+  </delete>
+
+
+  <resultMap id="FilterKeywordResultMap" type="com.hengyunsoft.platform.mail.entity.core.po.FilterKeyword">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="filter_word" jdbcType="VARCHAR" property="filterWord" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <select id="getFilterKeywordAll" parameterType="java.lang.String" resultMap="FilterKeywordResultMap">
+    SELECT
+      id,
+      filter_word,
+      create_time,
+      create_user,
+      update_time,
+      update_user
+    FROM
+      mail_filter_keyword
+      WHERE 1 = 1
+      <if test="filterWord != null">
+        AND filter_word = #{filterWord,jdbcType=VARCHAR}
+      </if>
+    ORDER BY create_time DESC
+  </select>
+</mapper>

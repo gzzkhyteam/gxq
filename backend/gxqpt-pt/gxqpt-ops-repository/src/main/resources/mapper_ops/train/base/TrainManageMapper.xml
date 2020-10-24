@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.train.dao.TrainManageMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.ops.entity.train.po.TrainManage">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="train_type" jdbcType="VARCHAR" property="trainType" />
+    <result column="train_name" jdbcType="VARCHAR" property="trainName" />
+    <result column="train_address" jdbcType="VARCHAR" property="trainAddress" />
+    <result column="train_time" jdbcType="TIMESTAMP" property="trainTime" />
+    <result column="train_info" jdbcType="VARCHAR" property="trainInfo" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="train_sorce" jdbcType="DECIMAL" property="trainSorce" />
+    <result column="score_time" jdbcType="TIMESTAMP" property="scoreTime" />
+    <result column="train_advice" jdbcType="VARCHAR" property="trainAdvice" />
+    <result column="sub_dept" jdbcType="VARCHAR" property="subDept" />
+    <result column="sub_person" jdbcType="VARCHAR" property="subPerson" />
+    <result column="deal_opinion" jdbcType="VARCHAR" property="dealOpinion" />
+    <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, train_type, train_name, train_address, train_time, train_info, status, train_sorce, 
+    score_time, train_advice, sub_dept, sub_person, deal_opinion, apply_code, create_user, 
+    create_time, update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.ops.repository.train.example.TrainManageExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_yw_train_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_yw_train_manage
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.ops.repository.train.example.TrainManageExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_yw_train_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_yw_train_manage
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.ops.repository.train.example.TrainManageExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_yw_train_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.ops.entity.train.po.TrainManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_train_manage
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_train_manage
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.ops.entity.train.po.TrainManage">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_yw_train_manage (id, train_type, train_name, 
+      train_address, train_time, train_info, 
+      status, train_sorce, score_time, 
+      train_advice, sub_dept, sub_person, 
+      deal_opinion, apply_code, create_user, 
+      create_time, update_user, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{trainType,jdbcType=VARCHAR}, #{trainName,jdbcType=VARCHAR}, 
+      #{trainAddress,jdbcType=VARCHAR}, #{trainTime,jdbcType=TIMESTAMP}, #{trainInfo,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{trainSorce,jdbcType=DECIMAL}, #{scoreTime,jdbcType=TIMESTAMP}, 
+      #{trainAdvice,jdbcType=VARCHAR}, #{subDept,jdbcType=VARCHAR}, #{subPerson,jdbcType=VARCHAR}, 
+      #{dealOpinion,jdbcType=VARCHAR}, #{applyCode,jdbcType=VARCHAR}, #{createUser,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_yw_train_manage (id, train_type, train_name, train_address, train_time, train_info, status, train_sorce, score_time, train_advice, sub_dept, sub_person, deal_opinion, apply_code, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.trainType,jdbcType=VARCHAR}, #{item.trainName,jdbcType=VARCHAR}, 
+        #{item.trainAddress,jdbcType=VARCHAR}, #{item.trainTime,jdbcType=TIMESTAMP}, #{item.trainInfo,jdbcType=VARCHAR}, 
+        #{item.status,jdbcType=INTEGER}, #{item.trainSorce,jdbcType=DECIMAL}, #{item.scoreTime,jdbcType=TIMESTAMP}, 
+        #{item.trainAdvice,jdbcType=VARCHAR}, #{item.subDept,jdbcType=VARCHAR}, #{item.subPerson,jdbcType=VARCHAR}, 
+        #{item.dealOpinion,jdbcType=VARCHAR}, #{item.applyCode,jdbcType=VARCHAR}, #{item.createUser,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.ops.entity.train.po.TrainManage">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_yw_train_manage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="trainType != null">
+        train_type,
+      </if>
+      <if test="trainName != null">
+        train_name,
+      </if>
+      <if test="trainAddress != null">
+        train_address,
+      </if>
+      <if test="trainTime != null">
+        train_time,
+      </if>
+      <if test="trainInfo != null">
+        train_info,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="trainSorce != null">
+        train_sorce,
+      </if>
+      <if test="scoreTime != null">
+        score_time,
+      </if>
+      <if test="trainAdvice != null">
+        train_advice,
+      </if>
+      <if test="subDept != null">
+        sub_dept,
+      </if>
+      <if test="subPerson != null">
+        sub_person,
+      </if>
+      <if test="dealOpinion != null">
+        deal_opinion,
+      </if>
+      <if test="applyCode != null">
+        apply_code,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="trainType != null">
+        #{trainType,jdbcType=VARCHAR},
+      </if>
+      <if test="trainName != null">
+        #{trainName,jdbcType=VARCHAR},
+      </if>
+      <if test="trainAddress != null">
+        #{trainAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="trainTime != null">
+        #{trainTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainInfo != null">
+        #{trainInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="trainSorce != null">
+        #{trainSorce,jdbcType=DECIMAL},
+      </if>
+      <if test="scoreTime != null">
+        #{scoreTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainAdvice != null">
+        #{trainAdvice,jdbcType=VARCHAR},
+      </if>
+      <if test="subDept != null">
+        #{subDept,jdbcType=VARCHAR},
+      </if>
+      <if test="subPerson != null">
+        #{subPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="dealOpinion != null">
+        #{dealOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="applyCode != null">
+        #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.ops.repository.train.example.TrainManageExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_yw_train_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_train_manage
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.trainType != null">
+        train_type = #{record.trainType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.trainName != null">
+        train_name = #{record.trainName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.trainAddress != null">
+        train_address = #{record.trainAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.trainTime != null">
+        train_time = #{record.trainTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.trainInfo != null">
+        train_info = #{record.trainInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.trainSorce != null">
+        train_sorce = #{record.trainSorce,jdbcType=DECIMAL},
+      </if>
+      <if test="record.scoreTime != null">
+        score_time = #{record.scoreTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.trainAdvice != null">
+        train_advice = #{record.trainAdvice,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subDept != null">
+        sub_dept = #{record.subDept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subPerson != null">
+        sub_person = #{record.subPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dealOpinion != null">
+        deal_opinion = #{record.dealOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyCode != null">
+        apply_code = #{record.applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_train_manage
+    set id = #{record.id,jdbcType=BIGINT},
+      train_type = #{record.trainType,jdbcType=VARCHAR},
+      train_name = #{record.trainName,jdbcType=VARCHAR},
+      train_address = #{record.trainAddress,jdbcType=VARCHAR},
+      train_time = #{record.trainTime,jdbcType=TIMESTAMP},
+      train_info = #{record.trainInfo,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      train_sorce = #{record.trainSorce,jdbcType=DECIMAL},
+      score_time = #{record.scoreTime,jdbcType=TIMESTAMP},
+      train_advice = #{record.trainAdvice,jdbcType=VARCHAR},
+      sub_dept = #{record.subDept,jdbcType=VARCHAR},
+      sub_person = #{record.subPerson,jdbcType=VARCHAR},
+      deal_opinion = #{record.dealOpinion,jdbcType=VARCHAR},
+      apply_code = #{record.applyCode,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.ops.entity.train.po.TrainManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_train_manage
+    <set>
+      <if test="trainType != null">
+        train_type = #{trainType,jdbcType=VARCHAR},
+      </if>
+      <if test="trainName != null">
+        train_name = #{trainName,jdbcType=VARCHAR},
+      </if>
+      <if test="trainAddress != null">
+        train_address = #{trainAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="trainTime != null">
+        train_time = #{trainTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainInfo != null">
+        train_info = #{trainInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="trainSorce != null">
+        train_sorce = #{trainSorce,jdbcType=DECIMAL},
+      </if>
+      <if test="scoreTime != null">
+        score_time = #{scoreTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trainAdvice != null">
+        train_advice = #{trainAdvice,jdbcType=VARCHAR},
+      </if>
+      <if test="subDept != null">
+        sub_dept = #{subDept,jdbcType=VARCHAR},
+      </if>
+      <if test="subPerson != null">
+        sub_person = #{subPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="dealOpinion != null">
+        deal_opinion = #{dealOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="applyCode != null">
+        apply_code = #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.ops.entity.train.po.TrainManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_train_manage
+    set train_type = #{trainType,jdbcType=VARCHAR},
+      train_name = #{trainName,jdbcType=VARCHAR},
+      train_address = #{trainAddress,jdbcType=VARCHAR},
+      train_time = #{trainTime,jdbcType=TIMESTAMP},
+      train_info = #{trainInfo,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      train_sorce = #{trainSorce,jdbcType=DECIMAL},
+      score_time = #{scoreTime,jdbcType=TIMESTAMP},
+      train_advice = #{trainAdvice,jdbcType=VARCHAR},
+      sub_dept = #{subDept,jdbcType=VARCHAR},
+      sub_person = #{subPerson,jdbcType=VARCHAR},
+      deal_opinion = #{dealOpinion,jdbcType=VARCHAR},
+      apply_code = #{applyCode,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

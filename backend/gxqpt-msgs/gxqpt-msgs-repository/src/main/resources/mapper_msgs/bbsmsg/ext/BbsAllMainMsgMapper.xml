@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.msgs.repository.bbsmsg.dao.BbsAllMainMsgMapper">
+  <resultMap id="FirstBaseResultMap" type="com.hengyunsoft.platform.msgs.entity.bbsmsg.msgdo.BbsAllMsgResDO">
+    <!--
+    @mbggenerated
+    -->
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="biz_id" jdbcType="VARCHAR" property="bizId" />
+    <result column="biz_type" jdbcType="VARCHAR" property="bizType" />
+    <result column="client_flag" jdbcType="VARCHAR" property="clientFlag" />
+    <result column="brief_tpye" jdbcType="VARCHAR" property="briefTpye" />
+    <result column="detailed_type" jdbcType="VARCHAR" property="detailedType" />
+    <result column="detailed_type_desc" jdbcType="VARCHAR" property="detailedTypeDesc" />
+    <result column="title_" jdbcType="VARCHAR" property="title" />
+    <result column="content_" jdbcType="VARCHAR" property="content" />
+    <result column="sender_name" jdbcType="VARCHAR" property="senderName" />
+    <result column="handler_url" jdbcType="VARCHAR" property="handlerUrl" />
+    <result column="handler_params" jdbcType="VARCHAR" property="handlerParams" />
+    <result column="single_handle_is" jdbcType="BIT" property="singleHandleIs" />
+    <result column="handler_need_is" jdbcType="BIT" property="handlerNeedIs" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="app_name" jdbcType="VARCHAR" property="appName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+
+      <result column="recId" jdbcType="BIGINT" property="recId" />
+      <result column="msg_id" jdbcType="BIGINT" property="msgId" />
+      <result column="receive_id" jdbcType="BIGINT" property="receiveId" />
+      <result column="read_is" jdbcType="BIT" property="readIs" />
+      <result column="recHanderNeedIs" jdbcType="BIT" property="recHanderNeedIs" />
+      <result column="recCreateTime" jdbcType="TIMESTAMP" property="recCreateTime" />
+      <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+    <resultMap id="DetailResultMap" type="com.hengyunsoft.platform.msgs.entity.bbsmsg.msgdo.BbsMsgDetailResDO">
+        <!--
+        @mbggenerated
+        -->
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="biz_id" jdbcType="VARCHAR" property="bizId" />
+        <result column="biz_type" jdbcType="VARCHAR" property="bizType" />
+        <result column="client_flag" jdbcType="VARCHAR" property="clientFlag" />
+        <result column="brief_tpye" jdbcType="VARCHAR" property="briefTpye" />
+        <result column="detailed_type" jdbcType="VARCHAR" property="detailedType" />
+        <result column="detailed_type_desc" jdbcType="VARCHAR" property="detailedTypeDesc" />
+        <result column="title_" jdbcType="VARCHAR" property="title" />
+        <result column="content_" jdbcType="VARCHAR" property="content" />
+        <result column="sender_name" jdbcType="VARCHAR" property="senderName" />
+        <result column="handler_url" jdbcType="VARCHAR" property="handlerUrl" />
+        <result column="handler_params" jdbcType="VARCHAR" property="handlerParams" />
+        <result column="single_handle_is" jdbcType="BIT" property="singleHandleIs" />
+        <result column="handler_need_is" jdbcType="BIT" property="handlerNeedIs" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+
+        <result column="readed_num" jdbcType="INTEGER" property="readedNum" />
+        <result column="not_read_num" jdbcType="INTEGER" property="notReadNum" />
+    </resultMap>
+  <sql id="First_Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, biz_id, biz_type, client_flag, brief_tpye, detailed_type, detailed_type_desc,
+    title_, content_, sender_name, handler_url, handler_params, single_handle_is, handler_need_is,
+    app_id, app_name, create_time
+  </sql>
+
+    <select id="getDetailById" parameterType="java.lang.Long" resultMap="DetailResultMap">
+        SELECT
+        bamm.id, bamm.biz_id, bamm.biz_type, bamm.client_flag, bamm.brief_tpye, bamm.detailed_type, bamm.detailed_type_desc,
+        bamm.title_, bamm.content_, bamm.sender_name, bamm.handler_url, bamm.handler_params, bamm.single_handle_is, bamm.handler_need_is,
+        bamm.app_id, bamm.app_name,
+        (select count(read_is) from b_bbs_all_receive_msg where read_is =true and msg_id = #{msgId}) as readed_num,
+        (select count(read_is) from b_bbs_all_receive_msg where read_is =false and msg_id = #{msgId}) as not_read_num
+        FROM b_bbs_all_main_msg bamm where bamm.id = #{msgId}
+    </select>
+
+  <select id="getAllMsg" parameterType="map" resultMap="FirstBaseResultMap">
+    SELECT
+    bamm.id, bamm.biz_id, bamm.biz_type, bamm.client_flag, bamm.brief_tpye, bamm.detailed_type, bamm.detailed_type_desc,
+    bamm.title_, bamm.content_, bamm.sender_name, bamm.handler_url, bamm.handler_params, bamm.single_handle_is, bamm.handler_need_is,
+    bamm.app_id, bamm.app_name, bamm.create_time,
+    barm.id as recId, barm.msg_id, barm.receive_id, barm.read_is,barm.delete_is,
+    barm.handler_need_is as recHanderNeedIs, barm.create_time as recCreateTime, barm.update_user,barm.update_time
+
+    FROM b_bbs_all_main_msg bamm
+
+    left join b_bbs_all_receive_msg barm on barm.msg_id = bamm.id
+
+    where barm.receive_id = #{userId} and barm.delete_is = false
+
+    order by barm.update_time desc
+  </select>
+
+  <select id="getReadMsg" parameterType="map" resultMap="FirstBaseResultMap">
+
+    SELECT
+        bamm.id, bamm.biz_id, bamm.biz_type, bamm.client_flag, bamm.brief_tpye, bamm.detailed_type, bamm.detailed_type_desc,
+        bamm.title_, bamm.content_, bamm.sender_name, bamm.handler_url, bamm.handler_params, bamm.single_handle_is, bamm.handler_need_is,
+        bamm.app_id, bamm.app_name, bamm.create_time,
+        barm.id as recId, barm.msg_id, barm.receive_id, barm.read_is,barm.delete_is,
+        barm.handler_need_is as recHanderNeedIs, barm.create_time as recCreateTime, barm.update_user,barm.update_time
+
+        FROM b_bbs_all_main_msg bamm
+
+        left join b_bbs_all_receive_msg barm on barm.msg_id = bamm.id
+
+        where barm.receive_id = #{userId}
+
+        and barm.read_is = true and barm.delete_is = false
+
+        order by barm.update_time desc
+  </select>
+
+  <select id="getAllNotHandleMsg" parameterType="map" resultMap="FirstBaseResultMap">
+
+    SELECT
+          bamm.id, bamm.biz_id, bamm.biz_type, bamm.client_flag, bamm.brief_tpye, bamm.detailed_type, bamm.detailed_type_desc,
+          bamm.title_, bamm.content_, bamm.sender_name, bamm.handler_url, bamm.handler_params, bamm.single_handle_is, bamm.handler_need_is,
+          bamm.app_id, bamm.app_name, bamm.create_time,
+          barm.id as recId, barm.msg_id, barm.receive_id, barm.read_is,barm.delete_is,
+          barm.handler_need_is as recHanderNeedIs, barm.create_time as recCreateTime, barm.update_user,barm.update_time
+
+          FROM b_bbs_all_main_msg bamm
+
+          left join b_bbs_all_receive_msg barm on barm.msg_id = bamm.id
+
+          where barm.receive_id = #{userId}
+
+          and barm.handler_need_is = true and barm.delete_is = false and barm.read_is = true
+
+          order by barm.update_time desc
+
+  </select>
+
+    <select id="getRecentMsgAndNotReadNum" parameterType="java.lang.Long" resultMap="DetailResultMap">
+        SELECT
+        bamm.id, bamm.biz_id, bamm.biz_type, bamm.client_flag, bamm.brief_tpye, bamm.detailed_type, bamm.detailed_type_desc,
+        bamm.title_, bamm.content_, bamm.sender_name, bamm.handler_url, bamm.handler_params, bamm.single_handle_is, bamm.handler_need_is,
+        bamm.app_id, bamm.app_name, bamm.create_time,
+        barm.id as recId, barm.msg_id, barm.receive_id, barm.read_is,barm.delete_is,
+        barm.handler_need_is as recHanderNeedIs, barm.create_time as recCreateTime, barm.update_user,barm.update_time,
+
+        (select count(read_is) from b_bbs_all_receive_msg where read_is =true and receive_id = #{userId}) as readed_num,
+
+        (select count(read_is) from b_bbs_all_receive_msg where read_is =false and receive_id = #{userId}) as not_read_num
+
+        FROM b_bbs_all_receive_msg barm
+
+        right join b_bbs_all_main_msg bamm on barm.msg_id = bamm.id
+
+        right join (select max(create_time) as recentTime from b_bbs_all_receive_msg where receive_id = #{userId}) bb on bb.recentTime = barm.create_time
+
+        where barm.receive_id = #{userId} and barm.delete_is = false  limit 1
+    </select>
+
+</mapper>

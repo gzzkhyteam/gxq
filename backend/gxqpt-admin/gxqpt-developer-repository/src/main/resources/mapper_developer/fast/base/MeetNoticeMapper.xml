@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.fast.meet.dao.MeetNoticeMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.developer.entity.fast.meet.po.MeetNotice">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="meet_id" jdbcType="BIGINT" property="meetId" />
+    <result column="notice_time" jdbcType="TIMESTAMP" property="noticeTime" />
+    <result column="emp_id" jdbcType="BIGINT" property="empId" />
+    <result column="emp_type" jdbcType="SMALLINT" property="empType" />
+    <result column="join_status" jdbcType="SMALLINT" property="joinStatus" />
+    <result column="remark_" jdbcType="VARCHAR" property="remark" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, meet_id, notice_time, emp_id, emp_type, join_status, remark_, app_id, create_user, 
+    create_time, update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.meet.example.MeetNoticeExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_meet_notice
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_meet_notice
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.developer.repository.fast.meet.example.MeetNoticeExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_meet_notice
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectByAppIdAndId" parameterType="map" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <include refid="Base_Column_List" />
+    from b_meet_notice
+    where 1=1 and app_id = #{appId,jdbcType=VARCHAR} and id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAppIdById" parameterType="map" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_meet_notice
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_meet_notice
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.meet.example.MeetNoticeExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_meet_notice
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_meet_notice where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_meet_notice
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_meet_notice where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.MeetNotice">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet_notice
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.MeetNotice">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet_notice
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.MeetNotice">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet_notice
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.MeetNotice">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet_notice
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.MeetNotice">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_meet_notice (id, meet_id, notice_time, 
+      emp_id, emp_type, join_status, 
+      remark_, app_id, create_user, 
+      create_time, update_user, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{meetId,jdbcType=BIGINT}, #{noticeTime,jdbcType=TIMESTAMP}, 
+      #{empId,jdbcType=BIGINT}, #{empType,jdbcType=SMALLINT}, #{joinStatus,jdbcType=SMALLINT}, 
+      #{remark,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{createUser,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_meet_notice (id, meet_id, notice_time, emp_id, emp_type, join_status, remark_, app_id, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.meetId,jdbcType=BIGINT}, #{item.noticeTime,jdbcType=TIMESTAMP}, 
+        #{item.empId,jdbcType=BIGINT}, #{item.empType,jdbcType=SMALLINT}, #{item.joinStatus,jdbcType=SMALLINT}, 
+        #{item.remark,jdbcType=VARCHAR}, #{item.appId,jdbcType=VARCHAR}, #{item.createUser,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.MeetNotice">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_meet_notice
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="meetId != null">
+        meet_id,
+      </if>
+      <if test="noticeTime != null">
+        notice_time,
+      </if>
+      <if test="empId != null">
+        emp_id,
+      </if>
+      <if test="empType != null">
+        emp_type,
+      </if>
+      <if test="joinStatus != null">
+        join_status,
+      </if>
+      <if test="remark != null">
+        remark_,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="meetId != null">
+        #{meetId,jdbcType=BIGINT},
+      </if>
+      <if test="noticeTime != null">
+        #{noticeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="empId != null">
+        #{empId,jdbcType=BIGINT},
+      </if>
+      <if test="empType != null">
+        #{empType,jdbcType=SMALLINT},
+      </if>
+      <if test="joinStatus != null">
+        #{joinStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.meet.example.MeetNoticeExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_meet_notice
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet_notice
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.meetId != null">
+        meet_id = #{record.meetId,jdbcType=BIGINT},
+      </if>
+      <if test="record.noticeTime != null">
+        notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.empId != null">
+        emp_id = #{record.empId,jdbcType=BIGINT},
+      </if>
+      <if test="record.empType != null">
+        emp_type = #{record.empType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.joinStatus != null">
+        join_status = #{record.joinStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="record.remark != null">
+        remark_ = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet_notice
+    set id = #{record.id,jdbcType=BIGINT},
+      meet_id = #{record.meetId,jdbcType=BIGINT},
+      notice_time = #{record.noticeTime,jdbcType=TIMESTAMP},
+      emp_id = #{record.empId,jdbcType=BIGINT},
+      emp_type = #{record.empType,jdbcType=SMALLINT},
+      join_status = #{record.joinStatus,jdbcType=SMALLINT},
+      remark_ = #{record.remark,jdbcType=VARCHAR},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.MeetNotice">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet_notice
+    <set>
+      <if test="meetId != null">
+        meet_id = #{meetId,jdbcType=BIGINT},
+      </if>
+      <if test="noticeTime != null">
+        notice_time = #{noticeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="empId != null">
+        emp_id = #{empId,jdbcType=BIGINT},
+      </if>
+      <if test="empType != null">
+        emp_type = #{empType,jdbcType=SMALLINT},
+      </if>
+      <if test="joinStatus != null">
+        join_status = #{joinStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="remark != null">
+        remark_ = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.MeetNotice">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet_notice
+    <set>
+      <if test="meetId != null">
+        meet_id = #{meetId,jdbcType=BIGINT},
+      </if>
+      <if test="noticeTime != null">
+        notice_time = #{noticeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="empId != null">
+        emp_id = #{empId,jdbcType=BIGINT},
+      </if>
+      <if test="empType != null">
+        emp_type = #{empType,jdbcType=SMALLINT},
+      </if>
+      <if test="joinStatus != null">
+        join_status = #{joinStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="remark != null">
+        remark_ = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.MeetNotice">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet_notice
+    set meet_id = #{meetId,jdbcType=BIGINT},
+      notice_time = #{noticeTime,jdbcType=TIMESTAMP},
+      emp_id = #{empId,jdbcType=BIGINT},
+      emp_type = #{empType,jdbcType=SMALLINT},
+      join_status = #{joinStatus,jdbcType=SMALLINT},
+      remark_ = #{remark,jdbcType=VARCHAR},
+      app_id = #{appId,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.meet.po.MeetNotice">
+    <!--
+    @mbggenerated
+    -->
+    update b_meet_notice
+    set meet_id = #{meetId,jdbcType=BIGINT},
+      notice_time = #{noticeTime,jdbcType=TIMESTAMP},
+      emp_id = #{empId,jdbcType=BIGINT},
+      emp_type = #{empType,jdbcType=SMALLINT},
+      join_status = #{joinStatus,jdbcType=SMALLINT},
+      remark_ = #{remark,jdbcType=VARCHAR},
+      app_id = #{appId,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+
+  <!--根据登陆用户ID和关联条件查询-->
+  <resultMap extends="BaseResultMap" id="extendsMap" type="com.hengyunsoft.platform.developer.entity.fast.meet.domain.MeetNoticeDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+  </resultMap>
+
+  <select id="findMeetList" resultMap="extendsMap">
+    SELECT
+    mn.id,
+    mn.app_id,
+    mn.notice_time,
+    mn.join_status,
+    mn.meet_id,
+    mn.emp_id,
+    mn.emp_type,
+    mn.remark_,
+    m.name_ AS meetName,
+    m.address AS meetAddress,
+    m.moderator,
+    m.join_leader AS joinLeader,
+    m.meet_status AS meetStatus,
+    m.start_time as startTime,
+    m.end_time as endTime,
+    m.remark as meetRemark,
+    tmp.meetJoiners
+    FROM
+      b_meet_notice mn
+    JOIN b_meet m ON mn.meet_id = m.id
+    JOIN (
+    SELECT
+    mn.meet_id,
+    GROUP_CONCAT(
+      CONCAT(
+      cu.name_,
+      CASE
+      mn.join_status
+      WHEN 0 THEN
+      '(通知中)'
+      WHEN 1 THEN
+      '(参加)'
+      WHEN 2 THEN
+      '(不参加)'
+      WHEN 3 THEN
+      '(发起人)'
+      END,
+      ''
+      )
+    ) AS meetJoiners
+    FROM
+    b_meet_notice mn
+    JOIN c_user cu ON mn.emp_id = cu.id
+    GROUP BY
+    mn.meet_id
+    ) tmp ON mn.meet_id = tmp.meet_id
+    <where>
+        <if test="appId != null">
+          AND m.app_id = #{appId}
+        </if>
+        <if test="userId != -1">
+          AND mn.emp_id = #{userId}
+        </if>
+
+        <if test=" meetName != null and meetName != '' ">
+          AND m.name_ LIKE #{meetName,typeHandler=fullLike}
+        </if>
+
+        <if test="meetStatus != -1">
+          AND m.meet_status = #{meetStatus}
+        </if>
+
+        <if test="joinStatus != -1">
+          AND mn.join_status = #{joinStatus}
+        </if>
+    </where>
+    order by m.start_time
+  </select>
+  <select id="findMeetById" resultMap="extendsMap">
+    SELECT
+      mn.id,
+      mn.app_id,
+      mn.notice_time,
+      mn.join_status,
+      mn.meet_id,
+      mn.emp_id,
+      mn.emp_type,
+      mn.remark_,
+      m.name_ AS meetName,
+      m.address AS meetAddress,
+      m.moderator,
+      m.join_leader AS joinLeader,
+      m.meet_status AS meetStatus,
+      m.start_time as startTime,
+      m.end_time as endTime,
+      m.remark as meetRemark,
+      tmp.meetJoiners
+    FROM
+      b_meet_notice mn
+    JOIN b_meet m ON mn.meet_id = m.id
+    JOIN (
+    SELECT
+    mn.meet_id,
+    GROUP_CONCAT(
+      CONCAT(
+      cu.name_,
+      CASE
+      mn.join_status
+      WHEN 0 THEN
+      '(通知中)'
+      WHEN 1 THEN
+      '(参加)'
+      WHEN 2 THEN
+      '(不参加)'
+      WHEN 3 THEN
+      '(发起人)'
+      END,
+      ''
+      )
+    ) AS meetJoiners
+    FROM
+    b_meet_notice mn
+    JOIN c_user cu ON mn.emp_id = cu.id
+    GROUP BY
+    mn.meet_id
+    ) tmp ON mn.meet_id = tmp.meet_id
+    WHERE mn.id = #{id}
+  </select>
+</mapper>

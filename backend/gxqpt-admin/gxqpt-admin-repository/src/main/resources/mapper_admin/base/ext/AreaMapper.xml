@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.base.dao.AreaMapper">
+    <sql id="R_Column_List">
+        r.id, r.parent_id, r.name
+    </sql>
+  <select id="findByParentId"  parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT DISTINCT
+    <include refid="R_Column_List"/>
+    from b_area r
+    where  r.parent_id=#{parentId,jdbcType=BIGINT}
+    ORDER BY r.order_num ASC
+  </select>
+    <delete id="deleteAllById" parameterType="java.lang.Long">
+        delete from b_area
+        where (id=#{id,jdbcType=BIGINT} or find_in_set( #{id,jdbcType=BIGINT}, tree_path) )
+    </delete>
+    <select id="findAreaForExcel" resultMap="BaseResultMap">
+        select id,parent_id,name from b_area order by order_num
+    </select>
+</mapper>

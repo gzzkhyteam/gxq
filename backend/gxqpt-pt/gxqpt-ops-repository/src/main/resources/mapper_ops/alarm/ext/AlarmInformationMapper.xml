@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.alarm.dao.AlarmInformationMapper">
+  <resultMap id="PageResultMap" type="com.hengyunsoft.platform.ops.entity.alarm.po.domain.AlarmInformationDO">
+
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="alarm_name" jdbcType="VARCHAR" property="alarmName" />
+    <result column="alarm_level" jdbcType="INTEGER" property="alarmLevel" />
+    <result column="system_id" jdbcType="VARCHAR" property="systemId" />
+    <result column="system_name" jdbcType="VARCHAR" property="systemName" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+    <result column="details_url" jdbcType="VARCHAR" property="detailsUrl" />
+    <result column="rule_id" jdbcType="BIGINT" property="ruleId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+  </resultMap>
+  <!--查询告警列表分页信息-->
+  <select id="getAlarmInfoPageList"  parameterType="java.util.Map" resultMap="PageResultMap">
+    SELECT  c.id,r.alarm_name, r.alarm_level,c.system_id,c.system_name,
+    c.status,c.apply_code,c.details_url,c.rule_id,c.create_time,c.create_user
+    FROM   b_yw_alarm_information c
+    INNER JOIN b_yw_alarm_rule_settings r on r.id=c.rule_id
+    <where>
+      <if test="alarmName!= null and alarmName!=''">
+        and  r.alarm_name =#{alarmName,jdbcType=VARCHAR}
+      </if>
+      <if test="alarmLevel!= null and alarmLevel!=''">
+        AND r.alarm_level =#{alarmLevel,jdbcType=INTEGER}
+      </if>
+      <if test="createUser!= null and createUser!=''">
+        AND c.create_user =#{createUser,jdbcType=BIGINT}
+      </if>
+      <if test="status!= null and status!=''">
+        AND c.status =#{status,jdbcType=INTEGER}
+      </if>
+      <if test="startTime!= null">
+        AND c.create_time>=#{startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime!= null">
+        AND #{endTime,jdbcType=TIMESTAMP}>=c.create_time
+      </if>
+    </where>
+    order by c.create_time desc
+  </select>
+
+  <!--运维首页查询告警列表分页信息,查询待审核数据和待当前用户处理的数据-->
+  <select id="getAlarmInfo"  parameterType="java.util.Map" resultMap="PageResultMap">
+    SELECT  c.id,r.alarm_name, r.alarm_level,c.system_id,c.system_name,
+    c.status,c.apply_code,c.details_url,c.rule_id,c.create_time,c.create_user
+    FROM   b_yw_alarm_information c
+    INNER JOIN b_yw_alarm_rule_settings r on r.id=c.rule_id
+    where c.apply_type LIKE #{applyType,typeHandler=fullLike}
+    OR c.create_user =#{createUser,jdbcType=BIGINT}
+  </select>
+</mapper>

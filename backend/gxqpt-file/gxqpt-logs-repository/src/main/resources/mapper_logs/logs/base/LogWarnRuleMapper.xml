@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogWarnRuleMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.logs.entity.logs.po.LogWarnRule">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="log_type" jdbcType="VARCHAR" property="logType" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="warn_type" jdbcType="VARCHAR" property="warnType" />
+    <result column="warn_level" jdbcType="VARCHAR" property="warnLevel" />
+    <result column="warn_description" jdbcType="VARCHAR" property="warnDescription" />
+    <result column="key_content" jdbcType="VARCHAR" property="keyContent" />
+    <result column="quantity_time_interval" jdbcType="BIGINT" property="quantityTimeInterval" />
+    <result column="quantity_log_level" jdbcType="VARCHAR" property="quantityLogLevel" />
+    <result column="quantity_upper_limit" jdbcType="BIGINT" property="quantityUpperLimit" />
+    <result column="response_duration" jdbcType="BIGINT" property="responseDuration" />
+    <result column="is_enable" jdbcType="VARCHAR" property="isEnable" />
+    <result column="is_delete" jdbcType="VARCHAR" property="isDelete" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, app_id, log_type, code, name, warn_type, warn_level, warn_description, key_content, 
+    quantity_time_interval, quantity_log_level, quantity_upper_limit, response_duration, 
+    is_enable, is_delete, create_time, create_user, create_user_name, update_time, update_user, 
+    update_user_name
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogWarnRuleExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from log_warn_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from log_warn_rule
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogWarnRuleExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from log_warn_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from log_warn_rule
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogWarnRuleExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from log_warn_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogWarnRule">
+    <!--
+    @mbggenerated
+    -->
+    update log_warn_rule
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogWarnRule">
+    <!--
+    @mbggenerated
+    -->
+    update log_warn_rule
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogWarnRule">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_warn_rule (id, app_id, log_type, 
+      code, name, warn_type, 
+      warn_level, warn_description, key_content, 
+      quantity_time_interval, quantity_log_level, 
+      quantity_upper_limit, response_duration, is_enable, 
+      is_delete, create_time, create_user, 
+      create_user_name, update_time, update_user, 
+      update_user_name)
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{logType,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{warnType,jdbcType=VARCHAR}, 
+      #{warnLevel,jdbcType=VARCHAR}, #{warnDescription,jdbcType=VARCHAR}, #{keyContent,jdbcType=VARCHAR}, 
+      #{quantityTimeInterval,jdbcType=BIGINT}, #{quantityLogLevel,jdbcType=VARCHAR}, 
+      #{quantityUpperLimit,jdbcType=BIGINT}, #{responseDuration,jdbcType=BIGINT}, #{isEnable,jdbcType=VARCHAR}, 
+      #{isDelete,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, 
+      #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT}, 
+      #{updateUserName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_warn_rule (id, app_id, log_type, code, name, warn_type, warn_level, warn_description, key_content, quantity_time_interval, quantity_log_level, quantity_upper_limit, response_duration, is_enable, is_delete, create_time, create_user, create_user_name, update_time, update_user, update_user_name ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.appId,jdbcType=VARCHAR}, #{item.logType,jdbcType=VARCHAR}, 
+        #{item.code,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.warnType,jdbcType=VARCHAR}, 
+        #{item.warnLevel,jdbcType=VARCHAR}, #{item.warnDescription,jdbcType=VARCHAR}, #{item.keyContent,jdbcType=VARCHAR}, 
+        #{item.quantityTimeInterval,jdbcType=BIGINT}, #{item.quantityLogLevel,jdbcType=VARCHAR}, 
+        #{item.quantityUpperLimit,jdbcType=BIGINT}, #{item.responseDuration,jdbcType=BIGINT}, 
+        #{item.isEnable,jdbcType=VARCHAR}, #{item.isDelete,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.createUser,jdbcType=BIGINT}, #{item.createUserName,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=BIGINT}, #{item.updateUserName,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogWarnRule">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_warn_rule
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="logType != null">
+        log_type,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="warnType != null">
+        warn_type,
+      </if>
+      <if test="warnLevel != null">
+        warn_level,
+      </if>
+      <if test="warnDescription != null">
+        warn_description,
+      </if>
+      <if test="keyContent != null">
+        key_content,
+      </if>
+      <if test="quantityTimeInterval != null">
+        quantity_time_interval,
+      </if>
+      <if test="quantityLogLevel != null">
+        quantity_log_level,
+      </if>
+      <if test="quantityUpperLimit != null">
+        quantity_upper_limit,
+      </if>
+      <if test="responseDuration != null">
+        response_duration,
+      </if>
+      <if test="isEnable != null">
+        is_enable,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateUserName != null">
+        update_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null">
+        #{logType,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="warnType != null">
+        #{warnType,jdbcType=VARCHAR},
+      </if>
+      <if test="warnLevel != null">
+        #{warnLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="warnDescription != null">
+        #{warnDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="keyContent != null">
+        #{keyContent,jdbcType=VARCHAR},
+      </if>
+      <if test="quantityTimeInterval != null">
+        #{quantityTimeInterval,jdbcType=BIGINT},
+      </if>
+      <if test="quantityLogLevel != null">
+        #{quantityLogLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="quantityUpperLimit != null">
+        #{quantityUpperLimit,jdbcType=BIGINT},
+      </if>
+      <if test="responseDuration != null">
+        #{responseDuration,jdbcType=BIGINT},
+      </if>
+      <if test="isEnable != null">
+        #{isEnable,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateUserName != null">
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogWarnRuleExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from log_warn_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update log_warn_rule
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logType != null">
+        log_type = #{record.logType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.code != null">
+        code = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.warnType != null">
+        warn_type = #{record.warnType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.warnLevel != null">
+        warn_level = #{record.warnLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.warnDescription != null">
+        warn_description = #{record.warnDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="record.keyContent != null">
+        key_content = #{record.keyContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.quantityTimeInterval != null">
+        quantity_time_interval = #{record.quantityTimeInterval,jdbcType=BIGINT},
+      </if>
+      <if test="record.quantityLogLevel != null">
+        quantity_log_level = #{record.quantityLogLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.quantityUpperLimit != null">
+        quantity_upper_limit = #{record.quantityUpperLimit,jdbcType=BIGINT},
+      </if>
+      <if test="record.responseDuration != null">
+        response_duration = #{record.responseDuration,jdbcType=BIGINT},
+      </if>
+      <if test="record.isEnable != null">
+        is_enable = #{record.isEnable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createUserName != null">
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateUserName != null">
+        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update log_warn_rule
+    set id = #{record.id,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      log_type = #{record.logType,jdbcType=VARCHAR},
+      code = #{record.code,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      warn_type = #{record.warnType,jdbcType=VARCHAR},
+      warn_level = #{record.warnLevel,jdbcType=VARCHAR},
+      warn_description = #{record.warnDescription,jdbcType=VARCHAR},
+      key_content = #{record.keyContent,jdbcType=VARCHAR},
+      quantity_time_interval = #{record.quantityTimeInterval,jdbcType=BIGINT},
+      quantity_log_level = #{record.quantityLogLevel,jdbcType=VARCHAR},
+      quantity_upper_limit = #{record.quantityUpperLimit,jdbcType=BIGINT},
+      response_duration = #{record.responseDuration,jdbcType=BIGINT},
+      is_enable = #{record.isEnable,jdbcType=VARCHAR},
+      is_delete = #{record.isDelete,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogWarnRule">
+    <!--
+    @mbggenerated
+    -->
+    update log_warn_rule
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null">
+        log_type = #{logType,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="warnType != null">
+        warn_type = #{warnType,jdbcType=VARCHAR},
+      </if>
+      <if test="warnLevel != null">
+        warn_level = #{warnLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="warnDescription != null">
+        warn_description = #{warnDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="keyContent != null">
+        key_content = #{keyContent,jdbcType=VARCHAR},
+      </if>
+      <if test="quantityTimeInterval != null">
+        quantity_time_interval = #{quantityTimeInterval,jdbcType=BIGINT},
+      </if>
+      <if test="quantityLogLevel != null">
+        quantity_log_level = #{quantityLogLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="quantityUpperLimit != null">
+        quantity_upper_limit = #{quantityUpperLimit,jdbcType=BIGINT},
+      </if>
+      <if test="responseDuration != null">
+        response_duration = #{responseDuration,jdbcType=BIGINT},
+      </if>
+      <if test="isEnable != null">
+        is_enable = #{isEnable,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateUserName != null">
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogWarnRule">
+    <!--
+    @mbggenerated
+    -->
+    update log_warn_rule
+    set app_id = #{appId,jdbcType=VARCHAR},
+      log_type = #{logType,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      warn_type = #{warnType,jdbcType=VARCHAR},
+      warn_level = #{warnLevel,jdbcType=VARCHAR},
+      warn_description = #{warnDescription,jdbcType=VARCHAR},
+      key_content = #{keyContent,jdbcType=VARCHAR},
+      quantity_time_interval = #{quantityTimeInterval,jdbcType=BIGINT},
+      quantity_log_level = #{quantityLogLevel,jdbcType=VARCHAR},
+      quantity_upper_limit = #{quantityUpperLimit,jdbcType=BIGINT},
+      response_duration = #{responseDuration,jdbcType=BIGINT},
+      is_enable = #{isEnable,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

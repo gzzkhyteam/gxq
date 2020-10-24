@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.security.repository.assess.dao.ProgramReleaseMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.security.entity.assess.po.ProgramRelease">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="version_name" jdbcType="VARCHAR" property="versionName" />
+    <result column="version_id" jdbcType="VARCHAR" property="versionId" />
+    <result column="upgrade_conent" jdbcType="LONGVARCHAR" property="upgradeConent" />
+    <result column="upgrade_time" jdbcType="TIMESTAMP" property="upgradeTime" />
+    <result column="upgrade_file_id" jdbcType="BIGINT" property="upgradeFileId" />
+    <result column="upgrade_file_url" jdbcType="VARCHAR" property="upgradeFileUrl" />
+    <result column="upgrade_file_name" jdbcType="VARCHAR" property="upgradeFileName" />
+    <result column="server_ip" jdbcType="VARCHAR" property="serverIp" />
+    <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
+    <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime" />
+    <result column="audit_user" jdbcType="VARCHAR" property="auditUser" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, app_id, name, version_name, version_id, upgrade_conent, upgrade_time, upgrade_file_id, 
+    upgrade_file_url, upgrade_file_name, server_ip, audit_status, audit_time, audit_user, 
+    remarks, create_time, create_user, update_time, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.security.repository.assess.example.ProgramReleaseExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from se_program_release
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from se_program_release
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.security.repository.assess.example.ProgramReleaseExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from se_program_release
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from se_program_release
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.security.repository.assess.example.ProgramReleaseExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from se_program_release
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.security.entity.assess.po.ProgramRelease">
+    <!--
+    @mbggenerated
+    -->
+    update se_program_release
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update se_program_release
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.security.entity.assess.po.ProgramRelease">
+    <!--
+    @mbggenerated
+    -->
+    insert into se_program_release (id, app_id, name, 
+      version_name, version_id, upgrade_conent, 
+      upgrade_time, upgrade_file_id, upgrade_file_url, 
+      upgrade_file_name, server_ip, audit_status, 
+      audit_time, audit_user, remarks, 
+      create_time, create_user, update_time, 
+      update_user)
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{versionName,jdbcType=VARCHAR}, #{versionId,jdbcType=VARCHAR}, #{upgradeConent,jdbcType=LONGVARCHAR}, 
+      #{upgradeTime,jdbcType=TIMESTAMP}, #{upgradeFileId,jdbcType=BIGINT}, #{upgradeFileUrl,jdbcType=VARCHAR}, 
+      #{upgradeFileName,jdbcType=VARCHAR}, #{serverIp,jdbcType=VARCHAR}, #{auditStatus,jdbcType=INTEGER}, 
+      #{auditTime,jdbcType=TIMESTAMP}, #{auditUser,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into se_program_release (id, app_id, name, version_name, version_id, upgrade_conent, upgrade_time, upgrade_file_id, upgrade_file_url, upgrade_file_name, server_ip, audit_status, audit_time, audit_user, remarks, create_time, create_user, update_time, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.appId,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, 
+        #{item.versionName,jdbcType=VARCHAR}, #{item.versionId,jdbcType=VARCHAR}, #{item.upgradeConent,jdbcType=LONGVARCHAR}, 
+        #{item.upgradeTime,jdbcType=TIMESTAMP}, #{item.upgradeFileId,jdbcType=BIGINT}, 
+        #{item.upgradeFileUrl,jdbcType=VARCHAR}, #{item.upgradeFileName,jdbcType=VARCHAR}, 
+        #{item.serverIp,jdbcType=VARCHAR}, #{item.auditStatus,jdbcType=INTEGER}, #{item.auditTime,jdbcType=TIMESTAMP}, 
+        #{item.auditUser,jdbcType=VARCHAR}, #{item.remarks,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.createUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.security.entity.assess.po.ProgramRelease">
+    <!--
+    @mbggenerated
+    -->
+    insert into se_program_release
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="versionName != null">
+        version_name,
+      </if>
+      <if test="versionId != null">
+        version_id,
+      </if>
+      <if test="upgradeConent != null">
+        upgrade_conent,
+      </if>
+      <if test="upgradeTime != null">
+        upgrade_time,
+      </if>
+      <if test="upgradeFileId != null">
+        upgrade_file_id,
+      </if>
+      <if test="upgradeFileUrl != null">
+        upgrade_file_url,
+      </if>
+      <if test="upgradeFileName != null">
+        upgrade_file_name,
+      </if>
+      <if test="serverIp != null">
+        server_ip,
+      </if>
+      <if test="auditStatus != null">
+        audit_status,
+      </if>
+      <if test="auditTime != null">
+        audit_time,
+      </if>
+      <if test="auditUser != null">
+        audit_user,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="versionName != null">
+        #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="versionId != null">
+        #{versionId,jdbcType=VARCHAR},
+      </if>
+      <if test="upgradeConent != null">
+        #{upgradeConent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="upgradeTime != null">
+        #{upgradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="upgradeFileId != null">
+        #{upgradeFileId,jdbcType=BIGINT},
+      </if>
+      <if test="upgradeFileUrl != null">
+        #{upgradeFileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="upgradeFileName != null">
+        #{upgradeFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="serverIp != null">
+        #{serverIp,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null">
+        #{auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="auditTime != null">
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditUser != null">
+        #{auditUser,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.security.repository.assess.example.ProgramReleaseExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from se_program_release
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update se_program_release
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.versionName != null">
+        version_name = #{record.versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.versionId != null">
+        version_id = #{record.versionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.upgradeConent != null">
+        upgrade_conent = #{record.upgradeConent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.upgradeTime != null">
+        upgrade_time = #{record.upgradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.upgradeFileId != null">
+        upgrade_file_id = #{record.upgradeFileId,jdbcType=BIGINT},
+      </if>
+      <if test="record.upgradeFileUrl != null">
+        upgrade_file_url = #{record.upgradeFileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.upgradeFileName != null">
+        upgrade_file_name = #{record.upgradeFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serverIp != null">
+        server_ip = #{record.serverIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditStatus != null">
+        audit_status = #{record.auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.auditTime != null">
+        audit_time = #{record.auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.auditUser != null">
+        audit_user = #{record.auditUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remarks != null">
+        remarks = #{record.remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update se_program_release
+    set id = #{record.id,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      version_name = #{record.versionName,jdbcType=VARCHAR},
+      version_id = #{record.versionId,jdbcType=VARCHAR},
+      upgrade_conent = #{record.upgradeConent,jdbcType=LONGVARCHAR},
+      upgrade_time = #{record.upgradeTime,jdbcType=TIMESTAMP},
+      upgrade_file_id = #{record.upgradeFileId,jdbcType=BIGINT},
+      upgrade_file_url = #{record.upgradeFileUrl,jdbcType=VARCHAR},
+      upgrade_file_name = #{record.upgradeFileName,jdbcType=VARCHAR},
+      server_ip = #{record.serverIp,jdbcType=VARCHAR},
+      audit_status = #{record.auditStatus,jdbcType=INTEGER},
+      audit_time = #{record.auditTime,jdbcType=TIMESTAMP},
+      audit_user = #{record.auditUser,jdbcType=VARCHAR},
+      remarks = #{record.remarks,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.security.entity.assess.po.ProgramRelease">
+    <!--
+    @mbggenerated
+    -->
+    update se_program_release
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="versionName != null">
+        version_name = #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="versionId != null">
+        version_id = #{versionId,jdbcType=VARCHAR},
+      </if>
+      <if test="upgradeConent != null">
+        upgrade_conent = #{upgradeConent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="upgradeTime != null">
+        upgrade_time = #{upgradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="upgradeFileId != null">
+        upgrade_file_id = #{upgradeFileId,jdbcType=BIGINT},
+      </if>
+      <if test="upgradeFileUrl != null">
+        upgrade_file_url = #{upgradeFileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="upgradeFileName != null">
+        upgrade_file_name = #{upgradeFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="serverIp != null">
+        server_ip = #{serverIp,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null">
+        audit_status = #{auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="auditTime != null">
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditUser != null">
+        audit_user = #{auditUser,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.security.entity.assess.po.ProgramRelease">
+    <!--
+    @mbggenerated
+    -->
+    update se_program_release
+    set app_id = #{appId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      version_name = #{versionName,jdbcType=VARCHAR},
+      version_id = #{versionId,jdbcType=VARCHAR},
+      upgrade_conent = #{upgradeConent,jdbcType=LONGVARCHAR},
+      upgrade_time = #{upgradeTime,jdbcType=TIMESTAMP},
+      upgrade_file_id = #{upgradeFileId,jdbcType=BIGINT},
+      upgrade_file_url = #{upgradeFileUrl,jdbcType=VARCHAR},
+      upgrade_file_name = #{upgradeFileName,jdbcType=VARCHAR},
+      server_ip = #{serverIp,jdbcType=VARCHAR},
+      audit_status = #{auditStatus,jdbcType=INTEGER},
+      audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      audit_user = #{auditUser,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.apply.dao.ApplicationApplyMapper">
+	
+  <resultMap type="com.hengyunsoft.platform.developer.entity.apply.po.domain.ApplyQueryDO" id="applyQueryDO">
+  	<id column="id" jdbcType="BIGINT" property="id" />
+    <result column="taskType" jdbcType="VARCHAR" property="taskType" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    
+    <result column="audit_status" jdbcType="SMALLINT" property="auditStatus" />
+    <result column="module_id" jdbcType="BIGINT" property="moduleId" />
+    <result column="apply_user" jdbcType="BIGINT" property="applyUser" />
+    <result column="apply_user_name" jdbcType="VARCHAR" property="applyUserName" />
+    <result column="audit_user" jdbcType="BIGINT" property="auditUser" />
+    <result column="audit_user_name" jdbcType="VARCHAR" property="auditUserName" />
+    <result column="apply_desc" jdbcType="VARCHAR" property="applyDesc" />
+    <result column="audit_desc" jdbcType="VARCHAR" property="auditDesc" />
+    <result column="moduleName" jdbcType="VARCHAR" property="moduleName" />
+    <result column="appName" jdbcType="VARCHAR" property="appName" />
+  </resultMap>
+
+    <!-- 获取我的应用申请  -->
+    <sql id="queryMyApplicationApply">
+  	select id, null module_id,app_id,apply_status audit_status,'appApply' taskType,create_time,null moduleName,
+  	           apply_user,apply_user_name,audit_user,audit_user_name,apply_desc,audit_desc,name_ appName
+  	from c_application_apply
+  	where apply_user = #{applyUser,jdbcType=BIGINT}
+  </sql>
+  <!-- 获取我的新增功能申请  -->
+  <sql id="queryMyModuleApply" >
+  	select id,id module_id,app_id,apply_status audit_status,'moduleApply' taskType,create_time,name_ moduleName,
+  	           apply_user,apply_user_name,audit_user,audit_user_name,apply_desc,audit_desc,null appName
+  	from c_service_module_apply
+  	where apply_user = #{applyUser,jdbcType=BIGINT}
+  		<if test="appIds != null and appIds.size != 0">
+	  		 and app_id in (
+            <foreach item="appId" collection="appIds" separator=",">#{appId,jdbcType=VARCHAR}
+            </foreach>
+            )
+  		</if>
+  </sql>
+  <!-- 获取我的消费功能申请  -->
+  <sql id="queryMyAssignModuleApply" >
+  	select assign.id id,assign.module_id ,assign.app_id,assign.status_ audit_status,'assignApply' taskType,assign.create_time,servicemo.name_ moduleName,
+  	           assign.apply_user,assign.apply_user_name,assign.audit_user,assign.audit_user_name,assign.apply_desc,assign.audit_desc,null appName
+  	from c_service_assign_module_apply assign join c_service_module servicemo on assign.module_id = servicemo.id
+  	where apply_user = #{applyUser,jdbcType=BIGINT}
+  		 <if test="appIds != null and appIds.size != 0">
+             and assign.app_id in (
+             <foreach item="appId" collection="appIds" separator=",">
+                 #{appId,jdbcType=VARCHAR}
+             </foreach>
+             )
+  		</if>
+  </sql>
+  
+  <!-- 获取新增应用审批  -->
+  <sql id="queryApplicationAudit" >
+  	select id ,null module_id,app_id,apply_status audit_status,'appAudit' taskType,create_time,null moduleName,
+  	           apply_user,apply_user_name,audit_user,audit_user_name,apply_desc,audit_desc,name_ appName
+  	from c_application_apply
+  </sql>
+  <!-- 获取新增功能审批  -->
+  <sql id="queryModuleAudit" >
+  	select id ,id module_id,app_id,apply_status audit_status,'moduleAudit' taskType,create_time,name_ moduleName,
+  	           apply_user,apply_user_name,audit_user,audit_user_name,apply_desc,audit_desc,null appName
+  	from c_service_module_apply
+  </sql>
+  <!-- 获取消费功能审批  -->
+  <sql id="queryAssignModuleAudit" >
+  	select apply.id,apply.module_id ,apply.app_id,apply.status_ audit_status,'assignAudit' taskType,apply.create_time,modul.name_ moduleName,
+  	           apply.apply_user,apply.apply_user_name,apply.audit_user,apply.audit_user_name,apply.apply_desc,apply.audit_desc,null appName
+  	from c_service_assign_module_apply apply join c_service_module modul on   apply.module_id = modul.id
+  	where modul.app_id in (
+  		<foreach  item="appId" collection="appIds" separator=",">
+  			#{appId,jdbcType=VARCHAR}
+  		</foreach>
+  	)
+  </sql>
+  
+  <select id="queryMyTask" resultMap="applyQueryDO" >
+  	
+  	select *
+  	from (
+  	      <!-- 只是为了创建一个不可能查出数据的查询语法      来帮助在不是服务监控系统管理员的情况下面筛选查看功能新增审批  应用新增审批下的语法错误 -->
+  	     <include refid="queryMyApplicationApply" /> and 1 = 2
+  	      <!--  -->
+	  	 <if test="taskRole != 'audit'">
+	  	 	<if test="taskType == null || taskType == 'appApply' || taskType == ''">
+	  	    	UNION ALL <include refid="queryMyApplicationApply" />
+	  	    </if>
+	  	    <if test="taskType == null || taskType == 'moduleApply' || taskType == ''">
+	  	        UNION ALL <include refid="queryMyModuleApply" />
+	  	    </if>
+	  	    <if test="taskType == null || taskType == 'assignApply' || taskType == ''">
+	  	        UNION ALL <include refid="queryMyAssignModuleApply" />
+	  	    </if>
+	  	 </if>
+	  	 
+	  	 <if test="taskRole != 'apply'">
+	  	 	<if test="auditApp2ModelAdd == true">
+	  	 		<if test="taskType == null || taskType == 'appAudit' || taskType == ''">
+		  	    UNION ALL <include refid="queryApplicationAudit" />
+		  	    </if>
+		  	    <if test="taskType == null || taskType == 'moduleAudit' || taskType == ''">
+		  	    UNION ALL <include refid="queryModuleAudit" />
+		  	    </if>
+	  	    </if>
+	  	    
+	  	    
+	  	    <if test="appIds != null and appIds.size != 0">
+	  	    	<if test="taskType == null || taskType == 'assginAudit' || taskType == ''">
+	  	        	UNION ALL <include refid="queryAssignModuleAudit" />
+	  	        </if>
+	  	    </if>
+	  	 </if>
+  	 
+  	) taskAll
+  	<where>
+  		<if test="moduleId != null and moduleId!=''">
+  		  <!-- 模块Id过滤 -->
+  			and module_id = #{moduleId}
+  		</if>
+  		<if test="auditStatus != null and auditStatus!=''">
+  			<!-- 审批状态过滤 -->
+  			and audit_status = #{auditStatus}
+  		</if>
+        <if test="appName != null and appName!=''">
+
+  			and appName LIKE #{appName,typeHandler=fullLike}
+  		</if>
+        <if test="moduleName != null and moduleName!=''">
+            and moduleName LIKE #{moduleName,typeHandler=fullLike}
+        </if>
+  	</where>
+	  order by taskAll.create_time desc
+  </select>
+
+  
+  
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.hardware.repository.database.dao.DatabaseManagementMapper">
+  <select id="selectByConditions" parameterType="com.hengyunsoft.platform.hardware.entity.database.po.DatabaseManagement" resultMap="BaseResultMap">
+
+    select
+    <include refid="Base_Column_List" />
+    from b_hd_database_management
+    <where>
+
+      <if test="instanceDi != null and !''.equals(instanceDi)">
+        AND instance_DI = #{instanceDi,jdbcType=VARCHAR}
+      </if>
+      <if test="admin != null">
+        AND admin_ LIKE concat(concat('%',#{admin,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="account != null">
+        AND account_ = #{account,jdbcType=VARCHAR}
+      </if>
+      <if test="type != null and !''.equals(type)">
+        AND type_ = #{type,jdbcType=INTEGER}
+      </if>
+      <if test="hostIpAddress != null">
+        AND host_IP_address = #{hostIpAddress,jdbcType=VARCHAR}
+      </if>
+      <if test="characterSet != null">
+        AND  character_set = #{characterSet,jdbcType=VARCHAR}
+      </if>
+      <if test="port != null">
+        AND  port_ = #{port,jdbcType=VARCHAR}
+      </if>
+      <if test="code != null">
+        AND  code_ = #{code,jdbcType=VARCHAR}
+      </if>
+      <if test="associatedServiceSystem != null">
+        AND  associated_service_system LIKE concat(concat('%',#{associatedServiceSystem,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="isRelease != null">
+        AND is_release = #{isRelease,jdbcType=INTEGER}
+      </if>
+      <if test="createUser != null">
+        AND  create_user = #{createUser,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        AND create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateUser != null">
+        AND  update_user = #{updateUser,jdbcType=VARCHAR}
+      </if>
+      <if test="updateTime != null">
+        AND  update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+        <if test="orgid != null and orgid !=''">
+        AND  orgid = #{orgid,jdbcType=VARCHAR}
+      </if>
+    </where>
+    GROUP BY create_time DESC
+  </select>
+
+  <select id="findDatabaseStatistics" resultType="com.hengyunsoft.platform.hardware.entity.database.domain.DatabaseStatisticsDO">
+      SELECT
+      count(id) databaseNum ,date_format(create_time,'%Y-%m') time
+      FROM b_hd_database_management
+      WHERE
+      create_time &lt;= DATE_FORMAT(LAST_DAY(curdate()),'%Y-%m-%d 00:00:00')
+      AND create_time &gt;= DATE_FORMAT(date_sub(curdate(), INTERVAL 11 MONTH),'%Y-%m-%01 00:00:00')
+      GROUP BY time
+  </select>
+
+  <select id="findDBTypeRatioStatistics" resultType="com.hengyunsoft.platform.hardware.entity.database.domain.DatabaseTypeRationDO">
+        SELECT COUNT(id) num ,
+        CASE type_
+        WHEN 1 THEN 'Mysql'
+        WHEN 2 THEN 'Oracle'
+        WHEN 3 THEN 'SqlServer'
+        WHEN 4 THEN 'Access'
+        WHEN 5 THEN 'Sybase'
+        ELSE '其他' END type
+        FROM b_hd_database_management
+        GROUP BY type_
+  </select>
+</mapper>

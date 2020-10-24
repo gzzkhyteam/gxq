@@ -1,0 +1,192 @@
+gxqpt:
+  appId: 45kj6317
+  appSecret: exchange45kj6317
+  port:
+    nginx: 10086
+    eureka: 10030
+    gate: ${gxqpt.port.nginx}
+  hostname:
+    redis: 127.0.0.1
+    rabbitmq: 127.0.0.1
+    mysql: 127.0.0.1
+    nginx: 127.0.0.1
+    eureka: 127.0.0.1
+    gate: ${gxqpt.hostname.nginx}     # eureka 实例界面实现的 statu链接
+    exchange: 127.0.0.1
+  mysql:
+    exchange:
+      database: gxqpt-data-share       # 根据环境更改
+      driverClassName: ${gxqpt.mysql.driverClassName}
+      host: ${gxqpt.hostname.mysql}
+      password: ${gxqpt.mysql.password}
+      port: ${gxqpt.mysql.port}
+      url: jdbc:mysql://${gxqpt.mysql.exchange.host}:${gxqpt.mysql.exchange.port}/${gxqpt.mysql.exchange.database}?serverTimezone=CTT&characterEncoding=utf8&useUnicode=true
+      username: ${gxqpt.mysql.username}
+    driverClassName: com.mysql.jdbc.Driver
+    port: 3306                  # 根据环境更改
+    username: root              # 数据库密码需要加密： System.out.println(ConfigTools.encrypt("your mysql password"));
+    password: bNVOqb7WKLX5Bjnw+LMv92taj25KOxDimXxILPQjw42wgv+1lHzOH8kr97xDwWdhpY67QuYCS7sWN4W46YbkFA==
+    jdbcpwd: r!o@o#t$>?.123
+  context-path:
+    eureka: /gxqpt-eureka
+    gate: /api
+
+logging:
+  path: ./logs/gxqpt-exchange-server
+  level:
+#    com.hengyunsoft.platform: debug
+    com.hengyunsoft.platform.admin.open.authority.api: debug
+dozer:
+  mappingFiles: classpath*:dozer/*.dozer.xml
+
+server:
+  context-path:
+  port: 10051
+  undertow:
+    io-threads: 4 # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
+    worker-threads: 80  # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
+    buffer-size: 1024  # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理 , 每块buffer的空间大小,越小的空间被利用越充分
+    buffers-per-region: 1024  # 每个区分配的buffer数量 , 所以pool的大小是buffer-size * buffers-per-region
+    direct-buffers: true  # 是否分配的直接内存
+
+spring:
+  application:
+    name: gxqpt-exchange-server
+  profiles:
+    active: dev
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq}     # 根据环境更改
+    port: 5672               # 根据环境更改
+    password: guest          # 根据环境更改
+    username: guest          # 根据环境更改
+  redis:
+    host: ${gxqpt.hostname.redis} # 根据环境更改
+    port: 6379
+    database: 1
+    pool:
+      max-active: 2
+      min-idle: 1
+      max-idle: 2
+      max-wait: 60
+    key-prefix: dev
+  sleuth:
+    sampler:
+      percentage: 0  #采样率  采用率由网关去控制
+    integration:
+      enabled: false
+    scheduled:
+      skip-pattern: "^org.*HystrixStreamTask$"
+  zipkin:
+    locator:
+      discovery:
+        enabled: true
+#    base-url: http://${gxqpt.hostname.zipkin}:9800
+
+eureka:
+  instance:
+    status-page-url-path: ${server.context-path}${management.context-path}/info
+    health-check-url-path: ${server.context-path}${management.context-path}/health
+    status-page-url: http://${gxqpt.hostname.gate}:${gxqpt.port.gate}${gxqpt.context-path.gate}/exchange${server.context-path}/swagger-ui.html
+    preferIpAddress: true
+    ip-address: ${gxqpt.hostname.exchange}
+    instance-id: ${gxqpt.hostname.exchange}:${server.port}${server.context-path}
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+      management.context-path: ${management.context-path}
+      appId: ${gxqpt.appId}
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+
+management:
+  security:
+    enabled: true
+  context-path: ${server.context-path}/mgmt
+
+security:
+  basic:
+    enabled: true
+    path: ${management.context-path}
+  user:
+    name: admin
+    password: gxqptadmin
+endpoints:
+  health:
+    enabled: true
+    sensitive: true  #actuator的health接口是否需要安全保证
+
+ribbon:
+  eureka:
+    enabled: true
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 1
+  OkToRetryOnAllOperations: false
+
+feign:
+  hystrix:
+    enabled: true
+  compression:
+    request:
+      enabled: true
+      mime-types: text/xml,application/xml,application/json
+      min-request-size: 2048
+    response:
+      enabled: true
+hystrix:
+  config:
+    stream:
+      maxConcurrentConnections: 50
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+  propagate:
+    request-attribute:
+      enabled: true
+
+swagger2:
+  exchange-map:
+    title: 共享交换服务
+    description: 高新区一体化平台项目，共享交换服务接口
+    base-path: ${gxqpt.context-path.gate}/exchange
+    impl-package: com.hengyunsoft.platform.exchange.impl
+    open-package: com.hengyunsoft.platform.exchange.open
+  contact-name: 中科恒运
+  contact-url: http://www.hengyunsoft.com/
+  contact-email: zkhy@hengyunsoft.com
+  host: ${gxqpt.hostname.gate}:${gxqpt.port.gate}
+
+
+auth:
+  serviceId: gxqpt-auth-server
+  app:
+    token-header: token # 其三方应用token
+    pub-key:
+      path: app/pub.key
+  client:
+    id: gxqpt-exchange-server
+    secret: 123456
+    token-header: token
+    admin-header: _isAdmin
+    user-id: _user_id
+    user-name: _user_name
+    pub-key:
+      path: client/pub.key
+
+id-generator:
+  machine-code: 1  # id生成器机器掩码
+
+app:
+  id: 35kj6100
+  name: 共享交换系统
+info:
+  contact:
+    email: xxx@hengyunsoft.com
+    phone: 10086
+  app: 权限管理服务
+

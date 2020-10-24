@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.hardware.repository.equipmentMonitor.dao.EquipmentMonitorReportMapper">
+  <resultMap id="BaseResultMaps" type="com.hengyunsoft.platform.hardware.entity.equipmentMonitor.domain.EquipmentMonitorReportDO">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="host_mg_id" jdbcType="BIGINT" property="hostMgId" />
+    <result column="year_" jdbcType="INTEGER" property="year" />
+    <result column="month_" jdbcType="INTEGER" property="month" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="file_size" jdbcType="INTEGER" property="fileSize" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="file_url" jdbcType="VARCHAR" property="fileUrl" />
+  </resultMap>
+  <select id="pageNewest" resultMap="BaseResultMaps">
+	<!--select
+		emr.id,emr.year_,emr.month_,group_concat(att.file_name) file_name,sum(att.file_size) file_size,
+		emr.create_user_name,emr.create_time,group_concat(att.file_url) file_url
+	from b_hd_equipment_monitor_report emr
+	left join b_hd_equipment_monitor em on emr.host_mg_id = em.id
+	left join b_hd_attachment att on att.bus_id =emr.id
+	where emr.is_delete = 0
+	<if test="emr.hostMgId != null">and emr.host_mg_id = ${emr.hostMgId} </if>
+	<if test="emr.year != null">and emr.year_ = ${emr.year} </if>
+	<if test="emr.month != null">and emr.month_ = ${emr.month} </if>
+	group by em.id
+	order by create_time desc-->
+      select
+      emr.id,emr.year_,emr.month_,att.file_name file_name,att.file_size file_size,
+      emr.create_user_name,emr.create_time,att.file_url file_url
+      from b_hd_equipment_monitor_report emr
+      left join b_hd_equipment_monitor em on emr.host_mg_id = em.id
+      left join b_hd_attachment att on att.bus_id =emr.id
+      where emr.is_delete = 0
+      <if test="emr.hostMgId != null">and emr.host_mg_id = ${emr.hostMgId} </if>
+      <if test="emr.year != null">and emr.year_ = ${emr.year} </if>
+      <if test="emr.month != null">and emr.month_ = ${emr.month} </if>
+      order by create_time desc
+</select>
+</mapper>

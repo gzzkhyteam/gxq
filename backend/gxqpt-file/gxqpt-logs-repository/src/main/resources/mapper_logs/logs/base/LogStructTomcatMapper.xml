@@ -1,0 +1,1059 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogStructTomcatMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.logs.entity.logs.po.LogStructTomcat">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="document_id" jdbcType="VARCHAR" property="documentId" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="remote_ip" jdbcType="VARCHAR" property="remoteIp" />
+    <result column="local_ip" jdbcType="VARCHAR" property="localIp" />
+    <result column="send_byte_littleb" jdbcType="VARCHAR" property="sendByteLittleb" />
+    <result column="send_byte_bigb" jdbcType="VARCHAR" property="sendByteBigb" />
+    <result column="remote_host" jdbcType="VARCHAR" property="remoteHost" />
+    <result column="request_agreement" jdbcType="VARCHAR" property="requestAgreement" />
+    <result column="identd_user" jdbcType="VARCHAR" property="identdUser" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="port" jdbcType="VARCHAR" property="port" />
+    <result column="query_str" jdbcType="VARCHAR" property="queryStr" />
+    <result column="first_line" jdbcType="VARCHAR" property="firstLine" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="session_id" jdbcType="VARCHAR" property="sessionId" />
+    <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
+    <result column="remote_check_user" jdbcType="VARCHAR" property="remoteCheckUser" />
+    <result column="request_url" jdbcType="VARCHAR" property="requestUrl" />
+    <result column="local_host" jdbcType="VARCHAR" property="localHost" />
+    <result column="deal_request_millisecond" jdbcType="BIGINT" property="dealRequestMillisecond" />
+    <result column="time_consum" jdbcType="BIGINT" property="timeConsum" />
+    <result column="current_line" jdbcType="VARCHAR" property="currentLine" />
+    <result column="accept" jdbcType="VARCHAR" property="accept" />
+    <result column="accept_encoding" jdbcType="VARCHAR" property="acceptEncoding" />
+    <result column="accept_language" jdbcType="VARCHAR" property="acceptLanguage" />
+    <result column="connection_i" jdbcType="VARCHAR" property="connectionI" />
+    <result column="cookie" jdbcType="VARCHAR" property="cookie" />
+    <result column="host" jdbcType="VARCHAR" property="host" />
+    <result column="referer" jdbcType="VARCHAR" property="referer" />
+    <result column="user_agent" jdbcType="VARCHAR" property="userAgent" />
+    <result column="allow_credential" jdbcType="VARCHAR" property="allowCredential" />
+    <result column="access_control_allow_origin" jdbcType="VARCHAR" property="accessControlAllowOrigin" />
+    <result column="transfer_encoding" jdbcType="VARCHAR" property="transferEncoding" />
+    <result column="vary" jdbcType="VARCHAR" property="vary" />
+    <result column="x_application_context" jdbcType="VARCHAR" property="xApplicationContext" />
+    <result column="date_o" jdbcType="TIMESTAMP" property="dateO" />
+    <result column="server" jdbcType="VARCHAR" property="server" />
+    <result column="connection_o" jdbcType="VARCHAR" property="connectionO" />
+    <result column="content_type" jdbcType="VARCHAR" property="contentType" />
+    <result column="cache_control" jdbcType="VARCHAR" property="cacheControl" />
+    <result column="xxx_c" jdbcType="VARCHAR" property="xxxC" />
+    <result column="xxx_r" jdbcType="VARCHAR" property="xxxR" />
+    <result column="xxx_s" jdbcType="VARCHAR" property="xxxS" />
+    <result column="data_channel" jdbcType="VARCHAR" property="dataChannel" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, document_id, app_id, remote_ip, local_ip, send_byte_littleb, send_byte_bigb, 
+    remote_host, request_agreement, identd_user, method, port, query_str, first_line, 
+    status, session_id, log_time, remote_check_user, request_url, local_host, deal_request_millisecond, 
+    time_consum, current_line, accept, accept_encoding, accept_language, connection_i, 
+    cookie, host, referer, user_agent, allow_credential, access_control_allow_origin, 
+    transfer_encoding, vary, x_application_context, date_o, server, connection_o, content_type, 
+    cache_control, xxx_c, xxx_r, xxx_s, data_channel, create_time, create_user, update_time, 
+    update_user, create_user_name, update_user_name
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructTomcatExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from log_struct_tomcat
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from log_struct_tomcat
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructTomcatExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from log_struct_tomcat
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from log_struct_tomcat
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructTomcatExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from log_struct_tomcat
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructTomcat">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_tomcat
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructTomcat">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_tomcat
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructTomcat">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_struct_tomcat (id, document_id, app_id, 
+      remote_ip, local_ip, send_byte_littleb, 
+      send_byte_bigb, remote_host, request_agreement, 
+      identd_user, method, port, 
+      query_str, first_line, status, 
+      session_id, log_time, remote_check_user, 
+      request_url, local_host, deal_request_millisecond, 
+      time_consum, current_line, accept, 
+      accept_encoding, accept_language, connection_i, 
+      cookie, host, referer, 
+      user_agent, allow_credential, access_control_allow_origin, 
+      transfer_encoding, vary, x_application_context, 
+      date_o, server, connection_o, 
+      content_type, cache_control, xxx_c, 
+      xxx_r, xxx_s, data_channel, 
+      create_time, create_user, update_time, 
+      update_user, create_user_name, update_user_name
+      )
+    values (#{id,jdbcType=BIGINT}, #{documentId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, 
+      #{remoteIp,jdbcType=VARCHAR}, #{localIp,jdbcType=VARCHAR}, #{sendByteLittleb,jdbcType=VARCHAR}, 
+      #{sendByteBigb,jdbcType=VARCHAR}, #{remoteHost,jdbcType=VARCHAR}, #{requestAgreement,jdbcType=VARCHAR}, 
+      #{identdUser,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{port,jdbcType=VARCHAR}, 
+      #{queryStr,jdbcType=VARCHAR}, #{firstLine,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{sessionId,jdbcType=VARCHAR}, #{logTime,jdbcType=TIMESTAMP}, #{remoteCheckUser,jdbcType=VARCHAR}, 
+      #{requestUrl,jdbcType=VARCHAR}, #{localHost,jdbcType=VARCHAR}, #{dealRequestMillisecond,jdbcType=BIGINT}, 
+      #{timeConsum,jdbcType=BIGINT}, #{currentLine,jdbcType=VARCHAR}, #{accept,jdbcType=VARCHAR}, 
+      #{acceptEncoding,jdbcType=VARCHAR}, #{acceptLanguage,jdbcType=VARCHAR}, #{connectionI,jdbcType=VARCHAR}, 
+      #{cookie,jdbcType=VARCHAR}, #{host,jdbcType=VARCHAR}, #{referer,jdbcType=VARCHAR}, 
+      #{userAgent,jdbcType=VARCHAR}, #{allowCredential,jdbcType=VARCHAR}, #{accessControlAllowOrigin,jdbcType=VARCHAR}, 
+      #{transferEncoding,jdbcType=VARCHAR}, #{vary,jdbcType=VARCHAR}, #{xApplicationContext,jdbcType=VARCHAR}, 
+      #{dateO,jdbcType=TIMESTAMP}, #{server,jdbcType=VARCHAR}, #{connectionO,jdbcType=VARCHAR}, 
+      #{contentType,jdbcType=VARCHAR}, #{cacheControl,jdbcType=VARCHAR}, #{xxxC,jdbcType=VARCHAR}, 
+      #{xxxR,jdbcType=VARCHAR}, #{xxxS,jdbcType=VARCHAR}, #{dataChannel,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT}, #{createUserName,jdbcType=VARCHAR}, #{updateUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_struct_tomcat (id, document_id, app_id, remote_ip, local_ip, send_byte_littleb, send_byte_bigb, remote_host, request_agreement, identd_user, method, port, query_str, first_line, status, session_id, log_time, remote_check_user, request_url, local_host, deal_request_millisecond, time_consum, current_line, accept, accept_encoding, accept_language, connection_i, cookie, host, referer, user_agent, allow_credential, access_control_allow_origin, transfer_encoding, vary, x_application_context, date_o, server, connection_o, content_type, cache_control, xxx_c, xxx_r, xxx_s, data_channel, create_time, create_user, update_time, update_user, create_user_name, update_user_name ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.documentId,jdbcType=VARCHAR}, #{item.appId,jdbcType=VARCHAR}, 
+        #{item.remoteIp,jdbcType=VARCHAR}, #{item.localIp,jdbcType=VARCHAR}, #{item.sendByteLittleb,jdbcType=VARCHAR}, 
+        #{item.sendByteBigb,jdbcType=VARCHAR}, #{item.remoteHost,jdbcType=VARCHAR}, #{item.requestAgreement,jdbcType=VARCHAR}, 
+        #{item.identdUser,jdbcType=VARCHAR}, #{item.method,jdbcType=VARCHAR}, #{item.port,jdbcType=VARCHAR}, 
+        #{item.queryStr,jdbcType=VARCHAR}, #{item.firstLine,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR}, 
+        #{item.sessionId,jdbcType=VARCHAR}, #{item.logTime,jdbcType=TIMESTAMP}, #{item.remoteCheckUser,jdbcType=VARCHAR}, 
+        #{item.requestUrl,jdbcType=VARCHAR}, #{item.localHost,jdbcType=VARCHAR}, #{item.dealRequestMillisecond,jdbcType=BIGINT}, 
+        #{item.timeConsum,jdbcType=BIGINT}, #{item.currentLine,jdbcType=VARCHAR}, #{item.accept,jdbcType=VARCHAR}, 
+        #{item.acceptEncoding,jdbcType=VARCHAR}, #{item.acceptLanguage,jdbcType=VARCHAR}, 
+        #{item.connectionI,jdbcType=VARCHAR}, #{item.cookie,jdbcType=VARCHAR}, #{item.host,jdbcType=VARCHAR}, 
+        #{item.referer,jdbcType=VARCHAR}, #{item.userAgent,jdbcType=VARCHAR}, #{item.allowCredential,jdbcType=VARCHAR}, 
+        #{item.accessControlAllowOrigin,jdbcType=VARCHAR}, #{item.transferEncoding,jdbcType=VARCHAR}, 
+        #{item.vary,jdbcType=VARCHAR}, #{item.xApplicationContext,jdbcType=VARCHAR}, #{item.dateO,jdbcType=TIMESTAMP}, 
+        #{item.server,jdbcType=VARCHAR}, #{item.connectionO,jdbcType=VARCHAR}, #{item.contentType,jdbcType=VARCHAR}, 
+        #{item.cacheControl,jdbcType=VARCHAR}, #{item.xxxC,jdbcType=VARCHAR}, #{item.xxxR,jdbcType=VARCHAR}, 
+        #{item.xxxS,jdbcType=VARCHAR}, #{item.dataChannel,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.createUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, 
+        #{item.createUserName,jdbcType=VARCHAR}, #{item.updateUserName,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructTomcat">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_struct_tomcat
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="documentId != null">
+        document_id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="remoteIp != null">
+        remote_ip,
+      </if>
+      <if test="localIp != null">
+        local_ip,
+      </if>
+      <if test="sendByteLittleb != null">
+        send_byte_littleb,
+      </if>
+      <if test="sendByteBigb != null">
+        send_byte_bigb,
+      </if>
+      <if test="remoteHost != null">
+        remote_host,
+      </if>
+      <if test="requestAgreement != null">
+        request_agreement,
+      </if>
+      <if test="identdUser != null">
+        identd_user,
+      </if>
+      <if test="method != null">
+        method,
+      </if>
+      <if test="port != null">
+        port,
+      </if>
+      <if test="queryStr != null">
+        query_str,
+      </if>
+      <if test="firstLine != null">
+        first_line,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="sessionId != null">
+        session_id,
+      </if>
+      <if test="logTime != null">
+        log_time,
+      </if>
+      <if test="remoteCheckUser != null">
+        remote_check_user,
+      </if>
+      <if test="requestUrl != null">
+        request_url,
+      </if>
+      <if test="localHost != null">
+        local_host,
+      </if>
+      <if test="dealRequestMillisecond != null">
+        deal_request_millisecond,
+      </if>
+      <if test="timeConsum != null">
+        time_consum,
+      </if>
+      <if test="currentLine != null">
+        current_line,
+      </if>
+      <if test="accept != null">
+        accept,
+      </if>
+      <if test="acceptEncoding != null">
+        accept_encoding,
+      </if>
+      <if test="acceptLanguage != null">
+        accept_language,
+      </if>
+      <if test="connectionI != null">
+        connection_i,
+      </if>
+      <if test="cookie != null">
+        cookie,
+      </if>
+      <if test="host != null">
+        host,
+      </if>
+      <if test="referer != null">
+        referer,
+      </if>
+      <if test="userAgent != null">
+        user_agent,
+      </if>
+      <if test="allowCredential != null">
+        allow_credential,
+      </if>
+      <if test="accessControlAllowOrigin != null">
+        access_control_allow_origin,
+      </if>
+      <if test="transferEncoding != null">
+        transfer_encoding,
+      </if>
+      <if test="vary != null">
+        vary,
+      </if>
+      <if test="xApplicationContext != null">
+        x_application_context,
+      </if>
+      <if test="dateO != null">
+        date_o,
+      </if>
+      <if test="server != null">
+        server,
+      </if>
+      <if test="connectionO != null">
+        connection_o,
+      </if>
+      <if test="contentType != null">
+        content_type,
+      </if>
+      <if test="cacheControl != null">
+        cache_control,
+      </if>
+      <if test="xxxC != null">
+        xxx_c,
+      </if>
+      <if test="xxxR != null">
+        xxx_r,
+      </if>
+      <if test="xxxS != null">
+        xxx_s,
+      </if>
+      <if test="dataChannel != null">
+        data_channel,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="updateUserName != null">
+        update_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="documentId != null">
+        #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteIp != null">
+        #{remoteIp,jdbcType=VARCHAR},
+      </if>
+      <if test="localIp != null">
+        #{localIp,jdbcType=VARCHAR},
+      </if>
+      <if test="sendByteLittleb != null">
+        #{sendByteLittleb,jdbcType=VARCHAR},
+      </if>
+      <if test="sendByteBigb != null">
+        #{sendByteBigb,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteHost != null">
+        #{remoteHost,jdbcType=VARCHAR},
+      </if>
+      <if test="requestAgreement != null">
+        #{requestAgreement,jdbcType=VARCHAR},
+      </if>
+      <if test="identdUser != null">
+        #{identdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="queryStr != null">
+        #{queryStr,jdbcType=VARCHAR},
+      </if>
+      <if test="firstLine != null">
+        #{firstLine,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionId != null">
+        #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null">
+        #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remoteCheckUser != null">
+        #{remoteCheckUser,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUrl != null">
+        #{requestUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="localHost != null">
+        #{localHost,jdbcType=VARCHAR},
+      </if>
+      <if test="dealRequestMillisecond != null">
+        #{dealRequestMillisecond,jdbcType=BIGINT},
+      </if>
+      <if test="timeConsum != null">
+        #{timeConsum,jdbcType=BIGINT},
+      </if>
+      <if test="currentLine != null">
+        #{currentLine,jdbcType=VARCHAR},
+      </if>
+      <if test="accept != null">
+        #{accept,jdbcType=VARCHAR},
+      </if>
+      <if test="acceptEncoding != null">
+        #{acceptEncoding,jdbcType=VARCHAR},
+      </if>
+      <if test="acceptLanguage != null">
+        #{acceptLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="connectionI != null">
+        #{connectionI,jdbcType=VARCHAR},
+      </if>
+      <if test="cookie != null">
+        #{cookie,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null">
+        #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="referer != null">
+        #{referer,jdbcType=VARCHAR},
+      </if>
+      <if test="userAgent != null">
+        #{userAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="allowCredential != null">
+        #{allowCredential,jdbcType=VARCHAR},
+      </if>
+      <if test="accessControlAllowOrigin != null">
+        #{accessControlAllowOrigin,jdbcType=VARCHAR},
+      </if>
+      <if test="transferEncoding != null">
+        #{transferEncoding,jdbcType=VARCHAR},
+      </if>
+      <if test="vary != null">
+        #{vary,jdbcType=VARCHAR},
+      </if>
+      <if test="xApplicationContext != null">
+        #{xApplicationContext,jdbcType=VARCHAR},
+      </if>
+      <if test="dateO != null">
+        #{dateO,jdbcType=TIMESTAMP},
+      </if>
+      <if test="server != null">
+        #{server,jdbcType=VARCHAR},
+      </if>
+      <if test="connectionO != null">
+        #{connectionO,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null">
+        #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="cacheControl != null">
+        #{cacheControl,jdbcType=VARCHAR},
+      </if>
+      <if test="xxxC != null">
+        #{xxxC,jdbcType=VARCHAR},
+      </if>
+      <if test="xxxR != null">
+        #{xxxR,jdbcType=VARCHAR},
+      </if>
+      <if test="xxxS != null">
+        #{xxxS,jdbcType=VARCHAR},
+      </if>
+      <if test="dataChannel != null">
+        #{dataChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null">
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructTomcatExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from log_struct_tomcat
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_tomcat
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.documentId != null">
+        document_id = #{record.documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remoteIp != null">
+        remote_ip = #{record.remoteIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.localIp != null">
+        local_ip = #{record.localIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendByteLittleb != null">
+        send_byte_littleb = #{record.sendByteLittleb,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendByteBigb != null">
+        send_byte_bigb = #{record.sendByteBigb,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remoteHost != null">
+        remote_host = #{record.remoteHost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requestAgreement != null">
+        request_agreement = #{record.requestAgreement,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identdUser != null">
+        identd_user = #{record.identdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.method != null">
+        method = #{record.method,jdbcType=VARCHAR},
+      </if>
+      <if test="record.port != null">
+        port = #{record.port,jdbcType=VARCHAR},
+      </if>
+      <if test="record.queryStr != null">
+        query_str = #{record.queryStr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.firstLine != null">
+        first_line = #{record.firstLine,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sessionId != null">
+        session_id = #{record.sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logTime != null">
+        log_time = #{record.logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remoteCheckUser != null">
+        remote_check_user = #{record.remoteCheckUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requestUrl != null">
+        request_url = #{record.requestUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.localHost != null">
+        local_host = #{record.localHost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dealRequestMillisecond != null">
+        deal_request_millisecond = #{record.dealRequestMillisecond,jdbcType=BIGINT},
+      </if>
+      <if test="record.timeConsum != null">
+        time_consum = #{record.timeConsum,jdbcType=BIGINT},
+      </if>
+      <if test="record.currentLine != null">
+        current_line = #{record.currentLine,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accept != null">
+        accept = #{record.accept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.acceptEncoding != null">
+        accept_encoding = #{record.acceptEncoding,jdbcType=VARCHAR},
+      </if>
+      <if test="record.acceptLanguage != null">
+        accept_language = #{record.acceptLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.connectionI != null">
+        connection_i = #{record.connectionI,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cookie != null">
+        cookie = #{record.cookie,jdbcType=VARCHAR},
+      </if>
+      <if test="record.host != null">
+        host = #{record.host,jdbcType=VARCHAR},
+      </if>
+      <if test="record.referer != null">
+        referer = #{record.referer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userAgent != null">
+        user_agent = #{record.userAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.allowCredential != null">
+        allow_credential = #{record.allowCredential,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accessControlAllowOrigin != null">
+        access_control_allow_origin = #{record.accessControlAllowOrigin,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transferEncoding != null">
+        transfer_encoding = #{record.transferEncoding,jdbcType=VARCHAR},
+      </if>
+      <if test="record.vary != null">
+        vary = #{record.vary,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xApplicationContext != null">
+        x_application_context = #{record.xApplicationContext,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dateO != null">
+        date_o = #{record.dateO,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.server != null">
+        server = #{record.server,jdbcType=VARCHAR},
+      </if>
+      <if test="record.connectionO != null">
+        connection_o = #{record.connectionO,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contentType != null">
+        content_type = #{record.contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cacheControl != null">
+        cache_control = #{record.cacheControl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xxxC != null">
+        xxx_c = #{record.xxxC,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xxxR != null">
+        xxx_r = #{record.xxxR,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xxxS != null">
+        xxx_s = #{record.xxxS,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataChannel != null">
+        data_channel = #{record.dataChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createUserName != null">
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUserName != null">
+        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_tomcat
+    set id = #{record.id,jdbcType=BIGINT},
+      document_id = #{record.documentId,jdbcType=VARCHAR},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      remote_ip = #{record.remoteIp,jdbcType=VARCHAR},
+      local_ip = #{record.localIp,jdbcType=VARCHAR},
+      send_byte_littleb = #{record.sendByteLittleb,jdbcType=VARCHAR},
+      send_byte_bigb = #{record.sendByteBigb,jdbcType=VARCHAR},
+      remote_host = #{record.remoteHost,jdbcType=VARCHAR},
+      request_agreement = #{record.requestAgreement,jdbcType=VARCHAR},
+      identd_user = #{record.identdUser,jdbcType=VARCHAR},
+      method = #{record.method,jdbcType=VARCHAR},
+      port = #{record.port,jdbcType=VARCHAR},
+      query_str = #{record.queryStr,jdbcType=VARCHAR},
+      first_line = #{record.firstLine,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      session_id = #{record.sessionId,jdbcType=VARCHAR},
+      log_time = #{record.logTime,jdbcType=TIMESTAMP},
+      remote_check_user = #{record.remoteCheckUser,jdbcType=VARCHAR},
+      request_url = #{record.requestUrl,jdbcType=VARCHAR},
+      local_host = #{record.localHost,jdbcType=VARCHAR},
+      deal_request_millisecond = #{record.dealRequestMillisecond,jdbcType=BIGINT},
+      time_consum = #{record.timeConsum,jdbcType=BIGINT},
+      current_line = #{record.currentLine,jdbcType=VARCHAR},
+      accept = #{record.accept,jdbcType=VARCHAR},
+      accept_encoding = #{record.acceptEncoding,jdbcType=VARCHAR},
+      accept_language = #{record.acceptLanguage,jdbcType=VARCHAR},
+      connection_i = #{record.connectionI,jdbcType=VARCHAR},
+      cookie = #{record.cookie,jdbcType=VARCHAR},
+      host = #{record.host,jdbcType=VARCHAR},
+      referer = #{record.referer,jdbcType=VARCHAR},
+      user_agent = #{record.userAgent,jdbcType=VARCHAR},
+      allow_credential = #{record.allowCredential,jdbcType=VARCHAR},
+      access_control_allow_origin = #{record.accessControlAllowOrigin,jdbcType=VARCHAR},
+      transfer_encoding = #{record.transferEncoding,jdbcType=VARCHAR},
+      vary = #{record.vary,jdbcType=VARCHAR},
+      x_application_context = #{record.xApplicationContext,jdbcType=VARCHAR},
+      date_o = #{record.dateO,jdbcType=TIMESTAMP},
+      server = #{record.server,jdbcType=VARCHAR},
+      connection_o = #{record.connectionO,jdbcType=VARCHAR},
+      content_type = #{record.contentType,jdbcType=VARCHAR},
+      cache_control = #{record.cacheControl,jdbcType=VARCHAR},
+      xxx_c = #{record.xxxC,jdbcType=VARCHAR},
+      xxx_r = #{record.xxxR,jdbcType=VARCHAR},
+      xxx_s = #{record.xxxS,jdbcType=VARCHAR},
+      data_channel = #{record.dataChannel,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructTomcat">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_tomcat
+    <set>
+      <if test="documentId != null">
+        document_id = #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteIp != null">
+        remote_ip = #{remoteIp,jdbcType=VARCHAR},
+      </if>
+      <if test="localIp != null">
+        local_ip = #{localIp,jdbcType=VARCHAR},
+      </if>
+      <if test="sendByteLittleb != null">
+        send_byte_littleb = #{sendByteLittleb,jdbcType=VARCHAR},
+      </if>
+      <if test="sendByteBigb != null">
+        send_byte_bigb = #{sendByteBigb,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteHost != null">
+        remote_host = #{remoteHost,jdbcType=VARCHAR},
+      </if>
+      <if test="requestAgreement != null">
+        request_agreement = #{requestAgreement,jdbcType=VARCHAR},
+      </if>
+      <if test="identdUser != null">
+        identd_user = #{identdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        method = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        port = #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="queryStr != null">
+        query_str = #{queryStr,jdbcType=VARCHAR},
+      </if>
+      <if test="firstLine != null">
+        first_line = #{firstLine,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionId != null">
+        session_id = #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null">
+        log_time = #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remoteCheckUser != null">
+        remote_check_user = #{remoteCheckUser,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUrl != null">
+        request_url = #{requestUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="localHost != null">
+        local_host = #{localHost,jdbcType=VARCHAR},
+      </if>
+      <if test="dealRequestMillisecond != null">
+        deal_request_millisecond = #{dealRequestMillisecond,jdbcType=BIGINT},
+      </if>
+      <if test="timeConsum != null">
+        time_consum = #{timeConsum,jdbcType=BIGINT},
+      </if>
+      <if test="currentLine != null">
+        current_line = #{currentLine,jdbcType=VARCHAR},
+      </if>
+      <if test="accept != null">
+        accept = #{accept,jdbcType=VARCHAR},
+      </if>
+      <if test="acceptEncoding != null">
+        accept_encoding = #{acceptEncoding,jdbcType=VARCHAR},
+      </if>
+      <if test="acceptLanguage != null">
+        accept_language = #{acceptLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="connectionI != null">
+        connection_i = #{connectionI,jdbcType=VARCHAR},
+      </if>
+      <if test="cookie != null">
+        cookie = #{cookie,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null">
+        host = #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="referer != null">
+        referer = #{referer,jdbcType=VARCHAR},
+      </if>
+      <if test="userAgent != null">
+        user_agent = #{userAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="allowCredential != null">
+        allow_credential = #{allowCredential,jdbcType=VARCHAR},
+      </if>
+      <if test="accessControlAllowOrigin != null">
+        access_control_allow_origin = #{accessControlAllowOrigin,jdbcType=VARCHAR},
+      </if>
+      <if test="transferEncoding != null">
+        transfer_encoding = #{transferEncoding,jdbcType=VARCHAR},
+      </if>
+      <if test="vary != null">
+        vary = #{vary,jdbcType=VARCHAR},
+      </if>
+      <if test="xApplicationContext != null">
+        x_application_context = #{xApplicationContext,jdbcType=VARCHAR},
+      </if>
+      <if test="dateO != null">
+        date_o = #{dateO,jdbcType=TIMESTAMP},
+      </if>
+      <if test="server != null">
+        server = #{server,jdbcType=VARCHAR},
+      </if>
+      <if test="connectionO != null">
+        connection_o = #{connectionO,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null">
+        content_type = #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="cacheControl != null">
+        cache_control = #{cacheControl,jdbcType=VARCHAR},
+      </if>
+      <if test="xxxC != null">
+        xxx_c = #{xxxC,jdbcType=VARCHAR},
+      </if>
+      <if test="xxxR != null">
+        xxx_r = #{xxxR,jdbcType=VARCHAR},
+      </if>
+      <if test="xxxS != null">
+        xxx_s = #{xxxS,jdbcType=VARCHAR},
+      </if>
+      <if test="dataChannel != null">
+        data_channel = #{dataChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null">
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructTomcat">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_tomcat
+    set document_id = #{documentId,jdbcType=VARCHAR},
+      app_id = #{appId,jdbcType=VARCHAR},
+      remote_ip = #{remoteIp,jdbcType=VARCHAR},
+      local_ip = #{localIp,jdbcType=VARCHAR},
+      send_byte_littleb = #{sendByteLittleb,jdbcType=VARCHAR},
+      send_byte_bigb = #{sendByteBigb,jdbcType=VARCHAR},
+      remote_host = #{remoteHost,jdbcType=VARCHAR},
+      request_agreement = #{requestAgreement,jdbcType=VARCHAR},
+      identd_user = #{identdUser,jdbcType=VARCHAR},
+      method = #{method,jdbcType=VARCHAR},
+      port = #{port,jdbcType=VARCHAR},
+      query_str = #{queryStr,jdbcType=VARCHAR},
+      first_line = #{firstLine,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      session_id = #{sessionId,jdbcType=VARCHAR},
+      log_time = #{logTime,jdbcType=TIMESTAMP},
+      remote_check_user = #{remoteCheckUser,jdbcType=VARCHAR},
+      request_url = #{requestUrl,jdbcType=VARCHAR},
+      local_host = #{localHost,jdbcType=VARCHAR},
+      deal_request_millisecond = #{dealRequestMillisecond,jdbcType=BIGINT},
+      time_consum = #{timeConsum,jdbcType=BIGINT},
+      current_line = #{currentLine,jdbcType=VARCHAR},
+      accept = #{accept,jdbcType=VARCHAR},
+      accept_encoding = #{acceptEncoding,jdbcType=VARCHAR},
+      accept_language = #{acceptLanguage,jdbcType=VARCHAR},
+      connection_i = #{connectionI,jdbcType=VARCHAR},
+      cookie = #{cookie,jdbcType=VARCHAR},
+      host = #{host,jdbcType=VARCHAR},
+      referer = #{referer,jdbcType=VARCHAR},
+      user_agent = #{userAgent,jdbcType=VARCHAR},
+      allow_credential = #{allowCredential,jdbcType=VARCHAR},
+      access_control_allow_origin = #{accessControlAllowOrigin,jdbcType=VARCHAR},
+      transfer_encoding = #{transferEncoding,jdbcType=VARCHAR},
+      vary = #{vary,jdbcType=VARCHAR},
+      x_application_context = #{xApplicationContext,jdbcType=VARCHAR},
+      date_o = #{dateO,jdbcType=TIMESTAMP},
+      server = #{server,jdbcType=VARCHAR},
+      connection_o = #{connectionO,jdbcType=VARCHAR},
+      content_type = #{contentType,jdbcType=VARCHAR},
+      cache_control = #{cacheControl,jdbcType=VARCHAR},
+      xxx_c = #{xxxC,jdbcType=VARCHAR},
+      xxx_r = #{xxxR,jdbcType=VARCHAR},
+      xxx_s = #{xxxS,jdbcType=VARCHAR},
+      data_channel = #{dataChannel,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

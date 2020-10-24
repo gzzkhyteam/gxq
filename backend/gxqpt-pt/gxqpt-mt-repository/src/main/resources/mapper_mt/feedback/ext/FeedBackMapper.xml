@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.feedback.dao.FeedBackMapper">
+    <resultMap id="FeeBaseResultMap" type="com.hengyunsoft.platform.mt.entity.feedback.po.FeedBackBase">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="appli_id" jdbcType="INTEGER" property="appliId"/>
+        <result column="fb_title" jdbcType="VARCHAR" property="fbTitle"/>
+        <result column="fb_content" jdbcType="VARCHAR" property="fbContent"/>
+        <result column="fb_emergency" jdbcType="INTEGER" property="fbEmergency"/>
+        <result column="fb_state" jdbcType="INTEGER" property="fbState"/>
+        <result column="fb_close_name" jdbcType="VARCHAR" property="fbCloseName"/>
+        <result column="fb_close_time" jdbcType="TIMESTAMP" property="fbCloseTime"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="msg_not_read" jdbcType="TIMESTAMP" property="msgNotRead"/>
+        <result column="msg_total" jdbcType="TIMESTAMP" property="msgTotal"/>
+    </resultMap>
+    <!--web端查询已经反馈列表-->
+    <select id="findFeedBackList" parameterType="map" resultMap="FeeBaseResultMap">
+        SELECT
+        f.id,
+        f.fb_title,
+        f.appli_id,
+        (SELECT a.app_name FROM `b_application` a WHERE f.appli_id = a.id) app_name,
+        f.fb_content,
+        f.fb_emergency,
+        f.fb_state,
+        f.fb_close_id,
+        f.fb_close_name,
+        f.fb_close_time,
+        f.create_user_name,
+        f.create_time,
+        f.create_user,
+        (SELECT COUNT(1) FROM b_feedback_msg m WHERE m.fb_id = f.id AND m.create_user = f.create_user) msg_total,
+        (SELECT COUNT(1) FROM b_feedback_msg m WHERE m.fb_id = f.id AND m.create_user = f.create_user AND m.isread =1 )
+        msg_not_read
+        FROM
+        b_feedback AS f
+
+        <where>
+            <if test="createUser != null">
+                AND f.create_user= #{createUser}
+            </if>
+            <if test="fbTitle != null and fbTitle !=''">
+                AND f.fb_title LIKE CONCAT('%',#{fbTitle},'%')
+            </if>
+            <if test="fbContent != null and fbContent !=''">
+                AND f.fb_content LIKE CONCAT('%',#{fbContent},'%')
+            </if>
+            <if test="fbState != null">
+                AND f.fb_state= #{fbState}
+            </if>
+            <if test="fbEmergency != null ">
+                AND f.fb_emergency= #{fbEmergency}
+            </if>
+            <if test="startCreateTime != null">
+                AND f.create_time >=#{startCreateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endCreateTime != null">
+                AND #{endCreateTime,jdbcType=TIMESTAMP}>=f.create_time
+            </if>
+        </where>
+        ORDER BY f.create_time DESC
+    </select>
+    <!--app端查询我的意见反馈列表-->
+    <select id="appFindFeedBackList" parameterType="java.util.Map" resultMap="FeeBaseResultMap">
+        SELECT
+        f.id,
+        f.fb_title,
+        f.appli_id,
+        (SELECT a.app_name FROM `b_application` a WHERE f.appli_id = a.id) app_name,
+        f.fb_content,
+        f.fb_emergency,
+        f.fb_state,
+        f.fb_close_id,
+        f.fb_close_name,
+        f.fb_close_time,
+        f.create_user_name,
+        f.create_time,
+        f.create_user,
+        (SELECT COUNT(1) FROM b_feedback_msg m WHERE m.fb_id = f.id) msg_total,
+        (SELECT COUNT(1) FROM b_feedback_msg m WHERE m.fb_id = f.id AND m.create_user != f.create_user AND m.isread =1 )
+        msg_not_read
+        FROM
+        b_feedback AS f
+
+        <where>
+            AND f.create_user= #{createUser}
+        </where>
+        ORDER BY f.create_time DESC
+    </select>
+    <!--查询用户未读的回复消息数量-->
+    <select id="getNotReadCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+            FROM
+             b_feedback_msg m
+            LEFT JOIN b_feedback f ON m.fb_id = f.id
+            AND m.create_user !=  #{createUser}
+            AND m.isread = 1
+        WHERE
+         f.create_user =  #{createUser}
+    </select>
+</mapper>

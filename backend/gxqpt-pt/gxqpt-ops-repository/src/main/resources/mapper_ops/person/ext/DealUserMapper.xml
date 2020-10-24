@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.person.dao.DealUserMapper">
+
+    <resultMap id="DealResultMap" type="com.hengyunsoft.platform.ops.entity.person.po.DealUser">
+
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="buss_id" jdbcType="BIGINT" property="bussId" />
+        <result column="person_id" jdbcType="BIGINT" property="personId" />
+        <result column="person_name" jdbcType="VARCHAR" property="personName" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+
+    <select id="getByBussId" resultMap="DealResultMap" parameterType="String" >
+        select
+        <include refid="Base_Column_List" />
+        from b_yw_deal_user
+        <where>
+            <if test="bussId != null and bussId != ''" >
+                and buss_id = #{bussId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+</mapper>

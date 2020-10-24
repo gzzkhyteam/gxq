@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+
+
+
+    <appender name="ROOT_APPENDER_HARDWARE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/root_hardware.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/root_hardware-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SERVICE_APPENDER_HARDWARE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/service_hardware.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/service_hardware-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="IMPL_APPENDER_HARDWARE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/impl_hardware.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/impl_hardware-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="UTILS_APPENDER_HARDWARE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/utils_hardware.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/utils_hardware-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="SQL_APPENDER_HARDWARE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/sql_hardware.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/sql_hardware-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+
+
+
+
+
+    <root level="${log.level.console}" >
+        <appender-ref ref="CONSOLE_APPENDER"/>
+        <appender-ref ref="ROOT_APPENDER_HARDWARE"/>
+    </root>
+    <logger name="com.hengyunsoft.platform.hardware.repository" additivity="true" level="${log.level.service}">
+        <appender-ref ref = "SERVICE_APPENDER_HARDWARE"/>
+    </logger>
+    <logger name="com.hengyunsoft.platform.hardware.impl" additivity="true" level="${log.level.impl}">
+        <appender-ref ref = "IMPL_APPENDER_HARDWARE"/>
+    </logger>
+
+
+</included>

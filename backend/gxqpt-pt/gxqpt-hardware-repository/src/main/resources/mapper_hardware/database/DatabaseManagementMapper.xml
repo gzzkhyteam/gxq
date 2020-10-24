@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.hardware.repository.database.dao.DatabaseManagementMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.hardware.entity.database.po.DatabaseManagement">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="instance_DI" jdbcType="VARCHAR" property="instanceDi" />
+    <result column="admin_" jdbcType="VARCHAR" property="admin" />
+    <result column="account_" jdbcType="VARCHAR" property="account" />
+    <result column="type_" jdbcType="INTEGER" property="type" />
+    <result column="host_IP_address" jdbcType="VARCHAR" property="hostIpAddress" />
+    <result column="character_set" jdbcType="VARCHAR" property="characterSet" />
+    <result column="port_" jdbcType="VARCHAR" property="port" />
+    <result column="code_" jdbcType="VARCHAR" property="code" />
+    <result column="associated_service_system" jdbcType="VARCHAR" property="associatedServiceSystem" />
+    <result column="is_release" jdbcType="INTEGER" property="isRelease" />
+    <result column="orgid" jdbcType="VARCHAR" property="orgid" />
+    <result column="orgname" jdbcType="VARCHAR" property="orgname" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, instance_DI, admin_, account_, type_, host_IP_address, character_set, port_, 
+    code_, associated_service_system, is_release, orgid, orgname, create_user, create_time, 
+    update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.hardware.repository.database.example.DatabaseManagementExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_hd_database_management
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_hd_database_management
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.hardware.repository.database.example.DatabaseManagementExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_hd_database_management
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_hd_database_management
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_database_management
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.hardware.repository.database.example.DatabaseManagementExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_database_management
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_hd_database_management where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_database_management
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_hd_database_management where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.hardware.entity.database.po.DatabaseManagement">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_database_management
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_database_management
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_database_management
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_database_management
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.hardware.entity.database.po.DatabaseManagement">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_database_management (id, instance_DI, admin_, 
+      account_, type_, host_IP_address, 
+      character_set, port_, code_, 
+      associated_service_system, is_release, orgid, 
+      orgname, create_user, create_time, 
+      update_user, update_time)
+    values (#{id,jdbcType=BIGINT}, #{instanceDi,jdbcType=VARCHAR}, #{admin,jdbcType=VARCHAR}, 
+      #{account,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{hostIpAddress,jdbcType=VARCHAR}, 
+      #{characterSet,jdbcType=VARCHAR}, #{port,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{associatedServiceSystem,jdbcType=VARCHAR}, #{isRelease,jdbcType=INTEGER}, #{orgid,jdbcType=VARCHAR}, 
+      #{orgname,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_database_management (id, instance_DI, admin_, account_, type_, host_IP_address, character_set, port_, code_, associated_service_system, is_release, orgid, orgname, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.instanceDi,jdbcType=VARCHAR}, #{item.admin,jdbcType=VARCHAR}, 
+        #{item.account,jdbcType=VARCHAR}, #{item.type,jdbcType=INTEGER}, #{item.hostIpAddress,jdbcType=VARCHAR}, 
+        #{item.characterSet,jdbcType=VARCHAR}, #{item.port,jdbcType=VARCHAR}, #{item.code,jdbcType=VARCHAR}, 
+        #{item.associatedServiceSystem,jdbcType=VARCHAR}, #{item.isRelease,jdbcType=INTEGER}, 
+        #{item.orgid,jdbcType=VARCHAR}, #{item.orgname,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.hardware.entity.database.po.DatabaseManagement">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_database_management
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="instanceDi != null">
+        instance_DI,
+      </if>
+      <if test="admin != null">
+        admin_,
+      </if>
+      <if test="account != null">
+        account_,
+      </if>
+      <if test="type != null">
+        type_,
+      </if>
+      <if test="hostIpAddress != null">
+        host_IP_address,
+      </if>
+      <if test="characterSet != null">
+        character_set,
+      </if>
+      <if test="port != null">
+        port_,
+      </if>
+      <if test="code != null">
+        code_,
+      </if>
+      <if test="associatedServiceSystem != null">
+        associated_service_system,
+      </if>
+      <if test="isRelease != null">
+        is_release,
+      </if>
+      <if test="orgid != null">
+        orgid,
+      </if>
+      <if test="orgname != null">
+        orgname,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="instanceDi != null">
+        #{instanceDi,jdbcType=VARCHAR},
+      </if>
+      <if test="admin != null">
+        #{admin,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="hostIpAddress != null">
+        #{hostIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="characterSet != null">
+        #{characterSet,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="associatedServiceSystem != null">
+        #{associatedServiceSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="isRelease != null">
+        #{isRelease,jdbcType=INTEGER},
+      </if>
+      <if test="orgid != null">
+        #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgname != null">
+        #{orgname,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.hardware.repository.database.example.DatabaseManagementExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_hd_database_management
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_database_management
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.instanceDi != null">
+        instance_DI = #{record.instanceDi,jdbcType=VARCHAR},
+      </if>
+      <if test="record.admin != null">
+        admin_ = #{record.admin,jdbcType=VARCHAR},
+      </if>
+      <if test="record.account != null">
+        account_ = #{record.account,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null">
+        type_ = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.hostIpAddress != null">
+        host_IP_address = #{record.hostIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.characterSet != null">
+        character_set = #{record.characterSet,jdbcType=VARCHAR},
+      </if>
+      <if test="record.port != null">
+        port_ = #{record.port,jdbcType=VARCHAR},
+      </if>
+      <if test="record.code != null">
+        code_ = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.associatedServiceSystem != null">
+        associated_service_system = #{record.associatedServiceSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isRelease != null">
+        is_release = #{record.isRelease,jdbcType=INTEGER},
+      </if>
+      <if test="record.orgid != null">
+        orgid = #{record.orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgname != null">
+        orgname = #{record.orgname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_database_management
+    set id = #{record.id,jdbcType=BIGINT},
+      instance_DI = #{record.instanceDi,jdbcType=VARCHAR},
+      admin_ = #{record.admin,jdbcType=VARCHAR},
+      account_ = #{record.account,jdbcType=VARCHAR},
+      type_ = #{record.type,jdbcType=INTEGER},
+      host_IP_address = #{record.hostIpAddress,jdbcType=VARCHAR},
+      character_set = #{record.characterSet,jdbcType=VARCHAR},
+      port_ = #{record.port,jdbcType=VARCHAR},
+      code_ = #{record.code,jdbcType=VARCHAR},
+      associated_service_system = #{record.associatedServiceSystem,jdbcType=VARCHAR},
+      is_release = #{record.isRelease,jdbcType=INTEGER},
+      orgid = #{record.orgid,jdbcType=VARCHAR},
+      orgname = #{record.orgname,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.hardware.entity.database.po.DatabaseManagement">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_database_management
+    <set>
+      <if test="instanceDi != null">
+        instance_DI = #{instanceDi,jdbcType=VARCHAR},
+      </if>
+      <if test="admin != null">
+        admin_ = #{admin,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null">
+        account_ = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type_ = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="hostIpAddress != null">
+        host_IP_address = #{hostIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="characterSet != null">
+        character_set = #{characterSet,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        port_ = #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code_ = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="associatedServiceSystem != null">
+        associated_service_system = #{associatedServiceSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="isRelease != null">
+        is_release = #{isRelease,jdbcType=INTEGER},
+      </if>
+      <if test="orgid != null">
+        orgid = #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgname != null">
+        orgname = #{orgname,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.hardware.entity.database.po.DatabaseManagement">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_database_management
+    <set>
+      <if test="instanceDi != null">
+        instance_DI = #{instanceDi,jdbcType=VARCHAR},
+      </if>
+      <if test="admin != null">
+        admin_ = #{admin,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null">
+        account_ = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type_ = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="hostIpAddress != null">
+        host_IP_address = #{hostIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="characterSet != null">
+        character_set = #{characterSet,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        port_ = #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code_ = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="associatedServiceSystem != null">
+        associated_service_system = #{associatedServiceSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="isRelease != null">
+        is_release = #{isRelease,jdbcType=INTEGER},
+      </if>
+      <if test="orgid != null">
+        orgid = #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgname != null">
+        orgname = #{orgname,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.hardware.entity.database.po.DatabaseManagement">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_database_management
+    set instance_DI = #{instanceDi,jdbcType=VARCHAR},
+      admin_ = #{admin,jdbcType=VARCHAR},
+      account_ = #{account,jdbcType=VARCHAR},
+      type_ = #{type,jdbcType=INTEGER},
+      host_IP_address = #{hostIpAddress,jdbcType=VARCHAR},
+      character_set = #{characterSet,jdbcType=VARCHAR},
+      port_ = #{port,jdbcType=VARCHAR},
+      code_ = #{code,jdbcType=VARCHAR},
+      associated_service_system = #{associatedServiceSystem,jdbcType=VARCHAR},
+      is_release = #{isRelease,jdbcType=INTEGER},
+      orgid = #{orgid,jdbcType=VARCHAR},
+      orgname = #{orgname,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.hardware.entity.database.po.DatabaseManagement">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_database_management
+    set instance_DI = #{instanceDi,jdbcType=VARCHAR},
+      admin_ = #{admin,jdbcType=VARCHAR},
+      account_ = #{account,jdbcType=VARCHAR},
+      type_ = #{type,jdbcType=INTEGER},
+      host_IP_address = #{hostIpAddress,jdbcType=VARCHAR},
+      character_set = #{characterSet,jdbcType=VARCHAR},
+      port_ = #{port,jdbcType=VARCHAR},
+      code_ = #{code,jdbcType=VARCHAR},
+      associated_service_system = #{associatedServiceSystem,jdbcType=VARCHAR},
+      is_release = #{isRelease,jdbcType=INTEGER},
+      orgid = #{orgid,jdbcType=VARCHAR},
+      orgname = #{orgname,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

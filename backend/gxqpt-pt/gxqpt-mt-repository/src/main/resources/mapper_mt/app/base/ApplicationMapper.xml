@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.app.dao.ApplicationMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.mt.entity.app.po.Application">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_name" jdbcType="VARCHAR" property="appName" />
+    <result column="app_type" jdbcType="INTEGER" property="appType" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="show_url" jdbcType="VARCHAR" property="showUrl" />
+    <result column="icon_path" jdbcType="VARCHAR" property="iconPath" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="app_path" jdbcType="VARCHAR" property="appPath" />
+    <result column="app_desc" jdbcType="LONGVARCHAR" property="appDesc" />
+    <result column="app_package_name" jdbcType="VARCHAR" property="appPackageName" />
+    <result column="app_start_act" jdbcType="VARCHAR" property="appStartAct" />
+    <result column="is_show" jdbcType="INTEGER" property="isShow" />
+    <result column="app_order" jdbcType="INTEGER" property="appOrder" />
+    <result column="create_type" jdbcType="INTEGER" property="createType" />
+    <result column="create_emp" jdbcType="VARCHAR" property="createEmp" />
+    <result column="audit_user" jdbcType="BIGINT" property="auditUser" />
+    <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime" />
+    <result column="audit_content" jdbcType="VARCHAR" property="auditContent" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, app_name, app_type, parent_id, show_url, icon_path, state, app_path, app_desc, 
+    app_package_name, app_start_act, is_show, app_order, create_type, create_emp, audit_user, 
+    audit_time, audit_content, create_time, create_user, update_time, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.mt.repository.app.example.ApplicationExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_application
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_application
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.mt.repository.app.example.ApplicationExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_application
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_application
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.mt.repository.app.example.ApplicationExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_application
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.mt.entity.app.po.Application">
+    <!--
+    @mbggenerated
+    -->
+    update b_application
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_application
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.mt.entity.app.po.Application">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_application (id, app_name, app_type, 
+      parent_id, show_url, icon_path, 
+      state, app_path, app_desc, 
+      app_package_name, app_start_act, is_show, 
+      app_order, create_type, create_emp, 
+      audit_user, audit_time, audit_content, 
+      create_time, create_user, update_time, 
+      update_user)
+    values (#{id,jdbcType=BIGINT}, #{appName,jdbcType=VARCHAR}, #{appType,jdbcType=INTEGER}, 
+      #{parentId,jdbcType=BIGINT}, #{showUrl,jdbcType=VARCHAR}, #{iconPath,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER}, #{appPath,jdbcType=VARCHAR}, #{appDesc,jdbcType=LONGVARCHAR}, 
+      #{appPackageName,jdbcType=VARCHAR}, #{appStartAct,jdbcType=VARCHAR}, #{isShow,jdbcType=INTEGER}, 
+      #{appOrder,jdbcType=INTEGER}, #{createType,jdbcType=INTEGER}, #{createEmp,jdbcType=VARCHAR}, 
+      #{auditUser,jdbcType=BIGINT}, #{auditTime,jdbcType=TIMESTAMP}, #{auditContent,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_application (id, app_name, app_type, parent_id, show_url, icon_path, state, app_path, app_desc, app_package_name, app_start_act, is_show, app_order, create_type, create_emp, audit_user, audit_time, audit_content, create_time, create_user, update_time, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.appName,jdbcType=VARCHAR}, #{item.appType,jdbcType=INTEGER}, 
+        #{item.parentId,jdbcType=BIGINT}, #{item.showUrl,jdbcType=VARCHAR}, #{item.iconPath,jdbcType=VARCHAR}, 
+        #{item.state,jdbcType=INTEGER}, #{item.appPath,jdbcType=VARCHAR}, #{item.appDesc,jdbcType=LONGVARCHAR}, 
+        #{item.appPackageName,jdbcType=VARCHAR}, #{item.appStartAct,jdbcType=VARCHAR}, 
+        #{item.isShow,jdbcType=INTEGER}, #{item.appOrder,jdbcType=INTEGER}, #{item.createType,jdbcType=INTEGER}, 
+        #{item.createEmp,jdbcType=VARCHAR}, #{item.auditUser,jdbcType=BIGINT}, #{item.auditTime,jdbcType=TIMESTAMP}, 
+        #{item.auditContent,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.mt.entity.app.po.Application">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_application
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appName != null">
+        app_name,
+      </if>
+      <if test="appType != null">
+        app_type,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="showUrl != null">
+        show_url,
+      </if>
+      <if test="iconPath != null">
+        icon_path,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="appPath != null">
+        app_path,
+      </if>
+      <if test="appDesc != null">
+        app_desc,
+      </if>
+      <if test="appPackageName != null">
+        app_package_name,
+      </if>
+      <if test="appStartAct != null">
+        app_start_act,
+      </if>
+      <if test="isShow != null">
+        is_show,
+      </if>
+      <if test="appOrder != null">
+        app_order,
+      </if>
+      <if test="createType != null">
+        create_type,
+      </if>
+      <if test="createEmp != null">
+        create_emp,
+      </if>
+      <if test="auditUser != null">
+        audit_user,
+      </if>
+      <if test="auditTime != null">
+        audit_time,
+      </if>
+      <if test="auditContent != null">
+        audit_content,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appName != null">
+        #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        #{appType,jdbcType=INTEGER},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="showUrl != null">
+        #{showUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="iconPath != null">
+        #{iconPath,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="appPath != null">
+        #{appPath,jdbcType=VARCHAR},
+      </if>
+      <if test="appDesc != null">
+        #{appDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="appPackageName != null">
+        #{appPackageName,jdbcType=VARCHAR},
+      </if>
+      <if test="appStartAct != null">
+        #{appStartAct,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null">
+        #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="appOrder != null">
+        #{appOrder,jdbcType=INTEGER},
+      </if>
+      <if test="createType != null">
+        #{createType,jdbcType=INTEGER},
+      </if>
+      <if test="createEmp != null">
+        #{createEmp,jdbcType=VARCHAR},
+      </if>
+      <if test="auditUser != null">
+        #{auditUser,jdbcType=BIGINT},
+      </if>
+      <if test="auditTime != null">
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditContent != null">
+        #{auditContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.mt.repository.app.example.ApplicationExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_application
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_application
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appName != null">
+        app_name = #{record.appName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appType != null">
+        app_type = #{record.appType,jdbcType=INTEGER},
+      </if>
+      <if test="record.parentId != null">
+        parent_id = #{record.parentId,jdbcType=BIGINT},
+      </if>
+      <if test="record.showUrl != null">
+        show_url = #{record.showUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.iconPath != null">
+        icon_path = #{record.iconPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.appPath != null">
+        app_path = #{record.appPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appDesc != null">
+        app_desc = #{record.appDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.appPackageName != null">
+        app_package_name = #{record.appPackageName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appStartAct != null">
+        app_start_act = #{record.appStartAct,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isShow != null">
+        is_show = #{record.isShow,jdbcType=INTEGER},
+      </if>
+      <if test="record.appOrder != null">
+        app_order = #{record.appOrder,jdbcType=INTEGER},
+      </if>
+      <if test="record.createType != null">
+        create_type = #{record.createType,jdbcType=INTEGER},
+      </if>
+      <if test="record.createEmp != null">
+        create_emp = #{record.createEmp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditUser != null">
+        audit_user = #{record.auditUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.auditTime != null">
+        audit_time = #{record.auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.auditContent != null">
+        audit_content = #{record.auditContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_application
+    set id = #{record.id,jdbcType=BIGINT},
+      app_name = #{record.appName,jdbcType=VARCHAR},
+      app_type = #{record.appType,jdbcType=INTEGER},
+      parent_id = #{record.parentId,jdbcType=BIGINT},
+      show_url = #{record.showUrl,jdbcType=VARCHAR},
+      icon_path = #{record.iconPath,jdbcType=VARCHAR},
+      state = #{record.state,jdbcType=INTEGER},
+      app_path = #{record.appPath,jdbcType=VARCHAR},
+      app_desc = #{record.appDesc,jdbcType=LONGVARCHAR},
+      app_package_name = #{record.appPackageName,jdbcType=VARCHAR},
+      app_start_act = #{record.appStartAct,jdbcType=VARCHAR},
+      is_show = #{record.isShow,jdbcType=INTEGER},
+      app_order = #{record.appOrder,jdbcType=INTEGER},
+      create_type = #{record.createType,jdbcType=INTEGER},
+      create_emp = #{record.createEmp,jdbcType=VARCHAR},
+      audit_user = #{record.auditUser,jdbcType=BIGINT},
+      audit_time = #{record.auditTime,jdbcType=TIMESTAMP},
+      audit_content = #{record.auditContent,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.mt.entity.app.po.Application">
+    <!--
+    @mbggenerated
+    -->
+    update b_application
+    <set>
+      <if test="appName != null">
+        app_name = #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="appType != null">
+        app_type = #{appType,jdbcType=INTEGER},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="showUrl != null">
+        show_url = #{showUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="iconPath != null">
+        icon_path = #{iconPath,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="appPath != null">
+        app_path = #{appPath,jdbcType=VARCHAR},
+      </if>
+      <if test="appDesc != null">
+        app_desc = #{appDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="appPackageName != null">
+        app_package_name = #{appPackageName,jdbcType=VARCHAR},
+      </if>
+      <if test="appStartAct != null">
+        app_start_act = #{appStartAct,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null">
+        is_show = #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="appOrder != null">
+        app_order = #{appOrder,jdbcType=INTEGER},
+      </if>
+      <if test="createType != null">
+        create_type = #{createType,jdbcType=INTEGER},
+      </if>
+      <if test="createEmp != null">
+        create_emp = #{createEmp,jdbcType=VARCHAR},
+      </if>
+      <if test="auditUser != null">
+        audit_user = #{auditUser,jdbcType=BIGINT},
+      </if>
+      <if test="auditTime != null">
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditContent != null">
+        audit_content = #{auditContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.mt.entity.app.po.Application">
+    <!--
+    @mbggenerated
+    -->
+    update b_application
+    set app_name = #{appName,jdbcType=VARCHAR},
+      app_type = #{appType,jdbcType=INTEGER},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      show_url = #{showUrl,jdbcType=VARCHAR},
+      icon_path = #{iconPath,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      app_path = #{appPath,jdbcType=VARCHAR},
+      app_desc = #{appDesc,jdbcType=LONGVARCHAR},
+      app_package_name = #{appPackageName,jdbcType=VARCHAR},
+      app_start_act = #{appStartAct,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=INTEGER},
+      app_order = #{appOrder,jdbcType=INTEGER},
+      create_type = #{createType,jdbcType=INTEGER},
+      create_emp = #{createEmp,jdbcType=VARCHAR},
+      audit_user = #{auditUser,jdbcType=BIGINT},
+      audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      audit_content = #{auditContent,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

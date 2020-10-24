@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.core.dao.HostMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.developer.entity.core.po.Host">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="domain_name" jdbcType="VARCHAR" property="domainName" />
+    <result column="ip_addr_public" jdbcType="VARCHAR" property="ipAddrPublic" />
+    <result column="ip_addr" jdbcType="VARCHAR" property="ipAddr" />
+    <result column="host_name" jdbcType="VARCHAR" property="hostName" />
+    <result column="os_type" jdbcType="VARCHAR" property="osType" />
+    <result column="os_version" jdbcType="VARCHAR" property="osVersion" />
+    <result column="cpu_info" jdbcType="VARCHAR" property="cpuInfo" />
+    <result column="cpu_count" jdbcType="SMALLINT" property="cpuCount" />
+    <result column="server_provider" jdbcType="VARCHAR" property="serverProvider" />
+    <result column="mem" jdbcType="INTEGER" property="mem" />
+    <result column="harddisk" jdbcType="INTEGER" property="harddisk" />
+    <result column="virtual_host" jdbcType="SMALLINT" property="virtualHost" />
+    <result column="physical_host_id" jdbcType="BIGINT" property="physicalHostId" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="BIT" property="status" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, domain_name, ip_addr_public, ip_addr, host_name, os_type, os_version, cpu_info, 
+    cpu_count, server_provider, mem, harddisk, virtual_host, physical_host_id, create_user, 
+    create_time, update_user, update_time, remark, status
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.developer.repository.core.example.HostExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_host
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from c_host
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.developer.repository.core.example.HostExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_host
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_host
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.developer.repository.core.example.HostExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_host
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.developer.entity.core.po.Host">
+    <!--
+    @mbggenerated
+    -->
+    update c_host
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.core.po.Host">
+    <!--
+    @mbggenerated
+    -->
+    update c_host
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.developer.entity.core.po.Host">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_host (id, domain_name, ip_addr_public, 
+      ip_addr, host_name, os_type, 
+      os_version, cpu_info, cpu_count, 
+      server_provider, mem, harddisk, 
+      virtual_host, physical_host_id, create_user, 
+      create_time, update_user, update_time, 
+      remark, status)
+    values (#{id,jdbcType=BIGINT}, #{domainName,jdbcType=VARCHAR}, #{ipAddrPublic,jdbcType=VARCHAR}, 
+      #{ipAddr,jdbcType=VARCHAR}, #{hostName,jdbcType=VARCHAR}, #{osType,jdbcType=VARCHAR}, 
+      #{osVersion,jdbcType=VARCHAR}, #{cpuInfo,jdbcType=VARCHAR}, #{cpuCount,jdbcType=SMALLINT}, 
+      #{serverProvider,jdbcType=VARCHAR}, #{mem,jdbcType=INTEGER}, #{harddisk,jdbcType=INTEGER},
+      #{virtualHost,jdbcType=SMALLINT}, #{physicalHostId,jdbcType=BIGINT}, #{createUser,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{status,jdbcType=BIT})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_host (id, domain_name, ip_addr_public, ip_addr, host_name, os_type, os_version, cpu_info, cpu_count, server_provider, mem, harddisk, virtual_host, physical_host_id, create_user, create_time, update_user, update_time, remark, status ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.domainName,jdbcType=VARCHAR}, #{item.ipAddrPublic,jdbcType=VARCHAR}, 
+        #{item.ipAddr,jdbcType=VARCHAR}, #{item.hostName,jdbcType=VARCHAR}, #{item.osType,jdbcType=VARCHAR}, 
+        #{item.osVersion,jdbcType=VARCHAR}, #{item.cpuInfo,jdbcType=VARCHAR}, #{item.cpuCount,jdbcType=SMALLINT}, 
+        #{item.serverProvider,jdbcType=VARCHAR}, #{item.mem,jdbcType=INTEGER}, #{item.harddisk,jdbcType=INTEGER},
+        #{item.virtualHost,jdbcType=SMALLINT}, #{item.physicalHostId,jdbcType=BIGINT}, 
+        #{item.createUser,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}, #{item.status,jdbcType=BIT}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.developer.entity.core.po.Host">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_host
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="domainName != null">
+        domain_name,
+      </if>
+      <if test="ipAddrPublic != null">
+        ip_addr_public,
+      </if>
+      <if test="ipAddr != null">
+        ip_addr,
+      </if>
+      <if test="hostName != null">
+        host_name,
+      </if>
+      <if test="osType != null">
+        os_type,
+      </if>
+      <if test="osVersion != null">
+        os_version,
+      </if>
+      <if test="cpuInfo != null">
+        cpu_info,
+      </if>
+      <if test="cpuCount != null">
+        cpu_count,
+      </if>
+      <if test="serverProvider != null">
+        server_provider,
+      </if>
+      <if test="mem != null">
+        mem,
+      </if>
+      <if test="harddisk != null">
+        harddisk,
+      </if>
+      <if test="virtualHost != null">
+        virtual_host,
+      </if>
+      <if test="physicalHostId != null">
+        physical_host_id,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="domainName != null">
+        #{domainName,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddrPublic != null">
+        #{ipAddrPublic,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddr != null">
+        #{ipAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null">
+        #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="osType != null">
+        #{osType,jdbcType=VARCHAR},
+      </if>
+      <if test="osVersion != null">
+        #{osVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="cpuInfo != null">
+        #{cpuInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="cpuCount != null">
+        #{cpuCount,jdbcType=SMALLINT},
+      </if>
+      <if test="serverProvider != null">
+        #{serverProvider,jdbcType=VARCHAR},
+      </if>
+      <if test="mem != null">
+        #{mem,jdbcType=INTEGER},
+      </if>
+      <if test="harddisk != null">
+        #{harddisk,jdbcType=INTEGER},
+      </if>
+      <if test="virtualHost != null">
+        #{virtualHost,jdbcType=SMALLINT},
+      </if>
+      <if test="physicalHostId != null">
+        #{physicalHostId,jdbcType=BIGINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.developer.repository.core.example.HostExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from c_host
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_host
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.domainName != null">
+        domain_name = #{record.domainName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ipAddrPublic != null">
+        ip_addr_public = #{record.ipAddrPublic,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ipAddr != null">
+        ip_addr = #{record.ipAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hostName != null">
+        host_name = #{record.hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.osType != null">
+        os_type = #{record.osType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.osVersion != null">
+        os_version = #{record.osVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cpuInfo != null">
+        cpu_info = #{record.cpuInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cpuCount != null">
+        cpu_count = #{record.cpuCount,jdbcType=SMALLINT},
+      </if>
+      <if test="record.serverProvider != null">
+        server_provider = #{record.serverProvider,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mem != null">
+        mem = #{record.mem,jdbcType=INTEGER},
+      </if>
+      <if test="record.harddisk != null">
+        harddisk = #{record.harddisk,jdbcType=INTEGER},
+      </if>
+      <if test="record.virtualHost != null">
+        virtual_host = #{record.virtualHost,jdbcType=SMALLINT},
+      </if>
+      <if test="record.physicalHostId != null">
+        physical_host_id = #{record.physicalHostId,jdbcType=BIGINT},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_host
+    set id = #{record.id,jdbcType=BIGINT},
+      domain_name = #{record.domainName,jdbcType=VARCHAR},
+      ip_addr_public = #{record.ipAddrPublic,jdbcType=VARCHAR},
+      ip_addr = #{record.ipAddr,jdbcType=VARCHAR},
+      host_name = #{record.hostName,jdbcType=VARCHAR},
+      os_type = #{record.osType,jdbcType=VARCHAR},
+      os_version = #{record.osVersion,jdbcType=VARCHAR},
+      cpu_info = #{record.cpuInfo,jdbcType=VARCHAR},
+      cpu_count = #{record.cpuCount,jdbcType=SMALLINT},
+      server_provider = #{record.serverProvider,jdbcType=VARCHAR},
+      mem = #{record.mem,jdbcType=INTEGER},
+      harddisk = #{record.harddisk,jdbcType=INTEGER},
+      virtual_host = #{record.virtualHost,jdbcType=SMALLINT},
+      physical_host_id = #{record.physicalHostId,jdbcType=BIGINT},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.developer.entity.core.po.Host">
+    <!--
+    @mbggenerated
+    -->
+    update c_host
+    <set>
+      <if test="domainName != null">
+        domain_name = #{domainName,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddrPublic != null">
+        ip_addr_public = #{ipAddrPublic,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddr != null">
+        ip_addr = #{ipAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null">
+        host_name = #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="osType != null">
+        os_type = #{osType,jdbcType=VARCHAR},
+      </if>
+      <if test="osVersion != null">
+        os_version = #{osVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="cpuInfo != null">
+        cpu_info = #{cpuInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="cpuCount != null">
+        cpu_count = #{cpuCount,jdbcType=SMALLINT},
+      </if>
+      <if test="serverProvider != null">
+        server_provider = #{serverProvider,jdbcType=VARCHAR},
+      </if>
+      <if test="mem != null">
+        mem = #{mem,jdbcType=INTEGER},
+      </if>
+      <if test="harddisk != null">
+        harddisk = #{harddisk,jdbcType=INTEGER},
+      </if>
+      <if test="virtualHost != null">
+        virtual_host = #{virtualHost,jdbcType=SMALLINT},
+      </if>
+      <if test="physicalHostId != null">
+        physical_host_id = #{physicalHostId,jdbcType=BIGINT},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.core.po.Host">
+    <!--
+    @mbggenerated
+    -->
+    update c_host
+    set domain_name = #{domainName,jdbcType=VARCHAR},
+      ip_addr_public = #{ipAddrPublic,jdbcType=VARCHAR},
+      ip_addr = #{ipAddr,jdbcType=VARCHAR},
+      host_name = #{hostName,jdbcType=VARCHAR},
+      os_type = #{osType,jdbcType=VARCHAR},
+      os_version = #{osVersion,jdbcType=VARCHAR},
+      cpu_info = #{cpuInfo,jdbcType=VARCHAR},
+      cpu_count = #{cpuCount,jdbcType=SMALLINT},
+      server_provider = #{serverProvider,jdbcType=VARCHAR},
+      mem = #{mem,jdbcType=INTEGER},
+      harddisk = #{harddisk,jdbcType=INTEGER},
+      virtual_host = #{virtualHost,jdbcType=SMALLINT},
+      physical_host_id = #{physicalHostId,jdbcType=BIGINT},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

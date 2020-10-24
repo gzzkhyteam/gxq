@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.warn.repository.dao.WarnTimeSlotMapper">
+    <resultMap id="timeSlotMap" type="com.hengyunsoft.platform.warn.entity.domain.FairWarnTimeSlotCountDO">
+        <result column="pending" jdbcType="INTEGER" property="pending" />
+        <result column="new_come" jdbcType="INTEGER" property="newCome" />
+        <result column="handled" jdbcType="INTEGER" property="handled" />
+        <result column="statistical_time" jdbcType="VARCHAR" property="month" />
+        <result column="avg_handle_time" jdbcType="VARCHAR" property="avgHandleTime" />
+        <result column="avg_confirm_time" jdbcType="VARCHAR" property="avgConfirmTime" />
+    </resultMap>
+    <!---ma 2019-04-26 统计 近一年12个月的预警数据-->
+    <select id="getTimeSlotByAppId" resultMap="timeSlotMap" parameterType="java.lang.String">
+        SELECT
+        /*未确认*/
+        SUM(bwt.unconfirm) AS pending,
+        /*已确认*/
+        SUM(bwt.confirm) AS new_come,
+        /*已处理*/
+        SUM(bwt.handled) AS handled,
+        bwt.statistical_time,
+        bwt.avg_handle_time,
+        bwt.avg_confirm_time
+        FROM
+        b_warn_timeslot bwt
+        WHERE
+        1 = 1
+        <if test="appid != null and appid != '' ">
+            AND bwt.app_id = #{appid}
+        </if>
+        AND ( bwt.create_time BETWEEN date_sub(now(), INTERVAL 12 MONTH) AND now())
+        GROUP BY bwt.statistical_time
+        ORDER BY bwt.statistical_time DESC
+          LIMIT 12
+    </select>
+    <!--ma 2019-04-26 统计制定年的数据-->
+    <select id="getScaleByAppId" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.ScaleReqDTO" resultMap="timeSlotMap">
+        SELECT
+        bwt.pending AS pending,
+        bwt.new_come AS new_come,
+        bwt.handled AS handled,
+        bwt.statistical_time,
+        bwt.avg_handle_time,
+        bwt.avg_confirm_time
+        FROM
+        b_warn_timeslot bwt
+        WHERE
+        1 = 1
+        <if test="scaleReqDTO.id != null and scaleReqDTO.id != '' ">
+            AND bwt.app_id = #{scaleReqDTO.id}
+        </if>
+        <if test="scaleReqDTO.year != null and scaleReqDTO.year != '' ">
+            AND substr(bwt.statistical_time,1,4) = #{scaleReqDTO.year}
+        </if>
+        ORDER BY
+        bwt.statistical_time DESC
+        LIMIT 12
+    </select>
+
+</mapper>

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.directory.dao.ShareDataDirectoryMapper">
+
+    <resultMap id="TreeResultMap" type="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataDirectory">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="dir_name" jdbcType="VARCHAR" property="dirName" />
+    <result column="dir_code" jdbcType="VARCHAR" property="dirCode" />
+    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+     <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+    <result column="is_bottom" jdbcType="INTEGER" property="isBottom" />
+    <result column="data_status" jdbcType="INTEGER" property="dataStatus" />
+  </resultMap>
+  <sql id="R_Column_List">
+    d.id, d.unit_id,d.parent_id, d.dir_name,d.dir_code,d.is_bottom,d.data_status
+  </sql>
+    <!--查询非本单位所有目录-->
+    <select id="getAllTreeUnUnit"  parameterType="java.lang.String" resultMap="UnitTreeResultMap">
+         SELECT  c.id, c.apply_code, c.dir_name, c.dir_code, c.unit_abbr, c.parent_id,
+        c.unit_id,  c.dir_type, c.opt_type, c.status_, c.is_bottom,  c.data_status,c.data_type,c.set_id,
+        c.open_way,c.share_way
+        from b_share_data_directory c
+        where  c.unit_id !=#{unitId}
+        and c.data_status!=2
+        and c.status_=4
+        and c.opt_type =5
+    </select>
+
+  <!--  根据父id查询数据目录表信息-->
+  <select id="findByParentId"  parameterType="java.lang.Long" resultMap="TreeResultMap">
+    SELECT
+    <include refid="R_Column_List"/>
+    from b_share_data_directory d
+    where  d.parent_id=#{parentId,jdbcType=BIGINT}
+  </select>
+  <resultMap id="UnitTreeResultMap" type="com.hengyunsoft.platform.exchange.entity.directory.po.domain.ShareDataDirectoryDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="ware_id" jdbcType="BIGINT" property="wareId" />
+    <result column="dir_name" jdbcType="VARCHAR" property="dirName" />
+    <result column="dir_code" jdbcType="VARCHAR" property="dirCode" />
+    <result column="unit_abbr" jdbcType="VARCHAR" property="unitAbbr" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+    <result column="dir_type" jdbcType="INTEGER" property="dirType" />
+    <result column="opt_type" jdbcType="INTEGER" property="optType" />
+    <result column="status_" jdbcType="INTEGER" property="status" />
+    <result column="is_bottom" jdbcType="INTEGER" property="isBottom" />
+    <result column="data_status" jdbcType="INTEGER" property="dataStatus" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
+    <result column="set_id" jdbcType="BIGINT" property="setId" />
+    <result column="open_way" jdbcType="INTEGER" property="openWay" />
+    <result column="share_way" jdbcType="INTEGER" property="shareWay" />
+
+
+  </resultMap>
+  <sql id="R_Unit_Column_List">
+     d.id as ware_id ,c.id, c.apply_code, c.dir_name, c.dir_code, c.unit_abbr, c.parent_id,
+    c.unit_id,  c.dir_type, c.opt_type, c.status_, c.is_bottom,  c.data_status,c.data_type,c.set_id
+  </sql>
+   <!-- 根据单位id查询单位的所有数据目录（没有删除状态的）-->
+  <select id="findByParentIdAndUnitId"  parameterType="java.util.Map" resultMap="UnitTreeResultMap">
+    SELECT
+    <include refid="R_Unit_Column_List"/>
+    from b_share_data_directory c
+    LEFT JOIN b_share_data_directory_ware d on d.id=c.id
+    where  c.unit_id=#{unitId,jdbcType=BIGINT}
+    and c.data_status!=2
+</select>
+    <!-- 平台管理员查询所有单位的所有数据目录（没有删除状态的）-->
+    <select id="getAllList"  parameterType="java.util.Map" resultMap="UnitTreeResultMap">
+        SELECT
+        <include refid="R_Unit_Column_List"/>
+        from b_share_data_directory c
+        LEFT JOIN b_share_data_directory_ware d on d.id=c.id
+        where c.data_status!=2
+    </select>
+       <!--根据数据类型、单位id查询已发布的数据目录信息（没有删除状态的）-->
+    <select id="getUnitDataTypeList"  parameterType="java.util.Map" resultMap="UnitTreeResultMap">
+        SELECT  c.id, c.apply_code, c.dir_name, c.dir_code, c.unit_abbr, c.parent_id,
+        c.unit_id,  c.dir_type, c.opt_type, c.status_, c.is_bottom,  c.data_status,c.data_type,c.set_id,
+        c.open_way,c.share_way
+        from b_share_data_directory c
+        where  c.unit_id=#{unitId}
+        and (c.data_type=#{dataType} or  c.data_type IS null)
+        and c.data_status!=2
+        and c.status_=4
+        and c.opt_type =5
+    </select>
+    <!--根据数据类型、查询所有单位已发布的数据目录信息（没有删除状态的）-->
+    <select id="getDataTypeList"  parameterType="java.util.Map" resultMap="UnitTreeResultMap">
+        SELECT c.id, c.apply_code, c.dir_name, c.dir_code, c.unit_abbr, c.parent_id,
+        c.unit_id,  c.dir_type, c.opt_type, c.status_, c.is_bottom,  c.data_status,c.data_type,c.set_id,
+        c.open_way,c.share_way
+        from b_share_data_directory c
+        where c.data_status!=2
+        and c.status_=4
+        and (c.data_type=#{dataType,jdbcType=INTEGER} or  c.data_type IS null)
+        and c.opt_type =5
+        <if test="unitId!= null and unitId!=''">
+            AND c.unit_id != #{unitId,jdbcType=VARCHAR}
+        </if>
+    </select>
+  <sql id="Directory_Change_Column_List">
+   c.id, c.apply_code, c.dir_name, c.dir_code, c.unit_abbr, c.parent_id,
+    c.unit_id, c.desc_, c.dir_type, c.data_count, c.see_count,
+     c.down_count, b.change_type as opt_type, c.status_, c.is_bottom, c.domain,  d.dict_name as  theme_one,
+     e.dict_name as  theme_two,
+     f.dict_name as  theme_three,
+     g.dict_name as  industry_one,
+     h.dict_name as  industry_two,
+     l.dict_name as  industry_three,
+     j.dict_name as  service_one,
+     k.dict_name as service_two,
+     m.dict_name as service_three,
+     c.open_way, c.share_way,
+    c.data_type, c.reason_, c.set_id,
+    c.data_status
+  </sql>
+    <!-- 查询需要申请发布的目录-->
+    <select id="getDirectoryChangeListApply"  parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Directory_Change_Column_List"/>
+        from b_share_data_change a
+        LEFT JOIN b_share_data_change_element b on b.bus_id=a.id
+        LEFT JOIN b_share_data_directory c on c.id=b.chg_id
+        LEFT JOIN b_share_dict d  on d.dict_code=c.theme_one
+        LEFT JOIN b_share_dict e  on e.dict_code=c.theme_two
+        LEFT JOIN b_share_dict f  on f.dict_code=c.theme_three
+        LEFT JOIN b_share_dict g  on g.dict_code=c.industry_one
+        LEFT JOIN b_share_dict h  on h.dict_code=c.industry_two
+        LEFT JOIN b_share_dict l  on l.dict_code=c.industry_three
+        LEFT JOIN b_share_dict j  on j.dict_code=c.service_one
+        LEFT JOIN b_share_dict k  on k.dict_code=c.service_two
+        LEFT JOIN b_share_dict m  on m.dict_code=c.service_three
+        where a.status_=#{status,jdbcType=INTEGER}
+          and c.status_=1
+          and  b.bus_type=1
+          and  c.data_status!=2
+          and a.unit_id=#{unitId,jdbcType=VARCHAR}
+        GROUP BY c.id
+    </select>
+    <!-- 查询需要已申请或发布的目录详情-->
+    <select id="getDirectoryChangeList"  parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Directory_Change_Column_List"/>
+        from b_share_data_change a
+        LEFT JOIN b_share_data_change_element b on b.bus_id=a.id
+        LEFT JOIN b_share_data_directory c on c.id=b.chg_id
+        LEFT JOIN b_share_dict d  on d.dict_code=c.theme_one
+        LEFT JOIN b_share_dict e  on e.dict_code=c.theme_two
+        LEFT JOIN b_share_dict f  on f.dict_code=c.theme_three
+        LEFT JOIN b_share_dict g  on g.dict_code=c.industry_one
+        LEFT JOIN b_share_dict h  on h.dict_code=c.industry_two
+        LEFT JOIN b_share_dict l  on l.dict_code=c.industry_three
+        LEFT JOIN b_share_dict j  on j.dict_code=c.service_one
+        LEFT JOIN b_share_dict k  on k.dict_code=c.service_two
+        LEFT JOIN b_share_dict m  on m.dict_code=c.service_three
+        where a.apply_code=#{applyCode,jdbcType=VARCHAR}
+        and b.bus_type=1
+        GROUP BY c.id
+    </select>
+  <resultMap id="OrgResultMap" type="com.hengyunsoft.platform.exchange.entity.directory.po.domain.VOrgDO">
+    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name_" jdbcType="VARCHAR" property="name_" />
+  </resultMap>
+  <sql id="Org_Column_List">
+        id, name_
+  </sql>
+    <!--查询共享单位信息-->
+  <select id="getOrgList"  parameterType="java.lang.Long" resultMap="OrgResultMap">
+    SELECT
+    <include refid="Org_Column_List"/>
+    from v_org
+  </select>
+    <resultMap id="DictResultMap" type="com.hengyunsoft.platform.exchange.entity.directory.po.domain.ShareDataDirectoryDictDO">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+        <result column="dir_name" jdbcType="VARCHAR" property="dirName" />
+        <result column="dir_code" jdbcType="VARCHAR" property="dirCode" />
+        <result column="unit_abbr" jdbcType="VARCHAR" property="unitAbbr" />
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+        <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+        <result column="desc_" jdbcType="VARCHAR" property="desc" />
+        <result column="dir_type" jdbcType="INTEGER" property="dirType" />
+        <result column="data_count" jdbcType="INTEGER" property="dataCount" />
+        <result column="see_count" jdbcType="INTEGER" property="seeCount" />
+        <result column="down_count" jdbcType="INTEGER" property="downCount" />
+        <result column="opt_type" jdbcType="INTEGER" property="optType" />
+        <result column="status_" jdbcType="INTEGER" property="status" />
+        <result column="is_bottom" jdbcType="INTEGER" property="isBottom" />
+        <result column="special_type" jdbcType="VARCHAR" property="specialType" />
+        <result column="domain" jdbcType="VARCHAR" property="domain" />
+        <result column="theme_one" jdbcType="VARCHAR" property="themeOne" />
+        <result column="theme_two" jdbcType="VARCHAR" property="themeTwo" />
+        <result column="theme_three" jdbcType="VARCHAR" property="themeThree" />
+        <result column="industry_one" jdbcType="VARCHAR" property="industryOne" />
+        <result column="industry_two" jdbcType="VARCHAR" property="industryTwo" />
+        <result column="industry_three" jdbcType="VARCHAR" property="industryThree" />
+        <result column="service_one" jdbcType="VARCHAR" property="serviceOne" />
+        <result column="service_two" jdbcType="VARCHAR" property="serviceTwo" />
+        <result column="service_three" jdbcType="VARCHAR" property="serviceThree" />
+        <result column="theme_one_name" jdbcType="VARCHAR" property="themeOneName" />
+        <result column="theme_two_name" jdbcType="VARCHAR" property="themeTwoName" />
+        <result column="theme_three_name" jdbcType="VARCHAR" property="themeThreeName" />
+        <result column="industry_one_name" jdbcType="VARCHAR" property="industryOneName" />
+        <result column="industry_two_name" jdbcType="VARCHAR" property="industryTwoName" />
+        <result column="industry_three_name" jdbcType="VARCHAR" property="industryThreeName" />
+        <result column="service_one_name" jdbcType="VARCHAR" property="serviceOneName" />
+        <result column="service_two_name" jdbcType="VARCHAR" property="serviceTwoName" />
+        <result column="service_three_name" jdbcType="VARCHAR" property="serviceThreeName" />
+        <result column="open_way" jdbcType="INTEGER" property="openWay" />
+        <result column="share_way" jdbcType="INTEGER" property="shareWay" />
+        <result column="data_type" jdbcType="INTEGER" property="dataType" />
+        <result column="reason_" jdbcType="LONGVARCHAR" property="reason" />
+        <result column="set_id" jdbcType="BIGINT" property="setId" />
+        <result column="data_status" jdbcType="INTEGER" property="dataStatus" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    </resultMap>
+    <sql id="Dict_Column_List">
+        c.id, c.apply_code, c.dir_name, c.dir_code, c.unit_abbr, c.parent_id,
+        c.unit_id, c.desc_, c.dir_type, c.data_count, c.see_count,
+        c.down_count, c.opt_type, c.status_, c.is_bottom,c.special_type, c.domain, d.dict_name as theme_one_name,theme_one,
+        e.dict_name as theme_two_name, theme_two, f.dict_name as theme_three_name ,theme_three, g.dict_name as industry_one_name,industry_one,
+         h.dict_name as industry_two_name,industry_two, j.dict_name as industry_three_name,industry_three,
+        k.dict_name as service_one_name,service_one,  l.dict_name as service_two_name ,service_two, m.dict_name as service_three_name,service_three,
+        c.open_way, c.share_way,c.data_type, c.reason_, c.set_id,
+        c.data_status
+    </sql>
+       <!-- 查询数据目录变动记录信息，需要返回数据字典的名称（做对比）-->
+    <select id="getDictCodeList"  parameterType="java.lang.Long" resultMap="DictResultMap">
+        SELECT
+        <include refid="Dict_Column_List"/>
+        from b_share_data_directory c
+        LEFT JOIN b_share_dict d  on d.dict_code=c.theme_one
+        LEFT JOIN b_share_dict e  on e.dict_code=c.theme_two
+        LEFT JOIN b_share_dict f  on f.dict_code=c.theme_three
+        LEFT JOIN b_share_dict g  on g.dict_code=c.industry_one
+        LEFT JOIN b_share_dict h  on h.dict_code=c.industry_two
+        LEFT JOIN b_share_dict j  on j.dict_code=c.industry_three
+        LEFT JOIN b_share_dict k  on k.dict_code=c.service_one
+        LEFT JOIN b_share_dict l  on l.dict_code=c.service_two
+        LEFT JOIN b_share_dict m  on m.dict_code=c.service_three
+        where c.id=#{Id,jdbcType=BIGINT}
+        group by c.id
+    </select>
+      <!-- 查询数据目录之前的发布信息，需要返回数据字典的名称（做对比）-->
+    <select id="getDictCodeWareList"  parameterType="java.lang.Long" resultMap="DictResultMap">
+        SELECT
+        <include refid="Dict_Column_List"/>
+        from b_share_data_directory_ware c
+        LEFT JOIN b_share_dict d  on d.dict_code=c.theme_one
+        LEFT JOIN b_share_dict e  on e.dict_code=c.theme_two
+        LEFT JOIN b_share_dict f  on f.dict_code=c.theme_three
+        LEFT JOIN b_share_dict g  on g.dict_code=c.industry_one
+        LEFT JOIN b_share_dict h  on h.dict_code=c.industry_two
+        LEFT JOIN b_share_dict j  on j.dict_code=c.industry_three
+        LEFT JOIN b_share_dict k  on k.dict_code=c.service_one
+        LEFT JOIN b_share_dict l  on l.dict_code=c.service_two
+        LEFT JOIN b_share_dict m  on m.dict_code=c.service_three
+        where c.id=#{Id,jdbcType=BIGINT}
+        group by c.id
+    </select>
+    <resultMap id="AuditResultMap" type="com.hengyunsoft.platform.exchange.entity.directory.po.domain.ShareDataDirectoryAuditDO">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="unit_id" jdbcType="BIGINT" property="unitId" />
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+        <result column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="task_id" jdbcType="BIGINT" property="taskId" />
+        <result column="audit_id" jdbcType="BIGINT" property="auditId" />
+        <result column="opt_time" jdbcType="TIMESTAMP" property="optTime" />
+        <result column="opt_type" jdbcType="INTEGER" property="optType" />
+        <result column="is_ptadmin" jdbcType="INTEGER" property="isPtadmin" />
+        <result column="status_" jdbcType="INTEGER" property="status" />
+        <result column="application_reasons" jdbcType="VARCHAR" property="applicationReasons" />
+        <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+    </resultMap>
+    <sql id="Audit_Column_List">
+           a.id,a.unit_id,o.name_ as unit_name,
+           a.user_id,
+           b.id as task_id,
+           c.id as audit_id,
+           a.opt_time,
+           a.is_ptadmin,
+           a.status_,
+           a.application_reasons,
+           a.apply_code
+    </sql>
+       <!--查询待审批、审批的数据目录信息-->
+    <select id="getDirectoryTask"  parameterType="map" resultMap="AuditResultMap">
+        SELECT
+        <include refid="Audit_Column_List"/>
+        from b_share_data_change a
+        LEFT JOIN b_share_flow_task b on b.apply_code=a.apply_code
+        LEFT JOIN  b_share_flow_audit  c on c.apply_code=a.apply_code
+        LEFT JOIN v_org o on o.id=a.unit_id
+        <where>
+            <if test="unitId!= null and unitId!=''">
+                AND a.unit_id = #{unitId,jdbcType=VARCHAR}
+            </if>
+            <if test="status!= null and status!=''">
+                AND a.status_= #{status,jdbcType=INTEGER}
+            </if>
+            <if test="status== null">
+               AND a.status_>1
+             </if>
+            <if test="startTime!= null">
+                AND a.opt_time >=#{startTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endTime!= null">
+                AND #{endTime,jdbcType=TIMESTAMP}>= a.opt_time
+            </if>
+        </where>
+        GROUP BY a.id
+        ORDER BY a.opt_time DESC
+    </select>
+    <!--更新查看量-->
+    <update id="updateSeeCount" parameterType="java.util.Map">
+        UPDATE  b_share_data_directory SET see_count=see_count+1
+        WHERE id=#{id}
+    </update>
+
+
+    <!--  查询变动表中只有字段而没有该字段的目录id 的目录id-->
+    <select id="getChangeDirListByApplyCode" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT tmp.id,tmp.dir_name,tmp.unit_id FROM(
+            select sdt.id,sdt.dir_name,sdt.unit_id
+            from b_share_data_change_element  elt
+            JOIN b_share_data_change sdc on elt.bus_id = sdc.id
+            JOIN b_share_data_element sde on elt.chg_id = sde.id
+            JOIN b_share_data_directory sdt on sde.dir_id = sdt.id
+            WHERE elt.bus_type=2 AND sdc.apply_code=#{applyCode}  AND sdt.is_bottom=2 AND sdc.unit_id=#{unitId}
+            GROUP BY sdt.id
+         )tmp
+         WHERE tmp.id not in (
+            select elt.chg_id
+            from b_share_data_change_element  elt
+            JOIN b_share_data_change sdc on elt.bus_id = sdc.id
+            JOIN b_share_data_directory sdt on elt.chg_id = sdt.id
+            WHERE elt.bus_type=1 AND sdc.apply_code=#{applyCode} AND sdt.is_bottom=2 AND sdc.unit_id=#{unitId}
+            GROUP BY elt.id
+        )
+    </select>
+
+
+    <!--根据数据id为null-->
+    <update id="updateSetIdToNull"  parameterType="java.util.Map" >
+        UPDATE  b_share_data_directory SET set_id = NULL
+        WHERE id=#{id}  AND   set_id = #{setId};
+    </update>
+    <!--更新数据集id-->
+    <update id="updateSetId"  parameterType="java.util.Map" >
+        UPDATE  b_share_data_directory SET set_id =  #{setId}
+        WHERE id=#{id}
+    </update>
+    <!--  查询字段变动表所有字段的目录信息-->
+    <select id="findChangeDirList" parameterType="java.util.Map" resultMap="BaseResultMap">
+      SELECT id, apply_code, dir_name, dir_code, unit_abbr, parent_id,
+      unit_id,  dir_type, opt_type, status_, is_bottom,  data_status,data_type
+     from b_share_data_directory
+     where id in(SELECT   e.dir_id
+     FROM  b_share_data_change_element ce
+     LEFT JOIN  b_share_data_change chg ON  ce.bus_id = chg.id
+     LEFT JOIN  b_share_data_element e on   e.id=ce.chg_id
+     WHERE  chg.apply_code=#{applyCode}
+      AND  chg.unit_id=#{unitId}
+      AND  ce.bus_type=2
+      GROUP BY dir_id)
+
+    </select>
+
+    <!-- 批量更新第一种方法，通过接收传进来的参数list进行循环着组装sql -->
+    <update id="batchUpdate" parameterType="java.util.Map">
+        update b_share_data_directory set
+        status_=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.status,jdbcType=INTEGER}
+        </foreach>
+        ,opt_type=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.optType,jdbcType=INTEGER}
+        </foreach>
+        ,data_status=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.dataStatus,jdbcType=INTEGER}
+        </foreach>
+        ,update_time=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+        ,update_user=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateUser,jdbcType=BIGINT}
+        </foreach>
+        where ID in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+</mapper>

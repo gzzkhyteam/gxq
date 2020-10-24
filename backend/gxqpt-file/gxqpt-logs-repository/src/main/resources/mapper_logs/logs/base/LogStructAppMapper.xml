@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogStructAppMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.logs.entity.logs.po.LogStructApp">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="document_id" jdbcType="VARCHAR" property="documentId" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="log_name" jdbcType="VARCHAR" property="logName" />
+    <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="source_file_name" jdbcType="VARCHAR" property="sourceFileName" />
+    <result column="level" jdbcType="VARCHAR" property="level" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="thread" jdbcType="VARCHAR" property="thread" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="line" jdbcType="VARCHAR" property="line" />
+    <result column="system_live_time" jdbcType="VARCHAR" property="systemLiveTime" />
+    <result column="log_business_type" jdbcType="VARCHAR" property="logBusinessType" />
+    <result column="data_channel" jdbcType="VARCHAR" property="dataChannel" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, document_id, app_id, log_name, log_time, class_name, source_file_name, level, 
+    content, thread, method, line, system_live_time, log_business_type, data_channel, 
+    create_time, create_user, update_time, update_user, create_user_name, update_user_name
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructAppExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from log_struct_app3
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from log_struct_app3
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructAppExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from log_struct_app3
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from log_struct_app3
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructAppExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from log_struct_app3
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructApp">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_app3
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructApp">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_app3
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructApp">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_struct_app3 (id, document_id, app_id, 
+      log_name, log_time, class_name, 
+      source_file_name, level, content, 
+      thread, method, line, 
+      system_live_time, log_business_type, data_channel, 
+      create_time, create_user, update_time, 
+      update_user, create_user_name, update_user_name
+      )
+    values (#{id,jdbcType=BIGINT}, #{documentId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, 
+      #{logName,jdbcType=VARCHAR}, #{logTime,jdbcType=TIMESTAMP}, #{className,jdbcType=VARCHAR}, 
+      #{sourceFileName,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{thread,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{line,jdbcType=VARCHAR}, 
+      #{systemLiveTime,jdbcType=VARCHAR}, #{logBusinessType,jdbcType=VARCHAR}, #{dataChannel,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT}, #{createUserName,jdbcType=VARCHAR}, #{updateUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_struct_app3 (id, document_id, app_id, log_name, log_time, class_name, source_file_name, level, content, thread, method, line, system_live_time, log_business_type, data_channel, create_time, create_user, update_time, update_user, create_user_name, update_user_name ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.documentId,jdbcType=VARCHAR}, #{item.appId,jdbcType=VARCHAR}, 
+        #{item.logName,jdbcType=VARCHAR}, #{item.logTime,jdbcType=TIMESTAMP}, #{item.className,jdbcType=VARCHAR}, 
+        #{item.sourceFileName,jdbcType=VARCHAR}, #{item.level,jdbcType=VARCHAR}, #{item.content,jdbcType=VARCHAR}, 
+        #{item.thread,jdbcType=VARCHAR}, #{item.method,jdbcType=VARCHAR}, #{item.line,jdbcType=VARCHAR}, 
+        #{item.systemLiveTime,jdbcType=VARCHAR}, #{item.logBusinessType,jdbcType=VARCHAR}, 
+        #{item.dataChannel,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, #{item.createUserName,jdbcType=VARCHAR}, 
+        #{item.updateUserName,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructApp">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_struct_app3
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="documentId != null">
+        document_id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="logName != null">
+        log_name,
+      </if>
+      <if test="logTime != null">
+        log_time,
+      </if>
+      <if test="className != null">
+        class_name,
+      </if>
+      <if test="sourceFileName != null">
+        source_file_name,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="thread != null">
+        thread,
+      </if>
+      <if test="method != null">
+        method,
+      </if>
+      <if test="line != null">
+        line,
+      </if>
+      <if test="systemLiveTime != null">
+        system_live_time,
+      </if>
+      <if test="logBusinessType != null">
+        log_business_type,
+      </if>
+      <if test="dataChannel != null">
+        data_channel,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="updateUserName != null">
+        update_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="documentId != null">
+        #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="logName != null">
+        #{logName,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null">
+        #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="className != null">
+        #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceFileName != null">
+        #{sourceFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="thread != null">
+        #{thread,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="line != null">
+        #{line,jdbcType=VARCHAR},
+      </if>
+      <if test="systemLiveTime != null">
+        #{systemLiveTime,jdbcType=VARCHAR},
+      </if>
+      <if test="logBusinessType != null">
+        #{logBusinessType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataChannel != null">
+        #{dataChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null">
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructAppExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from log_struct_app3
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_app3
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.documentId != null">
+        document_id = #{record.documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logName != null">
+        log_name = #{record.logName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logTime != null">
+        log_time = #{record.logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.className != null">
+        class_name = #{record.className,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sourceFileName != null">
+        source_file_name = #{record.sourceFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.level != null">
+        level = #{record.level,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.thread != null">
+        thread = #{record.thread,jdbcType=VARCHAR},
+      </if>
+      <if test="record.method != null">
+        method = #{record.method,jdbcType=VARCHAR},
+      </if>
+      <if test="record.line != null">
+        line = #{record.line,jdbcType=VARCHAR},
+      </if>
+      <if test="record.systemLiveTime != null">
+        system_live_time = #{record.systemLiveTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logBusinessType != null">
+        log_business_type = #{record.logBusinessType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataChannel != null">
+        data_channel = #{record.dataChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createUserName != null">
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUserName != null">
+        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_app3
+    set id = #{record.id,jdbcType=BIGINT},
+      document_id = #{record.documentId,jdbcType=VARCHAR},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      log_name = #{record.logName,jdbcType=VARCHAR},
+      log_time = #{record.logTime,jdbcType=TIMESTAMP},
+      class_name = #{record.className,jdbcType=VARCHAR},
+      source_file_name = #{record.sourceFileName,jdbcType=VARCHAR},
+      level = #{record.level,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      thread = #{record.thread,jdbcType=VARCHAR},
+      method = #{record.method,jdbcType=VARCHAR},
+      line = #{record.line,jdbcType=VARCHAR},
+      system_live_time = #{record.systemLiveTime,jdbcType=VARCHAR},
+      log_business_type = #{record.logBusinessType,jdbcType=VARCHAR},
+      data_channel = #{record.dataChannel,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructApp">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_app3
+    <set>
+      <if test="documentId != null">
+        document_id = #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="logName != null">
+        log_name = #{logName,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null">
+        log_time = #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="className != null">
+        class_name = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceFileName != null">
+        source_file_name = #{sourceFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="thread != null">
+        thread = #{thread,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        method = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="line != null">
+        line = #{line,jdbcType=VARCHAR},
+      </if>
+      <if test="systemLiveTime != null">
+        system_live_time = #{systemLiveTime,jdbcType=VARCHAR},
+      </if>
+      <if test="logBusinessType != null">
+        log_business_type = #{logBusinessType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataChannel != null">
+        data_channel = #{dataChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null">
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructApp">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_app3
+    set document_id = #{documentId,jdbcType=VARCHAR},
+      app_id = #{appId,jdbcType=VARCHAR},
+      log_name = #{logName,jdbcType=VARCHAR},
+      log_time = #{logTime,jdbcType=TIMESTAMP},
+      class_name = #{className,jdbcType=VARCHAR},
+      source_file_name = #{sourceFileName,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      thread = #{thread,jdbcType=VARCHAR},
+      method = #{method,jdbcType=VARCHAR},
+      line = #{line,jdbcType=VARCHAR},
+      system_live_time = #{systemLiveTime,jdbcType=VARCHAR},
+      log_business_type = #{logBusinessType,jdbcType=VARCHAR},
+      data_channel = #{dataChannel,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

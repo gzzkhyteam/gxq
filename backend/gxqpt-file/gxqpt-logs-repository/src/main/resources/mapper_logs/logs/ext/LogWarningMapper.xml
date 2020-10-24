@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogWarningMapper">
+    <resultMap id="LogWarningDoResultMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogWarningDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="log_type" jdbcType="VARCHAR" property="logType" />
+        <result column="rule_id" jdbcType="BIGINT" property="ruleId" />
+        <result column="log_description" jdbcType="VARCHAR" property="logDescription" />
+        <result column="is_deal" jdbcType="VARCHAR" property="isDeal" />
+        <result column="deal_result" jdbcType="VARCHAR" property="dealResult" />
+        <result column="deal_result_description" jdbcType="VARCHAR" property="dealResultDescription" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="warn_type" jdbcType="VARCHAR" property="warnType" />
+        <result column="warn_level" jdbcType="VARCHAR" property="warnLevel" />
+        <result column="deal_result_show" jdbcType="VARCHAR" property="dealResultShow" />
+        <result column="warn_description" jdbcType="VARCHAR" property="warnDescription" />
+
+
+    </resultMap>
+    <resultMap id="logTypeMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogTypeDO">
+        <result column="month" property="month"></result>
+        <result column="count" property="count"></result>
+        <result column="log_type" property="logType"></result>
+        <result column="year" property="year"></result>
+    </resultMap>
+    <resultMap id="logAppMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogAppNameDO">
+        <result column="count" property="count"></result>
+        <result column="app_id" property="appId"></result>
+    </resultMap>
+    <resultMap id="warnAvgMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogWarnAvgTimeDO">
+        <result column="count" property="count"></result>
+        <result column="dealTime" property="dealTime"></result>
+    </resultMap>
+    <!--分页查询-->
+    <select id="pageQueryWarning" resultMap="LogWarningDoResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogWarningExample">
+        SELECT lw.id,lw.app_id,lw.log_type,lw.rule_id,lw.log_description,case lw.is_deal
+        when '0' then '未处理' when '1' then '已处理'  end as is_deal,lw.deal_result,
+        CASE lw.is_deal WHEN '0' THEN '' WHEN '1' THEN  CASE lw.deal_result
+        WHEN 'DEAL' THEN '处理' WHEN 'WRONG' THEN  '误告' WHEN 'IGNORE' THEN '忽略'
+        END  ELSE  '其他'  END AS deal_result_show,  lw.deal_result_description,  lw.create_time,
+        lw.create_user, lw.create_user_name, lw.update_time, lw.update_user, lw.update_user_name,
+        case lwr.warn_level when '1' then '一级' when '2' then '二级' when '3' then '三级'
+        end as warn_level, case lwr.warn_type when 'KEY' then '关键词告警' when 'QUANTITY' then '数量告警' when 'RESPONSE' then '响应时长告警' end as warn_type,  lwr.name, lwr.warn_description
+        FROM log_warning lw
+        LEFT JOIN log_warn_rule lwr ON lw.rule_id = lwr.id
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <!--查询当前月份警告数-->
+<select id="currentWarnCount" resultType="Integer">
+    select count(*) FROM log_warning la WHERE  MONTH(la.create_time)=MONTH(NOW())
+</select>
+    <!--统计当前月告警已处理数-->
+    <select id="currentWarnDealCount" resultType="Integer">
+        select count(*) FROM log_warning la WHERE la.is_deal=1 and MONTH(la.create_time)=MONTH(NOW())
+    </select>
+    <!--统计日志类型数量-->
+    <select id="findWarnLogTypeCount" parameterType="String" resultMap="logTypeMap">
+        select la.log_type , YEAR(la.create_time) as year,MONTH(la.create_time) as month, COUNT(MONTH(la.create_time)) as count from log_warning la where la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time),la.log_type
+    </select>
+    <!--查询告警前12月的数量-->
+    <select id="findWarnCount" parameterType="String" resultMap="logTypeMap">
+         select  YEAR(la.create_time) as year,MONTH(la.create_time) as month, COUNT(MONTH(la.create_time)) as count from log_warning la where la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time)
+    </select>
+    <!--统计前二十日志应用-->
+    <select id="logWarningMapper" resultMap="logAppMap">
+        SELECT lw.app_id,COUNT(lw.app_id) as count  FROM log_warning lw GROUP BY lw.app_id desc
+    </select>
+    <select id="findWarnAvgTime" resultMap="warnAvgMap">
+        SELECT COUNT(la.update_time) as count,sum(la.update_time-la.create_time) as dealTime from log_warning la
+    </select>
+    <!--前12月告警等级统计-->
+    <select id="findLogWarnMonth" parameterType="String" resultMap="logTypeMap">
+        SELECT year(la.create_time) as year,month(la.create_time) as month, lwr.warn_level as log_type,COUNT(MONTH(la.create_time)) as count from log_warning la LEFT JOIN log_warn_rule lwr on la.rule_id=lwr.id WHERE la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time)
+    </select>
+    <!--统计前十二月告警数量类型统计-->
+    <select id="findLogWarnTypeMonth" resultMap="logTypeMap">
+      SELECT  lwr.warn_type as log_type,COUNT(lwr.warn_type) as count from log_warning la LEFT JOIN log_warn_rule lwr on la.rule_id=lwr.id GROUP BY lwr.warn_type
+    </select>
+    <!--统计告警级别数量-->
+    <select id="findLogWarnLevleCount" resultMap="logTypeMap">
+      SELECT  lwr.warn_level as log_type,COUNT(lwr.warn_level) as count from log_warning la LEFT JOIN log_warn_rule lwr on la.rule_id=lwr.id GROUP BY lwr.warn_level
+    </select>
+
+</mapper>

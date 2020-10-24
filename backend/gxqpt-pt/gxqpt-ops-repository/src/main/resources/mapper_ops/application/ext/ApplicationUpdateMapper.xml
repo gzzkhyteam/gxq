@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.application.dao.ApplicationUpdateMapper">
+  <resultMap id="PageResultMap" type="com.hengyunsoft.platform.ops.entity.application.po.ApplicationUpdate">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="system_id" jdbcType="VARCHAR" property="systemId" />
+    <result column="system_name" jdbcType="VARCHAR" property="systemName" />
+    <result column="publish_date" jdbcType="DATE" property="publishDate" />
+    <result column="version_name" jdbcType="VARCHAR" property="versionName" />
+    <result column="version_number" jdbcType="VARCHAR" property="versionNumber" />
+    <result column="upgrade_content" jdbcType="VARCHAR" property="upgradeContent" />
+    <result column="publishing_server" jdbcType="VARCHAR" property="publishingServer" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <!--查询应用升级分页信息-->
+  <select id="getPageList"  parameterType="java.util.Map" resultMap="PageResultMap">
+    SELECT id,system_id,system_name,publish_date,version_name,version_number,upgrade_content,publishing_server,status,remark,create_time
+    FROM b_yw_application_update
+    <where>
+        and system_id=#{appId,jdbcType=VARCHAR}
+      <if test="versionNumber!= null and versionNumber!=''">
+        and  version_number =#{versionNumber,jdbcType=VARCHAR}
+      </if>
+      <if test="startTime!= null">
+        AND create_time>=#{startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime!= null">
+        AND #{endTime,jdbcType=TIMESTAMP}>=create_time
+      </if>
+    </where>
+    order by create_time desc
+  </select>
+
+</mapper>

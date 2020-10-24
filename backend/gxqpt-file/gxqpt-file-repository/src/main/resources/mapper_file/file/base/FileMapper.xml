@@ -1,0 +1,998 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.file.repository.file.dao.FileMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.file.entity.file.po.File">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="org_id" jdbcType="BIGINT" property="orgId" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="folder_id" jdbcType="BIGINT" property="folderId" />
+    <result column="folder_name" jdbcType="VARCHAR" property="folderName" />
+    <result column="object_id" jdbcType="VARCHAR" property="objectId" />
+    <result column="namespace" jdbcType="VARCHAR" property="namespace" />
+    <result column="u_key" jdbcType="VARCHAR" property="uKey" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="remote_file_name" jdbcType="VARCHAR" property="remoteFileName" />
+    <result column="absolute_path" jdbcType="VARCHAR" property="absolutePath" />
+    <result column="relative_path" jdbcType="VARCHAR" property="relativePath" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="characters" jdbcType="LONGVARCHAR" property="characters" />
+    <result column="screenshot" jdbcType="VARCHAR" property="screenshot" />
+    <result column="swf" jdbcType="VARCHAR" property="swf" />
+    <result column="data_type" jdbcType="VARCHAR" property="dataType" />
+    <result column="mime" jdbcType="VARCHAR" property="mime" />
+    <result column="submitted_file_name" jdbcType="VARCHAR" property="submittedFileName" />
+    <result column="filename" jdbcType="VARCHAR" property="filename" />
+    <result column="ext" jdbcType="VARCHAR" property="ext" />
+    <result column="size" jdbcType="VARCHAR" property="size" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="tree_path" jdbcType="VARCHAR" property="treePath" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="file_md5" jdbcType="VARCHAR" property="fileMd5" />
+    <result column="context_type" jdbcType="VARCHAR" property="contextType" />
+    <result column="file_sha1" jdbcType="VARCHAR" property="fileSha1" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, app_id, org_id, admin_id, is_delete, type, folder_id, folder_name, object_id, 
+    namespace, u_key, group_name, remote_file_name, absolute_path, relative_path, url, 
+    characters, screenshot, swf, data_type, mime, submitted_file_name, filename, ext, 
+    size, icon, tree_path, create_time, create_user, update_time, update_user, file_md5, 
+    context_type, file_sha1
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.file.repository.file.example.FileExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from f_file
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from f_file
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.file.repository.file.example.FileExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from f_file
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectByAppIdAndId" parameterType="map" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <include refid="Base_Column_List" />
+    from f_file
+    where 1=1 and app_id = #{appId,jdbcType=VARCHAR} and id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAppIdById" parameterType="map" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from f_file
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from f_file
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.file.repository.file.example.FileExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from f_file
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  f_file where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from f_file
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  f_file where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.file.entity.file.po.File">
+    <!--
+    @mbggenerated
+    -->
+    update f_file
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="com.hengyunsoft.platform.file.entity.file.po.File">
+    <!--
+    @mbggenerated
+    -->
+    update f_file
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.file.entity.file.po.File">
+    <!--
+    @mbggenerated
+    -->
+    update f_file
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="com.hengyunsoft.platform.file.entity.file.po.File">
+    <!--
+    @mbggenerated
+    -->
+    update f_file
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.file.entity.file.po.File">
+    <!--
+    @mbggenerated
+    -->
+    insert into f_file (id, app_id, org_id, 
+      admin_id, is_delete, type, 
+      folder_id, folder_name, object_id, 
+      namespace, u_key, group_name, 
+      remote_file_name, absolute_path, relative_path, 
+      url, characters, screenshot, 
+      swf, data_type, mime, 
+      submitted_file_name, filename, ext, 
+      size, icon, tree_path, 
+      create_time, create_user, update_time, 
+      update_user, file_md5, context_type, 
+      file_sha1)
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{orgId,jdbcType=BIGINT}, 
+      #{adminId,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}, #{type,jdbcType=VARCHAR}, 
+      #{folderId,jdbcType=BIGINT}, #{folderName,jdbcType=VARCHAR}, #{objectId,jdbcType=VARCHAR}, 
+      #{namespace,jdbcType=VARCHAR}, #{uKey,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, 
+      #{remoteFileName,jdbcType=VARCHAR}, #{absolutePath,jdbcType=VARCHAR}, #{relativePath,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{characters,jdbcType=LONGVARCHAR}, #{screenshot,jdbcType=VARCHAR}, 
+      #{swf,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR}, #{mime,jdbcType=VARCHAR}, 
+      #{submittedFileName,jdbcType=VARCHAR}, #{filename,jdbcType=VARCHAR}, #{ext,jdbcType=VARCHAR}, 
+      #{size,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, #{treePath,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT}, #{fileMd5,jdbcType=VARCHAR}, #{contextType,jdbcType=VARCHAR}, 
+      #{fileSha1,jdbcType=VARCHAR})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into f_file (id, app_id, org_id, admin_id, is_delete, type, folder_id, folder_name, object_id, namespace, u_key, group_name, remote_file_name, absolute_path, relative_path, url, characters, screenshot, swf, data_type, mime, submitted_file_name, filename, ext, size, icon, tree_path, create_time, create_user, update_time, update_user, file_md5, context_type, file_sha1 ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.appId,jdbcType=VARCHAR}, #{item.orgId,jdbcType=BIGINT}, 
+        #{item.adminId,jdbcType=BIGINT}, #{item.isDelete,jdbcType=BIT}, #{item.type,jdbcType=VARCHAR}, 
+        #{item.folderId,jdbcType=BIGINT}, #{item.folderName,jdbcType=VARCHAR}, #{item.objectId,jdbcType=VARCHAR}, 
+        #{item.namespace,jdbcType=VARCHAR}, #{item.uKey,jdbcType=VARCHAR}, #{item.groupName,jdbcType=VARCHAR}, 
+        #{item.remoteFileName,jdbcType=VARCHAR}, #{item.absolutePath,jdbcType=VARCHAR}, 
+        #{item.relativePath,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR}, #{item.characters,jdbcType=LONGVARCHAR}, 
+        #{item.screenshot,jdbcType=VARCHAR}, #{item.swf,jdbcType=VARCHAR}, #{item.dataType,jdbcType=VARCHAR}, 
+        #{item.mime,jdbcType=VARCHAR}, #{item.submittedFileName,jdbcType=VARCHAR}, #{item.filename,jdbcType=VARCHAR}, 
+        #{item.ext,jdbcType=VARCHAR}, #{item.size,jdbcType=VARCHAR}, #{item.icon,jdbcType=VARCHAR}, 
+        #{item.treePath,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, #{item.fileMd5,jdbcType=VARCHAR}, 
+        #{item.contextType,jdbcType=VARCHAR}, #{item.fileSha1,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.file.entity.file.po.File">
+    <!--
+    @mbggenerated
+    -->
+    insert into f_file
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="folderId != null">
+        folder_id,
+      </if>
+      <if test="folderName != null">
+        folder_name,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="namespace != null">
+        namespace,
+      </if>
+      <if test="uKey != null">
+        u_key,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="remoteFileName != null">
+        remote_file_name,
+      </if>
+      <if test="absolutePath != null">
+        absolute_path,
+      </if>
+      <if test="relativePath != null">
+        relative_path,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="characters != null">
+        characters,
+      </if>
+      <if test="screenshot != null">
+        screenshot,
+      </if>
+      <if test="swf != null">
+        swf,
+      </if>
+      <if test="dataType != null">
+        data_type,
+      </if>
+      <if test="mime != null">
+        mime,
+      </if>
+      <if test="submittedFileName != null">
+        submitted_file_name,
+      </if>
+      <if test="filename != null">
+        filename,
+      </if>
+      <if test="ext != null">
+        ext,
+      </if>
+      <if test="size != null">
+        size,
+      </if>
+      <if test="icon != null">
+        icon,
+      </if>
+      <if test="treePath != null">
+        tree_path,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="fileMd5 != null">
+        file_md5,
+      </if>
+      <if test="contextType != null">
+        context_type,
+      </if>
+      <if test="fileSha1 != null">
+        file_sha1,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="folderId != null">
+        #{folderId,jdbcType=BIGINT},
+      </if>
+      <if test="folderName != null">
+        #{folderName,jdbcType=VARCHAR},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=VARCHAR},
+      </if>
+      <if test="namespace != null">
+        #{namespace,jdbcType=VARCHAR},
+      </if>
+      <if test="uKey != null">
+        #{uKey,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteFileName != null">
+        #{remoteFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="absolutePath != null">
+        #{absolutePath,jdbcType=VARCHAR},
+      </if>
+      <if test="relativePath != null">
+        #{relativePath,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="characters != null">
+        #{characters,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="screenshot != null">
+        #{screenshot,jdbcType=VARCHAR},
+      </if>
+      <if test="swf != null">
+        #{swf,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null">
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="mime != null">
+        #{mime,jdbcType=VARCHAR},
+      </if>
+      <if test="submittedFileName != null">
+        #{submittedFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null">
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="ext != null">
+        #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="treePath != null">
+        #{treePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="fileMd5 != null">
+        #{fileMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="contextType != null">
+        #{contextType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSha1 != null">
+        #{fileSha1,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.file.repository.file.example.FileExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from f_file
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update f_file
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgId != null">
+        org_id = #{record.orgId,jdbcType=BIGINT},
+      </if>
+      <if test="record.adminId != null">
+        admin_id = #{record.adminId,jdbcType=BIGINT},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.folderId != null">
+        folder_id = #{record.folderId,jdbcType=BIGINT},
+      </if>
+      <if test="record.folderName != null">
+        folder_name = #{record.folderName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.objectId != null">
+        object_id = #{record.objectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.namespace != null">
+        namespace = #{record.namespace,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uKey != null">
+        u_key = #{record.uKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.groupName != null">
+        group_name = #{record.groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remoteFileName != null">
+        remote_file_name = #{record.remoteFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.absolutePath != null">
+        absolute_path = #{record.absolutePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.relativePath != null">
+        relative_path = #{record.relativePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null">
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.characters != null">
+        characters = #{record.characters,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.screenshot != null">
+        screenshot = #{record.screenshot,jdbcType=VARCHAR},
+      </if>
+      <if test="record.swf != null">
+        swf = #{record.swf,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataType != null">
+        data_type = #{record.dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mime != null">
+        mime = #{record.mime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.submittedFileName != null">
+        submitted_file_name = #{record.submittedFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filename != null">
+        filename = #{record.filename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext != null">
+        ext = #{record.ext,jdbcType=VARCHAR},
+      </if>
+      <if test="record.size != null">
+        size = #{record.size,jdbcType=VARCHAR},
+      </if>
+      <if test="record.icon != null">
+        icon = #{record.icon,jdbcType=VARCHAR},
+      </if>
+      <if test="record.treePath != null">
+        tree_path = #{record.treePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.fileMd5 != null">
+        file_md5 = #{record.fileMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contextType != null">
+        context_type = #{record.contextType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileSha1 != null">
+        file_sha1 = #{record.fileSha1,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update f_file
+    set id = #{record.id,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      org_id = #{record.orgId,jdbcType=BIGINT},
+      admin_id = #{record.adminId,jdbcType=BIGINT},
+      is_delete = #{record.isDelete,jdbcType=BIT},
+      type = #{record.type,jdbcType=VARCHAR},
+      folder_id = #{record.folderId,jdbcType=BIGINT},
+      folder_name = #{record.folderName,jdbcType=VARCHAR},
+      object_id = #{record.objectId,jdbcType=VARCHAR},
+      namespace = #{record.namespace,jdbcType=VARCHAR},
+      u_key = #{record.uKey,jdbcType=VARCHAR},
+      group_name = #{record.groupName,jdbcType=VARCHAR},
+      remote_file_name = #{record.remoteFileName,jdbcType=VARCHAR},
+      absolute_path = #{record.absolutePath,jdbcType=VARCHAR},
+      relative_path = #{record.relativePath,jdbcType=VARCHAR},
+      url = #{record.url,jdbcType=VARCHAR},
+      characters = #{record.characters,jdbcType=LONGVARCHAR},
+      screenshot = #{record.screenshot,jdbcType=VARCHAR},
+      swf = #{record.swf,jdbcType=VARCHAR},
+      data_type = #{record.dataType,jdbcType=VARCHAR},
+      mime = #{record.mime,jdbcType=VARCHAR},
+      submitted_file_name = #{record.submittedFileName,jdbcType=VARCHAR},
+      filename = #{record.filename,jdbcType=VARCHAR},
+      ext = #{record.ext,jdbcType=VARCHAR},
+      size = #{record.size,jdbcType=VARCHAR},
+      icon = #{record.icon,jdbcType=VARCHAR},
+      tree_path = #{record.treePath,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      file_md5 = #{record.fileMd5,jdbcType=VARCHAR},
+      context_type = #{record.contextType,jdbcType=VARCHAR},
+      file_sha1 = #{record.fileSha1,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.file.entity.file.po.File">
+    <!--
+    @mbggenerated
+    -->
+    update f_file
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="folderId != null">
+        folder_id = #{folderId,jdbcType=BIGINT},
+      </if>
+      <if test="folderName != null">
+        folder_name = #{folderName,jdbcType=VARCHAR},
+      </if>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=VARCHAR},
+      </if>
+      <if test="namespace != null">
+        namespace = #{namespace,jdbcType=VARCHAR},
+      </if>
+      <if test="uKey != null">
+        u_key = #{uKey,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteFileName != null">
+        remote_file_name = #{remoteFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="absolutePath != null">
+        absolute_path = #{absolutePath,jdbcType=VARCHAR},
+      </if>
+      <if test="relativePath != null">
+        relative_path = #{relativePath,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="characters != null">
+        characters = #{characters,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="screenshot != null">
+        screenshot = #{screenshot,jdbcType=VARCHAR},
+      </if>
+      <if test="swf != null">
+        swf = #{swf,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null">
+        data_type = #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="mime != null">
+        mime = #{mime,jdbcType=VARCHAR},
+      </if>
+      <if test="submittedFileName != null">
+        submitted_file_name = #{submittedFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null">
+        filename = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="ext != null">
+        ext = #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="treePath != null">
+        tree_path = #{treePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="fileMd5 != null">
+        file_md5 = #{fileMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="contextType != null">
+        context_type = #{contextType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSha1 != null">
+        file_sha1 = #{fileSha1,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.file.entity.file.po.File">
+    <!--
+    @mbggenerated
+    -->
+    update f_file
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="folderId != null">
+        folder_id = #{folderId,jdbcType=BIGINT},
+      </if>
+      <if test="folderName != null">
+        folder_name = #{folderName,jdbcType=VARCHAR},
+      </if>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=VARCHAR},
+      </if>
+      <if test="namespace != null">
+        namespace = #{namespace,jdbcType=VARCHAR},
+      </if>
+      <if test="uKey != null">
+        u_key = #{uKey,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteFileName != null">
+        remote_file_name = #{remoteFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="absolutePath != null">
+        absolute_path = #{absolutePath,jdbcType=VARCHAR},
+      </if>
+      <if test="relativePath != null">
+        relative_path = #{relativePath,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="characters != null">
+        characters = #{characters,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="screenshot != null">
+        screenshot = #{screenshot,jdbcType=VARCHAR},
+      </if>
+      <if test="swf != null">
+        swf = #{swf,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null">
+        data_type = #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="mime != null">
+        mime = #{mime,jdbcType=VARCHAR},
+      </if>
+      <if test="submittedFileName != null">
+        submitted_file_name = #{submittedFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null">
+        filename = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="ext != null">
+        ext = #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="treePath != null">
+        tree_path = #{treePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="fileMd5 != null">
+        file_md5 = #{fileMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="contextType != null">
+        context_type = #{contextType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSha1 != null">
+        file_sha1 = #{fileSha1,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.file.entity.file.po.File">
+    <!--
+    @mbggenerated
+    -->
+    update f_file
+    set app_id = #{appId,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=BIGINT},
+      admin_id = #{adminId,jdbcType=BIGINT},
+      is_delete = #{isDelete,jdbcType=BIT},
+      type = #{type,jdbcType=VARCHAR},
+      folder_id = #{folderId,jdbcType=BIGINT},
+      folder_name = #{folderName,jdbcType=VARCHAR},
+      object_id = #{objectId,jdbcType=VARCHAR},
+      namespace = #{namespace,jdbcType=VARCHAR},
+      u_key = #{uKey,jdbcType=VARCHAR},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      remote_file_name = #{remoteFileName,jdbcType=VARCHAR},
+      absolute_path = #{absolutePath,jdbcType=VARCHAR},
+      relative_path = #{relativePath,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      characters = #{characters,jdbcType=LONGVARCHAR},
+      screenshot = #{screenshot,jdbcType=VARCHAR},
+      swf = #{swf,jdbcType=VARCHAR},
+      data_type = #{dataType,jdbcType=VARCHAR},
+      mime = #{mime,jdbcType=VARCHAR},
+      submitted_file_name = #{submittedFileName,jdbcType=VARCHAR},
+      filename = #{filename,jdbcType=VARCHAR},
+      ext = #{ext,jdbcType=VARCHAR},
+      size = #{size,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
+      tree_path = #{treePath,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      file_md5 = #{fileMd5,jdbcType=VARCHAR},
+      context_type = #{contextType,jdbcType=VARCHAR},
+      file_sha1 = #{fileSha1,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.file.entity.file.po.File">
+    <!--
+    @mbggenerated
+    -->
+    update f_file
+    set app_id = #{appId,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=BIGINT},
+      admin_id = #{adminId,jdbcType=BIGINT},
+      is_delete = #{isDelete,jdbcType=BIT},
+      type = #{type,jdbcType=VARCHAR},
+      folder_id = #{folderId,jdbcType=BIGINT},
+      folder_name = #{folderName,jdbcType=VARCHAR},
+      object_id = #{objectId,jdbcType=VARCHAR},
+      namespace = #{namespace,jdbcType=VARCHAR},
+      u_key = #{uKey,jdbcType=VARCHAR},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      remote_file_name = #{remoteFileName,jdbcType=VARCHAR},
+      absolute_path = #{absolutePath,jdbcType=VARCHAR},
+      relative_path = #{relativePath,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      characters = #{characters,jdbcType=LONGVARCHAR},
+      screenshot = #{screenshot,jdbcType=VARCHAR},
+      swf = #{swf,jdbcType=VARCHAR},
+      data_type = #{dataType,jdbcType=VARCHAR},
+      mime = #{mime,jdbcType=VARCHAR},
+      submitted_file_name = #{submittedFileName,jdbcType=VARCHAR},
+      filename = #{filename,jdbcType=VARCHAR},
+      ext = #{ext,jdbcType=VARCHAR},
+      size = #{size,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
+      tree_path = #{treePath,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      file_md5 = #{fileMd5,jdbcType=VARCHAR},
+      context_type = #{contextType,jdbcType=VARCHAR},
+      file_sha1 = #{fileSha1,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+</mapper>

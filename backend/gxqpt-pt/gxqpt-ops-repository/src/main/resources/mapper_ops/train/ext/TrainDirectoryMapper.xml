@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.train.dao.TrainDirectoryMapper">
+    <resultMap id="typeTreeMap" type="com.hengyunsoft.platform.ops.entity.train.dos.TrainTypePageResDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="service_name" jdbcType="VARCHAR" property="name"/>
+        <result column="service_info" jdbcType="VARCHAR" property="context"/>
+    </resultMap>
+    <select id="getTypeTree" parameterType="com.hengyunsoft.platform.ops.entity.train.dos.TrainTypePageReqDO"
+            resultMap="typeTreeMap">
+        select id,type,service_name,service_info
+        from b_yw_train_directory
+        where parent_id != -1
+        <if test="trainTypePageReqDTO.type!= null and trainTypePageReqDTO.type!=''">
+            and type = #{trainTypePageReqDTO.type}
+        </if>
+        <if test="trainTypePageReqDTO.name!= null and trainTypePageReqDTO.name!=''">
+            and service_name = #{trainTypePageReqDTO.name}
+        </if>
+        <if test="trainTypePageReqDTO.context!= null and trainTypePageReqDTO.context!=''">
+            and service_info like #{trainTypePageReqDTO.context}
+        </if>
+        order by type,create_time desc
+    </select>
+    <update id="updateByParentId" parameterType="com.hengyunsoft.platform.ops.entity.train.po.TrainDirectory">
+        update b_yw_train_directory
+        <set>
+            <if test="trainDirectory.type != null">
+                type = #{trainDirectory.type,jdbcType=VARCHAR},
+            </if>
+            <if test="trainDirectory.serviceName != null">
+                service_name = #{trainDirectory.serviceName,jdbcType=VARCHAR},
+            </if>
+            <if test="trainDirectory.serviceInfo != null">
+                service_info = #{trainDirectory.serviceInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="trainDirectory.updateTime != null">
+                update_time = #{trainDirectory.updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="trainDirectory.updateUser != null">
+                update_user = #{trainDirectory.updateUser,jdbcType=BIGINT},
+            </if>
+        </set>
+        where parent_id = #{trainDirectory.parentId,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectParentsById" parameterType="long" resultMap="BaseResultMap">
+        SELECT
+            T2.*
+        FROM
+            (
+            SELECT
+                @r AS _id,
+                ( SELECT @r := parent_id FROM b_yw_train_directory WHERE id = _id ) AS parent_id,
+                @l := @l + 1 AS lvl
+            FROM
+                ( SELECT @r := #{id}, @l := 0 ) vars,
+                b_yw_train_directory h
+            WHERE
+                @r &lt;&gt; 0
+            ) T1
+            JOIN b_yw_train_directory T2 ON T1._id = T2.id
+        ORDER BY
+            T1.lvl DESC
+  </select>
+    <!--模糊查询培训目录信息-->
+    <select id="getPageList"  parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT  id, parent_id, sort, level, type,
+        service_name, service_info, create_time,
+        create_user,update_time, update_user
+        FROM b_yw_train_directory
+        <where>
+            <if test="serviceName!= null and serviceName!=''">
+                and  service_name like #{serviceName,typeHandler=fullLike}
+                or type like #{serviceName,typeHandler=fullLike}
+            </if>
+        </where>
+    </select>
+</mapper>

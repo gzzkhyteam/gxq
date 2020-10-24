@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.train.dao.TrainManageMapper">
+    <resultMap id="treeMap" type="com.hengyunsoft.platform.ops.entity.train.dos.TrainPageResDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="train_name" jdbcType="VARCHAR" property="name"/>
+        <result column="train_type" jdbcType="VARCHAR" property="type"/>
+        <result column="train_time" jdbcType="TIMESTAMP" property="trainTime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="train_sorce" jdbcType="DECIMAL" property="trainSorce"/>
+        <result column="train_info" jdbcType="VARCHAR" property="context"/>
+        <result column="train_address" jdbcType="VARCHAR" property="trainAddress"/>
+        <result column="sub_dept" jdbcType="VARCHAR" property="company"/>
+        <result column="apply_code" jdbcType="VARCHAR" property="applyCode"/>
+    </resultMap>
+    <resultMap id="adminTreeMap" type="com.hengyunsoft.platform.ops.entity.train.dos.TrainAdminPageResDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="train_name" jdbcType="VARCHAR" property="name"/>
+        <result column="train_type" jdbcType="VARCHAR" property="type"/>
+        <result column="train_time" jdbcType="TIMESTAMP" property="trainTime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="train_sorce" jdbcType="DECIMAL" property="trainSorce"/>
+        <result column="sub_dept" jdbcType="VARCHAR" property="company"/>
+        <result column="train_info" jdbcType="VARCHAR" property="context"/>
+        <result column="train_address" jdbcType="VARCHAR" property="trainAddress"/>
+        <result column="sub_person" jdbcType="VARCHAR" property="person"/>
+        <result column="person_id" jdbcType="BIGINT" property="personId"/>
+        <result column="apply_code" jdbcType="VARCHAR" property="applyCode"/>
+    </resultMap>
+    <resultMap id="filesMap" type="com.hengyunsoft.platform.ops.entity.train.dos.OperationFileDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="buss_id" jdbcType="BIGINT" property="bussId"/>
+        <result column="buss_type" jdbcType="VARCHAR" property="bussType"/>
+        <result column="file_id" jdbcType="BIGINT" property="fileId"/>
+        <result column="file_url" jdbcType="VARCHAR" property="fileUrl"/>
+        <result column="file_size" jdbcType="INTEGER" property="fileSize"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="file_type" jdbcType="VARCHAR" property="fileType"/>
+    </resultMap>
+    <!--获取培训分页列表-->
+    <select id="getList" parameterType="java.util.Map" resultMap="treeMap">
+        select bytm.id,bytm.train_name,bytm.train_type,bytm.train_time,
+        bytm.status,bytm.train_sorce,bytm.train_info,bytm.train_address,bytm.sub_dept,bytm.apply_code
+        from b_yw_train_manage bytm
+        where bytm.create_user = #{createUser,jdbcType=INTEGER}
+        <if test="startTime!= null">
+            and bytm.train_time &gt;= #{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime!= null">
+            and bytm.train_time &lt;= #{endTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="type!= null and type!=''">
+            and bytm.train_type = #{type,jdbcType=VARCHAR}
+        </if>
+        <if test="name!= null and name!=''">
+            and bytm.train_name like #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="context!= null and context!=''">
+            and bytm.train_info like #{context,jdbcType=VARCHAR}
+        </if>
+        <if test="status!= null and status!=''">
+            and bytm.status = #{status,jdbcType=INTEGER}
+        </if>
+        <if test="applyCode!= null and applyCode!=''">
+            and bytm.apply_code like #{applyCode,jdbcType=VARCHAR}
+        </if>
+        order by bytm.train_time desc
+    </select>
+    <!--获取培训审核分页列表-->
+    <select id="getAuditorList" parameterType="com.hengyunsoft.platform.ops.entity.train.dos.TrainAdminPageReqDO"
+            resultMap="adminTreeMap">
+        select bytm.id,bytm.train_name,bytm.train_type,bytm.train_time,bytm.status,bytm.train_sorce,
+        bytm.sub_dept,bytm.sub_person,bytm.train_info,bytm.train_address,bydu.person_id,bytm.apply_code
+        from b_yw_train_manage bytm left join b_yw_deal_user bydu on bytm.id=bydu.buss_id
+        <if test="trainAdminPageReqDTO.handle==0">
+            and bydu.type='pxr'
+        </if>
+        <if test="trainAdminPageReqDTO.handle==1">
+            and bydu.type='clr'
+        </if>
+        where 1=1
+        <if test="trainAdminPageReqDTO.createUser != 0 and trainAdminPageReqDTO.createUser != -1">
+            and bydu.person_id = #{trainAdminPageReqDTO.createUser}
+        </if>
+        <if test="trainAdminPageReqDTO.handle==1">
+            and (bytm.status=3 or bytm.status=5)
+        </if>
+        <if test="trainAdminPageReqDTO.handle==0">
+            and bytm.status !=2
+        </if>
+        <if test="trainAdminPageReqDTO.startTime!= null">
+            and bytm.train_time &gt;= #{trainAdminPageReqDTO.startTime}
+        </if>
+        <if test="trainAdminPageReqDTO.endTime!= null">
+            and bytm.train_time &lt;= #{trainAdminPageReqDTO.endTime}
+        </if>
+        <if test="trainAdminPageReqDTO.type!= null and trainAdminPageReqDTO.type!=''">
+            and bytm.train_type = #{trainAdminPageReqDTO.type}
+        </if>
+        <if test="trainAdminPageReqDTO.name!= null and trainAdminPageReqDTO.name!=''">
+            and bytm.train_name like #{trainAdminPageReqDTO.name}
+        </if>
+        <if test="trainAdminPageReqDTO.context!= null and trainAdminPageReqDTO.context!=''">
+            and bytm.train_info like #{trainAdminPageReqDTO.context}
+        </if>
+        <if test="trainAdminPageReqDTO.status!= null and trainAdminPageReqDTO.status!='' and trainAdminPageReqDTO.status!=0">
+            and bytm.status = #{trainAdminPageReqDTO.status}
+        </if>
+        <if test="trainAdminPageReqDTO.company!= null and trainAdminPageReqDTO.company!=''">
+            and bytm.sub_dept like #{trainAdminPageReqDTO.company}
+        </if>
+        <if test="trainAdminPageReqDTO.person!= null and trainAdminPageReqDTO.person!=''">
+            and bytm.sub_person like #{trainAdminPageReqDTO.person}
+        </if>
+        <if test="trainAdminPageReqDTO.applyCode!= null and trainAdminPageReqDTO.applyCode!=''">
+            and bytm.apply_code like #{trainAdminPageReqDTO.applyCode,jdbcType=VARCHAR}
+        </if>
+        order by bytm.train_time desc
+    </select>
+    <!--获取文件列表-->
+    <select id="getFilesByBussId" resultMap="filesMap">
+        select * from b_yw_operation_file
+        where buss_id in
+        <foreach close=")" collection="ids" index="index" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

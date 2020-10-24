@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.base.dao.DictionaryMapper">
+    <resultMap id="ExtendResultMap" type="com.hengyunsoft.platform.admin.entity.base.domain.DictionaryMaintainDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="dictionary_type_id" jdbcType="BIGINT" property="dictionaryTypeId" />
+        <result column="dictionary_type_code" jdbcType="VARCHAR" property="dictionaryTypeCode" />
+        <result column="dictionary_type_name" jdbcType="VARCHAR" property="dictionaryTypeName" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="is_delete" jdbcType="BIT" property="isDelete" />
+        <result column="is_enable" jdbcType="BIT" property="isEnable" />
+        <result column="order_num" jdbcType="INTEGER" property="orderNum" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="num" jdbcType="BIGINT" property="num" />
+    </resultMap>
+    <sql id="Extend_Column_List">
+        <!--
+        @mbggenerated
+        -->
+        b_dictionary.id, b_dictionary.app_id, b_dictionary.dictionary_type_id, b_dictionary.dictionary_type_code,
+        b_dictionary.dictionary_type_name, b_dictionary.code, b_dictionary.name, b_dictionary.is_delete,
+        b_dictionary.is_enable, b_dictionary.order_num, b_dictionary.description, b_dictionary.create_time,
+        b_dictionary.create_user, b_dictionary.update_time, b_dictionary.update_user
+    </sql>
+    <delete id="deleteByAppIdAndTypeId" parameterType="map">
+    delete from b_dictionary
+    where app_id=#{appId,jdbcType=VARCHAR} and dictionary_type_id=#{typeId,jdbcType=BIGINT}
+  </delete>
+
+    <!--根据 name 查询-->
+    <select id="findByName" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from b_dictionary
+        WHERE
+        name = #{name,jdbcType=VARCHAR}
+        AND
+        is_delete = 0
+    </select>
+
+    <!--更新功能类型信息-->
+    <!--<update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.admin.entity.base.po.Dictionary">-->
+    <!--UPDATE b_dictionary-->
+    <!--SET-->
+    <!--code = #{code, jdbcType = VARCHAR},-->
+    <!--name = #{name, jdbcType = VARCHAR},-->
+    <!--update_time = #{updateTime, jdbcType =TIMESTAMP},-->
+    <!--update_user = #{updateUser, jdbcType =VARCHAR},-->
+    <!--description = #{description, jdbcType =VARCHAR}-->
+    <!--WHERE-->
+    <!--id = #{id,jdbcType = BIGINT}-->
+    <!--</update>-->
+
+    <!--根据功能ID删除功能信息 物理删除-->
+    <delete id="delById" parameterType="com.hengyunsoft.platform.admin.entity.base.po.Dictionary">
+        UPDATE b_dictionary
+        SET is_delete = #{isDelete,jdbcType=BIT}
+        WHERE id = #{id, jdbcType=BIGINT}
+    </delete>
+
+    <update id="updateDictionaryById" parameterType="com.hengyunsoft.platform.admin.entity.base.po.Dictionary">
+        UPDATE b_dictionary
+        SET
+        code=#{code},name=#{name},description=#{description}
+        ,update_time=#{updateTime},update_user=#{updateUser}
+        WHERE id = #{id}
+
+    </update>
+
+    <!--查找单位所有的字典
+    @wz-->
+    <select id="findOrgDictionary" resultMap="BaseResultMap">
+        (select 'fornodetype' dictionary_type_code, group_concat(b_dictionary.`name`) code from b_dictionary_type left join b_dictionary on b_dictionary_type.`code`=b_dictionary.dictionary_type_code where dictionary_type_code='node.type' order by order_num)
+        union all
+        (select 'forgk' dictionary_type_code, group_concat(b_dictionary.`name`) code from b_dictionary_type left join b_dictionary on b_dictionary_type.`code`=b_dictionary.dictionary_type_code where dictionary_type_code='org.ascription' order by order_num)
+        union all
+        (select 'forType' dictionary_type_code, group_concat(b_dictionary.`name`) code from b_dictionary_type left join b_dictionary on b_dictionary_type.`code`=b_dictionary.dictionary_type_code where dictionary_type_code='org.type' order by order_num)
+        union all
+        (select 'forClass' dictionary_type_code, group_concat(b_dictionary.`name`) code from b_dictionary_type left join b_dictionary on b_dictionary_type.`code`=b_dictionary.dictionary_type_code where dictionary_type_code='level' order by order_num)
+        union all
+        (select 'forindustry' dictionary_type_code, group_concat(b_dictionary.`name`) code from b_dictionary_type left join b_dictionary on b_dictionary_type.`code`=b_dictionary.dictionary_type_code where dictionary_type_code='app_type' order by order_num)
+    </select>
+    <!--应用类型维护查询
+    @wz-->
+    <select id="findAppMaintainPage" resultMap="ExtendResultMap">
+        select DISTINCT
+        <include refid="Extend_Column_List"/>,
+        (select count(c_application.id) from c_application where c_application.type_ = b_dictionary.`code`) num
+        from b_dictionary
+        left join c_application on b_dictionary.dictionary_type_code = c_application.type_
+        where b_dictionary.dictionary_type_code=#{typeCode, jdbcType=VARCHAR}
+        and b_dictionary.app_id = #{appId, jdbcType=VARCHAR}
+        and b_dictionary.is_delete=0
+        order by create_time desc
+    </select>
+
+    <!--功能类型维护查询
+    @wz-->
+    <select id="findModMaintainPage" resultMap="ExtendResultMap">
+        select DISTINCT
+        <include refid="Extend_Column_List"/>,
+        (select count(c_service_module.id) from c_service_module where c_service_module.module_type = b_dictionary.`code`) num
+        from b_dictionary
+        left join c_service_module on b_dictionary.dictionary_type_code = c_service_module.module_type
+        where b_dictionary.dictionary_type_code=#{typeCode, jdbcType=VARCHAR}
+        and b_dictionary.app_id =#{appId, jdbcType=VARCHAR}
+        and b_dictionary.is_delete=0
+        order by create_time desc
+    </select>
+</mapper>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.punchstatics.dao.PunchAttendanceStaticsMapper">
+    <resultMap id="ExtBaseResultMap"
+               type="com.hengyunsoft.platform.mt.entity.punchstatics.po.PunchAttendanceStaticsExt">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
+        <result column="mainduty_name" jdbcType="VARCHAR" property="maindutyName"/>
+        <result column="att_year" jdbcType="VARCHAR" property="attYear"/>
+        <result column="att_month" jdbcType="VARCHAR" property="attMonth"/>
+        <result column="att_day" jdbcType="VARCHAR" property="attDay"/>
+        <result column="isWorkDay" jdbcType="INTEGER" property="isWorkDay"/>
+        <result column="isHolidays" jdbcType="INTEGER" property="isHolidays"/>
+        <result column="week_day" jdbcType="INTEGER" property="weekDay"/>
+        <result column="out_hous" jdbcType="DOUBLE" property="outHous"/>
+        <result column="work_hous" jdbcType="DOUBLE" property="workHous"/>
+        <result column="leave_hous" jdbcType="DOUBLE" property="leaveHous"/>
+        <result column="travel_hous" jdbcType="DOUBLE" property="travelHous"/>
+        <result column="late_hour" jdbcType="DOUBLE" property="lateHour"/>
+        <result column="late_hour_time" jdbcType="DOUBLE" property="lateHourTime"/>
+        <result column="early_hour" jdbcType="DOUBLE" property="earlyHour"/>
+        <result column="early_hour_time" jdbcType="DOUBLE" property="earlyHourTime"/>
+        <result column="miner_count" jdbcType="INTEGER" property="minerCount"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="yearMonth" jdbcType="VARCHAR" property="yearMonth"/>
+        <result column="normalDays" jdbcType="INTEGER" property="normalDays"/>
+        <result column="out_hous_time" jdbcType="DOUBLE" property="outHousTime"/>
+        <result column="work_hous_time" jdbcType="DOUBLE" property="workHousTime"/>
+        <result column="leave_hous_time" jdbcType="DOUBLE" property="leaveHousTime"/>
+        <result column="travel_hous_time" jdbcType="DOUBLE" property="travelHousTime"/>
+        <result column="isToWork" jdbcType="INTEGER" property="isToWork"/>
+        <result column="allIsToWork" jdbcType="INTEGER" property="allIsToWork"/>
+        <result column="needDays" jdbcType="INTEGER" property="needDays"/>
+    </resultMap>
+    <!--web查询我的考勤-->
+    <select id="webQueryMyStatics" parameterType="java.util.Map" resultMap="ExtBaseResultMap">
+        SELECT
+        s.id,
+        s.user_id,
+        s.att_year,
+        s.att_month,
+        s.att_day,
+        IF(s.isholiday > 0,0,1) isWorkDay,
+        IF(s.isholiday > 0,1,0) isHolidays,
+        WEEKDAY(s.att_day) week_day,
+        (SELECT COUNT(*) FROM b_punch_clock c WHERE c.user_id = s.user_id AND STR_TO_DATE(c.clock_date,'%Y-%m-%d')
+        =s.att_day) isToWork,
+        s.out_hous,
+        s.work_hous,
+        s.leave_hous,
+        s.travel_hous,
+        s.late_hour,
+        s.early_hour,
+        s.miner_count,
+        s.create_user,
+        s.create_time,
+        s.update_user,
+        s.update_time
+        FROM
+        b_punch_attendance_statics AS s
+        <where>
+            AND s.user_id= #{userId}
+            <if test="unitId != null and unitId !=''">
+                AND s.unit_id= #{unitId}
+            </if>
+            <if test="startAttDay != null">
+                AND STR_TO_DATE(s.att_day,'%Y-%m-%d') >= #{startAttDay,jdbcType=DATE}
+            </if>
+            <if test="endAttDay != null">
+                AND #{endAttDay,jdbcType=DATE} >= STR_TO_DATE(s.att_day,'%Y-%m-%d')
+            </if>
+        </where>
+        ORDER BY s.att_day DESC
+    </select>
+    <!--web查询我的考勤总计值-->
+    <select id="queryMyStaticsSum" parameterType="java.util.Map" resultMap="ExtBaseResultMap">
+        SELECT
+        s.user_id,
+        SUM(s.out_hous) out_hous,
+        SUM(s.work_hous) work_hous,
+        SUM(s.leave_hous) leave_hous,
+        SUM(s.travel_hous) travel_hous,
+        SUM(s.late_hour) late_hour,
+        SUM(s.early_hour) early_hour,
+        SUM(s.miner_count) miner_count,
+        SUM(IF(s.late_hour > 0,1,0)) late_hour_time,
+        SUM(IF(s.early_hour > 0,1,0)) early_hour_time,
+        SUM(IF(s.out_hous > 0,1,0)) out_hous_time,
+        SUM(IF(s.work_hous > 0,1,0)) work_hous_time,
+        SUM(IF(s.leave_hous > 0,1,0)) leave_hous_time,
+        SUM(IF(s.travel_hous > 0,1,0)) travel_hous_time,
+        (SELECT COUNT(*) FROM b_punch_clock c WHERE c.user_id = s.user_id AND STR_TO_DATE(c.clock_date,'%Y-%m-%d') >=
+        #{startAttDay,jdbcType=DATE}
+        AND #{endAttDay,jdbcType=DATE} >= STR_TO_DATE(c.clock_date,'%Y-%m-%d')) allIsToWork,
+        SUM( IF(s.isholiday > 0,0,1)) needDays
+        FROM
+        b_punch_attendance_statics AS s
+        <where>
+            AND s.user_id= #{userId}
+            <if test="unitId != null and unitId !=''">
+                AND s.unit_id= #{unitId}
+            </if>
+            <if test="startAttDay != null">
+                AND STR_TO_DATE(s.att_day,'%Y-%m-%d') >= #{startAttDay,jdbcType=DATE}
+            </if>
+            <if test="endAttDay != null">
+                AND #{endAttDay,jdbcType=DATE} >= STR_TO_DATE(s.att_day,'%Y-%m-%d')
+            </if>
+        </where>
+    </select>
+
+    <select id="getNormalDay" resultType="java.lang.Integer" parameterType="map">
+       SELECT
+            IFNULL(SUM(
+                    (CASE WHEN 0 >= s.late_hour + s.early_hour + s.miner_count + s.leave_hous THEN 1 ELSE 0 END)
+            ),0)  normalDays
+        FROM b_punch_attendance_statics s
+        WHERE user_id = #{userId}
+        AND s.unit_id= #{unitId}
+        AND att_day>=#{startDate}
+        AND #{endDate} >= att_day
+    </select>
+
+    <select id="queryHalfYearAttence" parameterType="map" resultMap="ExtBaseResultMap">
+        SELECT   DATE_FORMAT(att_day,'%Y-%m') yearMonth,
+        IFNULL(SUM( CASE WHEN 0 >= s.late_hour + s.early_hour + s.miner_count + s.leave_hous THEN 1 ELSE 0 END),0) normalDays,
+        IFNULL(SUM(s.work_hous),0) work_hous,
+        IFNULL(SUM(s.leave_hous),0) leave_hous,
+        IFNULL(SUM(s.travel_hous),0) travel_hous,
+        IFNULL(SUM(s.late_hour),0) late_hour,
+        IFNULL(SUM(s.early_hour),0) early_hour,
+        IFNULL(SUM(s.miner_count),0) miner_count
+        FROM b_punch_attendance_statics AS s
+        WHERE user_id = #{userId}
+        AND s.unit_id= #{unitId}
+        AND att_day >=#{startDate}
+        AND #{endDate}>=att_day
+        GROUP BY DATE_FORMAT(att_day,'%Y-%m');
+    </select>
+    <select id="appPeronManaList" parameterType="java.util.Map" resultMap="ExtBaseResultMap">
+        SELECT
+        s.id,
+        s.user_id,
+        emp.name_ user_name,
+        s.att_year,
+        s.att_month,
+        s.att_day,
+        IF(s.isholiday > 0,0,1) isWorkDay,
+        IF(s.isholiday > 0,1,0) isHolidays,
+        s.out_hous,
+        s.work_hous,
+        s.leave_hous,
+        s.travel_hous,
+        s.late_hour,
+        s.early_hour,
+        s.miner_count,
+        s.create_user,
+        s.create_time,
+        s.update_user,
+        s.update_time
+        FROM
+        b_punch_attendance_statics AS s left join copy_core_c_gxqpt_emp emp on s.user_id = emp.gxqpt_emp_id
+        <where>
+            <if test="unitId != null and unitId !=''">
+                AND s.unit_id= #{unitId}
+            </if>
+            <if test="startAttDay != null">
+                AND STR_TO_DATE(s.att_day,'%Y-%m-%d') >= #{startAttDay,jdbcType=DATE}
+            </if>
+            <if test="endAttDay != null">
+                AND #{endAttDay,jdbcType=DATE} >= STR_TO_DATE(s.att_day,'%Y-%m-%d')
+            </if>
+            <if test="name != null and name !=''">
+                AND emp.name_ like #{userName,typeHandler=fullLike}
+            </if>
+        </where>
+        ORDER BY s.att_day DESC
+    </select>
+</mapper>

@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogFileInterfaceMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.logs.entity.logs.po.LogFileInterface">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="log_file_id" jdbcType="BIGINT" property="logFileId" />
+    <result column="log_type" jdbcType="VARCHAR" property="logType" />
+    <result column="log_export_type" jdbcType="VARCHAR" property="logExportType" />
+    <result column="log_pattern" jdbcType="VARCHAR" property="logPattern" />
+    <result column="document_id" jdbcType="VARCHAR" property="documentId" />
+    <result column="is_parsed" jdbcType="VARCHAR" property="isParsed" />
+    <result column="parse_time" jdbcType="TIMESTAMP" property="parseTime" />
+    <result column="is_pull" jdbcType="VARCHAR" property="isPull" />
+    <result column="pull_time" jdbcType="TIMESTAMP" property="pullTime" />
+    <result column="is_delete_struct" jdbcType="VARCHAR" property="isDeleteStruct" />
+    <result column="log_count" jdbcType="BIGINT" property="logCount" />
+    <result column="log_start_time" jdbcType="TIMESTAMP" property="logStartTime" />
+    <result column="log_end_time" jdbcType="TIMESTAMP" property="logEndTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, app_id, log_file_id, log_type, log_export_type, log_pattern, document_id, is_parsed, 
+    parse_time, is_pull, pull_time, is_delete_struct, log_count, log_start_time, log_end_time, 
+    create_time, create_user, update_time, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogFileInterfaceExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from log_file_interface
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from log_file_interface
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogFileInterfaceExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from log_file_interface
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from log_file_interface
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogFileInterfaceExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from log_file_interface
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogFileInterface">
+    <!--
+    @mbggenerated
+    -->
+    update log_file_interface
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogFileInterface">
+    <!--
+    @mbggenerated
+    -->
+    update log_file_interface
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogFileInterface">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_file_interface (id, app_id, log_file_id, 
+      log_type, log_export_type, log_pattern, 
+      document_id, is_parsed, parse_time, 
+      is_pull, pull_time, is_delete_struct, 
+      log_count, log_start_time, log_end_time, 
+      create_time, create_user, update_time, 
+      update_user)
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{logFileId,jdbcType=BIGINT}, 
+      #{logType,jdbcType=VARCHAR}, #{logExportType,jdbcType=VARCHAR}, #{logPattern,jdbcType=VARCHAR}, 
+      #{documentId,jdbcType=VARCHAR}, #{isParsed,jdbcType=VARCHAR}, #{parseTime,jdbcType=TIMESTAMP}, 
+      #{isPull,jdbcType=VARCHAR}, #{pullTime,jdbcType=TIMESTAMP}, #{isDeleteStruct,jdbcType=VARCHAR}, 
+      #{logCount,jdbcType=BIGINT}, #{logStartTime,jdbcType=TIMESTAMP}, #{logEndTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_file_interface (id, app_id, log_file_id, log_type, log_export_type, log_pattern, document_id, is_parsed, parse_time, is_pull, pull_time, is_delete_struct, log_count, log_start_time, log_end_time, create_time, create_user, update_time, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.appId,jdbcType=VARCHAR}, #{item.logFileId,jdbcType=BIGINT}, 
+        #{item.logType,jdbcType=VARCHAR}, #{item.logExportType,jdbcType=VARCHAR}, #{item.logPattern,jdbcType=VARCHAR}, 
+        #{item.documentId,jdbcType=VARCHAR}, #{item.isParsed,jdbcType=VARCHAR}, #{item.parseTime,jdbcType=TIMESTAMP}, 
+        #{item.isPull,jdbcType=VARCHAR}, #{item.pullTime,jdbcType=TIMESTAMP}, #{item.isDeleteStruct,jdbcType=VARCHAR}, 
+        #{item.logCount,jdbcType=BIGINT}, #{item.logStartTime,jdbcType=TIMESTAMP}, #{item.logEndTime,jdbcType=TIMESTAMP}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogFileInterface">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_file_interface
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="logFileId != null">
+        log_file_id,
+      </if>
+      <if test="logType != null">
+        log_type,
+      </if>
+      <if test="logExportType != null">
+        log_export_type,
+      </if>
+      <if test="logPattern != null">
+        log_pattern,
+      </if>
+      <if test="documentId != null">
+        document_id,
+      </if>
+      <if test="isParsed != null">
+        is_parsed,
+      </if>
+      <if test="parseTime != null">
+        parse_time,
+      </if>
+      <if test="isPull != null">
+        is_pull,
+      </if>
+      <if test="pullTime != null">
+        pull_time,
+      </if>
+      <if test="isDeleteStruct != null">
+        is_delete_struct,
+      </if>
+      <if test="logCount != null">
+        log_count,
+      </if>
+      <if test="logStartTime != null">
+        log_start_time,
+      </if>
+      <if test="logEndTime != null">
+        log_end_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="logFileId != null">
+        #{logFileId,jdbcType=BIGINT},
+      </if>
+      <if test="logType != null">
+        #{logType,jdbcType=VARCHAR},
+      </if>
+      <if test="logExportType != null">
+        #{logExportType,jdbcType=VARCHAR},
+      </if>
+      <if test="logPattern != null">
+        #{logPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="documentId != null">
+        #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="isParsed != null">
+        #{isParsed,jdbcType=VARCHAR},
+      </if>
+      <if test="parseTime != null">
+        #{parseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isPull != null">
+        #{isPull,jdbcType=VARCHAR},
+      </if>
+      <if test="pullTime != null">
+        #{pullTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleteStruct != null">
+        #{isDeleteStruct,jdbcType=VARCHAR},
+      </if>
+      <if test="logCount != null">
+        #{logCount,jdbcType=BIGINT},
+      </if>
+      <if test="logStartTime != null">
+        #{logStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logEndTime != null">
+        #{logEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogFileInterfaceExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from log_file_interface
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update log_file_interface
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logFileId != null">
+        log_file_id = #{record.logFileId,jdbcType=BIGINT},
+      </if>
+      <if test="record.logType != null">
+        log_type = #{record.logType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logExportType != null">
+        log_export_type = #{record.logExportType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logPattern != null">
+        log_pattern = #{record.logPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="record.documentId != null">
+        document_id = #{record.documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isParsed != null">
+        is_parsed = #{record.isParsed,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parseTime != null">
+        parse_time = #{record.parseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isPull != null">
+        is_pull = #{record.isPull,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pullTime != null">
+        pull_time = #{record.pullTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isDeleteStruct != null">
+        is_delete_struct = #{record.isDeleteStruct,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logCount != null">
+        log_count = #{record.logCount,jdbcType=BIGINT},
+      </if>
+      <if test="record.logStartTime != null">
+        log_start_time = #{record.logStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.logEndTime != null">
+        log_end_time = #{record.logEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update log_file_interface
+    set id = #{record.id,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      log_file_id = #{record.logFileId,jdbcType=BIGINT},
+      log_type = #{record.logType,jdbcType=VARCHAR},
+      log_export_type = #{record.logExportType,jdbcType=VARCHAR},
+      log_pattern = #{record.logPattern,jdbcType=VARCHAR},
+      document_id = #{record.documentId,jdbcType=VARCHAR},
+      is_parsed = #{record.isParsed,jdbcType=VARCHAR},
+      parse_time = #{record.parseTime,jdbcType=TIMESTAMP},
+      is_pull = #{record.isPull,jdbcType=VARCHAR},
+      pull_time = #{record.pullTime,jdbcType=TIMESTAMP},
+      is_delete_struct = #{record.isDeleteStruct,jdbcType=VARCHAR},
+      log_count = #{record.logCount,jdbcType=BIGINT},
+      log_start_time = #{record.logStartTime,jdbcType=TIMESTAMP},
+      log_end_time = #{record.logEndTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogFileInterface">
+    <!--
+    @mbggenerated
+    -->
+    update log_file_interface
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="logFileId != null">
+        log_file_id = #{logFileId,jdbcType=BIGINT},
+      </if>
+      <if test="logType != null">
+        log_type = #{logType,jdbcType=VARCHAR},
+      </if>
+      <if test="logExportType != null">
+        log_export_type = #{logExportType,jdbcType=VARCHAR},
+      </if>
+      <if test="logPattern != null">
+        log_pattern = #{logPattern,jdbcType=VARCHAR},
+      </if>
+      <if test="documentId != null">
+        document_id = #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="isParsed != null">
+        is_parsed = #{isParsed,jdbcType=VARCHAR},
+      </if>
+      <if test="parseTime != null">
+        parse_time = #{parseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isPull != null">
+        is_pull = #{isPull,jdbcType=VARCHAR},
+      </if>
+      <if test="pullTime != null">
+        pull_time = #{pullTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleteStruct != null">
+        is_delete_struct = #{isDeleteStruct,jdbcType=VARCHAR},
+      </if>
+      <if test="logCount != null">
+        log_count = #{logCount,jdbcType=BIGINT},
+      </if>
+      <if test="logStartTime != null">
+        log_start_time = #{logStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logEndTime != null">
+        log_end_time = #{logEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogFileInterface">
+    <!--
+    @mbggenerated
+    -->
+    update log_file_interface
+    set app_id = #{appId,jdbcType=VARCHAR},
+      log_file_id = #{logFileId,jdbcType=BIGINT},
+      log_type = #{logType,jdbcType=VARCHAR},
+      log_export_type = #{logExportType,jdbcType=VARCHAR},
+      log_pattern = #{logPattern,jdbcType=VARCHAR},
+      document_id = #{documentId,jdbcType=VARCHAR},
+      is_parsed = #{isParsed,jdbcType=VARCHAR},
+      parse_time = #{parseTime,jdbcType=TIMESTAMP},
+      is_pull = #{isPull,jdbcType=VARCHAR},
+      pull_time = #{pullTime,jdbcType=TIMESTAMP},
+      is_delete_struct = #{isDeleteStruct,jdbcType=VARCHAR},
+      log_count = #{logCount,jdbcType=BIGINT},
+      log_start_time = #{logStartTime,jdbcType=TIMESTAMP},
+      log_end_time = #{logEndTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

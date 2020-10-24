@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogStructNginxMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.logs.entity.logs.po.LogStructNginx">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="document_id" jdbcType="VARCHAR" property="documentId" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="remote_addr" jdbcType="VARCHAR" property="remoteAddr" />
+    <result column="remote_user" jdbcType="VARCHAR" property="remoteUser" />
+    <result column="local_time" jdbcType="TIMESTAMP" property="localTime" />
+    <result column="request_agreen" jdbcType="VARCHAR" property="requestAgreen" />
+    <result column="request_url" jdbcType="VARCHAR" property="requestUrl" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="upstream_status" jdbcType="VARCHAR" property="upstreamStatus" />
+    <result column="body_bytes_sent" jdbcType="VARCHAR" property="bodyBytesSent" />
+    <result column="http_referer" jdbcType="VARCHAR" property="httpReferer" />
+    <result column="http_user_agent" jdbcType="VARCHAR" property="httpUserAgent" />
+    <result column="ssl_protocol" jdbcType="VARCHAR" property="sslProtocol" />
+    <result column="ssl_cipher" jdbcType="VARCHAR" property="sslCipher" />
+    <result column="upstream_addr" jdbcType="VARCHAR" property="upstreamAddr" />
+    <result column="time_consum" jdbcType="BIGINT" property="timeConsum" />
+    <result column="upstream_response_time" jdbcType="TIMESTAMP" property="upstreamResponseTime" />
+    <result column="bytes_sent" jdbcType="BIGINT" property="bytesSent" />
+    <result column="connection" jdbcType="BIGINT" property="connection" />
+    <result column="connection_requests" jdbcType="BIGINT" property="connectionRequests" />
+    <result column="msec" jdbcType="VARCHAR" property="msec" />
+    <result column="pipe" jdbcType="VARCHAR" property="pipe" />
+    <result column="request_length" jdbcType="BIGINT" property="requestLength" />
+    <result column="time_iso8601" jdbcType="TIMESTAMP" property="timeIso8601" />
+    <result column="time_local" jdbcType="TIMESTAMP" property="timeLocal" />
+    <result column="data_channel" jdbcType="VARCHAR" property="dataChannel" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, document_id, app_id, remote_addr, remote_user, local_time, request_agreen, request_url, 
+    status, upstream_status, body_bytes_sent, http_referer, http_user_agent, ssl_protocol, 
+    ssl_cipher, upstream_addr, time_consum, upstream_response_time, bytes_sent, connection, 
+    connection_requests, msec, pipe, request_length, time_iso8601, time_local, data_channel, 
+    create_time, create_user, update_time, update_user, create_user_name, update_user_name
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructNginxExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from log_struct_nginx
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from log_struct_nginx
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructNginxExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from log_struct_nginx
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from log_struct_nginx
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructNginxExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from log_struct_nginx
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructNginx">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_nginx
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructNginx">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_nginx
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructNginx">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_struct_nginx (id, document_id, app_id, 
+      remote_addr, remote_user, local_time, 
+      request_agreen, request_url, status, 
+      upstream_status, body_bytes_sent, http_referer, 
+      http_user_agent, ssl_protocol, ssl_cipher, 
+      upstream_addr, time_consum, upstream_response_time, 
+      bytes_sent, connection, connection_requests, 
+      msec, pipe, request_length, 
+      time_iso8601, time_local, data_channel, 
+      create_time, create_user, update_time, 
+      update_user, create_user_name, update_user_name
+      )
+    values (#{id,jdbcType=BIGINT}, #{documentId,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, 
+      #{remoteAddr,jdbcType=VARCHAR}, #{remoteUser,jdbcType=VARCHAR}, #{localTime,jdbcType=TIMESTAMP}, 
+      #{requestAgreen,jdbcType=VARCHAR}, #{requestUrl,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{upstreamStatus,jdbcType=VARCHAR}, #{bodyBytesSent,jdbcType=VARCHAR}, #{httpReferer,jdbcType=VARCHAR}, 
+      #{httpUserAgent,jdbcType=VARCHAR}, #{sslProtocol,jdbcType=VARCHAR}, #{sslCipher,jdbcType=VARCHAR}, 
+      #{upstreamAddr,jdbcType=VARCHAR}, #{timeConsum,jdbcType=BIGINT}, #{upstreamResponseTime,jdbcType=TIMESTAMP}, 
+      #{bytesSent,jdbcType=BIGINT}, #{connection,jdbcType=BIGINT}, #{connectionRequests,jdbcType=BIGINT}, 
+      #{msec,jdbcType=VARCHAR}, #{pipe,jdbcType=VARCHAR}, #{requestLength,jdbcType=BIGINT}, 
+      #{timeIso8601,jdbcType=TIMESTAMP}, #{timeLocal,jdbcType=TIMESTAMP}, #{dataChannel,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT}, #{createUserName,jdbcType=VARCHAR}, #{updateUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_struct_nginx (id, document_id, app_id, remote_addr, remote_user, local_time, request_agreen, request_url, status, upstream_status, body_bytes_sent, http_referer, http_user_agent, ssl_protocol, ssl_cipher, upstream_addr, time_consum, upstream_response_time, bytes_sent, connection, connection_requests, msec, pipe, request_length, time_iso8601, time_local, data_channel, create_time, create_user, update_time, update_user, create_user_name, update_user_name ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.documentId,jdbcType=VARCHAR}, #{item.appId,jdbcType=VARCHAR}, 
+        #{item.remoteAddr,jdbcType=VARCHAR}, #{item.remoteUser,jdbcType=VARCHAR}, #{item.localTime,jdbcType=TIMESTAMP}, 
+        #{item.requestAgreen,jdbcType=VARCHAR}, #{item.requestUrl,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR}, 
+        #{item.upstreamStatus,jdbcType=VARCHAR}, #{item.bodyBytesSent,jdbcType=VARCHAR}, 
+        #{item.httpReferer,jdbcType=VARCHAR}, #{item.httpUserAgent,jdbcType=VARCHAR}, #{item.sslProtocol,jdbcType=VARCHAR}, 
+        #{item.sslCipher,jdbcType=VARCHAR}, #{item.upstreamAddr,jdbcType=VARCHAR}, #{item.timeConsum,jdbcType=BIGINT}, 
+        #{item.upstreamResponseTime,jdbcType=TIMESTAMP}, #{item.bytesSent,jdbcType=BIGINT}, 
+        #{item.connection,jdbcType=BIGINT}, #{item.connectionRequests,jdbcType=BIGINT}, 
+        #{item.msec,jdbcType=VARCHAR}, #{item.pipe,jdbcType=VARCHAR}, #{item.requestLength,jdbcType=BIGINT}, 
+        #{item.timeIso8601,jdbcType=TIMESTAMP}, #{item.timeLocal,jdbcType=TIMESTAMP}, #{item.dataChannel,jdbcType=VARCHAR}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=BIGINT}, #{item.createUserName,jdbcType=VARCHAR}, #{item.updateUserName,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructNginx">
+    <!--
+    @mbggenerated
+    -->
+    insert into log_struct_nginx
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="documentId != null">
+        document_id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="remoteAddr != null">
+        remote_addr,
+      </if>
+      <if test="remoteUser != null">
+        remote_user,
+      </if>
+      <if test="localTime != null">
+        local_time,
+      </if>
+      <if test="requestAgreen != null">
+        request_agreen,
+      </if>
+      <if test="requestUrl != null">
+        request_url,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="upstreamStatus != null">
+        upstream_status,
+      </if>
+      <if test="bodyBytesSent != null">
+        body_bytes_sent,
+      </if>
+      <if test="httpReferer != null">
+        http_referer,
+      </if>
+      <if test="httpUserAgent != null">
+        http_user_agent,
+      </if>
+      <if test="sslProtocol != null">
+        ssl_protocol,
+      </if>
+      <if test="sslCipher != null">
+        ssl_cipher,
+      </if>
+      <if test="upstreamAddr != null">
+        upstream_addr,
+      </if>
+      <if test="timeConsum != null">
+        time_consum,
+      </if>
+      <if test="upstreamResponseTime != null">
+        upstream_response_time,
+      </if>
+      <if test="bytesSent != null">
+        bytes_sent,
+      </if>
+      <if test="connection != null">
+        connection,
+      </if>
+      <if test="connectionRequests != null">
+        connection_requests,
+      </if>
+      <if test="msec != null">
+        msec,
+      </if>
+      <if test="pipe != null">
+        pipe,
+      </if>
+      <if test="requestLength != null">
+        request_length,
+      </if>
+      <if test="timeIso8601 != null">
+        time_iso8601,
+      </if>
+      <if test="timeLocal != null">
+        time_local,
+      </if>
+      <if test="dataChannel != null">
+        data_channel,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="updateUserName != null">
+        update_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="documentId != null">
+        #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteAddr != null">
+        #{remoteAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteUser != null">
+        #{remoteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="localTime != null">
+        #{localTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="requestAgreen != null">
+        #{requestAgreen,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUrl != null">
+        #{requestUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="upstreamStatus != null">
+        #{upstreamStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="bodyBytesSent != null">
+        #{bodyBytesSent,jdbcType=VARCHAR},
+      </if>
+      <if test="httpReferer != null">
+        #{httpReferer,jdbcType=VARCHAR},
+      </if>
+      <if test="httpUserAgent != null">
+        #{httpUserAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="sslProtocol != null">
+        #{sslProtocol,jdbcType=VARCHAR},
+      </if>
+      <if test="sslCipher != null">
+        #{sslCipher,jdbcType=VARCHAR},
+      </if>
+      <if test="upstreamAddr != null">
+        #{upstreamAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="timeConsum != null">
+        #{timeConsum,jdbcType=BIGINT},
+      </if>
+      <if test="upstreamResponseTime != null">
+        #{upstreamResponseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bytesSent != null">
+        #{bytesSent,jdbcType=BIGINT},
+      </if>
+      <if test="connection != null">
+        #{connection,jdbcType=BIGINT},
+      </if>
+      <if test="connectionRequests != null">
+        #{connectionRequests,jdbcType=BIGINT},
+      </if>
+      <if test="msec != null">
+        #{msec,jdbcType=VARCHAR},
+      </if>
+      <if test="pipe != null">
+        #{pipe,jdbcType=VARCHAR},
+      </if>
+      <if test="requestLength != null">
+        #{requestLength,jdbcType=BIGINT},
+      </if>
+      <if test="timeIso8601 != null">
+        #{timeIso8601,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeLocal != null">
+        #{timeLocal,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataChannel != null">
+        #{dataChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null">
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructNginxExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from log_struct_nginx
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_nginx
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.documentId != null">
+        document_id = #{record.documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remoteAddr != null">
+        remote_addr = #{record.remoteAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remoteUser != null">
+        remote_user = #{record.remoteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.localTime != null">
+        local_time = #{record.localTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.requestAgreen != null">
+        request_agreen = #{record.requestAgreen,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requestUrl != null">
+        request_url = #{record.requestUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.upstreamStatus != null">
+        upstream_status = #{record.upstreamStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bodyBytesSent != null">
+        body_bytes_sent = #{record.bodyBytesSent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.httpReferer != null">
+        http_referer = #{record.httpReferer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.httpUserAgent != null">
+        http_user_agent = #{record.httpUserAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sslProtocol != null">
+        ssl_protocol = #{record.sslProtocol,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sslCipher != null">
+        ssl_cipher = #{record.sslCipher,jdbcType=VARCHAR},
+      </if>
+      <if test="record.upstreamAddr != null">
+        upstream_addr = #{record.upstreamAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.timeConsum != null">
+        time_consum = #{record.timeConsum,jdbcType=BIGINT},
+      </if>
+      <if test="record.upstreamResponseTime != null">
+        upstream_response_time = #{record.upstreamResponseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.bytesSent != null">
+        bytes_sent = #{record.bytesSent,jdbcType=BIGINT},
+      </if>
+      <if test="record.connection != null">
+        connection = #{record.connection,jdbcType=BIGINT},
+      </if>
+      <if test="record.connectionRequests != null">
+        connection_requests = #{record.connectionRequests,jdbcType=BIGINT},
+      </if>
+      <if test="record.msec != null">
+        msec = #{record.msec,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pipe != null">
+        pipe = #{record.pipe,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requestLength != null">
+        request_length = #{record.requestLength,jdbcType=BIGINT},
+      </if>
+      <if test="record.timeIso8601 != null">
+        time_iso8601 = #{record.timeIso8601,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.timeLocal != null">
+        time_local = #{record.timeLocal,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.dataChannel != null">
+        data_channel = #{record.dataChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createUserName != null">
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUserName != null">
+        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_nginx
+    set id = #{record.id,jdbcType=BIGINT},
+      document_id = #{record.documentId,jdbcType=VARCHAR},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      remote_addr = #{record.remoteAddr,jdbcType=VARCHAR},
+      remote_user = #{record.remoteUser,jdbcType=VARCHAR},
+      local_time = #{record.localTime,jdbcType=TIMESTAMP},
+      request_agreen = #{record.requestAgreen,jdbcType=VARCHAR},
+      request_url = #{record.requestUrl,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      upstream_status = #{record.upstreamStatus,jdbcType=VARCHAR},
+      body_bytes_sent = #{record.bodyBytesSent,jdbcType=VARCHAR},
+      http_referer = #{record.httpReferer,jdbcType=VARCHAR},
+      http_user_agent = #{record.httpUserAgent,jdbcType=VARCHAR},
+      ssl_protocol = #{record.sslProtocol,jdbcType=VARCHAR},
+      ssl_cipher = #{record.sslCipher,jdbcType=VARCHAR},
+      upstream_addr = #{record.upstreamAddr,jdbcType=VARCHAR},
+      time_consum = #{record.timeConsum,jdbcType=BIGINT},
+      upstream_response_time = #{record.upstreamResponseTime,jdbcType=TIMESTAMP},
+      bytes_sent = #{record.bytesSent,jdbcType=BIGINT},
+      connection = #{record.connection,jdbcType=BIGINT},
+      connection_requests = #{record.connectionRequests,jdbcType=BIGINT},
+      msec = #{record.msec,jdbcType=VARCHAR},
+      pipe = #{record.pipe,jdbcType=VARCHAR},
+      request_length = #{record.requestLength,jdbcType=BIGINT},
+      time_iso8601 = #{record.timeIso8601,jdbcType=TIMESTAMP},
+      time_local = #{record.timeLocal,jdbcType=TIMESTAMP},
+      data_channel = #{record.dataChannel,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructNginx">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_nginx
+    <set>
+      <if test="documentId != null">
+        document_id = #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteAddr != null">
+        remote_addr = #{remoteAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteUser != null">
+        remote_user = #{remoteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="localTime != null">
+        local_time = #{localTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="requestAgreen != null">
+        request_agreen = #{requestAgreen,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUrl != null">
+        request_url = #{requestUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="upstreamStatus != null">
+        upstream_status = #{upstreamStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="bodyBytesSent != null">
+        body_bytes_sent = #{bodyBytesSent,jdbcType=VARCHAR},
+      </if>
+      <if test="httpReferer != null">
+        http_referer = #{httpReferer,jdbcType=VARCHAR},
+      </if>
+      <if test="httpUserAgent != null">
+        http_user_agent = #{httpUserAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="sslProtocol != null">
+        ssl_protocol = #{sslProtocol,jdbcType=VARCHAR},
+      </if>
+      <if test="sslCipher != null">
+        ssl_cipher = #{sslCipher,jdbcType=VARCHAR},
+      </if>
+      <if test="upstreamAddr != null">
+        upstream_addr = #{upstreamAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="timeConsum != null">
+        time_consum = #{timeConsum,jdbcType=BIGINT},
+      </if>
+      <if test="upstreamResponseTime != null">
+        upstream_response_time = #{upstreamResponseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bytesSent != null">
+        bytes_sent = #{bytesSent,jdbcType=BIGINT},
+      </if>
+      <if test="connection != null">
+        connection = #{connection,jdbcType=BIGINT},
+      </if>
+      <if test="connectionRequests != null">
+        connection_requests = #{connectionRequests,jdbcType=BIGINT},
+      </if>
+      <if test="msec != null">
+        msec = #{msec,jdbcType=VARCHAR},
+      </if>
+      <if test="pipe != null">
+        pipe = #{pipe,jdbcType=VARCHAR},
+      </if>
+      <if test="requestLength != null">
+        request_length = #{requestLength,jdbcType=BIGINT},
+      </if>
+      <if test="timeIso8601 != null">
+        time_iso8601 = #{timeIso8601,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeLocal != null">
+        time_local = #{timeLocal,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataChannel != null">
+        data_channel = #{dataChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserName != null">
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogStructNginx">
+    <!--
+    @mbggenerated
+    -->
+    update log_struct_nginx
+    set document_id = #{documentId,jdbcType=VARCHAR},
+      app_id = #{appId,jdbcType=VARCHAR},
+      remote_addr = #{remoteAddr,jdbcType=VARCHAR},
+      remote_user = #{remoteUser,jdbcType=VARCHAR},
+      local_time = #{localTime,jdbcType=TIMESTAMP},
+      request_agreen = #{requestAgreen,jdbcType=VARCHAR},
+      request_url = #{requestUrl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      upstream_status = #{upstreamStatus,jdbcType=VARCHAR},
+      body_bytes_sent = #{bodyBytesSent,jdbcType=VARCHAR},
+      http_referer = #{httpReferer,jdbcType=VARCHAR},
+      http_user_agent = #{httpUserAgent,jdbcType=VARCHAR},
+      ssl_protocol = #{sslProtocol,jdbcType=VARCHAR},
+      ssl_cipher = #{sslCipher,jdbcType=VARCHAR},
+      upstream_addr = #{upstreamAddr,jdbcType=VARCHAR},
+      time_consum = #{timeConsum,jdbcType=BIGINT},
+      upstream_response_time = #{upstreamResponseTime,jdbcType=TIMESTAMP},
+      bytes_sent = #{bytesSent,jdbcType=BIGINT},
+      connection = #{connection,jdbcType=BIGINT},
+      connection_requests = #{connectionRequests,jdbcType=BIGINT},
+      msec = #{msec,jdbcType=VARCHAR},
+      pipe = #{pipe,jdbcType=VARCHAR},
+      request_length = #{requestLength,jdbcType=BIGINT},
+      time_iso8601 = #{timeIso8601,jdbcType=TIMESTAMP},
+      time_local = #{timeLocal,jdbcType=TIMESTAMP},
+      data_channel = #{dataChannel,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

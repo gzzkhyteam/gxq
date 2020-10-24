@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogFileMapper">
+
+    <resultMap id="LogFileDoResultMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogFileDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+        <result column="log_type" jdbcType="VARCHAR" property="logType" />
+        <result column="document_id" jdbcType="VARCHAR" property="documentId" />
+        <result column="document_path" jdbcType="VARCHAR" property="documentPath" />
+        <result column="data_channel" jdbcType="VARCHAR" property="dataChannel" />
+        <result column="remote_ip" jdbcType="VARCHAR" property="remoteIp" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+        <result column="is_parsed" jdbcType="VARCHAR" property="isParsed"/>
+        <result column="log_start_time" jdbcType="TIMESTAMP" property="logStartTime" />
+        <result column="log_end_time" jdbcType="TIMESTAMP" property="logEndTime" />
+        <result column="parsed_status" jdbcType="VARCHAR" property="parsedStatus" />
+    </resultMap>
+
+    <resultMap id="LogStructAppPoResultMap" type="com.hengyunsoft.platform.logs.entity.logs.po.LogStructApp">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="document_id" jdbcType="VARCHAR" property="documentId" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="log_name" jdbcType="VARCHAR" property="logName" />
+        <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
+        <result column="class_name" jdbcType="VARCHAR" property="className" />
+        <result column="source_file_name" jdbcType="VARCHAR" property="sourceFileName" />
+        <result column="level" jdbcType="VARCHAR" property="level" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="thread" jdbcType="VARCHAR" property="thread" />
+        <result column="method" jdbcType="VARCHAR" property="method" />
+        <result column="line" jdbcType="VARCHAR" property="line" />
+        <result column="system_live_time" jdbcType="VARCHAR" property="systemLiveTime" />
+        <result column="log_business_type" jdbcType="VARCHAR" property="logBusinessType" />
+        <result column="data_channel" jdbcType="VARCHAR" property="dataChannel" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+    </resultMap>
+
+
+    <resultMap id="LogStructApachePoResultMap" type="com.hengyunsoft.platform.logs.entity.logs.po.LogStructApache">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="document_id" jdbcType="VARCHAR" property="documentId" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="remote_ip" jdbcType="VARCHAR" property="remoteIp" />
+        <result column="local_ip" jdbcType="VARCHAR" property="localIp" />
+        <result column="send_byte" jdbcType="VARCHAR" property="sendByte" />
+        <result column="foobar_e" jdbcType="VARCHAR" property="foobarE" />
+        <result column="foobar_i" jdbcType="VARCHAR" property="foobarI" />
+        <result column="foobar_n" jdbcType="VARCHAR" property="foobarN" />
+        <result column="foobar_o" jdbcType="VARCHAR" property="foobarO" />
+        <result column="clf_byte_count" jdbcType="VARCHAR" property="clfByteCount" />
+        <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+        <result column="host" jdbcType="VARCHAR" property="host" />
+        <result column="request_agreement" jdbcType="VARCHAR" property="requestAgreement" />
+        <result column="remote_login_name" jdbcType="VARCHAR" property="remoteLoginName" />
+        <result column="method" jdbcType="VARCHAR" property="method" />
+        <result column="port" jdbcType="VARCHAR" property="port" />
+        <result column="thread_id" jdbcType="VARCHAR" property="threadId" />
+        <result column="query_str" jdbcType="VARCHAR" property="queryStr" />
+        <result column="req_first_line" jdbcType="VARCHAR" property="reqFirstLine" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
+        <result column="time_consum" jdbcType="BIGINT" property="timeConsum" />
+        <result column="remote_user" jdbcType="VARCHAR" property="remoteUser" />
+        <result column="request_url" jdbcType="VARCHAR" property="requestUrl" />
+        <result column="rsp_server_name" jdbcType="VARCHAR" property="rspServerName" />
+        <result column="ucn_server_name" jdbcType="VARCHAR" property="ucnServerName" />
+        <result column="data_channel" jdbcType="VARCHAR" property="dataChannel" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+    </resultMap>
+
+    <resultMap id="LogStructNginxPoResultMap" type="com.hengyunsoft.platform.logs.entity.logs.po.LogStructNginx">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="document_id" jdbcType="VARCHAR" property="documentId" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="remote_addr" jdbcType="VARCHAR" property="remoteAddr" />
+        <result column="remote_user" jdbcType="VARCHAR" property="remoteUser" />
+        <result column="local_time" jdbcType="TIMESTAMP" property="localTime" />
+        <result column="request_agreen" jdbcType="VARCHAR" property="requestAgreen" />
+        <result column="request_url" jdbcType="VARCHAR" property="requestUrl" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="upstream_status" jdbcType="VARCHAR" property="upstreamStatus" />
+        <result column="body_bytes_sent" jdbcType="VARCHAR" property="bodyBytesSent" />
+        <result column="http_referer" jdbcType="VARCHAR" property="httpReferer" />
+        <result column="http_user_agent" jdbcType="VARCHAR" property="httpUserAgent" />
+        <result column="ssl_protocol" jdbcType="VARCHAR" property="sslProtocol" />
+        <result column="ssl_cipher" jdbcType="VARCHAR" property="sslCipher" />
+        <result column="upstream_addr" jdbcType="VARCHAR" property="upstreamAddr" />
+        <result column="time_consum" jdbcType="BIGINT" property="timeConsum" />
+        <result column="upstream_response_time" jdbcType="TIMESTAMP" property="upstreamResponseTime" />
+        <result column="data_channel" jdbcType="VARCHAR" property="dataChannel" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+    </resultMap>
+
+    <resultMap id="LogStructTomcatPoResultMap" type="com.hengyunsoft.platform.logs.entity.logs.po.LogStructTomcat">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="document_id" jdbcType="VARCHAR" property="documentId" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="remote_ip" jdbcType="VARCHAR" property="remoteIp" />
+        <result column="local_ip" jdbcType="VARCHAR" property="localIp" />
+        <result column="send_byte_littleb" jdbcType="VARCHAR" property="sendByteLittleb" />
+        <result column="send_byte_bigb" jdbcType="VARCHAR" property="sendByteBigb" />
+        <result column="remote_host" jdbcType="VARCHAR" property="remoteHost" />
+        <result column="request_agreement" jdbcType="VARCHAR" property="requestAgreement" />
+        <result column="identd_user" jdbcType="VARCHAR" property="identdUser" />
+        <result column="method" jdbcType="VARCHAR" property="method" />
+        <result column="port" jdbcType="VARCHAR" property="port" />
+        <result column="query_str" jdbcType="VARCHAR" property="queryStr" />
+        <result column="first_line" jdbcType="VARCHAR" property="firstLine" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="session_id" jdbcType="VARCHAR" property="sessionId" />
+        <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
+        <result column="remote_check_user" jdbcType="VARCHAR" property="remoteCheckUser" />
+        <result column="request_url" jdbcType="VARCHAR" property="requestUrl" />
+        <result column="local_host" jdbcType="VARCHAR" property="localHost" />
+        <result column="deal_request_millisecond" jdbcType="BIGINT" property="dealRequestMillisecond" />
+        <result column="time_consum" jdbcType="BIGINT" property="timeConsum" />
+        <result column="current_line" jdbcType="VARCHAR" property="currentLine" />
+        <result column="data_channel" jdbcType="VARCHAR" property="dataChannel" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+    </resultMap>
+
+    <!--分页查询文件列表-->
+    <select id="pageQueryUpload" resultMap="LogFileDoResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogFileExample">
+            select lf.id,lf.app_id,lf.file_name,lf.log_type,lf.document_id,lf.document_path,lf.data_channel,lf.remote_ip,lf.create_time,
+            lf.create_user,lf.update_time,lf.update_user,lf.create_user_name,lf.update_user_name,lfi.is_parsed,lfi.log_start_time,lfi.log_end_time,lfi.is_delete_struct,
+            case
+            when is_delete_struct='0' then case is_parsed when '0' then '解析中' when '1' then '已解析' when '2' then '解析失败' end
+            when is_delete_struct='1' then '已失效'
+            when is_delete_struct is NULL then '未解析'
+            else '其他' end as parsed_status
+            from log_file lf
+            left join log_file_interface lfi
+            on lf.id=lfi.log_file_id
+    <if test="_parameter != null">
+        <include refid="Example_Where_Clause"/>
+    </if>
+    <if test="orderByClause != null">
+        order by ${orderByClause}
+    </if>
+    </select>
+    <!--按doucmentid分页查询文件应用系统解析后对应列表-->
+    <select id="pageQueryAppList" resultMap="LogStructAppPoResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructAppExample">
+           select id,document_id,app_id,log_name,log_time,class_name,source_file_name,level,content,thread, method, line,
+        system_live_time, log_business_type, data_channel, create_time, create_user, update_time, update_user, create_user_name,
+        update_user_name
+        from log_struct_app3
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <!--按doucmentid分页查询文件apache解析后对应列表-->
+    <select id="pageQueryApacheList" resultMap="LogStructApachePoResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructApacheExample">
+            SELECT id,document_id,app_id,remote_ip,local_ip,send_byte,foobar_e,foobar_i,foobar_n,foobar_o,clf_byte_count,file_name,
+                HOST,request_agreement,remote_login_name,method,PORT,thread_id,query_str,req_first_line,STATUS,log_time,time_consum,
+                request_url, rsp_server_name,ucn_server_name,data_channel,create_time,create_user,update_time,update_user, create_user_name,
+                update_user_name
+            FROM
+                log_struct_apache
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+
+    <!--按doucmentid分页查询文件nginx解析后对应列表-->
+    <select id="pageQueryNginxList" resultMap="LogStructNginxPoResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructNginxExample">
+            SELECT id,document_id,app_id,remote_addr,remote_user,local_time,request_agreen,request_url,
+                STATUS,upstream_status,body_bytes_sent, http_referer,http_user_agent,ssl_protocol,ssl_cipher,
+                upstream_addr,time_consum,upstream_response_time,data_channel,create_time,create_user,
+                update_time, update_user,create_user_name,update_user_name
+            FROM
+                log_struct_nginx
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <!--按doucmentid分页查询文件tomcat解析后对应列表-->
+    <select id="pageQueryTomcatList" resultMap="LogStructTomcatPoResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogStructTomcatExample">
+            SELECT id,document_id,app_id,remote_ip,local_ip,send_byte_littleb,send_byte_bigb,remote_host,request_agreement,
+                identd_user,method,PORT,query_str,first_line,STATUS,session_id,log_time,remote_check_user, request_url,
+                local_host,deal_request_millisecond,time_consum,current_line,data_channel,create_time, create_user, update_time,
+                update_user,create_user_name,update_user_name
+            FROM
+                log_struct_tomcat
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <!--单个删除-->
+    <delete id="deleteLogFileInterfaceById" parameterType="Long">
+        <!--
+        @mbggenerated
+        -->
+        delete from log_file_interface where log_file_id = #{logFileId,jdbcType=BIGINT}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteLogFileInterfaceByIds" parameterType="list">
+        <!--
+        @mbggenerated
+        -->
+        delete from log_file_interface where log_file_id in
+        <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="queryLogFileByIds" resultMap="LogFileDoResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogFileExample">
+        select lf.id,lf.app_id,lf.file_name,lf.log_type,lf.document_id,lf.document_path,lf.data_channel,lf.remote_ip,lf.create_time,
+        lf.create_user,lf.update_time,lf.update_user,lf.create_user_name,lf.update_user_name
+        from log_file lf where lf.id in
+        <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--批量删除 app解析后的日志-->
+    <delete id="deleteAppByDocumentId" parameterType="list">
+        <!--
+        @mbggenerated
+        -->
+        delete from log_struct_app3 where document_id in
+        <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--批量删除 apache解析后的日志-->
+    <delete id="deleteApacheByDocumentId" parameterType="list">
+        <!--
+        @mbggenerated
+        -->
+        delete from log_struct_apache where document_id in
+        <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--批量删除 tomcat解析后的日志-->
+    <delete id="deleteTomcatByDocumentId" parameterType="list">
+        <!--
+        @mbggenerated
+        -->
+        delete from log_struct_tomcat where document_id in
+        <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--批量删除 nginx解析后的日志-->
+    <delete id="deleteNginxByDocumentId" parameterType="list">
+        <!--
+        @mbggenerated
+        -->
+        delete from log_struct_nginx where document_id in
+        <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <delete id="deleteByDocumentIds" parameterType="com.hengyunsoft.platform.logs.entity.logs.po.LogFile">
+        delete from log_file
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+
+</mapper>

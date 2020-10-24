@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogFileInterfaceMapper">
+    <resultMap id="LogFileInterfacePoResultMap" type="com.hengyunsoft.platform.logs.entity.logs.po.LogFileInterface">
+    </resultMap>
+    <!--分页查询文件列表-->
+    <select id="queryLogFileInterfaceByLogFileId" resultMap="LogFileInterfacePoResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogFileInterfaceExample">
+        select f.id,f.app_id,f.document_id,f.log_file_id,f.log_type,f.is_delete_struct,f.is_parsed,f.is_pull,
+                f.log_count,f.log_pattern,f.log_start_time,f.log_end_time,f.parse_time,
+                f.pull_time,f.create_time,f.create_user,f.update_time,f.update_user
+                from log_file_interface f
+                where f.log_file_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <update id="updateLogFileInterfaceStatus" parameterType="java.util.List">
+        update log_file_interface
+        set is_delete_struct = '1'
+        where document_id in
+        <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <update id="updateParsedSattus">
+        update log_file_interface set is_parsed = 1
+        where  EXISTS (
+            SELECT 1 from log_struct_app3  app
+            where app.document_id = log_file_interface.document_id
+        )
+    </update>
+
+
+</mapper>

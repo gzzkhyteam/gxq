@@ -1,0 +1,51 @@
+gxqpt:
+  port:
+    nginx: 10086
+    eureka: 10030
+    gate: ${gxqpt.port.nginx}        # 测试环境使用nginx
+  hostname:
+    redis: 127.0.0.1
+    rabbitmq: 192.168.1.204
+    mysql: 127.0.0.1
+    nginx: 127.0.0.1
+    eureka: 192.168.1.204
+    gate: ${gxqpt.hostname.nginx}      # 测试环境使用nginx
+    file: 192.168.1.204
+  shareFileUrl: http://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}/gxqpt-file/no/sharefile/
+  mysql:
+    file:
+      database: gxqpt_file_test # 根据环境更改
+    port: 3306                  # 根据环境更改
+    username: root              # 根据环境更改
+    password: LLm65c0VVd3axid9u+Y7DZeKwcODMjU95FRhxom6ApE2yZ1kbi5YzSsdAIz+edUOZH3Engm17+NyfyNczpaYlw==
+  file:
+    fastdfs:
+      enabled: false
+    upload-path-prefix: /home/gxqpt/uploadfile/file
+    upload-path-temp: /home/gxqpt/uploadfile/temp
+    remote-uri-prefix: http://192.168.1.204:7070/file/
+    ffmpeg-path: /home/gxqpt/uploadfile/ffmpeg/ffmpeg.exe
+  swf-conver:
+    env: 2
+    swf-tools-path: /usr/local/swftools/bin/pdf2swf
+    office-home: /opt/openoffice4
+spring:
+  profiles:
+    active: test
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq}     # 根据环境更改
+    port: 5672               # 根据环境更改
+    password: guest          # 根据环境更改
+    username: guest          # 根据环境更改
+  redis:
+    host: ${gxqpt.hostname.redis}
+    port: 6379
+    key-prefix: test
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+
+id-generator:
+  machine-code: 1  # id生成器机器掩码

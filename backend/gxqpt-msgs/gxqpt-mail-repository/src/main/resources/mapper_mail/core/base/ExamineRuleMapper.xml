@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mail.repository.core.dao.ExamineRuleMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.mail.entity.core.po.ExamineRule">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="source_ip" jdbcType="VARCHAR" property="sourceIp" />
+    <result column="cc_ip" jdbcType="VARCHAR" property="ccIp" />
+    <result column="form_dept" jdbcType="VARCHAR" property="formDept" />
+    <result column="cc_dept" jdbcType="VARCHAR" property="ccDept" />
+    <result column="mail_from" jdbcType="VARCHAR" property="mailFrom" />
+    <result column="mail_cc" jdbcType="VARCHAR" property="mailCc" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="attachment_name" jdbcType="VARCHAR" property="attachmentName" />
+    <result column="mail_length" jdbcType="VARCHAR" property="mailLength" />
+    <result column="mail_head" jdbcType="VARCHAR" property="mailHead" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="receive_time" jdbcType="TIMESTAMP" property="receiveTime" />
+    <result column="is_attachment" jdbcType="VARCHAR" property="isAttachment" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, source_ip, cc_ip, form_dept, cc_dept, mail_from, mail_cc, subject, content, attachment_name, 
+    mail_length, mail_head, send_time, receive_time, is_attachment, create_user, create_time, 
+    update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.mail.repository.core.example.ExamineRuleExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mail_examine_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from mail_examine_rule
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.mail.repository.core.example.ExamineRuleExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mail_examine_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from mail_examine_rule
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.mail.repository.core.example.ExamineRuleExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from mail_examine_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.mail.entity.core.po.ExamineRule">
+    <!--
+    @mbggenerated
+    -->
+    update mail_examine_rule
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update mail_examine_rule
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.mail.entity.core.po.ExamineRule">
+    <!--
+    @mbggenerated
+    -->
+    insert into mail_examine_rule (id, source_ip, cc_ip, 
+      form_dept, cc_dept, mail_from, 
+      mail_cc, subject, content, 
+      attachment_name, mail_length, mail_head, 
+      send_time, receive_time, is_attachment, 
+      create_user, create_time, update_user, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{sourceIp,jdbcType=VARCHAR}, #{ccIp,jdbcType=VARCHAR}, 
+      #{formDept,jdbcType=VARCHAR}, #{ccDept,jdbcType=VARCHAR}, #{mailFrom,jdbcType=VARCHAR}, 
+      #{mailCc,jdbcType=VARCHAR}, #{subject,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{attachmentName,jdbcType=VARCHAR}, #{mailLength,jdbcType=VARCHAR}, #{mailHead,jdbcType=VARCHAR}, 
+      #{sendTime,jdbcType=TIMESTAMP}, #{receiveTime,jdbcType=TIMESTAMP}, #{isAttachment,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into mail_examine_rule (id, source_ip, cc_ip, form_dept, cc_dept, mail_from, mail_cc, subject, content, attachment_name, mail_length, mail_head, send_time, receive_time, is_attachment, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.sourceIp,jdbcType=VARCHAR}, #{item.ccIp,jdbcType=VARCHAR}, 
+        #{item.formDept,jdbcType=VARCHAR}, #{item.ccDept,jdbcType=VARCHAR}, #{item.mailFrom,jdbcType=VARCHAR}, 
+        #{item.mailCc,jdbcType=VARCHAR}, #{item.subject,jdbcType=VARCHAR}, #{item.content,jdbcType=VARCHAR}, 
+        #{item.attachmentName,jdbcType=VARCHAR}, #{item.mailLength,jdbcType=VARCHAR}, #{item.mailHead,jdbcType=VARCHAR}, 
+        #{item.sendTime,jdbcType=TIMESTAMP}, #{item.receiveTime,jdbcType=TIMESTAMP}, #{item.isAttachment,jdbcType=VARCHAR}, 
+        #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, 
+        #{item.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.mail.entity.core.po.ExamineRule">
+    <!--
+    @mbggenerated
+    -->
+    insert into mail_examine_rule
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="sourceIp != null">
+        source_ip,
+      </if>
+      <if test="ccIp != null">
+        cc_ip,
+      </if>
+      <if test="formDept != null">
+        form_dept,
+      </if>
+      <if test="ccDept != null">
+        cc_dept,
+      </if>
+      <if test="mailFrom != null">
+        mail_from,
+      </if>
+      <if test="mailCc != null">
+        mail_cc,
+      </if>
+      <if test="subject != null">
+        subject,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="attachmentName != null">
+        attachment_name,
+      </if>
+      <if test="mailLength != null">
+        mail_length,
+      </if>
+      <if test="mailHead != null">
+        mail_head,
+      </if>
+      <if test="sendTime != null">
+        send_time,
+      </if>
+      <if test="receiveTime != null">
+        receive_time,
+      </if>
+      <if test="isAttachment != null">
+        is_attachment,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="sourceIp != null">
+        #{sourceIp,jdbcType=VARCHAR},
+      </if>
+      <if test="ccIp != null">
+        #{ccIp,jdbcType=VARCHAR},
+      </if>
+      <if test="formDept != null">
+        #{formDept,jdbcType=VARCHAR},
+      </if>
+      <if test="ccDept != null">
+        #{ccDept,jdbcType=VARCHAR},
+      </if>
+      <if test="mailFrom != null">
+        #{mailFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="mailCc != null">
+        #{mailCc,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentName != null">
+        #{attachmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="mailLength != null">
+        #{mailLength,jdbcType=VARCHAR},
+      </if>
+      <if test="mailHead != null">
+        #{mailHead,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null">
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receiveTime != null">
+        #{receiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isAttachment != null">
+        #{isAttachment,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.mail.repository.core.example.ExamineRuleExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from mail_examine_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update mail_examine_rule
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.sourceIp != null">
+        source_ip = #{record.sourceIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ccIp != null">
+        cc_ip = #{record.ccIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.formDept != null">
+        form_dept = #{record.formDept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ccDept != null">
+        cc_dept = #{record.ccDept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mailFrom != null">
+        mail_from = #{record.mailFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mailCc != null">
+        mail_cc = #{record.mailCc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subject != null">
+        subject = #{record.subject,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attachmentName != null">
+        attachment_name = #{record.attachmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mailLength != null">
+        mail_length = #{record.mailLength,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mailHead != null">
+        mail_head = #{record.mailHead,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendTime != null">
+        send_time = #{record.sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.receiveTime != null">
+        receive_time = #{record.receiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isAttachment != null">
+        is_attachment = #{record.isAttachment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update mail_examine_rule
+    set id = #{record.id,jdbcType=BIGINT},
+      source_ip = #{record.sourceIp,jdbcType=VARCHAR},
+      cc_ip = #{record.ccIp,jdbcType=VARCHAR},
+      form_dept = #{record.formDept,jdbcType=VARCHAR},
+      cc_dept = #{record.ccDept,jdbcType=VARCHAR},
+      mail_from = #{record.mailFrom,jdbcType=VARCHAR},
+      mail_cc = #{record.mailCc,jdbcType=VARCHAR},
+      subject = #{record.subject,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      attachment_name = #{record.attachmentName,jdbcType=VARCHAR},
+      mail_length = #{record.mailLength,jdbcType=VARCHAR},
+      mail_head = #{record.mailHead,jdbcType=VARCHAR},
+      send_time = #{record.sendTime,jdbcType=TIMESTAMP},
+      receive_time = #{record.receiveTime,jdbcType=TIMESTAMP},
+      is_attachment = #{record.isAttachment,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.mail.entity.core.po.ExamineRule">
+    <!--
+    @mbggenerated
+    -->
+    update mail_examine_rule
+    <set>
+      <if test="sourceIp != null">
+        source_ip = #{sourceIp,jdbcType=VARCHAR},
+      </if>
+      <if test="ccIp != null">
+        cc_ip = #{ccIp,jdbcType=VARCHAR},
+      </if>
+      <if test="formDept != null">
+        form_dept = #{formDept,jdbcType=VARCHAR},
+      </if>
+      <if test="ccDept != null">
+        cc_dept = #{ccDept,jdbcType=VARCHAR},
+      </if>
+      <if test="mailFrom != null">
+        mail_from = #{mailFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="mailCc != null">
+        mail_cc = #{mailCc,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        subject = #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentName != null">
+        attachment_name = #{attachmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="mailLength != null">
+        mail_length = #{mailLength,jdbcType=VARCHAR},
+      </if>
+      <if test="mailHead != null">
+        mail_head = #{mailHead,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null">
+        send_time = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receiveTime != null">
+        receive_time = #{receiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isAttachment != null">
+        is_attachment = #{isAttachment,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.mail.entity.core.po.ExamineRule">
+    <!--
+    @mbggenerated
+    -->
+    update mail_examine_rule
+    set source_ip = #{sourceIp,jdbcType=VARCHAR},
+      cc_ip = #{ccIp,jdbcType=VARCHAR},
+      form_dept = #{formDept,jdbcType=VARCHAR},
+      cc_dept = #{ccDept,jdbcType=VARCHAR},
+      mail_from = #{mailFrom,jdbcType=VARCHAR},
+      mail_cc = #{mailCc,jdbcType=VARCHAR},
+      subject = #{subject,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      attachment_name = #{attachmentName,jdbcType=VARCHAR},
+      mail_length = #{mailLength,jdbcType=VARCHAR},
+      mail_head = #{mailHead,jdbcType=VARCHAR},
+      send_time = #{sendTime,jdbcType=TIMESTAMP},
+      receive_time = #{receiveTime,jdbcType=TIMESTAMP},
+      is_attachment = #{isAttachment,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

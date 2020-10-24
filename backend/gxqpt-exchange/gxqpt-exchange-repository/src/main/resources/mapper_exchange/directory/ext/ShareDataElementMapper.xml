@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.directory.dao.ShareDataElementMapper">
+   <!-- 根据目录id删除元数据信息-->
+    <delete id="deleteByDirId" parameterType="map">
+        delete from b_share_data_element
+        where dir_id=#{dirId,jdbcType=VARCHAR}
+    </delete>
+   <!--更新元数据字段的数据集字段-->
+    <update id="updateSetFieldByPrimaryKey" parameterType="com.hengyunsoft.platform.exchange.entity.directory.po.ShareDataElement">
+        update b_share_data_element
+        set set_field = #{setField,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <sql id="Element_Change_Column_List">
+        c.id,e.dir_name as dir_id,a.unit_id,  c.field_name, c.field_code, c.field_type,c.desc_,c.set_field,c.status_,
+        b.change_type as opt_type,c.data_status,b.update_time,f.name_ as  update_user
+    </sql>
+    <resultMap id="ChangeResultMap" type="com.hengyunsoft.platform.exchange.entity.directory.po.domain.ShareDataElementDO">
+        <!--
+        @mbggenerated
+
+
+
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="dir_id" jdbcType="VARCHAR" property="dirId" />
+        <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+        <result column="field_name" jdbcType="VARCHAR" property="fieldName" />
+        <result column="field_code" jdbcType="VARCHAR" property="fieldCode" />
+        <result column="field_type" jdbcType="VARCHAR" property="fieldType" />
+        <result column="desc_" jdbcType="VARCHAR" property="desc" />
+        <result column="set_field" jdbcType="VARCHAR" property="setField" />
+        <result column="is_primary" jdbcType="INTEGER" property="isPrimary" />
+        <result column="status_" jdbcType="INTEGER" property="status" />
+        <result column="opt_type" jdbcType="INTEGER" property="optType" />
+        <result column="data_status" jdbcType="INTEGER" property="dataStatus" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+        <result column="updateUserName" jdbcType="VARCHAR" property="updateUserName" />
+
+    </resultMap>
+    <!--目录申请发布的时候，查询需要申请发布的元数据字段信息-->
+    <!--目录申请发布的时候，查询需要申请发布的元数据字段信息-->
+    <select id="getElementChangeListApply"  parameterType="java.util.Map" resultMap="ChangeResultMap">
+        SELECT
+        <include refid="Element_Change_Column_List"/>
+        ,f.name_ updateUserName
+        from b_share_data_change  a
+        LEFT JOIN b_share_data_change_element b on b.bus_id=a.id
+        LEFT JOIN b_share_data_element c on c.id=b.chg_id
+        LEFT JOIN b_share_data_directory e on e.id=c.dir_id
+        LEFT JOIN v_emp f on f.gxqpt_emp_id=b.update_user
+        where a.status_=#{status,jdbcType=INTEGER}
+        and c.status_=1
+        and b.bus_type=2
+        and a.unit_id=#{unitId,jdbcType=VARCHAR}
+    </select>
+    <select id="getElementChangeList"  parameterType="java.util.Map" resultMap="ChangeResultMap">
+        SELECT
+        <include refid="Element_Change_Column_List"/>
+        from b_share_data_change  a
+        LEFT JOIN b_share_data_change_element b on b.bus_id=a.id
+        LEFT JOIN b_share_data_element c on c.id=b.chg_id
+        LEFT JOIN b_share_data_directory e on e.id=c.dir_id
+        LEFT JOIN v_emp f on f.gxqpt_emp_id=b.update_user
+        where  a.apply_code=#{applyCode,jdbcType=VARCHAR}
+        and b.bus_type=2
+    </select>
+
+    <resultMap id="WareResultMap" type="com.hengyunsoft.platform.exchange.entity.directory.po.domain.ShareDataElementListDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="ware_id" jdbcType="BIGINT" property="wareId" />
+        <result column="dir_id" jdbcType="BIGINT" property="dirId" />
+        <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+        <result column="field_name" jdbcType="VARCHAR" property="fieldName" />
+        <result column="field_code" jdbcType="VARCHAR" property="fieldCode" />
+        <result column="field_type" jdbcType="VARCHAR" property="fieldType" />
+        <result column="desc_" jdbcType="VARCHAR" property="desc" />
+        <result column="set_field" jdbcType="VARCHAR" property="setField" />
+        <result column="status_" jdbcType="INTEGER" property="status" />
+        <result column="opt_type" jdbcType="INTEGER" property="optType" />
+        <result column="data_status" jdbcType="INTEGER" property="dataStatus" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    </resultMap>
+    <sql id="Ware_Column_List">
+        <!--
+        @mbggenerated
+        -->
+        c.id, c.dir_id, c.unit_id, c.field_name, c.field_code, c.field_type,
+        c.desc_, c.set_field, c.status_,
+        c.opt_type, c.data_status, c.create_time,
+        c.create_user, c.update_time, c.update_user,d.id as ware_id
+    </sql>
+     <!-- 查询元数据字段信息（做对比，相当于变动前）-->
+    <select id="getElementWareList"  parameterType="java.lang.Long" resultMap="WareResultMap">
+        SELECT
+        <include refid="Ware_Column_List"/>
+        from b_share_data_element c
+        LEFT JOIN b_share_data_element_ware d on d.id=c.id
+        where  c.dir_id=#{dirId,jdbcType=BIGINT}
+        and c.data_status!=2
+        order by c.create_time ASC
+    </select>
+
+
+    <select id="getEltListByDirId"  parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT  c.id
+        from b_share_data_element c
+        where  c.dir_id=#{dirId}
+        and c.data_status=1 AND  c.status_=4
+    </select>
+
+
+    <!--根据目录id更新数据集字段标识为空-->
+    <update id="updateSetFiled2Null"  parameterType="java.util.Map" >
+        UPDATE  b_share_data_element SET set_field = NULL
+        WHERE dir_id=#{dirId}
+    </update>
+    <!--根据目录id和字段标识更新数据集字段标识为空-->
+    <update id="updateSetFiled"  parameterType="java.util.Map" >
+        UPDATE  b_share_data_element SET set_field = #{setField}
+        WHERE dir_id=#{dirId}  AND field_code = #{fieldCode}
+    </update>
+    <select id="getByDirId"  parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT  c.id, c.dir_id, c.unit_id, c.field_name, c.field_code, c.field_type,
+        c.desc_, c.set_field, c.status_,c.opt_type, c.data_status,c.is_primary
+        from b_share_data_element c
+        where  c.dir_id=#{dirId,jdbcType=BIGINT}
+         and c.is_primary=1
+    </select>
+
+    <!-- 批量更新第一种方法，通过接收传进来的参数list进行循环着组装sql -->
+    <update id="batchUpdate" parameterType="java.util.List">
+        update b_share_data_element set
+        status_=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.status,jdbcType=INTEGER}
+        </foreach>
+        ,opt_type=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.optType,jdbcType=INTEGER}
+        </foreach>
+        ,update_time=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+        ,update_user=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateUser,jdbcType=BIGINT}
+        </foreach>
+        ,data_status=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=INTEGER} then #{item.dataStatus,jdbcType=INTEGER}
+        </foreach>
+        where ID in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+</mapper>

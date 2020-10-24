@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.file.repository.file.dao.FileDownloadWaterMapper">
+  <resultMap id="DownMap" type="com.hengyunsoft.platform.file.entity.file.domain.FileUpDO">
+    <result column="count" jdbcType="INTEGER" property="size" />
+    <result column="down_time" jdbcType="VARCHAR" property="upTime" />
+  </resultMap>
+  <select id="fileDown" parameterType="java.lang.Long" resultMap="DownMap">
+    SELECT sum(f_file.size) AS count,DATE_FORMAT(water.create_time,'%Y-%m-%d') AS down_time
+    FROM f_file_download_water water
+    LEFT JOIN f_file f_file ON water.file_id = f_file.id
+    WHERE (water.create_time BETWEEN date_sub(now(),interval 30 DAY ) and now())
+    and admin_id=#{userId,jdbcType=BIGINT}
+    group by down_time
+  </select>
+</mapper>

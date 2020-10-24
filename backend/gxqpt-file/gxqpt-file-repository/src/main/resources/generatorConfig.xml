@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry location="E:/maven/repertory/mysql/mysql-connector-java/5.1.36/mysql-connector-java-5.1.36.jar"/>
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="false"/>
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1/gxqpt_file_dev"
+                        userId="root" password="root"></jdbcConnection>
+        <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1/gxqpt_file_dev"-->
+                        <!--userId="root" password="r!o@o#t$>?.123"></jdbcConnection>-->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--
+         新增7个属性，用于修改Example类生成时的存放路径 by：tangyh
+         [javaModelGenerator]:
+         targetExamplePackage: Example类的存放包名
+         targetExampleProject: Example类的存放项目路径
+         targetExampleSuperClass: Example的父类完整类名
+         targetGeneratedCriteriaSuperClass: Example内部类GeneratedCriteria 的父类完整类名
+         rootClass: 实体父类
+
+         [javaClientGenerator]:
+         targetIsGenMethod: 是否在dao中生成扩展的方法
+         targetSuperClass:  dao父类接口
+         targetSuperGeneric: dao泛型第一个参数
+
+         [table]:
+         enabledGxqptExt= false时,表示表中没有appId字段，xml中只生成如下方法. EntityMapper 必须继承BaseDao
+         <property name="rootClass" value="com.hengyunsoft.base.entity.BaseEntity&lt;Long&gt;"/>
+		countByExample
+		deleteByExample
+		deleteByPrimaryKey
+		removeByExample
+		removeByPrimaryKey
+		insert
+		insertSelective
+		batchInsert
+		selectByExample
+		selectEntity
+		selectByPrimaryKey
+		updateByExampleSelective
+		updateByPrimaryKeySelective
+		updateByExample
+		updateByPrimaryKey
+
+		enabledGxqptExt= true时,表示表中有appId字段，xml中额外生成如下方法. EntityMapper 必须继承BaseAllDao
+		<property name="rootClass" value="com.hengyunsoft.base.entity.CommonBaseEntity&lt;Long&gt;"/>
+
+		deleteByAppIdAndId
+		deleteByAppIdAndIds
+		removeByAppIdAndIds
+		removeByAppIdAndId
+		selectByAppIdAndId
+		selectAppIdById
+		updateByAppIdAndIdSelective
+		updateByAppIdAndId
+
+
+
+         -->
+
+        <javaModelGenerator targetPackage="com.hengyunsoft.platform.file.entity.file.po"
+                            targetProject="src\main\java"
+                            targetExamplePackage="com.hengyunsoft.platform.file.repository.file.example"
+                            targetExampleProject="src\main\java"
+                            targetExampleSuperClass="com.hengyunsoft.db.example.BaseExample"
+                            targetGeneratedCriteriaSuperClass="com.hengyunsoft.db.example.BaseGeneratedCriteria"
+        >
+            <property name="rootClass" value="com.hengyunsoft.base.entity.CommonBaseEntity&lt;Long&gt;"/>
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <sqlMapGenerator targetPackage="mapper_file.file.base" targetProject="src\main\resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.hengyunsoft.platform.file.repository.file.dao"
+                             targetProject="src\main\java"
+                             targetIsGenMethod="false"
+                             targetSuperClass="com.hengyunsoft.base.dao.BaseAllDao"
+                             targetSuperGeneric="Long"
+        >
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <!--
+                <table tableName="base_user" domainObjectName="User" enabledGxqptExt="true">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+        </table>
+        <table tableName="base_department" domainObjectName="Department" enabledGxqptExt="true">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+        </table>
+
+
+                  <table tableName="base_dictionary" domainObjectName="Dictionary" enabledGxqptExt="true">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+        </table>
+        <table tableName="base_dictionary_type" domainObjectName="DictionaryType" enabledGxqptExt="true">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true"/>
+        </table>
+         -->
+
+        <table tableName="f_filerecycle" domainObjectName="FileRecycle" enabledGxqptExt="true">
+        </table>
+        <table tableName="f_file" domainObjectName="File" enabledGxqptExt="true">
+        </table>
+        <!--<table tableName="f_folder" domainObjectName="Folder" enabledGxqptExt="true">-->
+        <!--</table>-->
+
+
+
+    </context>
+</generatorConfiguration>

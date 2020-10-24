@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.api.dao.ShareDataApiUserMapper"
+       >
+  <resultMap id="ListResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.ShareDataApiUserListDO">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="api_name" jdbcType="VARCHAR" property="apiName" />
+    <result column="api_code" jdbcType="VARCHAR" property="apiCode" />
+    <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+    <result column="api_type" jdbcType="INTEGER" property="apiType" />
+    <result column="dir_name" jdbcType="VARCHAR" property="dirName" />
+    <result column="limit_time" jdbcType="TIMESTAMP" property="limitTime" />
+    <result column="call_count" jdbcType="INTEGER" property="useNum" />
+    <result column="api_status" jdbcType="INTEGER" property="apiStatus" />
+    <result column="auth_status" jdbcType="INTEGER" property="status" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="name_" jdbcType="VARCHAR" property="unitName" />
+    <result column="provideUnitName" jdbcType="VARCHAR" property="provideUnitName" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="createUserName" jdbcType="VARCHAR" property="createUserName" />
+    <result column="is_take" jdbcType="VARCHAR" property="isTake" />
+    <result column="apiId" jdbcType="BIGINT" property="apiId" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
+  </resultMap>
+  <!--根据单位Id查询申请的id-->
+  <select id="selectApiByUnitId" resultType="java.lang.Long" parameterType="java.lang.String">
+    SELECT au.id FROM b_share_data_api_user au
+    INNER JOIN b_share_data_api a ON au.api_id = a.id
+    WHERE au.secret_key IS NOT NULL
+	AND au.unit_id =#{unitId}
+	<if test="apiName != null and apiName != ''">
+      AND a.api_name LIKE #{apiName,typeHandler=fullLike}
+    </if>
+  </select>
+
+
+  <select id="selectList" parameterType="map" resultMap="ListResultMap">
+    SELECT au.id,api.id apiId,api.api_name,api.api_code,au.apply_code,dir.dir_name,au.limit_time,IFNULL(ci.callNum,0) call_count,au.is_take
+    ,api.api_status,au.auth_status,audit.content,org.name_,org1.name_ provideUnitName,au.create_user,u.name_ createUserName,dir.data_type,
+    au.api_type
+    FROM b_share_data_api_user au
+    INNER JOIN b_share_data_api api ON au.api_id = api.id
+    INNER JOIN b_share_data_directory dir ON api.dir_id = dir.id
+    LEFT JOIN b_share_flow_audit audit ON au.apply_code = audit.apply_code
+    INNER JOIN v_org org ON au.unit_id = org.id
+    INNER JOIN v_org org1 ON dir.unit_id = org1.id
+    INNER JOIN v_emp u ON  au.user_id = u.gxqpt_emp_id
+    LEFT JOIN (SELECT api_id,unit_id,COUNT(id) callNum
+    FROM b_share_data_api_call GROUP BY api_id,unit_id) ci
+    ON ci.api_id = au.api_id AND ci.unit_id = au.unit_id
+    <where>
+        AND au.api_type in(2,3)
+      <if test="apiName != null and apiName !=''">
+        AND api.api_name LIKE #{apiName,typeHandler=fullLike}
+      </if>
+      <if test="authStatus != null and authStatus !=''">
+        AND au.auth_status = #{authStatus}
+      </if>
+      <if test="apiStatus != null and apiStatus !=''">
+        AND api.api_status = #{apiStatus}
+      </if>
+      <if test="unitId != null and unitId !=''">
+        AND au.unit_id = #{unitId}
+      </if>
+      <if test="dirId != null and dirId !=''">
+        AND  api.dir_id =#{dirId}
+      </if>
+      <if test="createUser != null and createUser !=''">
+        AND au.create_user = #{createUser}
+      </if>
+    </where>
+    ORDER BY au.create_time DESC
+  </select>
+
+  <resultMap id="ApiBaseResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.ShareDataApiRenewalDO">
+    <!--
+    @mbggenerated
+    -->
+    <result column="api_name" jdbcType="VARCHAR" property="apiName" />
+    <result column="api_code" jdbcType="VARCHAR" property="apiCode" />
+    <result column="dir_name" jdbcType="VARCHAR" property="dirName" />
+    <result column="data_fmat" jdbcType="INTEGER" property="dataFmat" />
+    <result column="limit_time" jdbcType="DATE" property="limitTime" />
+    <result column="apiId" jdbcType="BIGINT" property="apiId" />
+  </resultMap>
+
+  <select id="selectApiBaseInfo" parameterType="java.lang.Long" resultMap="ApiBaseResultMap">
+    SELECT api.id apiId,api_name,api_code,data_fmat,dir.dir_name,au.limit_time
+    FROM b_share_data_api_user au
+    INNER JOIN  b_share_data_api api ON au.api_id = api.id
+    INNER JOIN b_share_data_directory dir ON api.dir_id = dir.id
+    WHERE au.id = #{id}
+  </select>
+
+  <resultMap id="OpenUserApiResultMap" type="com.hengyunsoft.platform.exchange.entity.api.domain.AllUserApiDO">
+    <!--
+    @mbggenerated
+    -->
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="apiName" jdbcType="VARCHAR" property="apiName" />
+    <result column="moduleName" jdbcType="VARCHAR" property="moduleName" />
+    <result column="apiUrl" jdbcType="VARCHAR" property="apiUrl" />
+    <result column="createTime" jdbcType="DATE" property="createTime" />
+    <result column="updateTime" jdbcType="DATE" property="updateTime" />
+  </resultMap>
+  <select id="selectAllUserApi" resultMap="OpenUserApiResultMap">
+    SELECT au.id,i.api_name apiName,d.dir_name moduleName,CONCAT(i.api_url,'/',au.secret_key) apiUrl,au.create_time createTime,au.update_time updateTime FROM b_share_data_api_user au
+    INNER JOIN b_share_data_api i ON au.api_id = i.id
+    INNER JOIN b_share_data_directory d ON i.dir_id = d.id
+    WHERE au.secret_key IS NOT NULL
+  </select>
+</mapper>

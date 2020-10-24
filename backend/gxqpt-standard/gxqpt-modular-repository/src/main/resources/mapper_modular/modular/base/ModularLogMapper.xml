@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.modular.repository.modular.dao.ModularLogMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.modular.entity.modular.po.ModularLog">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="modular_id" jdbcType="BIGINT" property="modularId" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="group_id" jdbcType="VARCHAR" property="groupId" />
+    <result column="artifact_id" jdbcType="VARCHAR" property="artifactId" />
+    <result column="classifier" jdbcType="VARCHAR" property="classifier" />
+    <result column="version_" jdbcType="VARCHAR" property="version" />
+    <result column="file_size" jdbcType="INTEGER" property="fileSize" />
+    <result column="time_consume" jdbcType="INTEGER" property="timeConsume" />
+    <result column="origina_log" jdbcType="VARCHAR" property="originaLog" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="rep_name" jdbcType="VARCHAR" property="repName" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, modular_id, ip, group_id, artifact_id, classifier, version_, file_size, time_consume, 
+    origina_log, create_user, create_time, update_user, update_time, rep_name
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.modular.repository.modular.example.ModularLogExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from modular_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from modular_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.modular.repository.modular.example.ModularLogExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from modular_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from modular_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.modular.repository.modular.example.ModularLogExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from modular_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.modular.entity.modular.po.ModularLog">
+    <!--
+    @mbggenerated
+    -->
+    update modular_log
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.modular.entity.modular.po.ModularLog">
+    <!--
+    @mbggenerated
+    -->
+    update modular_log
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.modular.entity.modular.po.ModularLog">
+    <!--
+    @mbggenerated
+    -->
+    insert into modular_log (id, modular_id, ip, 
+      group_id, artifact_id, classifier, 
+      version_, file_size, time_consume, 
+      origina_log, create_user, create_time, 
+      update_user, update_time, rep_name
+      )
+    values (#{id,jdbcType=BIGINT}, #{modularId,jdbcType=BIGINT}, #{ip,jdbcType=VARCHAR}, 
+      #{groupId,jdbcType=VARCHAR}, #{artifactId,jdbcType=VARCHAR}, #{classifier,jdbcType=VARCHAR}, 
+      #{version,jdbcType=VARCHAR}, #{fileSize,jdbcType=INTEGER}, #{timeConsume,jdbcType=INTEGER}, 
+      #{originaLog,jdbcType=VARCHAR}, #{createUser,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{repName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into modular_log (id, modular_id, ip, group_id, artifact_id, classifier, version_, file_size, time_consume, origina_log, create_user, create_time, update_user, update_time, rep_name ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.modularId,jdbcType=BIGINT}, #{item.ip,jdbcType=VARCHAR}, 
+        #{item.groupId,jdbcType=VARCHAR}, #{item.artifactId,jdbcType=VARCHAR}, #{item.classifier,jdbcType=VARCHAR}, 
+        #{item.version,jdbcType=VARCHAR}, #{item.fileSize,jdbcType=INTEGER}, #{item.timeConsume,jdbcType=INTEGER}, 
+        #{item.originaLog,jdbcType=VARCHAR}, #{item.createUser,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.repName,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.modular.entity.modular.po.ModularLog">
+    <!--
+    @mbggenerated
+    -->
+    insert into modular_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="modularId != null">
+        modular_id,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="artifactId != null">
+        artifact_id,
+      </if>
+      <if test="classifier != null">
+        classifier,
+      </if>
+      <if test="version != null">
+        version_,
+      </if>
+      <if test="fileSize != null">
+        file_size,
+      </if>
+      <if test="timeConsume != null">
+        time_consume,
+      </if>
+      <if test="originaLog != null">
+        origina_log,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="repName != null">
+        rep_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="modularId != null">
+        #{modularId,jdbcType=BIGINT},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="artifactId != null">
+        #{artifactId,jdbcType=VARCHAR},
+      </if>
+      <if test="classifier != null">
+        #{classifier,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null">
+        #{fileSize,jdbcType=INTEGER},
+      </if>
+      <if test="timeConsume != null">
+        #{timeConsume,jdbcType=INTEGER},
+      </if>
+      <if test="originaLog != null">
+        #{originaLog,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="repName != null">
+        #{repName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.modular.repository.modular.example.ModularLogExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from modular_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update modular_log
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.modularId != null">
+        modular_id = #{record.modularId,jdbcType=BIGINT},
+      </if>
+      <if test="record.ip != null">
+        ip = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.groupId != null">
+        group_id = #{record.groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.artifactId != null">
+        artifact_id = #{record.artifactId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.classifier != null">
+        classifier = #{record.classifier,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null">
+        version_ = #{record.version,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileSize != null">
+        file_size = #{record.fileSize,jdbcType=INTEGER},
+      </if>
+      <if test="record.timeConsume != null">
+        time_consume = #{record.timeConsume,jdbcType=INTEGER},
+      </if>
+      <if test="record.originaLog != null">
+        origina_log = #{record.originaLog,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.repName != null">
+        rep_name = #{record.repName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update modular_log
+    set id = #{record.id,jdbcType=BIGINT},
+      modular_id = #{record.modularId,jdbcType=BIGINT},
+      ip = #{record.ip,jdbcType=VARCHAR},
+      group_id = #{record.groupId,jdbcType=VARCHAR},
+      artifact_id = #{record.artifactId,jdbcType=VARCHAR},
+      classifier = #{record.classifier,jdbcType=VARCHAR},
+      version_ = #{record.version,jdbcType=VARCHAR},
+      file_size = #{record.fileSize,jdbcType=INTEGER},
+      time_consume = #{record.timeConsume,jdbcType=INTEGER},
+      origina_log = #{record.originaLog,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      rep_name = #{record.repName,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.modular.entity.modular.po.ModularLog">
+    <!--
+    @mbggenerated
+    -->
+    update modular_log
+    <set>
+      <if test="modularId != null">
+        modular_id = #{modularId,jdbcType=BIGINT},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="artifactId != null">
+        artifact_id = #{artifactId,jdbcType=VARCHAR},
+      </if>
+      <if test="classifier != null">
+        classifier = #{classifier,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        version_ = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null">
+        file_size = #{fileSize,jdbcType=INTEGER},
+      </if>
+      <if test="timeConsume != null">
+        time_consume = #{timeConsume,jdbcType=INTEGER},
+      </if>
+      <if test="originaLog != null">
+        origina_log = #{originaLog,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="repName != null">
+        rep_name = #{repName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.modular.entity.modular.po.ModularLog">
+    <!--
+    @mbggenerated
+    -->
+    update modular_log
+    set modular_id = #{modularId,jdbcType=BIGINT},
+      ip = #{ip,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=VARCHAR},
+      artifact_id = #{artifactId,jdbcType=VARCHAR},
+      classifier = #{classifier,jdbcType=VARCHAR},
+      version_ = #{version,jdbcType=VARCHAR},
+      file_size = #{fileSize,jdbcType=INTEGER},
+      time_consume = #{timeConsume,jdbcType=INTEGER},
+      origina_log = #{originaLog,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      rep_name = #{repName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

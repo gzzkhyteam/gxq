@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.msgs.repository.bbsmsg.dao.BbsIncrementMainMsgMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.msgs.entity.bbsmsg.po.BbsIncrementMainMsg">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="biz_id" jdbcType="VARCHAR" property="bizId" />
+    <result column="biz_type" jdbcType="VARCHAR" property="bizType" />
+    <result column="client_flag" jdbcType="VARCHAR" property="clientFlag" />
+    <result column="brief_tpye" jdbcType="VARCHAR" property="briefTpye" />
+    <result column="detailed_type" jdbcType="VARCHAR" property="detailedType" />
+    <result column="detailed_type_desc" jdbcType="VARCHAR" property="detailedTypeDesc" />
+    <result column="title_" jdbcType="VARCHAR" property="title" />
+    <result column="content_" jdbcType="VARCHAR" property="content" />
+    <result column="sender_name" jdbcType="VARCHAR" property="senderName" />
+    <result column="handler_url" jdbcType="VARCHAR" property="handlerUrl" />
+    <result column="handler_params" jdbcType="VARCHAR" property="handlerParams" />
+    <result column="single_handle_is" jdbcType="BIT" property="singleHandleIs" />
+    <result column="handler_need_is" jdbcType="BIT" property="handlerNeedIs" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="app_name" jdbcType="VARCHAR" property="appName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, biz_id, biz_type, client_flag, brief_tpye, detailed_type, detailed_type_desc, 
+    title_, content_, sender_name, handler_url, handler_params, single_handle_is, handler_need_is, 
+    app_id, app_name, create_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.msgs.repository.bbsmsg.example.BbsIncrementMainMsgExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_bbs_increment_main_msg
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_bbs_increment_main_msg
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.msgs.repository.bbsmsg.example.BbsIncrementMainMsgExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_bbs_increment_main_msg
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectByAppIdAndId" parameterType="map" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <include refid="Base_Column_List" />
+    from b_bbs_increment_main_msg
+    where 1=1 and app_id = #{appId,jdbcType=VARCHAR} and id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_bbs_increment_main_msg
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_bbs_increment_main_msg
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.msgs.repository.bbsmsg.example.BbsIncrementMainMsgExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_bbs_increment_main_msg
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_bbs_increment_main_msg where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_bbs_increment_main_msg
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_bbs_increment_main_msg where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.msgs.entity.bbsmsg.po.BbsIncrementMainMsg">
+    <!--
+    @mbggenerated
+    -->
+    update b_bbs_increment_main_msg
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_bbs_increment_main_msg
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_bbs_increment_main_msg
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_bbs_increment_main_msg
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.msgs.entity.bbsmsg.po.BbsIncrementMainMsg">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_bbs_increment_main_msg (id, biz_id, biz_type, 
+      client_flag, brief_tpye, detailed_type, 
+      detailed_type_desc, title_, content_, 
+      sender_name, handler_url, handler_params, 
+      single_handle_is, handler_need_is, app_id, 
+      app_name, create_time)
+    values (#{id,jdbcType=BIGINT}, #{bizId,jdbcType=VARCHAR}, #{bizType,jdbcType=VARCHAR}, 
+      #{clientFlag,jdbcType=VARCHAR}, #{briefTpye,jdbcType=VARCHAR}, #{detailedType,jdbcType=VARCHAR}, 
+      #{detailedTypeDesc,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{senderName,jdbcType=VARCHAR}, #{handlerUrl,jdbcType=VARCHAR}, #{handlerParams,jdbcType=VARCHAR}, 
+      #{singleHandleIs,jdbcType=BIT}, #{handlerNeedIs,jdbcType=BIT}, #{appId,jdbcType=VARCHAR}, 
+      #{appName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_bbs_increment_main_msg (id, biz_id, biz_type, client_flag, brief_tpye, detailed_type, detailed_type_desc, title_, content_, sender_name, handler_url, handler_params, single_handle_is, handler_need_is, app_id, app_name, create_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.bizId,jdbcType=VARCHAR}, #{item.bizType,jdbcType=VARCHAR}, 
+        #{item.clientFlag,jdbcType=VARCHAR}, #{item.briefTpye,jdbcType=VARCHAR}, #{item.detailedType,jdbcType=VARCHAR}, 
+        #{item.detailedTypeDesc,jdbcType=VARCHAR}, #{item.title,jdbcType=VARCHAR}, #{item.content,jdbcType=VARCHAR}, 
+        #{item.senderName,jdbcType=VARCHAR}, #{item.handlerUrl,jdbcType=VARCHAR}, #{item.handlerParams,jdbcType=VARCHAR}, 
+        #{item.singleHandleIs,jdbcType=BIT}, #{item.handlerNeedIs,jdbcType=BIT}, #{item.appId,jdbcType=VARCHAR}, 
+        #{item.appName,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.msgs.entity.bbsmsg.po.BbsIncrementMainMsg">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_bbs_increment_main_msg
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="bizId != null">
+        biz_id,
+      </if>
+      <if test="bizType != null">
+        biz_type,
+      </if>
+      <if test="clientFlag != null">
+        client_flag,
+      </if>
+      <if test="briefTpye != null">
+        brief_tpye,
+      </if>
+      <if test="detailedType != null">
+        detailed_type,
+      </if>
+      <if test="detailedTypeDesc != null">
+        detailed_type_desc,
+      </if>
+      <if test="title != null">
+        title_,
+      </if>
+      <if test="content != null">
+        content_,
+      </if>
+      <if test="senderName != null">
+        sender_name,
+      </if>
+      <if test="handlerUrl != null">
+        handler_url,
+      </if>
+      <if test="handlerParams != null">
+        handler_params,
+      </if>
+      <if test="singleHandleIs != null">
+        single_handle_is,
+      </if>
+      <if test="handlerNeedIs != null">
+        handler_need_is,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="appName != null">
+        app_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="bizId != null">
+        #{bizId,jdbcType=VARCHAR},
+      </if>
+      <if test="bizType != null">
+        #{bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="clientFlag != null">
+        #{clientFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="briefTpye != null">
+        #{briefTpye,jdbcType=VARCHAR},
+      </if>
+      <if test="detailedType != null">
+        #{detailedType,jdbcType=VARCHAR},
+      </if>
+      <if test="detailedTypeDesc != null">
+        #{detailedTypeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="senderName != null">
+        #{senderName,jdbcType=VARCHAR},
+      </if>
+      <if test="handlerUrl != null">
+        #{handlerUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="handlerParams != null">
+        #{handlerParams,jdbcType=VARCHAR},
+      </if>
+      <if test="singleHandleIs != null">
+        #{singleHandleIs,jdbcType=BIT},
+      </if>
+      <if test="handlerNeedIs != null">
+        #{handlerNeedIs,jdbcType=BIT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null">
+        #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.msgs.repository.bbsmsg.example.BbsIncrementMainMsgExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_bbs_increment_main_msg
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_bbs_increment_main_msg
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.bizId != null">
+        biz_id = #{record.bizId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bizType != null">
+        biz_type = #{record.bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clientFlag != null">
+        client_flag = #{record.clientFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.briefTpye != null">
+        brief_tpye = #{record.briefTpye,jdbcType=VARCHAR},
+      </if>
+      <if test="record.detailedType != null">
+        detailed_type = #{record.detailedType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.detailedTypeDesc != null">
+        detailed_type_desc = #{record.detailedTypeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null">
+        title_ = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null">
+        content_ = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.senderName != null">
+        sender_name = #{record.senderName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handlerUrl != null">
+        handler_url = #{record.handlerUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handlerParams != null">
+        handler_params = #{record.handlerParams,jdbcType=VARCHAR},
+      </if>
+      <if test="record.singleHandleIs != null">
+        single_handle_is = #{record.singleHandleIs,jdbcType=BIT},
+      </if>
+      <if test="record.handlerNeedIs != null">
+        handler_need_is = #{record.handlerNeedIs,jdbcType=BIT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appName != null">
+        app_name = #{record.appName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_bbs_increment_main_msg
+    set id = #{record.id,jdbcType=BIGINT},
+      biz_id = #{record.bizId,jdbcType=VARCHAR},
+      biz_type = #{record.bizType,jdbcType=VARCHAR},
+      client_flag = #{record.clientFlag,jdbcType=VARCHAR},
+      brief_tpye = #{record.briefTpye,jdbcType=VARCHAR},
+      detailed_type = #{record.detailedType,jdbcType=VARCHAR},
+      detailed_type_desc = #{record.detailedTypeDesc,jdbcType=VARCHAR},
+      title_ = #{record.title,jdbcType=VARCHAR},
+      content_ = #{record.content,jdbcType=VARCHAR},
+      sender_name = #{record.senderName,jdbcType=VARCHAR},
+      handler_url = #{record.handlerUrl,jdbcType=VARCHAR},
+      handler_params = #{record.handlerParams,jdbcType=VARCHAR},
+      single_handle_is = #{record.singleHandleIs,jdbcType=BIT},
+      handler_need_is = #{record.handlerNeedIs,jdbcType=BIT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      app_name = #{record.appName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.msgs.entity.bbsmsg.po.BbsIncrementMainMsg">
+    <!--
+    @mbggenerated
+    -->
+    update b_bbs_increment_main_msg
+    <set>
+      <if test="bizId != null">
+        biz_id = #{bizId,jdbcType=VARCHAR},
+      </if>
+      <if test="bizType != null">
+        biz_type = #{bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="clientFlag != null">
+        client_flag = #{clientFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="briefTpye != null">
+        brief_tpye = #{briefTpye,jdbcType=VARCHAR},
+      </if>
+      <if test="detailedType != null">
+        detailed_type = #{detailedType,jdbcType=VARCHAR},
+      </if>
+      <if test="detailedTypeDesc != null">
+        detailed_type_desc = #{detailedTypeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title_ = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content_ = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="senderName != null">
+        sender_name = #{senderName,jdbcType=VARCHAR},
+      </if>
+      <if test="handlerUrl != null">
+        handler_url = #{handlerUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="handlerParams != null">
+        handler_params = #{handlerParams,jdbcType=VARCHAR},
+      </if>
+      <if test="singleHandleIs != null">
+        single_handle_is = #{singleHandleIs,jdbcType=BIT},
+      </if>
+      <if test="handlerNeedIs != null">
+        handler_need_is = #{handlerNeedIs,jdbcType=BIT},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null">
+        app_name = #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.msgs.entity.bbsmsg.po.BbsIncrementMainMsg">
+    <!--
+    @mbggenerated
+    -->
+    update b_bbs_increment_main_msg
+    <set>
+      <if test="bizId != null">
+        biz_id = #{bizId,jdbcType=VARCHAR},
+      </if>
+      <if test="bizType != null">
+        biz_type = #{bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="clientFlag != null">
+        client_flag = #{clientFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="briefTpye != null">
+        brief_tpye = #{briefTpye,jdbcType=VARCHAR},
+      </if>
+      <if test="detailedType != null">
+        detailed_type = #{detailedType,jdbcType=VARCHAR},
+      </if>
+      <if test="detailedTypeDesc != null">
+        detailed_type_desc = #{detailedTypeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title_ = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content_ = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="senderName != null">
+        sender_name = #{senderName,jdbcType=VARCHAR},
+      </if>
+      <if test="handlerUrl != null">
+        handler_url = #{handlerUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="handlerParams != null">
+        handler_params = #{handlerParams,jdbcType=VARCHAR},
+      </if>
+      <if test="singleHandleIs != null">
+        single_handle_is = #{singleHandleIs,jdbcType=BIT},
+      </if>
+      <if test="handlerNeedIs != null">
+        handler_need_is = #{handlerNeedIs,jdbcType=BIT},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null">
+        app_name = #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.msgs.entity.bbsmsg.po.BbsIncrementMainMsg">
+    <!--
+    @mbggenerated
+    -->
+    update b_bbs_increment_main_msg
+    set biz_id = #{bizId,jdbcType=VARCHAR},
+      biz_type = #{bizType,jdbcType=VARCHAR},
+      client_flag = #{clientFlag,jdbcType=VARCHAR},
+      brief_tpye = #{briefTpye,jdbcType=VARCHAR},
+      detailed_type = #{detailedType,jdbcType=VARCHAR},
+      detailed_type_desc = #{detailedTypeDesc,jdbcType=VARCHAR},
+      title_ = #{title,jdbcType=VARCHAR},
+      content_ = #{content,jdbcType=VARCHAR},
+      sender_name = #{senderName,jdbcType=VARCHAR},
+      handler_url = #{handlerUrl,jdbcType=VARCHAR},
+      handler_params = #{handlerParams,jdbcType=VARCHAR},
+      single_handle_is = #{singleHandleIs,jdbcType=BIT},
+      handler_need_is = #{handlerNeedIs,jdbcType=BIT},
+      app_id = #{appId,jdbcType=VARCHAR},
+      app_name = #{appName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.msgs.entity.bbsmsg.po.BbsIncrementMainMsg">
+    <!--
+    @mbggenerated
+    -->
+    update b_bbs_increment_main_msg
+    set biz_id = #{bizId,jdbcType=VARCHAR},
+      biz_type = #{bizType,jdbcType=VARCHAR},
+      client_flag = #{clientFlag,jdbcType=VARCHAR},
+      brief_tpye = #{briefTpye,jdbcType=VARCHAR},
+      detailed_type = #{detailedType,jdbcType=VARCHAR},
+      detailed_type_desc = #{detailedTypeDesc,jdbcType=VARCHAR},
+      title_ = #{title,jdbcType=VARCHAR},
+      content_ = #{content,jdbcType=VARCHAR},
+      sender_name = #{senderName,jdbcType=VARCHAR},
+      handler_url = #{handlerUrl,jdbcType=VARCHAR},
+      handler_params = #{handlerParams,jdbcType=VARCHAR},
+      single_handle_is = #{singleHandleIs,jdbcType=BIT},
+      handler_need_is = #{handlerNeedIs,jdbcType=BIT},
+      app_id = #{appId,jdbcType=VARCHAR},
+      app_name = #{appName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+</mapper>

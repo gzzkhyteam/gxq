@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.core.dao.ModuleUseInfoMapper">
+      <resultMap id="TotalNumResultMap" type="com.hengyunsoft.platform.developer.entity.core.po.domain.ModuleUseSumTotalNumDO">
+            <result column="sum_total_num" jdbcType="INTEGER" property="sumTotalNum" />
+      </resultMap>
+    <resultMap id="DayDataResultMap" type="com.hengyunsoft.platform.developer.entity.core.po.domain.ModuleUseDayDataDO">
+        <result column="sum_total_num" jdbcType="INTEGER" property="sumTotalNum" />
+        <result column="now_day_hour" jdbcType="INTEGER" property="nowDayHour"/>
+        <result column="use_day" jdbcType="TIMESTAMP" property="useDay"/>
+    </resultMap>
+    <resultMap id="FirstResultMap" type="com.hengyunsoft.platform.developer.entity.core.po.ModuleUseInfo">
+        <!--
+        @mbggenerated
+        -->
+        <id column="combine_id" jdbcType="VARCHAR" property="combineId" />
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="module_id" jdbcType="VARCHAR" property="moduleId" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="use_year" jdbcType="VARCHAR" property="useYear" />
+        <result column="use_month" jdbcType="VARCHAR" property="useMonth" />
+        <result column="use_day" jdbcType="VARCHAR" property="useDay" />
+        <result column="use_hour" jdbcType="VARCHAR" property="useHour" />
+        <result column="use_weekend" jdbcType="VARCHAR" property="useWeekend" />
+        <result column="use_quarter" jdbcType="VARCHAR" property="useQuarter" />
+        <result column="total_num" jdbcType="INTEGER" property="totalNum" />
+        <result column="error_num" jdbcType="INTEGER" property="errorNum" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <!--<result column="use_year_num" jdbcType="INTEGER" property="useYearNum" />-->
+        <result column="new_total_num" jdbcType="INTEGER" property="newTotalNum" />
+        <result column="new_error_num" jdbcType="INTEGER" property="newErrorNum" />
+    </resultMap>
+
+    <resultMap id="RankResultMap" type="com.hengyunsoft.platform.developer.entity.core.domain.ModuleUseRankDO">
+        <result column="appName" jdbcType="VARCHAR" property="appName" />
+        <result column="totalNum" jdbcType="INTEGER" property="totalNum" />
+    </resultMap>
+
+    <sql id="BaseChildSql">
+        (
+        SELECT
+        <include refid="First_Column_List"/>
+        FROM c_module_use_info
+        WHERE 1= 1
+        <if test="appId != null and appId !=''">
+            and app_id = #{appId}
+        </if>
+        <if test="startTime != null and startTime !=''">
+            and #{startTime} &lt;= update_time
+        </if>
+        <if test="endTime != null and endTime !=''">
+            and update_time &lt;= #{endTime}
+        </if>
+        <if test="moduleId != null and moduleId !=''">
+            and module_id = #{moduleId}
+        </if>
+        ) a
+    </sql>
+
+    <sql id="First_Column_List">
+        <!--
+        @mbggenerated
+        -->
+        combine_id, id, module_id, app_id, use_year, use_month, use_day, use_hour, use_weekend,
+        use_quarter, total_num, error_num, update_time
+    </sql>
+
+    <!--如果存在combine_Id就更新，否则按业务规则插入新记录-->
+    <insert id="saveLog" parameterType="com.hengyunsoft.platform.developer.entity.core.po.ModuleUseInfo">
+        <!--
+        @mbggenerated
+        -->
+        insert into c_module_use_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="combineId != null">
+                combine_id,
+            </if>
+            <if test="id != null">
+                id,
+            </if>
+            <if test="moduleId != null">
+                module_id,
+            </if>
+            <if test="appId != null">
+                app_id,
+            </if>
+            <if test="useYear != null">
+                use_year,
+            </if>
+            <if test="useMonth != null">
+                use_month,
+            </if>
+            <if test="useDay != null">
+                use_day,
+            </if>
+            <if test="useHour != null">
+                use_hour,
+            </if>
+            <if test="useWeekend != null">
+                use_weekend,
+            </if>
+            <if test="useQuarter != null">
+                use_quarter,
+            </if>
+            <if test="totalNum != null">
+                total_num,
+            </if>
+            <if test="errorNum != null">
+                error_num,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="combineId != null">
+                #{combineId,jdbcType=VARCHAR},
+            </if>
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="moduleId != null">
+                #{moduleId,jdbcType=VARCHAR},
+            </if>
+            <if test="appId != null">
+                #{appId,jdbcType=VARCHAR},
+            </if>
+            <if test="useYear != null">
+                #{useYear,jdbcType=VARCHAR},
+            </if>
+            <if test="useMonth != null">
+                #{useMonth,jdbcType=VARCHAR},
+            </if>
+            <if test="useDay != null">
+                #{useDay,jdbcType=VARCHAR},
+            </if>
+            <if test="useHour != null">
+                #{useHour,jdbcType=VARCHAR},
+            </if>
+            <if test="useWeekend != null">
+                #{useWeekend,jdbcType=VARCHAR},
+            </if>
+            <if test="useQuarter != null">
+                #{useQuarter,jdbcType=VARCHAR},
+            </if>
+            <if test="totalNum != null">
+                #{totalNum,jdbcType=INTEGER},
+            </if>
+            <if test="errorNum != null">
+                #{errorNum,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+        ON DUPLICATE KEY update
+        combine_Id=#{combineId,jdbcType=VARCHAR},
+        total_num = total_num + #{totalNum,jdbcType=INTEGER},
+        error_num = error_num + #{errorNum,jdbcType=INTEGER}
+    </insert>
+
+    <select id="getJnlByYear"  resultMap="FirstResultMap">
+        <!--
+         @mbggenerated
+         -->
+        select a.*, count(use_year) as use_year_num,sum(total_num) as new_total_num,sum(error_num) as new_error_num
+        from
+        <include refid="BaseChildSql"/>
+        group by use_year ORDER BY a.update_time
+    </select>
+
+    <select id="getJnlByMonth"  resultMap="FirstResultMap">
+        <!--
+         @mbggenerated
+         -->
+        select a.*, count(use_month) as use_month_num,sum(total_num) as new_total_num,sum(error_num) as new_error_num
+        from
+        <include refid="BaseChildSql"/>
+        group by use_month ORDER BY a.update_time
+    </select>
+
+    <select id="getJnlByDay"  resultMap="FirstResultMap">
+        <!--
+         @mbggenerated
+         -->
+        select a.*, count(use_day) as use_day_num,sum(total_num) as new_total_num,sum(error_num) as new_error_num
+        from
+        <include refid="BaseChildSql"/>
+        group by use_day ORDER BY a.update_time
+    </select>
+
+    <select id="getJnlByHour"  resultMap="FirstResultMap">
+        <!--
+         @mbggenerated
+         -->
+        select a.*, count(use_hour) as use_hour_num,sum(total_num) as new_total_num,sum(error_num) as new_error_num from
+        <include refid="BaseChildSql"/>
+        group by use_hour ORDER BY a.update_time
+    </select>
+
+    <select id="getJnlByWeekEnd"  resultMap="FirstResultMap">
+        <!--
+         @mbggenerated
+         -->
+        select a.*, count(use_weekend) as use_weekend_num,sum(total_num) as new_total_num,sum(error_num) as new_error_num
+        from
+        <include refid="BaseChildSql"/>
+        group by use_weekend ORDER BY a.update_time
+    </select>
+
+    <select id="getJnlByQuarter"  resultMap="FirstResultMap">
+        <!--
+         @mbggenerated
+         -->
+        select a.*, count(use_quarter) as use_quarter_num,sum(total_num) as new_total_num,sum(error_num) as new_error_num
+        from
+        <include refid="BaseChildSql"/>
+        group by use_quarter ORDER BY a.update_time
+    </select>
+
+    <select id="getSumTotalNum" resultMap="TotalNumResultMap">
+        SELECT SUM(total_num) as sum_total_num FROM c_module_use_info
+    </select>
+
+    <select id="findDayData" parameterType="String" resultMap="DayDataResultMap">
+        select  cui.update_time as use_day,sum(cui.total_num) as sum_total_num,HOUR(cui.update_time) as now_day_hour from c_module_use_info cui where cui.update_time  &gt;= #{pre} and cui.update_time &lt;#{later} GROUP BY cui.use_hour ORDER BY cui.update_time asc
+    </select>
+
+    <!--大屏 查询当天模块使用次数-->
+    <select id="getDayUserModuleCount" resultType="Integer">
+        SELECT case when asknum then asknum else 0 end  as asknum from (
+            select sum(total_num) asknum
+            from c_module_use_info
+            where
+            update_time &gt;= #{nowDay}
+            and update_time   &lt;= #{nextDay}
+        )t
+    </select>
+
+    <select id="getModuleUseRank" resultMap="RankResultMap">
+        SELECT count(cm.total_num) as totalNum,ca.name_ as appName
+        FROM c_module_use_info cm
+        LEFT JOIN c_application ca on cm.app_id = ca.app_id
+        GROUP BY cm.app_id
+        ORDER BY totalNum  desc
+        limit 6
+    </select>
+
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.directory.dao.ShareDataChangeElementMapper">
+
+
+
+  <!-- 根据申请编号查询字段目录信息 -->
+  <select id="findChangeEmtList"  parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT  elt.id, elt.chg_id, elt.change_type, elt.bus_type, elt.bus_id, elt.create_time, elt.create_user, elt.update_time,
+      elt.update_user
+     FROM  b_share_data_change_element elt
+     JOIN  b_share_data_change sdc ON  elt.bus_id = sdc.id
+     WHERE  sdc.apply_code=#{applyCode} AND  sdc.unit_id=#{unitId}
+     <if test="busType!=null and busType!='' ">AND  elt.bus_type=#{busType}</if>
+  </select>
+<delete id="deleteByElementId"  parameterType="java.util.Map">
+    DELETE FROM  b_share_data_change_element
+    where chg_id=#{elementId} and bus_type=2
+</delete>
+    <delete id="deleteByDirId"  parameterType="java.util.Map">
+    DELETE FROM  b_share_data_change_element
+    where chg_id=#{dirId} and bus_type=1
+    </delete>
+
+    <!-- 批量更新第一种方法，通过接收传进来的参数list进行循环着组装sql -->
+    <update id="batchUpdate" parameterType="java.util.Map">
+        update b_share_data_change_element set
+        chg_id=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.chgId,jdbcType=BIGINT}
+        </foreach>
+        ,change_type=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.changeType,jdbcType=INTEGER}
+        </foreach>
+        ,bus_type=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.busType,jdbcType=INTEGER}
+        </foreach>
+        ,bus_id=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.busId,jdbcType=BIGINT}
+        </foreach>
+        ,update_time=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+        ,update_user=
+        <foreach collection="list" item="item" index="index" separator=" " open="case ID" close="end">
+            when #{item.id,jdbcType=BIGINT} then #{item.updateUser,jdbcType=BIGINT}
+        </foreach>
+        where ID in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+</mapper>

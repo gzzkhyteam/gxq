@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.consult.dao.ConsultManageMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.ops.entity.consult.po.ConsultManage">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="consult_name" jdbcType="VARCHAR" property="consultName" />
+    <result column="consult_time" jdbcType="TIMESTAMP" property="consultTime" />
+    <result column="consult_info" jdbcType="VARCHAR" property="consultInfo" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="score" jdbcType="DECIMAL" property="score" />
+    <result column="score_time" jdbcType="TIMESTAMP" property="scoreTime" />
+    <result column="sub_dept" jdbcType="VARCHAR" property="subDept" />
+    <result column="sub_person" jdbcType="VARCHAR" property="subPerson" />
+    <result column="consult_advice" jdbcType="VARCHAR" property="consultAdvice" />
+    <result column="deal_opinion" jdbcType="VARCHAR" property="dealOpinion" />
+    <result column="service_attitude" jdbcType="DECIMAL" property="serviceAttitude" />
+    <result column="service_efficiency" jdbcType="DECIMAL" property="serviceEfficiency" />
+    <result column="deal_result" jdbcType="VARCHAR" property="dealResult" />
+    <result column="service_quality" jdbcType="DECIMAL" property="serviceQuality" />
+    <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, consult_name, consult_time, consult_info, status, score, score_time, sub_dept, 
+    sub_person, consult_advice, deal_opinion, service_attitude, service_efficiency, deal_result, 
+    service_quality, apply_code, create_user, create_time, update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.ops.repository.consult.example.ConsultManageExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_yw_consult_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_yw_consult_manage
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.ops.repository.consult.example.ConsultManageExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_yw_consult_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_yw_consult_manage
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.ops.repository.consult.example.ConsultManageExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_yw_consult_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.ops.entity.consult.po.ConsultManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_consult_manage
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_consult_manage
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.ops.entity.consult.po.ConsultManage">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_yw_consult_manage (id, consult_name, consult_time, 
+      consult_info, status, score, 
+      score_time, sub_dept, sub_person, 
+      consult_advice, deal_opinion, service_attitude, 
+      service_efficiency, deal_result, service_quality, 
+      apply_code, create_user, create_time, 
+      update_user, update_time)
+    values (#{id,jdbcType=BIGINT}, #{consultName,jdbcType=VARCHAR}, #{consultTime,jdbcType=TIMESTAMP}, 
+      #{consultInfo,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{score,jdbcType=DECIMAL}, 
+      #{scoreTime,jdbcType=TIMESTAMP}, #{subDept,jdbcType=VARCHAR}, #{subPerson,jdbcType=VARCHAR}, 
+      #{consultAdvice,jdbcType=VARCHAR}, #{dealOpinion,jdbcType=VARCHAR}, #{serviceAttitude,jdbcType=DECIMAL}, 
+      #{serviceEfficiency,jdbcType=DECIMAL}, #{dealResult,jdbcType=VARCHAR}, #{serviceQuality,jdbcType=DECIMAL}, 
+      #{applyCode,jdbcType=VARCHAR}, #{createUser,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_yw_consult_manage (id, consult_name, consult_time, consult_info, status, score, score_time, sub_dept, sub_person, consult_advice, deal_opinion, service_attitude, service_efficiency, deal_result, service_quality, apply_code, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.consultName,jdbcType=VARCHAR}, #{item.consultTime,jdbcType=TIMESTAMP}, 
+        #{item.consultInfo,jdbcType=VARCHAR}, #{item.status,jdbcType=INTEGER}, #{item.score,jdbcType=DECIMAL}, 
+        #{item.scoreTime,jdbcType=TIMESTAMP}, #{item.subDept,jdbcType=VARCHAR}, #{item.subPerson,jdbcType=VARCHAR}, 
+        #{item.consultAdvice,jdbcType=VARCHAR}, #{item.dealOpinion,jdbcType=VARCHAR}, #{item.serviceAttitude,jdbcType=DECIMAL}, 
+        #{item.serviceEfficiency,jdbcType=DECIMAL}, #{item.dealResult,jdbcType=VARCHAR}, 
+        #{item.serviceQuality,jdbcType=DECIMAL}, #{item.applyCode,jdbcType=VARCHAR}, #{item.createUser,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.ops.entity.consult.po.ConsultManage">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_yw_consult_manage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="consultName != null">
+        consult_name,
+      </if>
+      <if test="consultTime != null">
+        consult_time,
+      </if>
+      <if test="consultInfo != null">
+        consult_info,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="scoreTime != null">
+        score_time,
+      </if>
+      <if test="subDept != null">
+        sub_dept,
+      </if>
+      <if test="subPerson != null">
+        sub_person,
+      </if>
+      <if test="consultAdvice != null">
+        consult_advice,
+      </if>
+      <if test="dealOpinion != null">
+        deal_opinion,
+      </if>
+      <if test="serviceAttitude != null">
+        service_attitude,
+      </if>
+      <if test="serviceEfficiency != null">
+        service_efficiency,
+      </if>
+      <if test="dealResult != null">
+        deal_result,
+      </if>
+      <if test="serviceQuality != null">
+        service_quality,
+      </if>
+      <if test="applyCode != null">
+        apply_code,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="consultName != null">
+        #{consultName,jdbcType=VARCHAR},
+      </if>
+      <if test="consultTime != null">
+        #{consultTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consultInfo != null">
+        #{consultInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="scoreTime != null">
+        #{scoreTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="subDept != null">
+        #{subDept,jdbcType=VARCHAR},
+      </if>
+      <if test="subPerson != null">
+        #{subPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="consultAdvice != null">
+        #{consultAdvice,jdbcType=VARCHAR},
+      </if>
+      <if test="dealOpinion != null">
+        #{dealOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceAttitude != null">
+        #{serviceAttitude,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceEfficiency != null">
+        #{serviceEfficiency,jdbcType=DECIMAL},
+      </if>
+      <if test="dealResult != null">
+        #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceQuality != null">
+        #{serviceQuality,jdbcType=DECIMAL},
+      </if>
+      <if test="applyCode != null">
+        #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.ops.repository.consult.example.ConsultManageExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_yw_consult_manage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_consult_manage
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.consultName != null">
+        consult_name = #{record.consultName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.consultTime != null">
+        consult_time = #{record.consultTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.consultInfo != null">
+        consult_info = #{record.consultInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.score != null">
+        score = #{record.score,jdbcType=DECIMAL},
+      </if>
+      <if test="record.scoreTime != null">
+        score_time = #{record.scoreTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.subDept != null">
+        sub_dept = #{record.subDept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subPerson != null">
+        sub_person = #{record.subPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.consultAdvice != null">
+        consult_advice = #{record.consultAdvice,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dealOpinion != null">
+        deal_opinion = #{record.dealOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceAttitude != null">
+        service_attitude = #{record.serviceAttitude,jdbcType=DECIMAL},
+      </if>
+      <if test="record.serviceEfficiency != null">
+        service_efficiency = #{record.serviceEfficiency,jdbcType=DECIMAL},
+      </if>
+      <if test="record.dealResult != null">
+        deal_result = #{record.dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceQuality != null">
+        service_quality = #{record.serviceQuality,jdbcType=DECIMAL},
+      </if>
+      <if test="record.applyCode != null">
+        apply_code = #{record.applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_consult_manage
+    set id = #{record.id,jdbcType=BIGINT},
+      consult_name = #{record.consultName,jdbcType=VARCHAR},
+      consult_time = #{record.consultTime,jdbcType=TIMESTAMP},
+      consult_info = #{record.consultInfo,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      score = #{record.score,jdbcType=DECIMAL},
+      score_time = #{record.scoreTime,jdbcType=TIMESTAMP},
+      sub_dept = #{record.subDept,jdbcType=VARCHAR},
+      sub_person = #{record.subPerson,jdbcType=VARCHAR},
+      consult_advice = #{record.consultAdvice,jdbcType=VARCHAR},
+      deal_opinion = #{record.dealOpinion,jdbcType=VARCHAR},
+      service_attitude = #{record.serviceAttitude,jdbcType=DECIMAL},
+      service_efficiency = #{record.serviceEfficiency,jdbcType=DECIMAL},
+      deal_result = #{record.dealResult,jdbcType=VARCHAR},
+      service_quality = #{record.serviceQuality,jdbcType=DECIMAL},
+      apply_code = #{record.applyCode,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.ops.entity.consult.po.ConsultManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_consult_manage
+    <set>
+      <if test="consultName != null">
+        consult_name = #{consultName,jdbcType=VARCHAR},
+      </if>
+      <if test="consultTime != null">
+        consult_time = #{consultTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consultInfo != null">
+        consult_info = #{consultInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="scoreTime != null">
+        score_time = #{scoreTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="subDept != null">
+        sub_dept = #{subDept,jdbcType=VARCHAR},
+      </if>
+      <if test="subPerson != null">
+        sub_person = #{subPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="consultAdvice != null">
+        consult_advice = #{consultAdvice,jdbcType=VARCHAR},
+      </if>
+      <if test="dealOpinion != null">
+        deal_opinion = #{dealOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceAttitude != null">
+        service_attitude = #{serviceAttitude,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceEfficiency != null">
+        service_efficiency = #{serviceEfficiency,jdbcType=DECIMAL},
+      </if>
+      <if test="dealResult != null">
+        deal_result = #{dealResult,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceQuality != null">
+        service_quality = #{serviceQuality,jdbcType=DECIMAL},
+      </if>
+      <if test="applyCode != null">
+        apply_code = #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.ops.entity.consult.po.ConsultManage">
+    <!--
+    @mbggenerated
+    -->
+    update b_yw_consult_manage
+    set consult_name = #{consultName,jdbcType=VARCHAR},
+      consult_time = #{consultTime,jdbcType=TIMESTAMP},
+      consult_info = #{consultInfo,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      score = #{score,jdbcType=DECIMAL},
+      score_time = #{scoreTime,jdbcType=TIMESTAMP},
+      sub_dept = #{subDept,jdbcType=VARCHAR},
+      sub_person = #{subPerson,jdbcType=VARCHAR},
+      consult_advice = #{consultAdvice,jdbcType=VARCHAR},
+      deal_opinion = #{dealOpinion,jdbcType=VARCHAR},
+      service_attitude = #{serviceAttitude,jdbcType=DECIMAL},
+      service_efficiency = #{serviceEfficiency,jdbcType=DECIMAL},
+      deal_result = #{dealResult,jdbcType=VARCHAR},
+      service_quality = #{serviceQuality,jdbcType=DECIMAL},
+      apply_code = #{applyCode,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

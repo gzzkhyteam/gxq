@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.work.dao.WorkLogMapper">
+    <resultMap id="PageResultMap" type="com.hengyunsoft.platform.mt.entity.work.po.domain.WorkLogDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="main_org_id" jdbcType="VARCHAR" property="mainOrgId" />
+        <result column="main_dept_id" jdbcType="VARCHAR" property="mainDeptId" />
+        <result column="main_dept_name" jdbcType="VARCHAR" property="mainDeptName" />
+        <result column="main_duty_name" jdbcType="VARCHAR" property="mainDutyName" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    </resultMap>
+
+  <!--查询工作日志分页信息-->
+  <select id="getPageList"  parameterType="java.util.Map" resultMap="PageResultMap">
+      SELECT id,create_date,user_name,main_org_id,main_dept_name,main_duty_name
+      FROM b_work_log
+      <where>
+          <if test="unitId!= null and unitId!=''">
+              main_org_id =#{unitId,jdbcType=VARCHAR}
+         </if>
+          <if test="mainDeptId!= null and mainDeptId!=''">
+            AND  main_dept_id  like concat('%',#{mainDeptId,jdbcType=VARCHAR},'%')
+          </if>
+          <if test="startTime!= null">
+            AND create_date>=#{startTime,jdbcType=TIMESTAMP}
+          </if>
+          <if test="endTime!= null">
+            AND #{endTime,jdbcType=TIMESTAMP}>=create_date
+          </if>
+    </where>
+      order by create_date desc
+  </select>
+
+    <resultMap id="CountResultMap" type="com.hengyunsoft.platform.mt.entity.work.po.domain.WorkLogCountDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="main_org_id" jdbcType="VARCHAR" property="mainOrgId" />
+        <result column="main_dept_id" jdbcType="VARCHAR" property="mainDeptId" />
+        <result column="main_dept_name" jdbcType="VARCHAR" property="mainDeptName" />
+        <result column="main_duty_name" jdbcType="VARCHAR" property="mainDutyName" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="photo" jdbcType="VARCHAR" property="photo" />
+    </resultMap>
+    <!--查询工作日志統計信息-->
+    <select id="getCountList"  parameterType="java.util.Map" resultMap="CountResultMap">
+        SELECT id,create_date,user_id ,COUNT(user_id) as count ,user_name,main_dept_id,main_dept_name,main_duty_name,photo
+        FROM b_work_log
+        WHERE YEARWEEK(date_format(create_date,'%Y-%m-%d')) = YEARWEEK(now())
+            AND  main_org_id =#{unitId,jdbcType=VARCHAR}
+        <if test="mainDeptId!= null and mainDeptId!=''">
+            AND main_dept_id  like concat('%',#{mainDeptId,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="userId!= null and userId!=''">
+            AND  user_id =#{userId,jdbcType=BIGINT}
+        </if>
+        <if test="userName!= null and userName!=''">
+            AND   user_name =#{userName,jdbcType=VARCHAR}
+        </if>
+        GROUP BY user_id
+    </select>
+    <!--查询当天日志信息-->
+    <select id="getByUserId"  parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT id, user_id, photo, user_name, main_org_id, main_dept_id, main_dept_name, main_duty_name, create_date, now_num
+        FROM b_work_log
+        WHERE user_id=#{userId,jdbcType=BIGINT}
+        and main_org_id=#{unitId,jdbcType=VARCHAR}
+        and to_days(create_date)=to_days(now())
+    </select>
+    <!--查询当月用户写的日志数量-->
+    <select id="getMonthCount"  parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM b_work_log
+        WHERE DATE_FORMAT( create_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+        AND  main_org_id =#{unitId,jdbcType=VARCHAR}
+        AND  user_id =#{userId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectNoViewNum" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM b_work_log bw WHERE
+        bw.main_org_id = #{unitId}
+        AND YEARWEEK(date_format(create_date,'%Y-%m-%d')- INTERVAL 1 DAY) = YEARWEEK(now())
+        AND user_id in(
+        SELECT be_viewed_user FROM b_work_log_authority
+        WHERE user_id = #{userId})
+        AND  id NOT IN
+        (SELECT log_id FROM b_work_log_look WHERE user_id = #{userId});
+    </select>
+
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogStructTomcatMapper">
+    <resultMap id="logTypeMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogTypeDO">
+        <result column="month" property="month"></result>
+        <result column="count" property="count"></result>
+        <result column="log_type" property="logType"></result>
+        <result column="year" property="year"></result>
+    </resultMap>
+    <resultMap id="LogRespondMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogRespondMonthDO">
+        <result column="month" property="month"></result>
+        <result column="respondTime" property="respondTime"></result>
+        <result column="year" property="year"></result>
+    </resultMap>
+    <!--分页查询告警Tomcat结构化列表-->
+    <select id="pageQueryWarningTomcat" resultMap="BaseResultMap"
+            parameterType="Long">
+        select lsa.id, lsa.document_id, lsa.app_id, lsa.remote_ip, lsa.local_ip, lsa.send_byte_littleb, lsa.send_byte_bigb,
+        lsa.remote_host, lsa.request_agreement, lsa.identd_user, lsa.method, lsa.port, lsa.query_str, lsa.first_line,
+        lsa.status, lsa.session_id, lsa.log_time, lsa.remote_check_user, lsa.request_url, lsa.local_host, lsa.deal_request_millisecond,
+        lsa.time_consum, lsa.current_line, lsa.accept, lsa.accept_encoding, lsa.accept_language, lsa.connection_i,
+        lsa.cookie, lsa.host, lsa.referer, lsa.user_agent, lsa.allow_credential, lsa.access_control_allow_origin,
+        lsa.transfer_encoding, lsa.vary, lsa.x_application_context, lsa.date_o, lsa.server, lsa.connection_o, lsa.content_type,
+        lsa.cache_control, lsa.xxx_c, lsa.xxx_r, lsa.xxx_s, lsa.data_channel, lsa.create_time, lsa.create_user, lsa.update_time,
+        lsa.update_user, lsa.create_user_name, lsa.update_user_name
+        from log_warning_struct lws,log_struct_tomcat lsa where lws.log_struct_id = lsa.id and lws.log_type='TOMCAT' and lws.log_warning_id = #{id,jdbcType=BIGINT}
+
+    </select>
+    <!--查询Tomcat结构化列表-->
+    <select id="queryTomcatWarn" resultMap="BaseResultMap"
+            parameterType="Long">
+        select lsa.id, lsa.document_id, lsa.app_id, lsa.remote_ip, lsa.local_ip, lsa.send_byte_littleb, lsa.send_byte_bigb,
+        lsa.remote_host, lsa.request_agreement, lsa.identd_user, lsa.method, lsa.port, lsa.query_str, lsa.first_line,
+        lsa.status, lsa.session_id, lsa.log_time, lsa.remote_check_user, lsa.request_url, lsa.local_host, lsa.deal_request_millisecond,
+        lsa.time_consum, lsa.current_line, lsa.accept, lsa.accept_encoding, lsa.accept_language, lsa.connection_i,
+        lsa.cookie, lsa.host, lsa.referer, lsa.user_agent, lsa.allow_credential, lsa.access_control_allow_origin,
+        lsa.transfer_encoding, lsa.vary, lsa.x_application_context, lsa.date_o, lsa.server, lsa.connection_o, lsa.content_type,
+        lsa.cache_control, lsa.xxx_c, lsa.xxx_r, lsa.xxx_s, lsa.data_channel, lsa.create_time, lsa.create_user, lsa.update_time,
+        lsa.update_user, lsa.create_user_name, lsa.update_user_name
+        from log_struct_tomcat lsa where not exists (
+        SELECT 1
+        FROM log_warn_check lwc
+        WHERE lwc.log_type='TOMCAT' and lwc.log_struct_id = lsa.id ) order by lsa.log_time limit #{pageSize,jdbcType=BIGINT}
+
+    </select>
+
+    <delete id="deleteByDocumentIds" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogFileInterfaceExample">
+        delete from log_struct_tomcat
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <!--统计前12月数据-->
+    <select id="findMonthCount" parameterType="String" resultMap="logTypeMap">
+        select  YEAR(la.create_time) as year,MONTH(la.create_time) as month, COUNT(MONTH(la.create_time)) as count from log_struct_tomcat la where la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time)
+    </select>
+    <!--查询前十二月响应时间-->
+    <select id="findLogRespondMonth" parameterType="String" resultMap="LogRespondMap">
+        select  YEAR(la.create_time) as year,MONTH(la.create_time) as month, sum(la.time_consum) as respondTime from log_struct_tomcat la where la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time)
+    </select>
+</mapper>

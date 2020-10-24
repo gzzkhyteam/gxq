@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.warn.repository.dao.GxqptSendeeMapper">
+
+
+    <resultMap id="WarnMixMap" type="com.hengyunsoft.platform.warn.entity.domain.WarnMixStatusNumDO">
+        <result column="unConfirmedNum" jdbcType="INTEGER" property="unConfirmedNum" />
+        <result column="confirmedNum" jdbcType="INTEGER" property="confirmedNum" />
+        <result column="handledNum" jdbcType="INTEGER" property="handledNum" />
+        <result column="avgHandleTimeNum" jdbcType="INTEGER" property="avgHandleTimeNum" />
+    </resultMap>
+    <!--查询预警接收信息 过滤抄送人记录-->
+    <select id="getSendeeList" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT * FROM b_sendee WHERE warn_id = #{warnId,jdbcType=BIGINT} and rec_type in ('1','3') order by id
+    </select>
+    <select id="getSenList" parameterType="java.lang.Long" resultType="map">
+        SELECT rec_name,rec_type,rec_time,status,handler_leve,remarks,result_,create_user,create_time FROM b_sendee WHERE warn_id = #{warnId,jdbcType=BIGINT}
+    </select>
+    <resultMap id="conMap" type="com.hengyunsoft.platform.warn.entity.domain.GxqptSendeeDO">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="rec_name" jdbcType="VARCHAR" property="recName" />
+        <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+        <result column="result_" jdbcType="BIT" property="result" />
+    </resultMap>
+    <select id="getConList" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultMap="conMap">
+        SELECT rec_name,rec_type,rec_time,status,handler_leve,remarks,result_,create_user,create_time FROM b_sendee WHERE warn_id = #{warnId,jdbcType=BIGINT} AND rec_type = #{recType,jdbcType=VARCHAR}
+    </select>
+    <select id="getLeveList" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultType="java.lang.Integer">
+        SELECT count(id) as count FROM b_sendee where warn_id = #{warnId,jdbcType=BIGINT} AND rec_type = #{recType,jdbcType=VARCHAR}
+    </select>
+    <update id="updateByWarnIdAndLeve">
+        update b_sendee
+        set  who_handle = FALSE
+        WHERE warn_id = #{warnId} AND handler_leve = #{handlerLeve}
+    </update>
+    <update id="updateByWarnId">
+        update b_sendee
+        set  who_handle = TRUE
+        WHERE warn_id = #{warnId} AND handler_leve = #{handlerLeve}
+    </update>
+    <select id="getByUserId" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultMap="BaseResultMap">
+        SELECT id,user_id,warn_id,rec_name,rec_type,rec_time,status,remarks,handler_leve,result_,who_handle,create_user,create_time,update_user,update_time FROM b_sendee
+        WHERE user_id = #{userId,jdbcType=BIGINT} AND warn_id = #{warnId,jdbcType=BIGINT} AND rec_type = #{recType,jdbcType=VARCHAR}
+    </select>
+    <resultMap id="sendeeMap" type="com.hengyunsoft.platform.warn.entity.domain.GxqptWarnPagingDO">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="warn_id" jdbcType="BIGINT" property="warnId" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="type" jdbcType="VARCHAR" property="typeName" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="warntime" jdbcType="TIMESTAMP" property="warntime" />
+        <result column="rec_name" jdbcType="VARCHAR" property="dName" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="handler_leve" jdbcType="INTEGER" property="handlerLeve" />
+        <result column="who_handle" jdbcType="BIT" property="whoHandle" />
+        <result column="is_handle" jdbcType="BIT" property="isHandle" />
+        <result column="rec_type" jdbcType="VARCHAR" property="recType" />
+        <result column="callback_url" jdbcType="VARCHAR" property="callbackUrl" />
+    </resultMap>
+    <select id="getDName" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultMap="sendeeMap">
+        SELECT id,warn_id,rec_name FROM b_sendee WHERE warn_id IN
+        <foreach close=")" collection="warnId" index="index" item="item" open="(" separator=",">
+            #{item}
+        </foreach> AND rec_type = #{recType,jdbcType=VARCHAR}
+    </select>
+    <select id="getDuList" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultMap="BaseResultMap">
+        SELECT * FROM b_sendee WHERE warn_id = #{warnId,jdbcType=BIGINT} AND rec_type = #{recType,jdbcType=VARCHAR}
+    </select>
+    <resultMap id="dutyerMap" type="com.hengyunsoft.platform.warn.entity.domain.DutyerDO">
+        <result column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="rec_name" jdbcType="VARCHAR" property="recName" />
+    </resultMap>
+    <select id="getDutyer" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultMap="dutyerMap">
+        SELECT user_id,rec_name FROM b_sendee WHERE warn_id = #{warnId,jdbcType=BIGINT} AND rec_type = #{recType,jdbcType=VARCHAR}
+    </select>
+    <select id="getWarnId" resultType="java.lang.Long">
+        SELECT DISTINCT warn_id FROM b_sendee WHERE user_id = #{userId,jdbcType=BIGINT}
+    </select>
+    <resultMap id="dNameMap" type="com.hengyunsoft.platform.warn.entity.domain.GxqptWarnResultPagingDO">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="warn_id" jdbcType="BIGINT" property="warnId" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="type" jdbcType="VARCHAR" property="typeName" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="rec_name" jdbcType="VARCHAR" property="dutyName" />
+        <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    </resultMap>
+    <select id="getDNameByWarnId" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultMap="dNameMap">
+        SELECT id,warn_id,rec_name FROM b_sendee WHERE warn_id IN
+        <foreach close=")" collection="warnId" index="index" item="item" open="(" separator=",">
+            #{item}
+        </foreach> AND rec_type = #{recType,jdbcType=VARCHAR}
+    </select>
+    <resultMap id="dListMap" type="com.hengyunsoft.platform.warn.entity.domain.DutyerMessageDO">
+        <result column="warn_id" jdbcType="BIGINT" property="warnId" />
+        <result column="rec_name" jdbcType="VARCHAR" property="recName" />
+        <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    </resultMap>
+    <select id="getDListByWarnId" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultMap="dListMap">
+        SELECT warn_id,rec_name,remarks FROM b_sendee WHERE warn_id = #{warnId,jdbcType=BIGINT}
+        AND rec_type = #{recType,jdbcType=VARCHAR}
+    </select>
+    <select id="getNotResult" resultType="java.lang.Integer">
+        SELECT count(id) as count FROM b_sendee WHERE warn_id = #{warnId,jdbcType=BIGINT}
+        AND rec_type = #{recType,jdbcType=VARCHAR} AND result_ = #{result,jdbcType=BIT}
+    </select>
+    <resultMap id="confirmMap" type="com.hengyunsoft.platform.warn.entity.domain.ConfirmTimeDO">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="confirm_time" jdbcType="VARCHAR" property="confirmTime" />
+        <result column="handle_time" jdbcType="VARCHAR" property="handleTime" />
+    </resultMap>
+    <select id="getConfirmt" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultMap="confirmMap">
+        SELECT count(warn_id) as count,ROUND(SUM(TIMESTAMPDIFF(SECOND,rec_time,update_time)/3600),2) as confirm_time FROM b_sendee WHERE warn_id = #{warnId,jdbcType=BIGINT}
+        AND rec_type = #{recType,jdbcType=VARCHAR} AND handler_leve = #{handlerLeve,jdbcType=INTEGER}
+    </select>
+    <select id="getConfirmtNo" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultMap="confirmMap">
+        SELECT count(warn_id) as count,ROUND(SUM(TIMESTAMPDIFF(SECOND,rec_time,update_time)/3600),2) as confirm_time FROM b_sendee WHERE warn_id = #{warnId,jdbcType=BIGINT}
+        AND rec_type = #{recType,jdbcType=VARCHAR} AND result_ = FALSE
+    </select>
+    <select id="getConfirmti" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultMap="confirmMap">
+        SELECT count(warn_id) as count,ROUND(SUM(TIMESTAMPDIFF(SECOND,create_time,update_time)/3600),2) as handle_time FROM b_sendee WHERE warn_id = #{warnId,jdbcType=BIGINT}
+        AND rec_type = #{recType,jdbcType=VARCHAR}
+    </select>
+    <select id="getCsr" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee" resultMap="BaseResultMap">
+        SELECT * FROM b_sendee WHERE warn_id = #{warnId,jdbcType=BIGINT}
+        AND rec_type = #{recType,jdbcType=VARCHAR}
+    </select>
+    <update id="updateStatus">
+        update b_sendee
+        set  status = "2"
+        WHERE warn_id = #{warnId,jdbcType=BIGINT} AND rec_type = #{recType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateStatusByWarnId">
+        update b_sendee
+        set  status = "3"
+        WHERE warn_id = #{warnId,jdbcType=BIGINT} AND rec_type = #{recType,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getWarnMixStatusNum" parameterType="java.lang.Long" resultMap="WarnMixMap">
+    select
+     IFNULL(ta.unConfirmedNum,0) as unConfirmedNum,
+     IFNULL(tb.confirmedNum,0) as confirmedNum,
+     IFNULL(tc.handledNum,0) as handledNum,
+     IFNULL(td.avgHandleTimeNum,0) as avgHandleTimeNum
+     from (
+        (SELECT count(id) as unConfirmedNum FROM b_sendee
+        WHERE rec_type = '1'
+        AND status = '1'
+        ) ta,
+        (SELECT count(id) as confirmedNum FROM b_sendee
+        WHERE rec_type = '1'
+        AND status = '2'
+        ) tb,
+        (SELECT count(id) as handledNum FROM b_sendee
+        WHERE rec_type = '3'
+        AND status = '3'
+        ) tc,
+        /*ma 2019-4-28 预警处理均值*/
+        (SELECT ROUND(AVG (TIMESTAMPDIFF(SECOND,create_time,update_time))/3600, 2)
+        as avgHandleTimeNum FROM b_sendee
+        WHERE rec_type = '3' AND status = '3') td
+        )
+    </select>
+
+</mapper>

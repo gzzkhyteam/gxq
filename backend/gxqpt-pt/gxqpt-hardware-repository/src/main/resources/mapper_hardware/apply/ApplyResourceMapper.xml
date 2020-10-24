@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.hardware.repository.apply.dao.ApplyResourceMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyResource">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_keyid" jdbcType="BIGINT" property="applyKeyid" />
+    <result column="cpu_count" jdbcType="INTEGER" property="cpuCount" />
+    <result column="cpu_model" jdbcType="VARCHAR" property="cpuModel" />
+    <result column="memory_size" jdbcType="INTEGER" property="memorySize" />
+    <result column="memory_model" jdbcType="VARCHAR" property="memoryModel" />
+    <result column="disk_size" jdbcType="BIGINT" property="diskSize" />
+    <result column="disk_model" jdbcType="VARCHAR" property="diskModel" />
+    <result column="netcard_count" jdbcType="INTEGER" property="netcardCount" />
+    <result column="netcard_model" jdbcType="VARCHAR" property="netcardModel" />
+    <result column="change_machine" jdbcType="INTEGER" property="changeMachine" />
+    <result column="change_model" jdbcType="VARCHAR" property="changeModel" />
+    <result column="light_count" jdbcType="INTEGER" property="lightCount" />
+    <result column="light_model" jdbcType="VARCHAR" property="lightModel" />
+    <result column="videocard_count" jdbcType="INTEGER" property="videocardCount" />
+    <result column="videocard_model" jdbcType="VARCHAR" property="videocardModel" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, apply_keyid, cpu_count, cpu_model, memory_size, memory_model, disk_size, disk_model, 
+    netcard_count, netcard_model, change_machine, change_model, light_count, light_model, 
+    videocard_count, videocard_model, remark, create_user, create_time, update_user, 
+    update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyResourceExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_hd_resource_apply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_hd_resource_apply
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyResourceExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_hd_resource_apply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_hd_resource_apply
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_resource_apply
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyResourceExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_resource_apply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_hd_resource_apply where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_hd_resource_apply
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_hd_resource_apply where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyResource">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_resource_apply
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_resource_apply
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_resource_apply
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_resource_apply
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyResource">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_resource_apply (id, apply_keyid, cpu_count, 
+      cpu_model, memory_size, memory_model, 
+      disk_size, disk_model, netcard_count, 
+      netcard_model, change_machine, change_model, 
+      light_count, light_model, videocard_count, 
+      videocard_model, remark, create_user, 
+      create_time, update_user, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{applyKeyid,jdbcType=BIGINT}, #{cpuCount,jdbcType=INTEGER}, 
+      #{cpuModel,jdbcType=VARCHAR}, #{memorySize,jdbcType=INTEGER}, #{memoryModel,jdbcType=VARCHAR}, 
+      #{diskSize,jdbcType=BIGINT}, #{diskModel,jdbcType=VARCHAR}, #{netcardCount,jdbcType=INTEGER}, 
+      #{netcardModel,jdbcType=VARCHAR}, #{changeMachine,jdbcType=INTEGER}, #{changeModel,jdbcType=VARCHAR}, 
+      #{lightCount,jdbcType=INTEGER}, #{lightModel,jdbcType=VARCHAR}, #{videocardCount,jdbcType=INTEGER}, 
+      #{videocardModel,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_resource_apply (id, apply_keyid, cpu_count, cpu_model, memory_size, memory_model, disk_size, disk_model, netcard_count, netcard_model, change_machine, change_model, light_count, light_model, videocard_count, videocard_model, remark, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.applyKeyid,jdbcType=BIGINT}, #{item.cpuCount,jdbcType=INTEGER}, 
+        #{item.cpuModel,jdbcType=VARCHAR}, #{item.memorySize,jdbcType=INTEGER}, #{item.memoryModel,jdbcType=VARCHAR}, 
+        #{item.diskSize,jdbcType=BIGINT}, #{item.diskModel,jdbcType=VARCHAR}, #{item.netcardCount,jdbcType=INTEGER}, 
+        #{item.netcardModel,jdbcType=VARCHAR}, #{item.changeMachine,jdbcType=INTEGER}, 
+        #{item.changeModel,jdbcType=VARCHAR}, #{item.lightCount,jdbcType=INTEGER}, #{item.lightModel,jdbcType=VARCHAR}, 
+        #{item.videocardCount,jdbcType=INTEGER}, #{item.videocardModel,jdbcType=VARCHAR}, 
+        #{item.remark,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyResource">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_hd_resource_apply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="applyKeyid != null">
+        apply_keyid,
+      </if>
+      <if test="cpuCount != null">
+        cpu_count,
+      </if>
+      <if test="cpuModel != null">
+        cpu_model,
+      </if>
+      <if test="memorySize != null">
+        memory_size,
+      </if>
+      <if test="memoryModel != null">
+        memory_model,
+      </if>
+      <if test="diskSize != null">
+        disk_size,
+      </if>
+      <if test="diskModel != null">
+        disk_model,
+      </if>
+      <if test="netcardCount != null">
+        netcard_count,
+      </if>
+      <if test="netcardModel != null">
+        netcard_model,
+      </if>
+      <if test="changeMachine != null">
+        change_machine,
+      </if>
+      <if test="changeModel != null">
+        change_model,
+      </if>
+      <if test="lightCount != null">
+        light_count,
+      </if>
+      <if test="lightModel != null">
+        light_model,
+      </if>
+      <if test="videocardCount != null">
+        videocard_count,
+      </if>
+      <if test="videocardModel != null">
+        videocard_model,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="applyKeyid != null">
+        #{applyKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="cpuCount != null">
+        #{cpuCount,jdbcType=INTEGER},
+      </if>
+      <if test="cpuModel != null">
+        #{cpuModel,jdbcType=VARCHAR},
+      </if>
+      <if test="memorySize != null">
+        #{memorySize,jdbcType=INTEGER},
+      </if>
+      <if test="memoryModel != null">
+        #{memoryModel,jdbcType=VARCHAR},
+      </if>
+      <if test="diskSize != null">
+        #{diskSize,jdbcType=BIGINT},
+      </if>
+      <if test="diskModel != null">
+        #{diskModel,jdbcType=VARCHAR},
+      </if>
+      <if test="netcardCount != null">
+        #{netcardCount,jdbcType=INTEGER},
+      </if>
+      <if test="netcardModel != null">
+        #{netcardModel,jdbcType=VARCHAR},
+      </if>
+      <if test="changeMachine != null">
+        #{changeMachine,jdbcType=INTEGER},
+      </if>
+      <if test="changeModel != null">
+        #{changeModel,jdbcType=VARCHAR},
+      </if>
+      <if test="lightCount != null">
+        #{lightCount,jdbcType=INTEGER},
+      </if>
+      <if test="lightModel != null">
+        #{lightModel,jdbcType=VARCHAR},
+      </if>
+      <if test="videocardCount != null">
+        #{videocardCount,jdbcType=INTEGER},
+      </if>
+      <if test="videocardModel != null">
+        #{videocardModel,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.hardware.repository.apply.example.ApplyResourceExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_hd_resource_apply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_resource_apply
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.applyKeyid != null">
+        apply_keyid = #{record.applyKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="record.cpuCount != null">
+        cpu_count = #{record.cpuCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.cpuModel != null">
+        cpu_model = #{record.cpuModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memorySize != null">
+        memory_size = #{record.memorySize,jdbcType=INTEGER},
+      </if>
+      <if test="record.memoryModel != null">
+        memory_model = #{record.memoryModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.diskSize != null">
+        disk_size = #{record.diskSize,jdbcType=BIGINT},
+      </if>
+      <if test="record.diskModel != null">
+        disk_model = #{record.diskModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.netcardCount != null">
+        netcard_count = #{record.netcardCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.netcardModel != null">
+        netcard_model = #{record.netcardModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.changeMachine != null">
+        change_machine = #{record.changeMachine,jdbcType=INTEGER},
+      </if>
+      <if test="record.changeModel != null">
+        change_model = #{record.changeModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lightCount != null">
+        light_count = #{record.lightCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.lightModel != null">
+        light_model = #{record.lightModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.videocardCount != null">
+        videocard_count = #{record.videocardCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.videocardModel != null">
+        videocard_model = #{record.videocardModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_resource_apply
+    set id = #{record.id,jdbcType=BIGINT},
+      apply_keyid = #{record.applyKeyid,jdbcType=BIGINT},
+      cpu_count = #{record.cpuCount,jdbcType=INTEGER},
+      cpu_model = #{record.cpuModel,jdbcType=VARCHAR},
+      memory_size = #{record.memorySize,jdbcType=INTEGER},
+      memory_model = #{record.memoryModel,jdbcType=VARCHAR},
+      disk_size = #{record.diskSize,jdbcType=BIGINT},
+      disk_model = #{record.diskModel,jdbcType=VARCHAR},
+      netcard_count = #{record.netcardCount,jdbcType=INTEGER},
+      netcard_model = #{record.netcardModel,jdbcType=VARCHAR},
+      change_machine = #{record.changeMachine,jdbcType=INTEGER},
+      change_model = #{record.changeModel,jdbcType=VARCHAR},
+      light_count = #{record.lightCount,jdbcType=INTEGER},
+      light_model = #{record.lightModel,jdbcType=VARCHAR},
+      videocard_count = #{record.videocardCount,jdbcType=INTEGER},
+      videocard_model = #{record.videocardModel,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyResource">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_resource_apply
+    <set>
+      <if test="applyKeyid != null">
+        apply_keyid = #{applyKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="cpuCount != null">
+        cpu_count = #{cpuCount,jdbcType=INTEGER},
+      </if>
+      <if test="cpuModel != null">
+        cpu_model = #{cpuModel,jdbcType=VARCHAR},
+      </if>
+      <if test="memorySize != null">
+        memory_size = #{memorySize,jdbcType=INTEGER},
+      </if>
+      <if test="memoryModel != null">
+        memory_model = #{memoryModel,jdbcType=VARCHAR},
+      </if>
+      <if test="diskSize != null">
+        disk_size = #{diskSize,jdbcType=BIGINT},
+      </if>
+      <if test="diskModel != null">
+        disk_model = #{diskModel,jdbcType=VARCHAR},
+      </if>
+      <if test="netcardCount != null">
+        netcard_count = #{netcardCount,jdbcType=INTEGER},
+      </if>
+      <if test="netcardModel != null">
+        netcard_model = #{netcardModel,jdbcType=VARCHAR},
+      </if>
+      <if test="changeMachine != null">
+        change_machine = #{changeMachine,jdbcType=INTEGER},
+      </if>
+      <if test="changeModel != null">
+        change_model = #{changeModel,jdbcType=VARCHAR},
+      </if>
+      <if test="lightCount != null">
+        light_count = #{lightCount,jdbcType=INTEGER},
+      </if>
+      <if test="lightModel != null">
+        light_model = #{lightModel,jdbcType=VARCHAR},
+      </if>
+      <if test="videocardCount != null">
+        videocard_count = #{videocardCount,jdbcType=INTEGER},
+      </if>
+      <if test="videocardModel != null">
+        videocard_model = #{videocardModel,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyResource">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_resource_apply
+    <set>
+      <if test="applyKeyid != null">
+        apply_keyid = #{applyKeyid,jdbcType=BIGINT},
+      </if>
+      <if test="cpuCount != null">
+        cpu_count = #{cpuCount,jdbcType=INTEGER},
+      </if>
+      <if test="cpuModel != null">
+        cpu_model = #{cpuModel,jdbcType=VARCHAR},
+      </if>
+      <if test="memorySize != null">
+        memory_size = #{memorySize,jdbcType=INTEGER},
+      </if>
+      <if test="memoryModel != null">
+        memory_model = #{memoryModel,jdbcType=VARCHAR},
+      </if>
+      <if test="diskSize != null">
+        disk_size = #{diskSize,jdbcType=BIGINT},
+      </if>
+      <if test="diskModel != null">
+        disk_model = #{diskModel,jdbcType=VARCHAR},
+      </if>
+      <if test="netcardCount != null">
+        netcard_count = #{netcardCount,jdbcType=INTEGER},
+      </if>
+      <if test="netcardModel != null">
+        netcard_model = #{netcardModel,jdbcType=VARCHAR},
+      </if>
+      <if test="changeMachine != null">
+        change_machine = #{changeMachine,jdbcType=INTEGER},
+      </if>
+      <if test="changeModel != null">
+        change_model = #{changeModel,jdbcType=VARCHAR},
+      </if>
+      <if test="lightCount != null">
+        light_count = #{lightCount,jdbcType=INTEGER},
+      </if>
+      <if test="lightModel != null">
+        light_model = #{lightModel,jdbcType=VARCHAR},
+      </if>
+      <if test="videocardCount != null">
+        videocard_count = #{videocardCount,jdbcType=INTEGER},
+      </if>
+      <if test="videocardModel != null">
+        videocard_model = #{videocardModel,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyResource">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_resource_apply
+    set apply_keyid = #{applyKeyid,jdbcType=BIGINT},
+      cpu_count = #{cpuCount,jdbcType=INTEGER},
+      cpu_model = #{cpuModel,jdbcType=VARCHAR},
+      memory_size = #{memorySize,jdbcType=INTEGER},
+      memory_model = #{memoryModel,jdbcType=VARCHAR},
+      disk_size = #{diskSize,jdbcType=BIGINT},
+      disk_model = #{diskModel,jdbcType=VARCHAR},
+      netcard_count = #{netcardCount,jdbcType=INTEGER},
+      netcard_model = #{netcardModel,jdbcType=VARCHAR},
+      change_machine = #{changeMachine,jdbcType=INTEGER},
+      change_model = #{changeModel,jdbcType=VARCHAR},
+      light_count = #{lightCount,jdbcType=INTEGER},
+      light_model = #{lightModel,jdbcType=VARCHAR},
+      videocard_count = #{videocardCount,jdbcType=INTEGER},
+      videocard_model = #{videocardModel,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.hardware.entity.apply.po.ApplyResource">
+    <!--
+    @mbggenerated
+    -->
+    update b_hd_resource_apply
+    set apply_keyid = #{applyKeyid,jdbcType=BIGINT},
+      cpu_count = #{cpuCount,jdbcType=INTEGER},
+      cpu_model = #{cpuModel,jdbcType=VARCHAR},
+      memory_size = #{memorySize,jdbcType=INTEGER},
+      memory_model = #{memoryModel,jdbcType=VARCHAR},
+      disk_size = #{diskSize,jdbcType=BIGINT},
+      disk_model = #{diskModel,jdbcType=VARCHAR},
+      netcard_count = #{netcardCount,jdbcType=INTEGER},
+      netcard_model = #{netcardModel,jdbcType=VARCHAR},
+      change_machine = #{changeMachine,jdbcType=INTEGER},
+      change_model = #{changeModel,jdbcType=VARCHAR},
+      light_count = #{lightCount,jdbcType=INTEGER},
+      light_model = #{lightModel,jdbcType=VARCHAR},
+      videocard_count = #{videocardCount,jdbcType=INTEGER},
+      videocard_model = #{videocardModel,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.system.dao.ShareJoinOrgMapper">
+
+    <!--查询已接入单位-->
+    <select id="getJoinUnitList" resultType="com.hengyunsoft.platform.exchange.entity.system.domain.JoinOrgDO">
+            SELECT vo.id AS unitId,vo.name_ AS  unitName
+            FROM  v_org vo
+    </select>
+    <!--查询单位的目录数量-->
+    <select id="getUnitDirList" resultType="com.hengyunsoft.platform.exchange.entity.system.domain.JoinOrgDO">
+          SELECT tmp.unitId,tmp.dataCount as dirCount,vo.name_ as unitName
+            FROM(
+            SELECT unit_id AS  unitId,count(1) AS dataCount
+                  FROM  b_share_data_directory_ware
+                  WHERE status_=4 AND  data_status=1  AND  is_bottom=2
+                  GROUP BY  unit_id
+            )tmp
+            LEFT JOIN v_org vo on tmp.unitId = vo.id
+            WHERE tmp.dataCount > 0
+    </select>
+
+
+</mapper>

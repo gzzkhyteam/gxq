@@ -1,0 +1,843 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.org.sdzzww.dao.SdzzwwDepartmentMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="parent_name" jdbcType="VARCHAR" property="parentName" />
+    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="name_" jdbcType="VARCHAR" property="name" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="else_name" jdbcType="VARCHAR" property="elseName" />
+    <result column="for_type" jdbcType="VARCHAR" property="forType" />
+    <result column="for_class" jdbcType="VARCHAR" property="forClass" />
+    <result column="forindustry" jdbcType="VARCHAR" property="forindustry" />
+    <result column="orgadmin" jdbcType="VARCHAR" property="orgadmin" />
+    <result column="zipcode" jdbcType="VARCHAR" property="zipcode" />
+    <result column="telcode" jdbcType="VARCHAR" property="telcode" />
+    <result column="faxcode" jdbcType="VARCHAR" property="faxcode" />
+    <result column="status_" jdbcType="VARCHAR" property="status" />
+    <result column="sortvalue" jdbcType="INTEGER" property="sortvalue" />
+    <result column="descrption" jdbcType="VARCHAR" property="descrption" />
+    <result column="fornodetype" jdbcType="VARCHAR" property="fornodetype" />
+    <result column="orgduty" jdbcType="VARCHAR" property="orgduty" />
+    <result column="isdelete" jdbcType="VARCHAR" property="isdelete" />
+    <result column="isenable" jdbcType="VARCHAR" property="isenable" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="logid" jdbcType="VARCHAR" property="logid" />
+    <result column="otherid" jdbcType="VARCHAR" property="otherid" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, parent_name, parent_id, org_id, name_, short_name, else_name, for_type, for_class, 
+    forindustry, orgadmin, zipcode, telcode, faxcode, status_, sortvalue, descrption, 
+    fornodetype, orgduty, isdelete, isenable, create_user, create_time, update_user, 
+    update_time, logid, otherid
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.admin.repository.org.sdzzww.example.SdzzwwDepartmentExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_sdzzww_department
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from c_sdzzww_department
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.admin.repository.org.sdzzww.example.SdzzwwDepartmentExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_sdzzww_department
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="map" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from c_sdzzww_department
+    where 1=1 and id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_sdzzww_department
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.admin.repository.org.sdzzww.example.SdzzwwDepartmentExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_sdzzww_department
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_sdzzww_department where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_sdzzww_department
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_sdzzww_department where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_department
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_department
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_department
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_department
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_sdzzww_department (id, parent_name, parent_id, 
+      org_id, name_, short_name, 
+      else_name, for_type, for_class, 
+      forindustry, orgadmin, zipcode, 
+      telcode, faxcode, status_, 
+      sortvalue, descrption, fornodetype, 
+      orgduty, isdelete, isenable, 
+      create_user, create_time, update_user, 
+      update_time, logid, otherid
+      )
+    values (#{id,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
+      #{orgId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{shortName,jdbcType=VARCHAR}, 
+      #{elseName,jdbcType=VARCHAR}, #{forType,jdbcType=VARCHAR}, #{forClass,jdbcType=VARCHAR}, 
+      #{forindustry,jdbcType=VARCHAR}, #{orgadmin,jdbcType=VARCHAR}, #{zipcode,jdbcType=VARCHAR}, 
+      #{telcode,jdbcType=VARCHAR}, #{faxcode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{sortvalue,jdbcType=INTEGER}, #{descrption,jdbcType=VARCHAR}, #{fornodetype,jdbcType=VARCHAR}, 
+      #{orgduty,jdbcType=VARCHAR}, #{isdelete,jdbcType=VARCHAR}, #{isenable,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{logid,jdbcType=VARCHAR}, #{otherid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_sdzzww_department (id, parent_name, parent_id, org_id, name_, short_name, else_name, for_type, for_class, forindustry, orgadmin, zipcode, telcode, faxcode, status_, sortvalue, descrption, fornodetype, orgduty, isdelete, isenable, create_user, create_time, update_user, update_time, logid, otherid ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=VARCHAR}, #{item.parentName,jdbcType=VARCHAR}, #{item.parentId,jdbcType=VARCHAR}, 
+        #{item.orgId,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.shortName,jdbcType=VARCHAR}, 
+        #{item.elseName,jdbcType=VARCHAR}, #{item.forType,jdbcType=VARCHAR}, #{item.forClass,jdbcType=VARCHAR}, 
+        #{item.forindustry,jdbcType=VARCHAR}, #{item.orgadmin,jdbcType=VARCHAR}, #{item.zipcode,jdbcType=VARCHAR}, 
+        #{item.telcode,jdbcType=VARCHAR}, #{item.faxcode,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR}, 
+        #{item.sortvalue,jdbcType=INTEGER}, #{item.descrption,jdbcType=VARCHAR}, #{item.fornodetype,jdbcType=VARCHAR}, 
+        #{item.orgduty,jdbcType=VARCHAR}, #{item.isdelete,jdbcType=VARCHAR}, #{item.isenable,jdbcType=VARCHAR}, 
+        #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.logid,jdbcType=VARCHAR}, #{item.otherid,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_sdzzww_department
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="parentName != null">
+        parent_name,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="name != null">
+        name_,
+      </if>
+      <if test="shortName != null">
+        short_name,
+      </if>
+      <if test="elseName != null">
+        else_name,
+      </if>
+      <if test="forType != null">
+        for_type,
+      </if>
+      <if test="forClass != null">
+        for_class,
+      </if>
+      <if test="forindustry != null">
+        forindustry,
+      </if>
+      <if test="orgadmin != null">
+        orgadmin,
+      </if>
+      <if test="zipcode != null">
+        zipcode,
+      </if>
+      <if test="telcode != null">
+        telcode,
+      </if>
+      <if test="faxcode != null">
+        faxcode,
+      </if>
+      <if test="status != null">
+        status_,
+      </if>
+      <if test="sortvalue != null">
+        sortvalue,
+      </if>
+      <if test="descrption != null">
+        descrption,
+      </if>
+      <if test="fornodetype != null">
+        fornodetype,
+      </if>
+      <if test="orgduty != null">
+        orgduty,
+      </if>
+      <if test="isdelete != null">
+        isdelete,
+      </if>
+      <if test="isenable != null">
+        isenable,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="logid != null">
+        logid,
+      </if>
+      <if test="otherid != null">
+        otherid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="parentName != null">
+        #{parentName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="shortName != null">
+        #{shortName,jdbcType=VARCHAR},
+      </if>
+      <if test="elseName != null">
+        #{elseName,jdbcType=VARCHAR},
+      </if>
+      <if test="forType != null">
+        #{forType,jdbcType=VARCHAR},
+      </if>
+      <if test="forClass != null">
+        #{forClass,jdbcType=VARCHAR},
+      </if>
+      <if test="forindustry != null">
+        #{forindustry,jdbcType=VARCHAR},
+      </if>
+      <if test="orgadmin != null">
+        #{orgadmin,jdbcType=VARCHAR},
+      </if>
+      <if test="zipcode != null">
+        #{zipcode,jdbcType=VARCHAR},
+      </if>
+      <if test="telcode != null">
+        #{telcode,jdbcType=VARCHAR},
+      </if>
+      <if test="faxcode != null">
+        #{faxcode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="sortvalue != null">
+        #{sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="descrption != null">
+        #{descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="fornodetype != null">
+        #{fornodetype,jdbcType=VARCHAR},
+      </if>
+      <if test="orgduty != null">
+        #{orgduty,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="isenable != null">
+        #{isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logid != null">
+        #{logid,jdbcType=VARCHAR},
+      </if>
+      <if test="otherid != null">
+        #{otherid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.admin.repository.org.sdzzww.example.SdzzwwDepartmentExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from c_sdzzww_department
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_department
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentName != null">
+        parent_name = #{record.parentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentId != null">
+        parent_id = #{record.parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgId != null">
+        org_id = #{record.orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name_ = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shortName != null">
+        short_name = #{record.shortName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.elseName != null">
+        else_name = #{record.elseName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.forType != null">
+        for_type = #{record.forType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.forClass != null">
+        for_class = #{record.forClass,jdbcType=VARCHAR},
+      </if>
+      <if test="record.forindustry != null">
+        forindustry = #{record.forindustry,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgadmin != null">
+        orgadmin = #{record.orgadmin,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zipcode != null">
+        zipcode = #{record.zipcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.telcode != null">
+        telcode = #{record.telcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.faxcode != null">
+        faxcode = #{record.faxcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status_ = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sortvalue != null">
+        sortvalue = #{record.sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="record.descrption != null">
+        descrption = #{record.descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fornodetype != null">
+        fornodetype = #{record.fornodetype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgduty != null">
+        orgduty = #{record.orgduty,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isdelete != null">
+        isdelete = #{record.isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isenable != null">
+        isenable = #{record.isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.logid != null">
+        logid = #{record.logid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherid != null">
+        otherid = #{record.otherid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_department
+    set id = #{record.id,jdbcType=VARCHAR},
+      parent_name = #{record.parentName,jdbcType=VARCHAR},
+      parent_id = #{record.parentId,jdbcType=VARCHAR},
+      org_id = #{record.orgId,jdbcType=VARCHAR},
+      name_ = #{record.name,jdbcType=VARCHAR},
+      short_name = #{record.shortName,jdbcType=VARCHAR},
+      else_name = #{record.elseName,jdbcType=VARCHAR},
+      for_type = #{record.forType,jdbcType=VARCHAR},
+      for_class = #{record.forClass,jdbcType=VARCHAR},
+      forindustry = #{record.forindustry,jdbcType=VARCHAR},
+      orgadmin = #{record.orgadmin,jdbcType=VARCHAR},
+      zipcode = #{record.zipcode,jdbcType=VARCHAR},
+      telcode = #{record.telcode,jdbcType=VARCHAR},
+      faxcode = #{record.faxcode,jdbcType=VARCHAR},
+      status_ = #{record.status,jdbcType=VARCHAR},
+      sortvalue = #{record.sortvalue,jdbcType=INTEGER},
+      descrption = #{record.descrption,jdbcType=VARCHAR},
+      fornodetype = #{record.fornodetype,jdbcType=VARCHAR},
+      orgduty = #{record.orgduty,jdbcType=VARCHAR},
+      isdelete = #{record.isdelete,jdbcType=VARCHAR},
+      isenable = #{record.isenable,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      logid = #{record.logid,jdbcType=VARCHAR},
+      otherid = #{record.otherid,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_department
+    <set>
+      <if test="parentName != null">
+        parent_name = #{parentName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="shortName != null">
+        short_name = #{shortName,jdbcType=VARCHAR},
+      </if>
+      <if test="elseName != null">
+        else_name = #{elseName,jdbcType=VARCHAR},
+      </if>
+      <if test="forType != null">
+        for_type = #{forType,jdbcType=VARCHAR},
+      </if>
+      <if test="forClass != null">
+        for_class = #{forClass,jdbcType=VARCHAR},
+      </if>
+      <if test="forindustry != null">
+        forindustry = #{forindustry,jdbcType=VARCHAR},
+      </if>
+      <if test="orgadmin != null">
+        orgadmin = #{orgadmin,jdbcType=VARCHAR},
+      </if>
+      <if test="zipcode != null">
+        zipcode = #{zipcode,jdbcType=VARCHAR},
+      </if>
+      <if test="telcode != null">
+        telcode = #{telcode,jdbcType=VARCHAR},
+      </if>
+      <if test="faxcode != null">
+        faxcode = #{faxcode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="sortvalue != null">
+        sortvalue = #{sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="descrption != null">
+        descrption = #{descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="fornodetype != null">
+        fornodetype = #{fornodetype,jdbcType=VARCHAR},
+      </if>
+      <if test="orgduty != null">
+        orgduty = #{orgduty,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        isdelete = #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="isenable != null">
+        isenable = #{isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logid != null">
+        logid = #{logid,jdbcType=VARCHAR},
+      </if>
+      <if test="otherid != null">
+        otherid = #{otherid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_department
+    <set>
+      <if test="parentName != null">
+        parent_name = #{parentName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="shortName != null">
+        short_name = #{shortName,jdbcType=VARCHAR},
+      </if>
+      <if test="elseName != null">
+        else_name = #{elseName,jdbcType=VARCHAR},
+      </if>
+      <if test="forType != null">
+        for_type = #{forType,jdbcType=VARCHAR},
+      </if>
+      <if test="forClass != null">
+        for_class = #{forClass,jdbcType=VARCHAR},
+      </if>
+      <if test="forindustry != null">
+        forindustry = #{forindustry,jdbcType=VARCHAR},
+      </if>
+      <if test="orgadmin != null">
+        orgadmin = #{orgadmin,jdbcType=VARCHAR},
+      </if>
+      <if test="zipcode != null">
+        zipcode = #{zipcode,jdbcType=VARCHAR},
+      </if>
+      <if test="telcode != null">
+        telcode = #{telcode,jdbcType=VARCHAR},
+      </if>
+      <if test="faxcode != null">
+        faxcode = #{faxcode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="sortvalue != null">
+        sortvalue = #{sortvalue,jdbcType=INTEGER},
+      </if>
+      <if test="descrption != null">
+        descrption = #{descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="fornodetype != null">
+        fornodetype = #{fornodetype,jdbcType=VARCHAR},
+      </if>
+      <if test="orgduty != null">
+        orgduty = #{orgduty,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        isdelete = #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="isenable != null">
+        isenable = #{isenable,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logid != null">
+        logid = #{logid,jdbcType=VARCHAR},
+      </if>
+      <if test="otherid != null">
+        otherid = #{otherid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_department
+    set parent_name = #{parentName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      name_ = #{name,jdbcType=VARCHAR},
+      short_name = #{shortName,jdbcType=VARCHAR},
+      else_name = #{elseName,jdbcType=VARCHAR},
+      for_type = #{forType,jdbcType=VARCHAR},
+      for_class = #{forClass,jdbcType=VARCHAR},
+      forindustry = #{forindustry,jdbcType=VARCHAR},
+      orgadmin = #{orgadmin,jdbcType=VARCHAR},
+      zipcode = #{zipcode,jdbcType=VARCHAR},
+      telcode = #{telcode,jdbcType=VARCHAR},
+      faxcode = #{faxcode,jdbcType=VARCHAR},
+      status_ = #{status,jdbcType=VARCHAR},
+      sortvalue = #{sortvalue,jdbcType=INTEGER},
+      descrption = #{descrption,jdbcType=VARCHAR},
+      fornodetype = #{fornodetype,jdbcType=VARCHAR},
+      orgduty = #{orgduty,jdbcType=VARCHAR},
+      isdelete = #{isdelete,jdbcType=VARCHAR},
+      isenable = #{isenable,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      logid = #{logid,jdbcType=VARCHAR},
+      otherid = #{otherid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.admin.entity.org.sdzzww.po.SdzzwwDepartment">
+    <!--
+    @mbggenerated
+    -->
+    update c_sdzzww_department
+    set parent_name = #{parentName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      name_ = #{name,jdbcType=VARCHAR},
+      short_name = #{shortName,jdbcType=VARCHAR},
+      else_name = #{elseName,jdbcType=VARCHAR},
+      for_type = #{forType,jdbcType=VARCHAR},
+      for_class = #{forClass,jdbcType=VARCHAR},
+      forindustry = #{forindustry,jdbcType=VARCHAR},
+      orgadmin = #{orgadmin,jdbcType=VARCHAR},
+      zipcode = #{zipcode,jdbcType=VARCHAR},
+      telcode = #{telcode,jdbcType=VARCHAR},
+      faxcode = #{faxcode,jdbcType=VARCHAR},
+      status_ = #{status,jdbcType=VARCHAR},
+      sortvalue = #{sortvalue,jdbcType=INTEGER},
+      descrption = #{descrption,jdbcType=VARCHAR},
+      fornodetype = #{fornodetype,jdbcType=VARCHAR},
+      orgduty = #{orgduty,jdbcType=VARCHAR},
+      isdelete = #{isdelete,jdbcType=VARCHAR},
+      isenable = #{isenable,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      logid = #{logid,jdbcType=VARCHAR},
+      otherid = #{otherid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

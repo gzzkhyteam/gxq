@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.appr.dao.ApprPersonMapper">
+  <resultMap id="ExtBaseResultMap" type="com.hengyunsoft.platform.mt.entity.appr.po.ApprPerson">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_id" jdbcType="BIGINT" property="applyId" />
+    <result column="appr_user_id" jdbcType="BIGINT" property="apprUserId" />
+    <result column="appr_user_name" jdbcType="VARCHAR" property="apprUserName" />
+    <result column="appr_user_index" jdbcType="INTEGER" property="apprUserIndex" />
+      <result column="photo" jdbcType="VARCHAR" property="photo" />
+    <result column="user_type" jdbcType="INTEGER" property="userType" />
+    <result column="is_read" jdbcType="INTEGER" property="isRead" />
+    <result column="agree" jdbcType="INTEGER" property="agree" />
+    <result column="appr_opinion" jdbcType="LONGVARCHAR" property="apprOpinion" />
+    <result column="appr_time" jdbcType="TIMESTAMP" property="apprTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <!--查询审批人或者抄送人-->
+    <select id="getApprPersons" parameterType="java.util.Map" resultMap="ExtBaseResultMap">
+      SELECT
+          p.id,
+          p.apply_id,
+          p.appr_user_id,
+          p.appr_user_index,
+          p.user_type,
+          p.is_read,
+          p.agree,
+          p.appr_opinion,
+          p.appr_time,
+          p.create_user,
+          p.create_time,
+          p.update_user,
+          p.update_time,
+          g.name_ appr_user_name,
+          g.photo
+        FROM
+            b_appr_person AS p
+        INNER JOIN copy_core_c_gxqpt_emp AS g ON p.appr_user_id = g.gxqpt_emp_id
+        WHERE
+            p.user_type = #{userType,jdbcType=INTEGER}
+        AND p.apply_id =  #{applyId,jdbcType=BIGINT}
+        <if test="apprUserIndex != null">
+          AND  p.appr_user_index = #{apprUserIndex,jdbcType=INTEGER}
+        </if>
+      ORDER BY p.appr_user_index ASC
+    </select>
+</mapper>

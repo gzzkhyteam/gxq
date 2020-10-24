@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.set.dao.ShareDbSourceMapper">
+    <resultMap id="DbSourceListResultMap" type="com.hengyunsoft.platform.exchange.entity.set.domain.DbSourceDO">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
+        <result column="sys_name" jdbcType="VARCHAR" property="systemName"/>
+        <result column="source_name" jdbcType="VARCHAR" property="sourceName"/>
+        <result column="db_name" jdbcType="VARCHAR" property="dbName"/>
+        <result column="db_port" jdbcType="VARCHAR" property="dbPort"/>
+        <result column="db_address" jdbcType="VARCHAR" property="dbAddress"/>
+        <result column="cont_type" jdbcType="INTEGER" property="contType"/>
+        <result column="db_type" jdbcType="INTEGER" property="dbType"/>
+        <result column="server_type" jdbcType="INTEGER" property="serverType"/>
+        <result column="db_account" jdbcType="VARCHAR" property="dbAccount"/>
+        <result column="db_password" jdbcType="VARCHAR" property="dbPassword"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+    </resultMap>
+
+    <select id="queryDbSourceList" parameterType="java.util.Map" resultMap="DbSourceListResultMap">
+        SELECT
+        bs.id,
+        bs.unit_id,
+        bss.sys_name,
+        bs.source_name,
+        bs.db_name,
+        bs.db_port,
+        bs.db_address,
+        bs.cont_type,
+        bs.db_type,
+        bs.server_type,
+        bs.db_account,
+        bs.db_password,
+        bs.create_time,
+        bs.create_user,
+        bs.update_time,
+        bs.update_user
+        FROM
+        b_share_db_source bs
+        LEFT JOIN b_share_system bss
+        ON bs.unit_id = bss.id
+        <where>
+            <if test="dbType != null">
+                AND bs.db_type = #{dbType,jdbcType=INTEGER}
+            </if>
+            <if test="sourceName != null">
+                AND bs.source_name LIKE #{sourceName,typeHandler=fullLike}
+            </if>
+            <if test="orgId != null">
+                AND bs.org_id = #{orgId,jdbcType=VARCHAR}
+            </if>
+            <if test="dbName != null">
+                AND bs.db_name LIKE #{dbName,typeHandler=fullLike}
+            </if>
+            <if test="sysName != null">
+                AND bss.sys_name LIKE #{sysName,typeHandler=fullLike}
+            </if>
+        </where>
+        ORDER BY bs.create_time DESC
+    </select>
+
+    <select id="getDbSourceById" parameterType="java.lang.Long" resultMap="DbSourceListResultMap">
+    SELECT
+    bs.id,
+    bs.unit_id,
+    bss.sys_name,
+    bs.source_name,
+    bs.db_name,
+    bs.db_port,
+    bs.db_address,
+    bs.cont_type,
+    bs.db_type,
+    bs.server_type,
+    bs.db_account,
+    bs.db_password,
+    bs.create_time,
+    bs.create_user,
+    bs.update_time,
+    bs.update_user
+    FROM
+    b_share_db_source bs
+    LEFT JOIN b_share_system bss
+    ON bs.unit_id = bss.id
+    WHERE bs.id = #{id,jdbcType=BIGINT}
+  </select>
+</mapper>

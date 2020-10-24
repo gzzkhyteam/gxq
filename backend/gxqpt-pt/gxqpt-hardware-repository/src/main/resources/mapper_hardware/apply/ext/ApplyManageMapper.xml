@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.hardware.repository.apply.dao.ApplyManageMapper">
+
+    <resultMap id="ApprApplyListMap" extends="BaseResultMap" type="com.hengyunsoft.platform.hardware.entity.apply.domain.ApplyManageDO">
+        <result column="handleType" jdbcType="VARCHAR" property="handleType" />
+    </resultMap>
+
+    <select id="getApprApplyList" resultMap="ApprApplyListMap" parameterType="com.hengyunsoft.platform.hardware.entity.apply.domain.ApplyManageDO">
+        SELECT t.* from (
+            select '2' handleType,apply.id, apply.apply_no, apply.apply_orgid, apply.apply_orgname, apply.apply_uid, apply.apply_uname, apply.apply_type, apply.apply_time,
+                apply.step_code, apply.step_name, apply.scode, apply.sname, apply.apply_email, apply.apply_reason, apply.server_keyid, apply.resflag,
+                apply.endflag,apply.create_time
+                from b_hd_apply_manage apply where
+                apply.scode in
+                <foreach item="scode" collection="scodes" open="(" separator="," close=")">
+                    #{scode}
+                </foreach>
+            union
+            SELECT '1' handleType,apply.id, apply.apply_no, apply.apply_orgid, apply.apply_orgname, apply.apply_uid, apply.apply_uname, apply.apply_type, apply.apply_time,
+                apply.step_code, apply.step_name, apply.scode, apply.sname, apply.apply_email, apply.apply_reason, apply.server_keyid, apply.resflag,
+                apply.endflag,apply.create_time
+                from b_hd_apply_manage apply
+            join  b_hd_apply_record record on apply.id = record.apply_keyid
+            and (
+                record.scode in
+                <foreach item="scode" collection="scodes" open="(" separator="," close=")">
+                    #{scode}
+                </foreach>
+                <if test="scode!=null and scode=='UY'">
+                    or record.scode='END'
+                </if>
+            )
+        )t
+        where 1=1
+        <if test="applyNo !=null and applyNo!=''">
+            and t.apply_no = #{applyNo}
+        </if>
+        <if test="applyType !=null and applyType!=''">
+            and t.apply_type = #{applyType}
+        </if>
+        <if test="applyOrgname !=null and applyOrgname!=''">
+            and t.apply_orgname like CONCAT('%', #{applyOrgname}, '%')
+        </if>
+        <if test="applyUname !=null and applyUname!=''">
+            and t.apply_uname like CONCAT('%', #{applyUname}, '%')
+        </if>
+        <if test="applyStartTime !=null ">
+            AND date_format(t.apply_time,'%Y-%m-%d') &gt;= date_format(#{applyStartTime},'%Y-%m-%d')
+        </if>
+        <if test="applyEneTime !=null ">
+            AND date_format(t.apply_time,'%Y-%m-%d') &lt;= date_format(#{applyEneTime},'%Y-%m-%d')
+        </if>
+        GROUP BY t.id
+        ORDER BY t.handleType desc,t.create_time desc
+    </select>
+</mapper>

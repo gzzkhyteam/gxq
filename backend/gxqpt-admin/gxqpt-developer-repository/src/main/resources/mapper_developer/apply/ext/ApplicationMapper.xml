@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.apply.dao.ApplicationMapper">
+    <resultMap id="DetailsResultMap" type="com.hengyunsoft.platform.developer.entity.apply.po.domain.ApplicationDO" extends="BaseResultMap">
+        <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
+        <result column="create_name" jdbcType="VARCHAR" property="createName"/>
+    </resultMap>
+    <resultMap id="CostAndTimeResultMap" type="com.hengyunsoft.platform.developer.entity.apply.po.domain.ApplicationCostAndTimeDO">
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="type_" jdbcType="VARCHAR" property="type"/>
+        <result column="type_num" jdbcType="INTEGER" property="typeNum"/>
+        <result column="sum_reduce_cost" jdbcType="INTEGER" property="sumReduceCost"></result>
+        <result column="sum_reduce_cost" jdbcType="DOUBLE" property="sumReduceTime"></result>
+    </resultMap>
+
+
+
+    <resultMap id="PlatformDevMap" type="com.hengyunsoft.platform.developer.entity.apply.po.domain.ApplicationScreenDO">
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="num" jdbcType="INTEGER" property="num"/>
+        <result column="xDate" jdbcType="VARCHAR" property="xDate"></result>
+    </resultMap>
+
+    <!-- 根据用户Id查找所拥有应用
+    <select id="selectAppByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        
+         @mbggenerated
+        
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM c_application
+        WHERE
+        <if test="type != null and type == 1">
+            app_type IN (1,3) AND
+        </if>
+        <if test="type != null and type == 2">
+            app_type IN (2,3) AND
+        </if>
+        id IN (SELECT biz_id
+        FROM c_role_power
+        WHERE role_id IN (SELECT role_id
+        FROM c_assign_role
+        WHERE user_id = #{userId})
+        AND biz_type = 2
+        )
+        order by order_no asc
+    </select> -->
+
+    <!--根据name查询应用数据-->
+    <sql id="QueryByName_Column_List">
+    id, app_id,  name_, logo_url, desc_, code_, index_url, service_id
+  </sql>
+
+    <resultMap id="QueryByNameResultMap" type="com.hengyunsoft.platform.developer.entity.apply.po.Application">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="app_id" jdbcType="VARCHAR" property="appId"/>
+        <result column="name_" jdbcType="VARCHAR" property="name"/>
+        <result column="logo_url" jdbcType="VARCHAR" property="logoUrl"/>
+        <result column="desc_" jdbcType="VARCHAR" property="desc"/>
+        <result column="code_" jdbcType="VARCHAR" property="code"/>
+        <result column="index_url" jdbcType="VARCHAR" property="indexUrl"/>
+        <result column="service_id" jdbcType="VARCHAR" property="serviceId"/>
+    </resultMap>
+
+    <select id="findAppListByNameAndUserId" resultMap="QueryByNameResultMap">
+        SELECT
+        <include refid="QueryByName_Column_List"/>
+        FROM c_application
+        WHERE id IN (
+        SELECT biz_id FROM c_role_power
+        WHERE role_id IN (
+        SELECT role_id FROM c_assign_role WHERE user_id = #{userId}
+        )
+        AND biz_type = 2
+        )
+        AND name_ like #{name,typeHandler=fullLike} AND status_ = 1
+    </select>
+
+    <sql id="Extend_App_Column_List">
+        <!--
+        @别名
+        -->
+        c.id, c.app_id, c.app_secret, c.index_url, c.name_, c.logo_url, c.desc_, c.code_, c.order_no, c.app_type,
+        c.type_, c.provider_, c.status_, c.random_str, c.org_name, c.create_user, c.create_time, c.update_user,
+        c.update_time, c.org_id, c.org_system_code, c.org_name,c.service_id service_id,c.full_root_path full_root_path
+    </sql>
+    <sql id="Details_App_Column_List">
+        <!--
+        @别名
+        -->
+        c.id, c.app_id, c.app_secret, c.index_url, c.name_, c.logo_url, c.desc_, c.code_, c.order_no, c.app_type, 
+	    c.type_, c.provider_, c.status_, c.random_str, c.create_user, c.create_time, c.update_user, c.update_time, 
+	    c.org_id, c.org_system_code, c.org_name, c.reduce_time, c.reduce_cost, c.original_time, c.original_cost, 
+	    c.is_fast_app, c.biz_config_id, c.hots_count, c.reduce_build_cost, c.reduce_use_cost, c.reduce_protect_cost, 
+	    c.public_is,b_dictionary.`name` type_name,c.service_id service_id,c.full_root_path full_root_path,c.provider_id provider_id
+    </sql>
+    <!--查询当前所有的应用(启用)
+    1:应用
+    2:服务
+    3:即是应用又是服务
+    @wz-->
+    <select id="findAppByAdminWithEnable" parameterType="Long" resultMap="DetailsResultMap">
+        select
+        <include refid="Details_App_Column_List"/>
+        from c_application c left join b_dictionary on b_dictionary.`code`=c.type_
+        where 1=1
+        <if test="type != null and type == 1">
+            AND c.app_type IN (1,3)
+        </if>
+        <if test="type != null and type == 2">
+            AND c.app_type IN (2,3)
+        </if>
+        <if test="type != null and type == 3">
+            AND c.app_type IN (3)
+        </if>
+        AND c.status_= 1
+        order by b_dictionary.order_num is null,b_dictionary.order_num,c.order_no is null,c.order_no
+    </select>
+    <!--查询当前管理的所有的应用
+    1:应用
+    2:服务
+    3:启用的所有
+    @wz-->
+    <select id="findAppByAdmin" parameterType="Long" resultMap="DetailsResultMap">
+        select
+        <include refid="Details_App_Column_List"/>
+        from c_application c left join b_dictionary on b_dictionary.`code`=c.type_
+        where c.app_id in (
+        select c_role.app_id
+        from c_role join c_assign_role on c_assign_role.role_id=c_role.id
+        where c_role.code_ = 'app_admin' and c_assign_role.user_id=#{id,jdbcType=BIGINT}
+        )
+        <if test="type != null and type == 1">
+            AND c.app_type IN (1,3)
+        </if>
+        <if test="type != null and type == 2">
+            AND c.app_type IN (2,3)
+        </if>
+        AND c.status_= 1
+        order by b_dictionary.order_num is null,b_dictionary.order_num,c.order_no is null,c.order_no
+    </select>
+    <!--查询当前管理的所有的编辑应用
+    1:应用
+    2:服务
+    3:启用的所有
+    @wz-->
+    <select id="findAppByAdminEdit" parameterType="Long" resultMap="DetailsResultMap">
+        select
+        <include refid="Details_App_Column_List"/>
+        from c_application c left join b_dictionary on b_dictionary.`code`=c.type_
+        where c.app_id in (
+        select c_role.app_id
+        from c_role join c_assign_role on c_assign_role.role_id=c_role.id
+        where c_role.code_ = 'app_admin' and c_assign_role.user_id=#{id,jdbcType=BIGINT}
+        )
+        <if test="type != null and type == 1">
+            AND c.app_type IN (1,3)
+        </if>
+        <if test="type != null and type == 2">
+            AND c.app_type IN (2,3)
+        </if>
+        <if test="type != null and type == 3">
+            AND c.app_type IN (3)
+        </if>
+        order by b_dictionary.order_num is null,b_dictionary.order_num,c.order_no is null,c.order_no
+    </select>
+    <!--查询应用详情
+    @wz-->
+    <select id="getDetails" parameterType="Long" resultMap="DetailsResultMap">
+        select
+        <include refid="Details_App_Column_List"/>
+        from c_application c
+        left join b_dictionary on b_dictionary.`code`= binary c.type_
+        AND b_dictionary.dictionary_type_code='application.type'
+        where c.id=#{id,jdbcType=BIGINT}
+    </select>
+    <!--统计应用可降低成本与可缩短工期 -->
+    <select id="findReduceCostAndTime" resultMap="CostAndTimeResultMap">
+        SELECT ca.name_, type_ ,COUNT(type_) as type_num , SUM(reduce_cost) as sum_reduce_cost,SUM(reduce_time) as sum_reduce_time FROM c_application ca GROUP BY ca.type_
+    </select>
+
+
+    <select id="getPlatformDev" resultMap="PlatformDevMap">
+        SELECT t.type_ type,COUNT(*) num, str_to_date(#{strDate,jdbcType=VARCHAR}, '%Y-%m-%d') xDate from c_application t
+        WHERE t.create_time &lt;= str_to_date(#{strDate,jdbcType=VARCHAR}, '%Y-%m-%d')
+        GROUP BY t.type_
+    </select>
+
+	<!-- farglory 降本提质-组件预估价值统计  -->
+    <select id="findComponentEstimatedValue" parameterType="map" resultType="map">
+    	select t1.name_, t1.reduce_time, t1.reduce_cost from  c_application  t1  
+		order by t1.name_ desc limit 5
+    </select>
+	
+	<!-- farglory 降本提质-总数统计 -->
+	<select id="findTotalStatistics" parameterType="map" resultType="map">
+		select count(*) application_total, sum(reduce_time), sum(reduce_cost) from c_application
+	</select>
+
+    <!--查询应用之间的依赖关系 idRely 是否存在依赖，target 依赖应用的id -->
+    <resultMap id="RelationResultMap" extends="BaseResultMap" type="com.hengyunsoft.platform.developer.entity.apply.po.domain.ApplicationRelationDO">
+        <result column="idRely" jdbcType="INTEGER" property="idRely" />
+        <result column="target" jdbcType="INTEGER" property="target" />
+        <result column="targetName" jdbcType="VARCHAR" property="targetName" />
+        <result column="relationId" jdbcType="INTEGER" property="relationId" />
+    </resultMap>
+    <select id="getApplicationRelation" resultMap="RelationResultMap">
+        select
+         app.id, app.app_id, app.app_secret, app.index_url, app.name_, app.logo_url, app.desc_, app.code_, app.order_no,
+         app.app_type, app.type_, app.provider_, app.status_, app.random_str, app.create_user, app.create_time,
+         app.update_user, app.update_time, app.org_id, app.org_system_code, app.org_name, app.reduce_time, app.reduce_cost,
+         app.original_time, app.original_cost,
+         CASE when relation.producer_id then 1 else 0 end as idRely ,
+         relation.id as target
+	     FROM c_application app
+	     LEFT JOIN c_depend_relation relation
+	     ON relation.consume_id= #{appId} and relation.consume_type='app' and app.id = relation.producer_id
+	     and relation.producer_type='app'
+	     where app.id != #{appId} 
+	     <if test="name != null and name != ''">
+	     	and app.name_ like #{name,typeHandler=fullLike}
+	     </if>
+	     ORDER BY idRely desc
+    </select>
+    <!--根据appId查找信息-->
+    <select id="getMsgByAppId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        <!--
+         @mbggenerated
+         -->
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM c_application
+        WHERE app_id = #{appId}
+    </select>
+    
+    <select id="findAppVisible" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+	    from c_application 
+	    where ( public_is = 1 or app_id in (
+	       select reso.app_id from c_resource reso join c_role_power  power on reso.id = power.biz_id join c_role on power.role_id = c_role.id join c_assign_role on c_role.id = c_assign_role.role_id
+	       where reso.status_= 1 and c_role.status_=1  and c_assign_role.user_id= #{userId}
+	    )) and status_=1
+        <if test="type != null and type == 1">
+            AND app_type IN (1,3)
+        </if>
+        <if test="type != null and type == 2">
+            AND app_type IN (2,3)
+        </if>
+
+    </select>
+
+    <select id="findAppVisibleName" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from c_application
+        where ( public_is = 1 or app_id in (
+        select reso.app_id from c_resource reso join c_role_power  power on reso.id = power.biz_id join c_role on power.role_id = c_role.id join c_assign_role on c_role.id = c_assign_role.role_id
+        where reso.status_= 1 and c_role.status_=1  and c_assign_role.user_id= #{userId}
+        )) and status_=1
+        <if test="type != null and type == 1">
+            AND app_type IN (1,3)
+        </if>
+        <if test="type != null and type == 2">
+            AND app_type IN (2,3)
+        </if>
+        <if test="name!=null and name!='' ">
+            and name_ = #{name,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="findAppIdByUserId" parameterType="map" resultType="java.lang.Long">
+        SELECT
+        id
+        FROM c_application c
+        WHERE id IN (SELECT biz_id
+        FROM c_role_power
+        WHERE role_id IN (SELECT role_id
+        FROM c_assign_role
+        WHERE user_id = #{userId,jdbcType=BIGINT})
+        AND biz_type = 2
+        )
+        and  id in
+        <foreach collection="applicationIdList" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
+    </select>
+
+    <!--大屏运维监控应用系统访问次数top10-->
+    <select id="findApplicationVisitCount" resultType="com.hengyunsoft.platform.developer.entity.apply.po.domain.ApplicationVisitCountDO">
+        SELECT  app.app_id appId,app.name_ appName,sum(uinfo.total_num) count
+        from c_module_use_info uinfo
+        JOIN c_service_module module on uinfo.module_id = module.id
+        JOIN c_application app on module.app_id = app.app_id
+        where uinfo.use_year = YEAR(NOW())
+        GROUP BY app.app_id ORDER BY count desc
+        LIMIT 10
+    </select>
+
+    <!--大屏运维监控调用方应用系统访问次数top10-->
+    <select id="findConsumerAppApplicationVisitCount" resultType="com.hengyunsoft.platform.developer.entity.apply.po.domain.ApplicationVisitCountDO">
+        SELECT  app.app_id appId,app.name_ appName,count(app.app_id) count from c_module_use_info uinfo
+        JOIN c_application app on uinfo.app_id = app.app_id
+        where uinfo.use_year = YEAR(NOW())
+        GROUP BY app.app_id ORDER BY count desc
+        LIMIT 10
+    </select>
+
+    <!--根据定窑新需求：接入应用查询-->
+    <select id="findAllIncomeApplication" resultType="com.hengyunsoft.platform.developer.entity.apply.po.domain.ApplicationInComeAppDO">
+        SELECT app_id as appId,name_ as appName from c_application where type_='jryy'
+        LIMIT #{top}
+    </select>
+    
+    <resultMap type="com.hengyunsoft.platform.developer.entity.apply.po.domain.CountOrgApplicationDO" id="CountOrgApplicationMap">
+    	<result column="org_id" jdbcType="VARCHAR" property="orgId"/>
+        <result column="org_system_code" jdbcType="VARCHAR" property="orgSystemCode"/>
+        <result column="org_name" jdbcType="VARCHAR" property="orgName"/>
+        <result column="appNum" jdbcType="INTEGER" property="appNum"></result>
+    </resultMap>
+    <select id="countOrgApplication" resultType="boolean" resultMap="CountOrgApplicationMap">
+    	select org_id,org_system_code,org_name,count(*) appNum
+    	from c_application 
+    	<where>
+    		<if test="status != null">
+    			status_ = #{status}
+    		</if>
+    	</where>
+    	group by org_id,org_system_code,org_name
+    </select>
+    <select id="findAppByCondition" parameterType="java.lang.String" resultMap="BaseResultMap">
+        <!--
+         @mbggenerated
+         -->
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM c_application
+        WHERE type_ != 'zcfw' and  type_ != 'zcfwmk'
+    </select>
+
+    <select id="findByAppIdList" parameterType="java.util.Map" resultMap="DetailsResultMap">
+        SELECT
+          a.id,
+          a.app_id,
+          a.name_,
+          a.logo_url,
+          a.desc_,
+          a.code_,
+          a.order_no,
+          a.app_type,
+          (SELECT b.name FROM b_dictionary b WHERE b.code = a.type_) AS type_name,
+          a.provider_,
+          (SELECT c.name_ FROM c_user c WHERE c.id = a.create_user) AS create_name,
+          a.create_user
+        FROM
+          c_application a
+          <where>
+              <if test="name!=null and name!='' ">and a.name_ LIKE #{name,typeHandler=fullLike}</if>
+              <if test="appType!=null and appType!='' ">and app_type = #{appType,jdbcType=SMALLINT}</if>
+              <if test="type!=null and type!='' ">and type_ = #{type,jdbcType=VARCHAR}</if>
+              <if test="provider!=null and provider!='' ">and provider_ LIKE #{provider,typeHandler=fullLike}</if>
+              <!--<foreach collection="appIdList" open=" and a.app_id in(" close=")" item="appId" separator=",">
+                  #{appId}
+              </foreach>-->
+          </where>
+          ORDER  BY a.name_ DESC
+    </select>
+    <select id="selectAppByPower">
+
+    </select>
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry location="D:\mavenRepo\mysql\mysql-connector-java\5.1.42\mysql-connector-java-5.1.42.jar"/>
+    <context id="DB2Tables" targetRuntime="com.hengyunsoft.generator.codegen.mybatis3.IntrospectedTableMyBatis3ImplExt">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 使用正则表达式的方式来指定在生成代码时，不要覆盖的文件名   下面禁止覆盖的是 *Mapper.java(DAO)  *Service.java(SERVICE 接口)  *ServiceImpl.java(service实现) -->
+        <property name="disableOverwriteRegex" value="^.+(Mapper|Service|ServiceImpl).java$"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="false"/>
+        </commentGenerator>
+        <!-- <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://192.168.1.204:3306/gxqpt_core_dev"
+                        userId="root" password="r!o@o#t$>?.123"></jdbcConnection> -->
+ 		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3306/gxqpt_core_zs"
+                        userId="root" password="root"></jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--
+         新增7个属性，用于修改Example类生成时的存放路径 by：tangyh
+         [javaModelGenerator]:
+         targetExamplePackage: Example类的存放包名
+         targetExampleProject: Example类的存放项目路径
+         targetExampleSuperClass: Example的父类完整类名
+         targetGeneratedCriteriaSuperClass: Example内部类GeneratedCriteria 的父类完整类名
+         rootClass: 实体父类
+
+         [javaClientGenerator]:
+         targetIsGenMethod: 是否在dao中生成扩展的方法
+         targetSuperClass:  dao父类接口
+         targetSuperGeneric: dao泛型第一个参数
+
+         [table]:
+         enabledGxqptExt 是否在xml中生成扩展的方法
+         -->
+
+        <javaModelGenerator targetPackage="com.hengyunsoft.platform.developer.entity.service.po"
+                            targetProject="src\main\java"
+                            targetExamplePackage="com.hengyunsoft.platform.developer.repository.service.example"
+                            targetExampleProject="src\main\java"
+                            targetExampleSuperClass="com.hengyunsoft.db.example.BaseExample"
+                            targetGeneratedCriteriaSuperClass="com.hengyunsoft.db.example.BaseGeneratedCriteria" >
+            <!-- 指定service接口要继承的接口 -->
+            <property name="serviceSuperInterface" value="com.hengyunsoft.base.service.normal.BaseService"/>
+            <property name="serviceProject" value="src\main\java"/>
+            <!-- 指定service接口所在的包 -->
+            <property name="servicePackage" value="com.hengyunsoft.platform.developer.repository.service.service"/>
+            <!-- 指定service实现所要继承的父类 -->
+            
+            <property name="serviceImplSuperClass" value="com.hengyunsoft.base.service.impl.BaseServiceImpl"/>
+            <!-- 指定service实现所在的包 -->
+            
+            <property name="serviceImplPackage" value="com.hengyunsoft.platform.developer.repository.service.service.impl"/>         
+            <property name="rootClass" value="com.hengyunsoft.base.entity.BaseEntity&lt;Long&gt;"/>
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <sqlMapGenerator targetPackage="mapper_developer.service.base" targetProject="src\main\resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.hengyunsoft.platform.developer.repository.service.dao"
+                             targetProject="src\main\java"
+                             targetIsGenMethod="false"
+                             targetSuperClass="com.hengyunsoft.base.dao.BaseNormalDao"
+                             targetSuperGeneric="Long"
+        >
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="c_service_assign_module" domainObjectName="ServiceAssignModule" enabledGxqptExt="true"></table>
+        <table tableName="c_service_module" domainObjectName="ServiceModule" enabledGxqptExt="true"></table>
+        <table tableName="c_service_module_doc" domainObjectName="ServiceModuleDoc" enabledGxqptExt="true"></table>
+        <table tableName="c_service_resource" domainObjectName="ServiceResource" enabledGxqptExt="true"></table>
+        <table tableName="c_service_resource_doc" domainObjectName="ServiceResourceDoc" enabledGxqptExt="true"></table>
+<!--         <table tableName="c_user" domainObjectName="User" enabledGxqptExt="true"></table> -->
+<!--         <table tableName="c_sdzzww_duties" domainObjectName="SdzzwwDuties" enabledGxqptExt="true"></table>
+        <table tableName="c_sdzzww_emp" domainObjectName="SdzzwwEmp" enabledGxqptExt="true"></table>
+        <table tableName="c_sdzzww_emp_identity" domainObjectName="SdzzwwEmpIdentity" enabledGxqptExt="true"></table>
+
+        <table tableName="c_sdzzww_org" domainObjectName="SdzzwwOrg" enabledGxqptExt="true"></table>
+        <table tableName="c_sdzzww_post" domainObjectName="SdzzwwPost" enabledGxqptExt="true"></table> -->
+<!--         <table tableName="c_role" domainObjectName="Role" enabledGxqptExt="true"></table>
+        
+        <table tableName="c_application" domainObjectName="Application" enabledGxqptExt="true"></table>
+        <table tableName="c_application_host_install" domainObjectName="ApplicationHostInstall" enabledGxqptExt="true"></table>
+
+
+        <table tableName="c_service_resource" domainObjectName="ServiceResource" enabledGxqptExt="true"></table>
+        <table tableName="c_service_module" domainObjectName="ServiceModule" enabledGxqptExt="true"></table>
+        <table tableName="c_service_assign_module" domainObjectName="ServiceAssignModule" enabledGxqptExt="true"></table> -->
+    </context>
+</generatorConfiguration>

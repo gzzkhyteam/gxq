@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogCountMapper">
+    <resultMap id="LogCountDOResultMap" type="com.hengyunsoft.platform.logs.entity.logs.po.LogCount">
+        <result column="logTypename" jdbcType="VARCHAR" property="logTypeName" />
+        <result column="number" jdbcType="BIGINT" property="number" />
+    </resultMap>
+        <select id="getLoginQuantity" resultMap="LogCountDOResultMap">
+            select count(*) as number from log_struct_app3
+            where log_business_type not in('LOGIN','FAILED')
+            and log_time between #{startDate,jdbcType=TIMESTAMP} and #{endDate,jdbcType=TIMESTAMP}
+                <if test="applyId!=''">
+                        and app_id = #{applyId,jdbcType=VARCHAR}
+                </if>
+            union all
+            select count(*) as number from log_struct_app3
+            where log_business_type in('LOGIN','FAILED')
+            and log_time between #{startDate,jdbcType=TIMESTAMP} and #{endDate,jdbcType=TIMESTAMP}
+                <if test="applyId!=''">
+                        and app_id = #{applyId,jdbcType=VARCHAR}
+                </if>
+        </select>
+
+        <!--业务类型分类统计-->
+        <select id="getBusinessClassAccount" resultMap="LogCountDOResultMap">
+            select log_business_type as logTypeName, count(log_business_type) as number
+            from log_struct_app3
+                where log_time between #{startDate,jdbcType=TIMESTAMP}
+                and #{endDate,jdbcType=TIMESTAMP}
+                <if test="applyId!=''">
+                        and app_id = #{applyId,jdbcType=VARCHAR}
+                </if>
+            group by log_business_type
+        </select>
+
+        <!--日志级别统计-->
+        <select id="getLogLevelAccount" resultMap="LogCountDOResultMap">
+              select level as logTypeName , count(level) as number
+              from log_struct_app3
+                where log_time between #{startDate,jdbcType=TIMESTAMP}
+                and #{endDate,jdbcType=TIMESTAMP}
+                <if test="applyId!=''">
+                        and app_id = #{applyId,jdbcType=VARCHAR}
+                </if>
+              group by level
+
+        </select>
+    <select id="getTypeNum" resultMap="LogCountDOResultMap">
+            select a.name as logTypeName ,ifnull(c.number,0) as number from(
+            SELECT '应用系统日志' as name from dual
+            union all
+            SELECT 'Apache日志' as name from dual
+            union all
+            SELECT 'Tomcat日志' as name from dual
+            union all
+            SELECT 'Nginx日志' as name from dual
+            )a
+            left join (
+            select b.number,b.name,b.log_time,b.app_id from(
+            select count(id) as number,'Apache日志' as name,app_id,log_time from log_struct_apache
+            union ALL
+            select count(id) as number,'应用系统日志' as name,app_id,log_time  from log_struct_app3
+            union ALL
+            select count(id) as number,'Nginx日志' as name,app_id,local_time as log_time from log_struct_nginx
+            union ALL
+            select count(id) as number,'Tomcat日志' as name,app_id,log_time  from log_struct_tomcat
+            ) b
+            where b.log_time BETWEEN #{startDate,jdbcType=TIMESTAMP} and #{endDate,jdbcType=TIMESTAMP}
+            <if test="applyId!=''">
+                    and b.app_id=#{applyId,jdbcType=VARCHAR}
+            </if>
+            )c
+            on a.name = c.name
+
+    </select>
+    <select id="getLevelNum" resultMap="LogCountDOResultMap">
+            select count(b.level) as number from(
+            select 'ERROR' as level from dual
+            union all
+            select 'DEBUG' as level from dual
+            union all
+            select 'FATAL' as level from dual
+            union all
+            select 'WARN' as level from dual
+            union all
+            select 'INFO' as level from dual
+            ) a left join
+            (select level from log_struct_app3
+            where log_time
+            BETWEEN #{startDate,jdbcType=TIMESTAMP}
+            and #{endDate,jdbcType=TIMESTAMP}
+            <if test="applyId!=''">
+            and app_id = #{applyId,jdbcType=VARCHAR}
+            </if>
+            )b
+            on a.level= b.level
+            group by a.level,b.level
+    </select>
+        <select id="getResponseTime" resultMap="LogCountDOResultMap">
+                <if test="logType=='apache'">
+                        select IFNULL(sum(IFNULL(time_consum,0)),0) as number from log_struct_apache
+                        where log_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="logType=='tomcat'">
+                        select IFNULL(sum(IFNULL(time_consum,0)),0) as number from log_struct_tomcat
+                        where log_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="logType=='nginx'">
+                        select IFNULL(sum(IFNULL(time_consum,0)),0) as number from log_struct_nginx
+                        where local_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="applyId!=''">
+                        and app_id = #{applyId,jdbcType=VARCHAR}
+                </if>
+        </select>
+        <select id="getWarnLevelNumber" resultMap="LogCountDOResultMap">
+                select IFNULL(b.number,0) as number from(
+                select 1 as level from dual
+                union all
+                select 2 as level from dual
+                union all
+                select 3 as level from dual
+                )a left join
+                (
+                select ru.warn_level ,count(ru.warn_level) as number from log_warning wa
+                left join log_warn_rule ru
+                on wa.rule_id=ru.id
+                where wa.create_time between #{startDate,jdbcType=TIMESTAMP}
+                and #{endDate,jdbcType=TIMESTAMP}
+                <if test="applyId!=''">
+                        and wa.app_id = #{applyId,jdbcType=VARCHAR}
+                </if>
+                group by ru.warn_level
+                )b
+                on a.level=b.warn_level
+        </select>
+        <select id="getWarnTypeNumber" resultMap="LogCountDOResultMap">
+                select count(ru.warn_type) as number from log_warning wa
+                left join log_warn_rule ru
+                on wa.rule_id=ru.id
+                where wa.create_time between #{startDate,jdbcType=TIMESTAMP}
+                and #{endDate,jdbcType=TIMESTAMP}
+                <if test="applyId!=''">
+                        and wa.app_id = #{applyId,jdbcType=VARCHAR}
+                </if>
+                <if test="logType!=''">
+                        and ru.warn_type=#{logType,jdbcType=VARCHAR}
+                </if>
+        </select>
+        <select id="getWarnTypeAccount" resultMap="LogCountDOResultMap">
+                select a.type as logTypeName,IFNULL(b.number,0) as number from(
+                select 'QUANTITY' as type from dual
+                union all
+                select 'KEY' as type from dual
+                union all
+                select 'RESPONSE' as type from dual
+                )a left join
+                (
+                select ru.warn_type ,count(ru.warn_type) as number from log_warning wa
+                left join log_warn_rule ru
+                on wa.rule_id=ru.id
+                where wa.create_time between #{startDate,jdbcType=TIMESTAMP}
+                and #{endDate,jdbcType=TIMESTAMP}
+                <if test="applyId!=''">
+                        and wa.app_id = #{applyId,jdbcType=VARCHAR}
+                </if>
+                group by ru.warn_type
+                )b
+                on a.type=b.warn_type
+
+        </select>
+        <!--热门页面访问量统计-->
+        <select id="getPageAccess" resultMap="LogCountDOResultMap">
+                <if test="logType==''">
+                        select request_url as logTypeName,count(request_url) as number FROM
+                        (  select  request_url,log_time,app_id  from log_struct_tomcat
+                           union all
+                           select  request_url,local_time as log_time,app_id from log_struct_nginx
+                           union all
+                           select  request_url,log_time,app_id  from log_struct_apache ) c
+                                where log_time between #{startDate,jdbcType=TIMESTAMP}
+                                and #{endDate,jdbcType=TIMESTAMP}
+                                <if test="applyId!=''">
+                                        and app_id = #{applyId,jdbcType=VARCHAR}
+                                </if>
+                           group by request_url order by request_url desc limit 10
+                </if>
+                <if test="logType=='TOMCAT'">
+                        select request_url as logTypeName, count(request_url) as number from log_struct_tomcat
+                                where log_time between #{startDate,jdbcType=TIMESTAMP}
+                                and #{endDate,jdbcType=TIMESTAMP}
+                                <if test="applyId!=''">
+                                        and app_id = #{applyId,jdbcType=VARCHAR}
+                                </if>
+                        GROUP BY request_url order by logTypeName desc limit 10
+                </if>
+                <if test="logType=='APACHE'">
+                        select request_url as logTypeName, count(request_url) as number from log_struct_apache
+                        where log_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        GROUP BY request_url order by logTypeName desc limit 10
+                </if>
+                <if test="logType=='NGINX'">
+                        select request_url as logTypeName, count(request_url) as number from log_struct_nginx
+                        where local_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        GROUP BY request_url order by logTypeName desc limit 10
+                </if>
+
+        </select>
+
+        <select id="getHttpStatus" resultMap="LogCountDOResultMap">
+                select a.status as logTypeName,count(a.status) as number from(
+                select status,log_time,'tomcat' as type  from log_struct_tomcat
+                union all
+                select status,log_time,'apache' as type from log_struct_apache
+                union all
+                select status,local_time as log_time,'nginx' as type from log_struct_nginx
+                ) a
+                where a.log_time between #{startDate,jdbcType=TIMESTAMP}
+                and #{endDate,jdbcType=TIMESTAMP}
+                and (a.status is not null and a.status !='')
+                <if test="applyId!=''">
+                        and a.app_id = #{applyId,jdbcType=VARCHAR}
+                </if>
+                <if test="logType!=''">
+                        and a.type = #{logType,jdbcType=VARCHAR}
+                </if>
+                group by status
+        </select>
+        <select id="getBrowserType" resultMap="LogCountDOResultMap">
+                select b.logTypeName as logTypeName,b.number as number from (
+                select 'IE浏览器' as logTypeName,count(user_agent) as number,log_time,app_id,type from
+                (select user_agent,log_time,app_id,'tomcat' as type from log_struct_tomcat
+                union all
+                select http_user_agent as user_agent,local_time as log_time,app_id,'nginx' as type from log_struct_nginx
+                union all
+                select user_agent,log_time,app_id,'apache' as type from log_struct_apache
+                )a
+                where a.user_agent is not null
+                and a.user_agent !=''
+                and (a.user_agent not like '%TencentTraveler%' and a.user_agent not like '%Maxthon%' and
+                a.user_agent not like '%MetaSr%' and
+                a.user_agent not like '%360SE%' and
+                a.user_agent not like '%Chrome%' and
+                a.user_agent not like '%Firefox%')
+                union all
+                select '火狐浏览器' as logTypeName,count(user_agent) as number,log_time,app_id,type from
+                (select user_agent,log_time,app_id,'tomcat' as type from log_struct_tomcat
+                union all
+                select http_user_agent as user_agent,local_time as log_time,app_id,'nginx' as type from log_struct_nginx
+                union all
+                select user_agent,log_time,app_id,'apache' as type from log_struct_apache
+                )a
+                where a.user_agent is not null
+                and a.user_agent !=''
+                and a.user_agent like '%Firefox%'
+                union all
+                select '谷歌浏览器' as logTypeName,count(user_agent) as number,log_time,app_id,type from
+                (select user_agent,log_time,app_id,'tomcat' as type from log_struct_tomcat
+                union all
+                select http_user_agent as user_agent,local_time as log_time,app_id,'nginx' as type from log_struct_nginx
+                union all
+                select user_agent,log_time,app_id,'apache' as type from log_struct_apache
+                )a
+                where a.user_agent is not null
+                and a.user_agent !=''
+                and a.user_agent like '%Chrome%'
+                union all
+                select '360浏览器' as logTypeName,count(user_agent) as number,log_time,app_id,type from
+                (select user_agent,log_time,app_id,'tomcat' as type from log_struct_tomcat
+                union all
+                select http_user_agent as user_agent,local_time as log_time,app_id,'nginx' as type from log_struct_nginx
+                union all
+                select user_agent,log_time,app_id,'apache' as type from log_struct_apache
+                )a
+                where a.user_agent is not null
+                and a.user_agent !=''
+                and a.user_agent like '%360SE%'
+                union all
+                select '搜狗浏览器' as logTypeName,count(user_agent) as number,log_time,app_id,type from
+                (select user_agent,log_time,app_id,'tomcat' as type from log_struct_tomcat
+                union all
+                select http_user_agent as user_agent,local_time as log_time,app_id,'nginx' as type from log_struct_nginx
+                union all
+                select user_agent,log_time,app_id,'apache' as type from log_struct_apache
+                )a
+                where a.user_agent is not null
+                and a.user_agent !=''
+                and a.user_agent like '%MetaSr%'
+                union all
+                select '傲游浏览器' as logTypeName,count(user_agent) as number,log_time,app_id,type from
+                (select user_agent,log_time,app_id,'tomcat' as type from log_struct_tomcat
+                union all
+                select http_user_agent as user_agent,local_time as log_time,app_id,'nginx' as type from log_struct_nginx
+                union all
+                select user_agent,log_time,app_id,'apache' as type from log_struct_apache
+                )a
+                where a.user_agent is not null
+                and a.user_agent !=''
+                and a.user_agent like '%Maxthon%'
+                union all
+                select '腾讯浏览器' as logTypeName,count(user_agent) as number,log_time,app_id,type from
+                (select user_agent,log_time,app_id,'tomcat' as type from log_struct_tomcat
+                union all
+                select http_user_agent as user_agent,local_time as log_time,app_id,'nginx' as type from log_struct_nginx
+                union all
+                select user_agent,log_time,app_id,'apache' as type from log_struct_apache
+                )a
+                where a.user_agent is not null
+                and a.user_agent !=''
+                and a.user_agent like '%TencentTraveler%'
+                )b
+                where b.log_time between #{startDate,jdbcType=TIMESTAMP}
+                and #{endDate,jdbcType=TIMESTAMP}
+                <if test="applyId!=''">
+                    and b.app_id = #{applyId,jdbcType=VARCHAR}
+                </if>
+                <if test="logType!=''">
+                    and b.type = #{logType,jdbcType=VARCHAR}
+                </if>
+
+        </select>
+        <!--pv/uv-->
+        <select id="getPvToUvCount" resultMap="LogCountDOResultMap">
+                <if test="logType==''">
+                        select code as logTypeName,sum(name) as number from
+
+                        (select 'pv' as code ,count(request_url) name from log_struct_apache
+                        where log_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        UNION ALL
+                        select 'uv' as code,count(local_ip) name from
+                        (select local_ip from log_struct_apache
+                        where log_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        group by local_ip)b
+
+                        union all
+
+                        select 'pv' as code ,count(request_url) name from log_struct_nginx
+                        where local_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        UNION ALL
+                        select 'uv' as code,count(remote_user) name from
+                        (select remote_user from log_struct_nginx
+                        where local_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        group by remote_user)b
+
+
+                        union all
+
+                        select 'pv' as code ,count(request_url) name from log_struct_tomcat
+                        where log_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        UNION ALL
+                        select 'uv' as code,count(local_ip) name from
+                        (select local_ip from log_struct_tomcat
+                        where log_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        group by local_ip)b   ) c where 1=1 group by code
+                </if>
+                <if test="logType=='APACHE'">
+                        select 'pv' as logTypeName ,count(request_url) number from log_struct_apache
+                        where log_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        UNION ALL
+                        select 'uv' as code,count(local_ip) name from
+                        (select local_ip from log_struct_apache
+                        where log_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        group by local_ip)b
+                </if>
+                <if test="logType=='TOMCAT'">
+                        select 'pv' as logTypeName ,count(request_url) number from log_struct_tomcat
+                        where log_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        UNION ALL
+                        select 'uv' as code,count(local_ip) name from
+                        (select local_ip from log_struct_tomcat
+                        where log_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        group by local_ip)b
+                </if>
+                <if test="logType=='NGINX'">
+                        select 'pv' as logTypeName ,count(request_url) number from log_struct_nginx
+                        where local_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        UNION ALL
+                        select 'uv' as code,count(remote_user) name from
+                        (select remote_user from log_struct_nginx
+                        where local_time between #{startDate,jdbcType=TIMESTAMP}
+                        and #{endDate,jdbcType=TIMESTAMP}
+                        <if test="applyId!=''">
+                                and app_id = #{applyId,jdbcType=VARCHAR}
+                        </if>
+                        group by remote_user)b
+                </if>
+        </select>
+</mapper>

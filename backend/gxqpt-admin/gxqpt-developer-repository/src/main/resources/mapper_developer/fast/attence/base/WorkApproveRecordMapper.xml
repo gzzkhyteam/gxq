@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.fast.attence.dao.WorkApproveRecordMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApproveRecord">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="approve_sort_id" jdbcType="INTEGER" property="approveSortId" />
+    <result column="person_id" jdbcType="BIGINT" property="personId" />
+    <result column="person_name" jdbcType="VARCHAR" property="personName" />
+    <result column="appr_id" jdbcType="BIGINT" property="apprId" />
+    <result column="approve_state" jdbcType="VARCHAR" property="approveState" />
+    <result column="approve_oponion" jdbcType="VARCHAR" property="approveOponion" />
+    <result column="operation_date" jdbcType="TIMESTAMP" property="operationDate" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, approve_sort_id, person_id, person_name, appr_id, approve_state, approve_oponion, 
+    operation_date, create_time, update_time, create_user, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.WorkApproveRecordExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_work_appr_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_work_appr_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.WorkApproveRecordExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_work_appr_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_work_appr_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.WorkApproveRecordExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_work_appr_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApproveRecord">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_appr_record
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApproveRecord">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_appr_record
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApproveRecord">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_work_appr_record (id, approve_sort_id, person_id, 
+      person_name, appr_id, approve_state, 
+      approve_oponion, operation_date, create_time, 
+      update_time, create_user, update_user
+      )
+    values (#{id,jdbcType=BIGINT}, #{approveSortId,jdbcType=INTEGER}, #{personId,jdbcType=BIGINT}, 
+      #{personName,jdbcType=VARCHAR}, #{apprId,jdbcType=BIGINT}, #{approveState,jdbcType=VARCHAR}, 
+      #{approveOponion,jdbcType=VARCHAR}, #{operationDate,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT}, #{updateUser,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_work_appr_record (id, approve_sort_id, person_id, person_name, appr_id, approve_state, approve_oponion, operation_date, create_time, update_time, create_user, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.approveSortId,jdbcType=INTEGER}, #{item.personId,jdbcType=BIGINT}, 
+        #{item.personName,jdbcType=VARCHAR}, #{item.apprId,jdbcType=BIGINT}, #{item.approveState,jdbcType=VARCHAR}, 
+        #{item.approveOponion,jdbcType=VARCHAR}, #{item.operationDate,jdbcType=TIMESTAMP}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=BIGINT}, 
+        #{item.updateUser,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApproveRecord">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_work_appr_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="approveSortId != null">
+        approve_sort_id,
+      </if>
+      <if test="personId != null">
+        person_id,
+      </if>
+      <if test="personName != null">
+        person_name,
+      </if>
+      <if test="apprId != null">
+        appr_id,
+      </if>
+      <if test="approveState != null">
+        approve_state,
+      </if>
+      <if test="approveOponion != null">
+        approve_oponion,
+      </if>
+      <if test="operationDate != null">
+        operation_date,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="approveSortId != null">
+        #{approveSortId,jdbcType=INTEGER},
+      </if>
+      <if test="personId != null">
+        #{personId,jdbcType=BIGINT},
+      </if>
+      <if test="personName != null">
+        #{personName,jdbcType=VARCHAR},
+      </if>
+      <if test="apprId != null">
+        #{apprId,jdbcType=BIGINT},
+      </if>
+      <if test="approveState != null">
+        #{approveState,jdbcType=VARCHAR},
+      </if>
+      <if test="approveOponion != null">
+        #{approveOponion,jdbcType=VARCHAR},
+      </if>
+      <if test="operationDate != null">
+        #{operationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.WorkApproveRecordExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_work_appr_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_appr_record
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.approveSortId != null">
+        approve_sort_id = #{record.approveSortId,jdbcType=INTEGER},
+      </if>
+      <if test="record.personId != null">
+        person_id = #{record.personId,jdbcType=BIGINT},
+      </if>
+      <if test="record.personName != null">
+        person_name = #{record.personName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apprId != null">
+        appr_id = #{record.apprId,jdbcType=BIGINT},
+      </if>
+      <if test="record.approveState != null">
+        approve_state = #{record.approveState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.approveOponion != null">
+        approve_oponion = #{record.approveOponion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operationDate != null">
+        operation_date = #{record.operationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_appr_record
+    set id = #{record.id,jdbcType=BIGINT},
+      approve_sort_id = #{record.approveSortId,jdbcType=INTEGER},
+      person_id = #{record.personId,jdbcType=BIGINT},
+      person_name = #{record.personName,jdbcType=VARCHAR},
+      appr_id = #{record.apprId,jdbcType=BIGINT},
+      approve_state = #{record.approveState,jdbcType=VARCHAR},
+      approve_oponion = #{record.approveOponion,jdbcType=VARCHAR},
+      operation_date = #{record.operationDate,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_user = #{record.updateUser,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApproveRecord">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_appr_record
+    <set>
+      <if test="approveSortId != null">
+        approve_sort_id = #{approveSortId,jdbcType=INTEGER},
+      </if>
+      <if test="personId != null">
+        person_id = #{personId,jdbcType=BIGINT},
+      </if>
+      <if test="personName != null">
+        person_name = #{personName,jdbcType=VARCHAR},
+      </if>
+      <if test="apprId != null">
+        appr_id = #{apprId,jdbcType=BIGINT},
+      </if>
+      <if test="approveState != null">
+        approve_state = #{approveState,jdbcType=VARCHAR},
+      </if>
+      <if test="approveOponion != null">
+        approve_oponion = #{approveOponion,jdbcType=VARCHAR},
+      </if>
+      <if test="operationDate != null">
+        operation_date = #{operationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.WorkApproveRecord">
+    <!--
+    @mbggenerated
+    -->
+    update b_work_appr_record
+    set approve_sort_id = #{approveSortId,jdbcType=INTEGER},
+      person_id = #{personId,jdbcType=BIGINT},
+      person_name = #{personName,jdbcType=VARCHAR},
+      appr_id = #{apprId,jdbcType=BIGINT},
+      approve_state = #{approveState,jdbcType=VARCHAR},
+      approve_oponion = #{approveOponion,jdbcType=VARCHAR},
+      operation_date = #{operationDate,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

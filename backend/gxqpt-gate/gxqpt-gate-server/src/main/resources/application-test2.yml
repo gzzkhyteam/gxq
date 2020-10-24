@@ -1,0 +1,31 @@
+gxqpt:
+  port:
+    nginx: 10086
+    eureka: 10030
+    gate: ${gxqpt.port.nginx}
+  hostname:
+    redis: 192.168.0.53
+    rabbitmq: 192.168.0.53
+    nginx: 127.0.0.1    # 测试不走nginx 就填写本机
+    eureka: 192.168.0.191
+    gate: 192.168.0.191
+
+spring:
+  profiles:
+    active: test2
+  redis:
+    database: 1
+    host: ${gxqpt.hostname.redis}
+    port: 16379
+    key-prefix: test
+    password: SbtyMveYNfLzTks7H0apCmyStPzWJqjy
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq}    # 根据环境更改
+    port: 5672               # 根据环境更改
+    password: gxqpt          # 根据环境更改
+    username: gxqpt          # 根据环境更改
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogStructNginxMapper">
+    <resultMap id="logTypeMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogTypeDO">
+        <result column="month" property="month"></result>
+        <result column="count" property="count"></result>
+        <result column="log_type" property="logType"></result>
+        <result column="year" property="year"></result>
+    </resultMap>
+    <resultMap id="LogRespondMap" type="com.hengyunsoft.platform.logs.entity.logs.domain.LogRespondMonthDO">
+        <result column="month" property="month"></result>
+        <result column="respondTime" property="respondTime"></result>
+        <result column="year" property="year"></result>
+    </resultMap>
+    <!--分页查询告警nginx结构化列表-->
+    <select id="pageQueryWarningNginx" resultMap="BaseResultMap"
+            parameterType="Long">
+        select lsa.id, lsa.document_id, lsa.app_id, lsa.remote_addr, lsa.remote_user, lsa.local_time, lsa.request_agreen, lsa.request_url,
+        lsa.status, lsa.upstream_status, lsa.body_bytes_sent, lsa.http_referer, lsa.http_user_agent, lsa.ssl_protocol,
+        lsa.ssl_cipher, lsa.upstream_addr, lsa.time_consum, lsa.upstream_response_time, lsa.bytes_sent, lsa.connection,
+        lsa.connection_requests, lsa.msec, lsa.pipe, lsa.request_length, lsa.time_iso8601, lsa.time_local, lsa.data_channel,
+        lsa.create_time, lsa.create_user, lsa.update_time, lsa.update_user, lsa.create_user_name, lsa.update_user_name
+        from log_warning_struct lws,log_struct_nginx lsa where lws.log_struct_id = lsa.id and lws.log_type='NGINX' and lws.log_warning_id = #{id,jdbcType=BIGINT}
+
+    </select>
+
+    <!--查询nginx结构化告警数据-->
+    <select id="queryNginxWarn" resultMap="BaseResultMap"
+            parameterType="Long">
+        select lsa.id, lsa.document_id, lsa.app_id, lsa.remote_addr, lsa.remote_user, lsa.local_time, lsa.request_agreen, lsa.request_url,
+        lsa.status, lsa.upstream_status, lsa.body_bytes_sent, lsa.http_referer, lsa.http_user_agent, lsa.ssl_protocol,
+        lsa.ssl_cipher, lsa.upstream_addr, lsa.time_consum, lsa.upstream_response_time, lsa.bytes_sent, lsa.connection,
+        lsa.connection_requests, lsa.msec, lsa.pipe, lsa.request_length, lsa.time_iso8601, lsa.time_local, lsa.data_channel,
+        lsa.create_time, lsa.create_user, lsa.update_time, lsa.update_user, lsa.create_user_name, lsa.update_user_name
+        from log_struct_nginx lsa where not exists (
+        SELECT 1
+        FROM log_warn_check lwc
+        WHERE lwc.log_type='NGINX' and lwc.log_struct_id = lsa.id ) order by lsa.local_time limit #{pageSize,jdbcType=BIGINT}
+
+    </select>
+
+    <delete id="deleteByDocumentIds" parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogFileInterfaceExample">
+        delete from log_struct_nginx
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <!--统计前12月数据-->
+<select id="findMonthCount" parameterType="String" resultMap="logTypeMap">
+      select  YEAR(la.create_time) as year,MONTH(la.create_time) as month, COUNT(MONTH(la.create_time)) as count from log_struct_nginx la where la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time)
+</select>
+    <!--查询前十二月响应时间-->
+    <select id="findLogRespondMonth" parameterType="String" resultMap="LogRespondMap">
+        select  YEAR(la.create_time) as year,MONTH(la.create_time) as month, sum(la.time_consum) as respondTime from log_struct_nginx la where la.create_time &gt;= #{endTime} and la.create_time &lt;=#{startTime} GROUP BY MONTH(la.create_time)
+    </select>
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.file.repository.file.dao.FileRecycleMapper">
+  <resultMap id="FirstBaseResultMap" type="com.hengyunsoft.platform.file.entity.file.po.FileRecycle">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="org_id" jdbcType="BIGINT" property="orgId" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="folder_id" jdbcType="BIGINT" property="folderId" />
+    <result column="folder_name" jdbcType="VARCHAR" property="folderName" />
+    <result column="object_id" jdbcType="VARCHAR" property="objectId" />
+    <result column="namespace" jdbcType="VARCHAR" property="namespace" />
+    <result column="u_key" jdbcType="VARCHAR" property="uKey" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="remote_file_name" jdbcType="VARCHAR" property="remoteFileName" />
+    <result column="absolute_path" jdbcType="VARCHAR" property="absolutePath" />
+    <result column="relative_path" jdbcType="VARCHAR" property="relativePath" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="data_type" jdbcType="VARCHAR" property="dataType" />
+    <result column="mime" jdbcType="VARCHAR" property="mime" />
+    <result column="submitted_file_name" jdbcType="VARCHAR" property="submittedFileName" />
+    <result column="filename" jdbcType="VARCHAR" property="filename" />
+    <result column="ext" jdbcType="VARCHAR" property="ext" />
+    <result column="size" jdbcType="VARCHAR" property="size" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="tree_path" jdbcType="VARCHAR" property="treePath" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="file_md5" jdbcType="VARCHAR" property="fileMd5" />
+    <result column="context_type" jdbcType="VARCHAR" property="contextType" />
+    <result column="file_sha1" jdbcType="VARCHAR" property="fileSha1" />
+    <result column="is_one_level_delete" jdbcType="BIT" property="isOneLevelDelete" />
+  </resultMap>
+
+  <sql id="First_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, app_id, org_id, admin_id, type, folder_id, folder_name, object_id, namespace,
+    u_key, group_name, remote_file_name, absolute_path, relative_path, url, data_type,
+    mime, submitted_file_name, filename, ext, size, icon, tree_path, create_time, create_user,
+    update_time, update_user, file_md5, context_type, file_sha1, is_one_level_delete
+  </sql>
+
+  <!--删除回收站数据-->
+  <delete id="removeFileRecycleByAppIdAndId" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  f_filerecycle where 1=1
+    and app_id = #{appId,jdbcType=VARCHAR}
+    and admin_id =${adminId}
+    and id=${id}
+  </delete>
+
+  <!--永久删除回收站10天后数据-->
+  <delete id="foreverRecycle" parameterType="list">
+    delete from f_filerecycle where 1=1 and id = #{id}
+  </delete>
+
+  <!--清空回收站-->
+  <delete id="cleanAll">
+  delete from  f_filerecycle where 1=1
+    and app_id = #{appId,jdbcType=VARCHAR}
+    and admin_id =${adminId}
+  </delete>
+
+    <!--根据一级删除标识和时间查询10天后回收站数据-->
+  <select id="getForeverRecycle" parameterType="java.lang.Boolean" resultMap="FirstBaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <include refid="First_Column_List" />
+    from f_filerecycle
+    where DATE_SUB(CURDATE(),INTERVAL 10 DAY) &gt;= date(create_time)
+    and is_one_level_delete = ${isOneLevelDelete}
+  </select>
+</mapper>

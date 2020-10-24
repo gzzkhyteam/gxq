@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.core.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.admin.entity.core.po.User">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="account_" jdbcType="VARCHAR" property="account" />
+    <result column="password_" jdbcType="VARCHAR" property="password" />
+    <result column="name_" jdbcType="VARCHAR" property="name" />
+    <result column="sex_" jdbcType="CHAR" property="sex" />
+    <result column="birthday_" jdbcType="TIMESTAMP" property="birthday" />
+    <result column="nation_" jdbcType="VARCHAR" property="nation" />
+    <result column="photo" jdbcType="VARCHAR" property="photo" />
+    <result column="officetel" jdbcType="VARCHAR" property="officetel" />
+    <result column="phone_" jdbcType="VARCHAR" property="phone" />
+    <result column="work_desc" jdbcType="VARCHAR" property="workDesc" />
+    <result column="work_status" jdbcType="VARCHAR" property="workStatus" />
+    <result column="loginable" jdbcType="BIT" property="loginable" />
+    <result column="own_system" jdbcType="VARCHAR" property="ownSystem" />
+    <result column="descrption" jdbcType="VARCHAR" property="descrption" />
+    <result column="type_" jdbcType="VARCHAR" property="type" />
+    <result column="sort_value" jdbcType="INTEGER" property="sortValue" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, account_, password_, name_, sex_, birthday_, nation_, photo, officetel, phone_, 
+    work_desc, work_status, loginable, own_system, descrption, type_, sort_value, create_user, 
+    create_time, update_user, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.admin.repository.core.example.UserExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from c_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.admin.repository.core.example.UserExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="map" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from c_user
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.admin.repository.core.example.UserExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_user where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_user where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.admin.entity.core.po.User">
+    <!--
+    @mbggenerated
+    -->
+    update c_user
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="com.hengyunsoft.platform.admin.entity.core.po.User">
+    <!--
+    @mbggenerated
+    -->
+    update c_user
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.admin.entity.core.po.User">
+    <!--
+    @mbggenerated
+    -->
+    update c_user
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="com.hengyunsoft.platform.admin.entity.core.po.User">
+    <!--
+    @mbggenerated
+    -->
+    update c_user
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.admin.entity.core.po.User">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_user (id, account_, password_, 
+      name_, sex_, birthday_, 
+      nation_, photo, officetel, 
+      phone_, work_desc, work_status, 
+      loginable, own_system, descrption, 
+      type_, sort_value, create_user, 
+      create_time, update_user, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR}, #{birthday,jdbcType=TIMESTAMP}, 
+      #{nation,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR}, #{officetel,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{workDesc,jdbcType=VARCHAR}, #{workStatus,jdbcType=VARCHAR}, 
+      #{loginable,jdbcType=BIT}, #{ownSystem,jdbcType=VARCHAR}, #{descrption,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{sortValue,jdbcType=INTEGER}, #{createUser,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_user (id, account_, password_, name_, sex_, birthday_, nation_, photo, officetel, phone_, work_desc, work_status, loginable, own_system, descrption, type_, sort_value, create_user, create_time, update_user, update_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.account,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, 
+        #{item.name,jdbcType=VARCHAR}, #{item.sex,jdbcType=CHAR}, #{item.birthday,jdbcType=TIMESTAMP}, 
+        #{item.nation,jdbcType=VARCHAR}, #{item.photo,jdbcType=VARCHAR}, #{item.officetel,jdbcType=VARCHAR}, 
+        #{item.phone,jdbcType=VARCHAR}, #{item.workDesc,jdbcType=VARCHAR}, #{item.workStatus,jdbcType=VARCHAR}, 
+        #{item.loginable,jdbcType=BIT}, #{item.ownSystem,jdbcType=VARCHAR}, #{item.descrption,jdbcType=VARCHAR}, 
+        #{item.type,jdbcType=VARCHAR}, #{item.sortValue,jdbcType=INTEGER}, #{item.createUser,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.admin.entity.core.po.User">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="account != null">
+        account_,
+      </if>
+      <if test="password != null">
+        password_,
+      </if>
+      <if test="name != null">
+        name_,
+      </if>
+      <if test="sex != null">
+        sex_,
+      </if>
+      <if test="birthday != null">
+        birthday_,
+      </if>
+      <if test="nation != null">
+        nation_,
+      </if>
+      <if test="photo != null">
+        photo,
+      </if>
+      <if test="officetel != null">
+        officetel,
+      </if>
+      <if test="phone != null">
+        phone_,
+      </if>
+      <if test="workDesc != null">
+        work_desc,
+      </if>
+      <if test="workStatus != null">
+        work_status,
+      </if>
+      <if test="loginable != null">
+        loginable,
+      </if>
+      <if test="ownSystem != null">
+        own_system,
+      </if>
+      <if test="descrption != null">
+        descrption,
+      </if>
+      <if test="type != null">
+        type_,
+      </if>
+      <if test="sortValue != null">
+        sort_value,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nation != null">
+        #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="officetel != null">
+        #{officetel,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="workDesc != null">
+        #{workDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="workStatus != null">
+        #{workStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="loginable != null">
+        #{loginable,jdbcType=BIT},
+      </if>
+      <if test="ownSystem != null">
+        #{ownSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="descrption != null">
+        #{descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="sortValue != null">
+        #{sortValue,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.admin.repository.core.example.UserExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from c_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_user
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.account != null">
+        account_ = #{record.account,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        password_ = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name_ = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null">
+        sex_ = #{record.sex,jdbcType=CHAR},
+      </if>
+      <if test="record.birthday != null">
+        birthday_ = #{record.birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.nation != null">
+        nation_ = #{record.nation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.photo != null">
+        photo = #{record.photo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.officetel != null">
+        officetel = #{record.officetel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null">
+        phone_ = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workDesc != null">
+        work_desc = #{record.workDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workStatus != null">
+        work_status = #{record.workStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginable != null">
+        loginable = #{record.loginable,jdbcType=BIT},
+      </if>
+      <if test="record.ownSystem != null">
+        own_system = #{record.ownSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="record.descrption != null">
+        descrption = #{record.descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null">
+        type_ = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sortValue != null">
+        sort_value = #{record.sortValue,jdbcType=INTEGER},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_user
+    set id = #{record.id,jdbcType=BIGINT},
+      account_ = #{record.account,jdbcType=VARCHAR},
+      password_ = #{record.password,jdbcType=VARCHAR},
+      name_ = #{record.name,jdbcType=VARCHAR},
+      sex_ = #{record.sex,jdbcType=CHAR},
+      birthday_ = #{record.birthday,jdbcType=TIMESTAMP},
+      nation_ = #{record.nation,jdbcType=VARCHAR},
+      photo = #{record.photo,jdbcType=VARCHAR},
+      officetel = #{record.officetel,jdbcType=VARCHAR},
+      phone_ = #{record.phone,jdbcType=VARCHAR},
+      work_desc = #{record.workDesc,jdbcType=VARCHAR},
+      work_status = #{record.workStatus,jdbcType=VARCHAR},
+      loginable = #{record.loginable,jdbcType=BIT},
+      own_system = #{record.ownSystem,jdbcType=VARCHAR},
+      descrption = #{record.descrption,jdbcType=VARCHAR},
+      type_ = #{record.type,jdbcType=VARCHAR},
+      sort_value = #{record.sortValue,jdbcType=INTEGER},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.admin.entity.core.po.User">
+    <!--
+    @mbggenerated
+    -->
+    update c_user
+    <set>
+      <if test="account != null">
+        account_ = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password_ = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex_ = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="birthday != null">
+        birthday_ = #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nation != null">
+        nation_ = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="officetel != null">
+        officetel = #{officetel,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone_ = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="workDesc != null">
+        work_desc = #{workDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="workStatus != null">
+        work_status = #{workStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="loginable != null">
+        loginable = #{loginable,jdbcType=BIT},
+      </if>
+      <if test="ownSystem != null">
+        own_system = #{ownSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="descrption != null">
+        descrption = #{descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type_ = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="sortValue != null">
+        sort_value = #{sortValue,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.admin.entity.core.po.User">
+    <!--
+    @mbggenerated
+    -->
+    update c_user
+    <set>
+      <if test="account != null">
+        account_ = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password_ = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex_ = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="birthday != null">
+        birthday_ = #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nation != null">
+        nation_ = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="officetel != null">
+        officetel = #{officetel,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone_ = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="workDesc != null">
+        work_desc = #{workDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="workStatus != null">
+        work_status = #{workStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="loginable != null">
+        loginable = #{loginable,jdbcType=BIT},
+      </if>
+      <if test="ownSystem != null">
+        own_system = #{ownSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="descrption != null">
+        descrption = #{descrption,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type_ = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="sortValue != null">
+        sort_value = #{sortValue,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.admin.entity.core.po.User">
+    <!--
+    @mbggenerated
+    -->
+    update c_user
+    set account_ = #{account,jdbcType=VARCHAR},
+      password_ = #{password,jdbcType=VARCHAR},
+      name_ = #{name,jdbcType=VARCHAR},
+      sex_ = #{sex,jdbcType=CHAR},
+      birthday_ = #{birthday,jdbcType=TIMESTAMP},
+      nation_ = #{nation,jdbcType=VARCHAR},
+      photo = #{photo,jdbcType=VARCHAR},
+      officetel = #{officetel,jdbcType=VARCHAR},
+      phone_ = #{phone,jdbcType=VARCHAR},
+      work_desc = #{workDesc,jdbcType=VARCHAR},
+      work_status = #{workStatus,jdbcType=VARCHAR},
+      loginable = #{loginable,jdbcType=BIT},
+      own_system = #{ownSystem,jdbcType=VARCHAR},
+      descrption = #{descrption,jdbcType=VARCHAR},
+      type_ = #{type,jdbcType=VARCHAR},
+      sort_value = #{sortValue,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.admin.entity.core.po.User">
+    <!--
+    @mbggenerated
+    -->
+    update c_user
+    set account_ = #{account,jdbcType=VARCHAR},
+      password_ = #{password,jdbcType=VARCHAR},
+      name_ = #{name,jdbcType=VARCHAR},
+      sex_ = #{sex,jdbcType=CHAR},
+      birthday_ = #{birthday,jdbcType=TIMESTAMP},
+      nation_ = #{nation,jdbcType=VARCHAR},
+      photo = #{photo,jdbcType=VARCHAR},
+      officetel = #{officetel,jdbcType=VARCHAR},
+      phone_ = #{phone,jdbcType=VARCHAR},
+      work_desc = #{workDesc,jdbcType=VARCHAR},
+      work_status = #{workStatus,jdbcType=VARCHAR},
+      loginable = #{loginable,jdbcType=BIT},
+      own_system = #{ownSystem,jdbcType=VARCHAR},
+      descrption = #{descrption,jdbcType=VARCHAR},
+      type_ = #{type,jdbcType=VARCHAR},
+      sort_value = #{sortValue,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

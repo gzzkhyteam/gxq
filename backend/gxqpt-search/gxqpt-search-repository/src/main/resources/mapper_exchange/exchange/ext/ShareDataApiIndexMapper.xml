@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.search.repository.exchange.dao.ShareDataApiMapper">
+    <resultMap id="ApiResultMap" type="com.hengyunsoft.platform.search.entity.core.po.ShareDataApiIndex">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="apiName" jdbcType="VARCHAR" property="apiName" />
+        <result column="apiDesc" jdbcType="VARCHAR" property="apiDesc" />
+    </resultMap>
+
+    <select id="getAllApiList"  parameterType="java.util.Map" resultMap="ApiResultMap">
+        SELECT id,api_name apiName,api_desc apiDesc
+        from b_share_data_api
+        where api_status=1 and auth_status=3
+    </select>
+</mapper>

@@ -1,0 +1,54 @@
+gxqpt:
+  port:
+    nginx: 10086
+    eureka: 10030
+    gate: ${gxqpt.port.nginx}        # 测试环境使用nginx
+  hostname:
+    redis: 192.168.1.204
+    rabbitmq: 192.168.1.204
+    mysql: 127.0.0.1
+    nginx: 127.0.0.1
+    eureka: 192.168.1.204
+    gate: ${gxqpt.hostname.nginx}      # 测试环境使用nginx
+    mt: 192.168.1.204
+  mysql:
+    mt:
+      database: gxqpt_pt_test # 根据环境更改
+    port: 3306                  # 根据环境更改
+    username: root              # 根据环境更改
+    password: LLm65c0VVd3axid9u+Y7DZeKwcODMjU95FRhxom6ApE2yZ1kbi5YzSsdAIz+edUOZH3Engm17+NyfyNczpaYlw==
+spring:
+  profiles:
+    active: test
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq}     # 根据环境更改
+    port: 5672               # 根据环境更改
+    password: guest          # 根据环境更改
+    username: guest          # 根据环境更改
+  redis:
+    host: ${gxqpt.hostname.redis}
+    port: 6379
+    key-prefix: prod
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+
+id-generator:
+  machine-code: 1  # id生成器机器掩码
+Solr:
+  zkHosts: localhost:4180 #以逗号隔开多个zookeeper实例,如127.0.0.1:4180,127.0.0.1:4181
+  #通过URL创建collection需要满足条件(numShards + numReplicas)< num（存活的节点数）,n根据实际部署的节点配置
+  numShards : 1
+  numReplicas : 1
+#文件上传下载
+fileServerUrl: http://127.0.0.1:10086/api/file
+#生成二维码图片保存
+upload-path-prefix: /home/gxqpt/uploadfile/file
+#登录地址
+loginUrl: http://127.0.0.1:10086/api/auth/p/login
+getToeknPre: "test:gxqpt-auth-server:app:token:"
+mt:
+   app-id: 45aj6314
+   app-secret: mt45aj6314

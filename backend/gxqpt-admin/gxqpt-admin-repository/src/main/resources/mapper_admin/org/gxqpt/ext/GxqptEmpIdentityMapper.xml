@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.org.gxqpt.dao.GxqptEmpIdentityMapper">
+  <resultMap id="QueryResultMap" type="com.hengyunsoft.platform.admin.entity.org.gxqpt.domain.GxqptEmpIdentityDO">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="dept_id" jdbcType="VARCHAR" property="deptId" />
+    <result column="post_id" jdbcType="VARCHAR" property="postId" />
+    <result column="duty_id" jdbcType="VARCHAR" property="dutyId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="isheader" jdbcType="VARCHAR" property="isheader" />
+    <result column="isleader" jdbcType="VARCHAR" property="isleader" />
+    <result column="userduty" jdbcType="VARCHAR" property="userduty" />
+    <result column="isdelete" jdbcType="VARCHAR" property="isdelete" />
+    <result column="isenable" jdbcType="VARCHAR" property="isenable" />
+    <result column="logid" jdbcType="VARCHAR" property="logid" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+    <result column="orgName" jdbcType="VARCHAR" property="orgName" />
+    <result column="deptName" jdbcType="VARCHAR" property="deptName" />
+    <result column="postName" jdbcType="VARCHAR" property="postName" />
+    <result column="dutyName" jdbcType="VARCHAR" property="dutyName" />
+  </resultMap>
+
+    <select id="getEmpIdentity" resultMap="QueryResultMap" >
+
+    SELECT  t.id, t.user_id, t.org_id, t.dept_id, t.post_id, t.duty_id, t.description, t.isheader, t.isleader,
+    t.userduty, t.isdelete, t.isenable, t.logid, t.create_user, t.create_time, t.update_user, t.update_time,
+    org.name_ as orgName,dept.name_ as deptName,emp.name_ as userName,post.name_ as postName,duty.name_ as dutyName
+    from c_gxqpt_emp_identity t
+    LEFT JOIN c_gxqpt_org org on t.org_id = org.id
+    LEFT JOIN c_gxqpt_department dept on t.dept_id = dept.id
+    LEFT JOIN c_gxqpt_emp emp on t.user_id = emp.id
+    LEFT JOIN c_gxqpt_post post on t.post_id = post.id
+    LEFT JOIN c_gxqpt_duties duty on t.duty_id = duty.id
+    where 1=1
+    <if test="userId !=null and userId !=''">
+        and t.user_id = #{userId}
+    </if>
+    <if test="orgId !=null and orgId !=''">
+        and t.org_id = #{orgId}
+    </if>
+    <if test="deptId !=null and deptId !=''">
+        and t.dept_id = #{deptId}
+    </if>
+    <if test="postId !=null and postId !=''">
+        and t.post_id = #{postId}
+    </if>
+    <if test="dutyId !=null and dutyId !=''">
+        and t.duty_id = #{dutyId}
+    </if>
+    <if test="isdelete !=null and isdelete !=''">
+        and t.isdelete = #{isdelete}
+    </if>
+    <if test="isenable !=null and isenable !=''">
+        and t.isenable = #{isenable}
+    </if>
+
+  </select>
+
+
+    <select id="getEmpIdentityById" resultMap="QueryResultMap" >
+
+        SELECT  t.id, t.user_id, t.org_id, t.dept_id, t.post_id, t.duty_id, t.description, t.isheader, t.isleader,
+        t.userduty, t.isdelete, t.isenable, t.logid, t.create_user, t.create_time, t.update_user, t.update_time,
+        org.name_ as orgName,dept.name_ as deptName,emp.name_ as userName,post.name_ as postName,duty.name_ as dutyName
+        from c_gxqpt_emp_identity t
+        LEFT JOIN c_gxqpt_org org on t.org_id = org.id
+        LEFT JOIN c_gxqpt_department dept on t.dept_id = dept.id
+        LEFT JOIN c_gxqpt_emp emp on t.user_id = emp.id
+        LEFT JOIN c_gxqpt_post post on t.post_id = post.id
+        LEFT JOIN c_gxqpt_duties duty on t.duty_id = duty.id
+        where 1=1
+        <if test="id !=null and id !=''">
+            and t.id = #{id}
+        </if>
+
+    </select>
+</mapper>

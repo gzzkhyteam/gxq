@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.security.repository.interfaces.dao.InterfaceCallRecordMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.security.entity.interfaces.po.InterfaceCallRecord">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="interface_config_id" jdbcType="BIGINT" property="interfaceConfigId" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="modular_name" jdbcType="VARCHAR" property="modularName" />
+    <result column="caller_app_id" jdbcType="VARCHAR" property="callerAppId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="uri" jdbcType="VARCHAR" property="uri" />
+    <result column="zuul_uri" jdbcType="VARCHAR" property="zuulUri" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="cookies" jdbcType="VARCHAR" property="cookies" />
+    <result column="headers" jdbcType="VARCHAR" property="headers" />
+    <result column="query_string" jdbcType="VARCHAR" property="queryString" />
+    <result column="request_query_params" jdbcType="VARCHAR" property="requestQueryParams" />
+    <result column="content_length" jdbcType="VARCHAR" property="contentLength" />
+    <result column="content_type" jdbcType="VARCHAR" property="contentType" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="request_body" jdbcType="VARCHAR" property="requestBody" />
+    <result column="response_body" jdbcType="VARCHAR" property="responseBody" />
+    <result column="create_date" jdbcType="VARCHAR" property="createDate" />
+    <result column="create_month" jdbcType="VARCHAR" property="createMonth" />
+    <result column="create_hour" jdbcType="VARCHAR" property="createHour" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="err_msg" jdbcType="LONGVARCHAR" property="errMsg" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, interface_config_id, app_id, modular_name, caller_app_id, name, uri, zuul_uri, 
+    url, ip, cookies, headers, query_string, request_query_params, content_length, content_type, 
+    method, request_body, response_body, create_date, create_month, create_hour, create_time, 
+    status, err_msg, user_id, user_name, account
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.security.repository.interfaces.example.InterfaceCallRecordExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from se_interface_call_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from se_interface_call_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.security.repository.interfaces.example.InterfaceCallRecordExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from se_interface_call_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectByAppIdAndId" parameterType="map" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <include refid="Base_Column_List" />
+    from se_interface_call_record
+    where 1=1 and app_id = #{appId,jdbcType=VARCHAR} and id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from se_interface_call_record
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from se_interface_call_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.security.repository.interfaces.example.InterfaceCallRecordExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from se_interface_call_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  se_interface_call_record where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from se_interface_call_record
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  se_interface_call_record where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.security.entity.interfaces.po.InterfaceCallRecord">
+    <!--
+    @mbggenerated
+    -->
+    update se_interface_call_record
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update se_interface_call_record
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update se_interface_call_record
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update se_interface_call_record
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.security.entity.interfaces.po.InterfaceCallRecord">
+    <!--
+    @mbggenerated
+    -->
+    insert into se_interface_call_record (id, interface_config_id, app_id, 
+      modular_name, caller_app_id, name, 
+      uri, zuul_uri, url, 
+      ip, cookies, headers, 
+      query_string, request_query_params, content_length, 
+      content_type, method, request_body, 
+      response_body, create_date, create_month, 
+      create_hour, create_time, status, 
+      err_msg, user_id, user_name, 
+      account)
+    values (#{id,jdbcType=BIGINT}, #{interfaceConfigId,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, 
+      #{modularName,jdbcType=VARCHAR}, #{callerAppId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{uri,jdbcType=VARCHAR}, #{zuulUri,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{ip,jdbcType=VARCHAR}, #{cookies,jdbcType=VARCHAR}, #{headers,jdbcType=VARCHAR}, 
+      #{queryString,jdbcType=VARCHAR}, #{requestQueryParams,jdbcType=VARCHAR}, #{contentLength,jdbcType=VARCHAR}, 
+      #{contentType,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{requestBody,jdbcType=VARCHAR}, 
+      #{responseBody,jdbcType=VARCHAR}, #{createDate,jdbcType=VARCHAR}, #{createMonth,jdbcType=VARCHAR}, 
+      #{createHour,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{errMsg,jdbcType=LONGVARCHAR}, #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, 
+      #{account,jdbcType=VARCHAR})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into se_interface_call_record (id, interface_config_id, app_id, modular_name, caller_app_id, name, uri, zuul_uri, url, ip, cookies, headers, query_string, request_query_params, content_length, content_type, method, request_body, response_body, create_date, create_month, create_hour, create_time, status, err_msg, user_id, user_name, account ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.interfaceConfigId,jdbcType=BIGINT}, #{item.appId,jdbcType=VARCHAR}, 
+        #{item.modularName,jdbcType=VARCHAR}, #{item.callerAppId,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, 
+        #{item.uri,jdbcType=VARCHAR}, #{item.zuulUri,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR}, 
+        #{item.ip,jdbcType=VARCHAR}, #{item.cookies,jdbcType=VARCHAR}, #{item.headers,jdbcType=VARCHAR}, 
+        #{item.queryString,jdbcType=VARCHAR}, #{item.requestQueryParams,jdbcType=VARCHAR}, 
+        #{item.contentLength,jdbcType=VARCHAR}, #{item.contentType,jdbcType=VARCHAR}, #{item.method,jdbcType=VARCHAR}, 
+        #{item.requestBody,jdbcType=VARCHAR}, #{item.responseBody,jdbcType=VARCHAR}, #{item.createDate,jdbcType=VARCHAR}, 
+        #{item.createMonth,jdbcType=VARCHAR}, #{item.createHour,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.status,jdbcType=INTEGER}, #{item.errMsg,jdbcType=LONGVARCHAR}, #{item.userId,jdbcType=BIGINT}, 
+        #{item.userName,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.security.entity.interfaces.po.InterfaceCallRecord">
+    <!--
+    @mbggenerated
+    -->
+    insert into se_interface_call_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="interfaceConfigId != null">
+        interface_config_id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="modularName != null">
+        modular_name,
+      </if>
+      <if test="callerAppId != null">
+        caller_app_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="uri != null">
+        uri,
+      </if>
+      <if test="zuulUri != null">
+        zuul_uri,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="cookies != null">
+        cookies,
+      </if>
+      <if test="headers != null">
+        headers,
+      </if>
+      <if test="queryString != null">
+        query_string,
+      </if>
+      <if test="requestQueryParams != null">
+        request_query_params,
+      </if>
+      <if test="contentLength != null">
+        content_length,
+      </if>
+      <if test="contentType != null">
+        content_type,
+      </if>
+      <if test="method != null">
+        method,
+      </if>
+      <if test="requestBody != null">
+        request_body,
+      </if>
+      <if test="responseBody != null">
+        response_body,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createMonth != null">
+        create_month,
+      </if>
+      <if test="createHour != null">
+        create_hour,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="errMsg != null">
+        err_msg,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="interfaceConfigId != null">
+        #{interfaceConfigId,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="modularName != null">
+        #{modularName,jdbcType=VARCHAR},
+      </if>
+      <if test="callerAppId != null">
+        #{callerAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="uri != null">
+        #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="zuulUri != null">
+        #{zuulUri,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="cookies != null">
+        #{cookies,jdbcType=VARCHAR},
+      </if>
+      <if test="headers != null">
+        #{headers,jdbcType=VARCHAR},
+      </if>
+      <if test="queryString != null">
+        #{queryString,jdbcType=VARCHAR},
+      </if>
+      <if test="requestQueryParams != null">
+        #{requestQueryParams,jdbcType=VARCHAR},
+      </if>
+      <if test="contentLength != null">
+        #{contentLength,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null">
+        #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="requestBody != null">
+        #{requestBody,jdbcType=VARCHAR},
+      </if>
+      <if test="responseBody != null">
+        #{responseBody,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createMonth != null">
+        #{createMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="createHour != null">
+        #{createHour,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="errMsg != null">
+        #{errMsg,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.security.repository.interfaces.example.InterfaceCallRecordExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from se_interface_call_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update se_interface_call_record
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.interfaceConfigId != null">
+        interface_config_id = #{record.interfaceConfigId,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modularName != null">
+        modular_name = #{record.modularName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.callerAppId != null">
+        caller_app_id = #{record.callerAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uri != null">
+        uri = #{record.uri,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zuulUri != null">
+        zuul_uri = #{record.zuulUri,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null">
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ip != null">
+        ip = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cookies != null">
+        cookies = #{record.cookies,jdbcType=VARCHAR},
+      </if>
+      <if test="record.headers != null">
+        headers = #{record.headers,jdbcType=VARCHAR},
+      </if>
+      <if test="record.queryString != null">
+        query_string = #{record.queryString,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requestQueryParams != null">
+        request_query_params = #{record.requestQueryParams,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contentLength != null">
+        content_length = #{record.contentLength,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contentType != null">
+        content_type = #{record.contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.method != null">
+        method = #{record.method,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requestBody != null">
+        request_body = #{record.requestBody,jdbcType=VARCHAR},
+      </if>
+      <if test="record.responseBody != null">
+        response_body = #{record.responseBody,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null">
+        create_date = #{record.createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createMonth != null">
+        create_month = #{record.createMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createHour != null">
+        create_hour = #{record.createHour,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.errMsg != null">
+        err_msg = #{record.errMsg,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.account != null">
+        account = #{record.account,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update se_interface_call_record
+    set id = #{record.id,jdbcType=BIGINT},
+      interface_config_id = #{record.interfaceConfigId,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      modular_name = #{record.modularName,jdbcType=VARCHAR},
+      caller_app_id = #{record.callerAppId,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      uri = #{record.uri,jdbcType=VARCHAR},
+      zuul_uri = #{record.zuulUri,jdbcType=VARCHAR},
+      url = #{record.url,jdbcType=VARCHAR},
+      ip = #{record.ip,jdbcType=VARCHAR},
+      cookies = #{record.cookies,jdbcType=VARCHAR},
+      headers = #{record.headers,jdbcType=VARCHAR},
+      query_string = #{record.queryString,jdbcType=VARCHAR},
+      request_query_params = #{record.requestQueryParams,jdbcType=VARCHAR},
+      content_length = #{record.contentLength,jdbcType=VARCHAR},
+      content_type = #{record.contentType,jdbcType=VARCHAR},
+      method = #{record.method,jdbcType=VARCHAR},
+      request_body = #{record.requestBody,jdbcType=VARCHAR},
+      response_body = #{record.responseBody,jdbcType=VARCHAR},
+      create_date = #{record.createDate,jdbcType=VARCHAR},
+      create_month = #{record.createMonth,jdbcType=VARCHAR},
+      create_hour = #{record.createHour,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=INTEGER},
+      err_msg = #{record.errMsg,jdbcType=LONGVARCHAR},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      account = #{record.account,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.security.entity.interfaces.po.InterfaceCallRecord">
+    <!--
+    @mbggenerated
+    -->
+    update se_interface_call_record
+    <set>
+      <if test="interfaceConfigId != null">
+        interface_config_id = #{interfaceConfigId,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="modularName != null">
+        modular_name = #{modularName,jdbcType=VARCHAR},
+      </if>
+      <if test="callerAppId != null">
+        caller_app_id = #{callerAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="uri != null">
+        uri = #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="zuulUri != null">
+        zuul_uri = #{zuulUri,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="cookies != null">
+        cookies = #{cookies,jdbcType=VARCHAR},
+      </if>
+      <if test="headers != null">
+        headers = #{headers,jdbcType=VARCHAR},
+      </if>
+      <if test="queryString != null">
+        query_string = #{queryString,jdbcType=VARCHAR},
+      </if>
+      <if test="requestQueryParams != null">
+        request_query_params = #{requestQueryParams,jdbcType=VARCHAR},
+      </if>
+      <if test="contentLength != null">
+        content_length = #{contentLength,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null">
+        content_type = #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        method = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="requestBody != null">
+        request_body = #{requestBody,jdbcType=VARCHAR},
+      </if>
+      <if test="responseBody != null">
+        response_body = #{responseBody,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createMonth != null">
+        create_month = #{createMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="createHour != null">
+        create_hour = #{createHour,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="errMsg != null">
+        err_msg = #{errMsg,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.security.entity.interfaces.po.InterfaceCallRecord">
+    <!--
+    @mbggenerated
+    -->
+    update se_interface_call_record
+    <set>
+      <if test="interfaceConfigId != null">
+        interface_config_id = #{interfaceConfigId,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="modularName != null">
+        modular_name = #{modularName,jdbcType=VARCHAR},
+      </if>
+      <if test="callerAppId != null">
+        caller_app_id = #{callerAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="uri != null">
+        uri = #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="zuulUri != null">
+        zuul_uri = #{zuulUri,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="cookies != null">
+        cookies = #{cookies,jdbcType=VARCHAR},
+      </if>
+      <if test="headers != null">
+        headers = #{headers,jdbcType=VARCHAR},
+      </if>
+      <if test="queryString != null">
+        query_string = #{queryString,jdbcType=VARCHAR},
+      </if>
+      <if test="requestQueryParams != null">
+        request_query_params = #{requestQueryParams,jdbcType=VARCHAR},
+      </if>
+      <if test="contentLength != null">
+        content_length = #{contentLength,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null">
+        content_type = #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        method = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="requestBody != null">
+        request_body = #{requestBody,jdbcType=VARCHAR},
+      </if>
+      <if test="responseBody != null">
+        response_body = #{responseBody,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createMonth != null">
+        create_month = #{createMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="createHour != null">
+        create_hour = #{createHour,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="errMsg != null">
+        err_msg = #{errMsg,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.security.entity.interfaces.po.InterfaceCallRecord">
+    <!--
+    @mbggenerated
+    -->
+    update se_interface_call_record
+    set interface_config_id = #{interfaceConfigId,jdbcType=BIGINT},
+      app_id = #{appId,jdbcType=VARCHAR},
+      modular_name = #{modularName,jdbcType=VARCHAR},
+      caller_app_id = #{callerAppId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      uri = #{uri,jdbcType=VARCHAR},
+      zuul_uri = #{zuulUri,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      cookies = #{cookies,jdbcType=VARCHAR},
+      headers = #{headers,jdbcType=VARCHAR},
+      query_string = #{queryString,jdbcType=VARCHAR},
+      request_query_params = #{requestQueryParams,jdbcType=VARCHAR},
+      content_length = #{contentLength,jdbcType=VARCHAR},
+      content_type = #{contentType,jdbcType=VARCHAR},
+      method = #{method,jdbcType=VARCHAR},
+      request_body = #{requestBody,jdbcType=VARCHAR},
+      response_body = #{responseBody,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=VARCHAR},
+      create_month = #{createMonth,jdbcType=VARCHAR},
+      create_hour = #{createHour,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      err_msg = #{errMsg,jdbcType=LONGVARCHAR},
+      user_id = #{userId,jdbcType=BIGINT},
+      user_name = #{userName,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.security.entity.interfaces.po.InterfaceCallRecord">
+    <!--
+    @mbggenerated
+    -->
+    update se_interface_call_record
+    set interface_config_id = #{interfaceConfigId,jdbcType=BIGINT},
+      app_id = #{appId,jdbcType=VARCHAR},
+      modular_name = #{modularName,jdbcType=VARCHAR},
+      caller_app_id = #{callerAppId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      uri = #{uri,jdbcType=VARCHAR},
+      zuul_uri = #{zuulUri,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      cookies = #{cookies,jdbcType=VARCHAR},
+      headers = #{headers,jdbcType=VARCHAR},
+      query_string = #{queryString,jdbcType=VARCHAR},
+      request_query_params = #{requestQueryParams,jdbcType=VARCHAR},
+      content_length = #{contentLength,jdbcType=VARCHAR},
+      content_type = #{contentType,jdbcType=VARCHAR},
+      method = #{method,jdbcType=VARCHAR},
+      request_body = #{requestBody,jdbcType=VARCHAR},
+      response_body = #{responseBody,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=VARCHAR},
+      create_month = #{createMonth,jdbcType=VARCHAR},
+      create_hour = #{createHour,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      err_msg = #{errMsg,jdbcType=LONGVARCHAR},
+      user_id = #{userId,jdbcType=BIGINT},
+      user_name = #{userName,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+</mapper>

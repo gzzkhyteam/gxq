@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.hardware.repository.manage.dao.DiskManageMapper">
+  
+     <resultMap id="BaseResultMaps" extends="BaseResultMap" 
+     		type="com.hengyunsoft.platform.hardware.entity.manage.domian.DiskManageDO">
+     	<result column="orgid" jdbcType="VARCHAR" property="orgid" />
+    	<result column="orgname" jdbcType="VARCHAR" property="orgname" />
+     </resultMap>
+    
+    <select id="findDiskByDpm" resultMap="BaseResultMaps"> 
+        select d.id, d.server_id, d.disk_id, d.disk_name, sum(d.disk_size) disk_size, 
+        	d.disk_path, d.disk_type, d.create_user, 
+    		d.create_time, d.update_user, d.update_time,s.orgid,s.orgname
+    	from b_hd_disk_manage d join b_hd_server_manage s on  d.server_id = s.id
+		where s.manage_uid is not null and s.use_status =1
+		group by s.orgid 
+		order by disk_size desc
+	</select>
+</mapper>

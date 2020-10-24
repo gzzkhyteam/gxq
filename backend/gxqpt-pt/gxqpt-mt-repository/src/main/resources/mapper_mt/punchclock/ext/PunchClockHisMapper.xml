@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.punchclock.dao.PunchClockHisMapper">
+    <resultMap id="ExtBaseResultMap" type="com.hengyunsoft.platform.mt.entity.punchclock.po.PunchClockHis">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="clock_type" jdbcType="INTEGER" property="clockType"/>
+        <result column="clock_date" jdbcType="DATE" property="clockDate"/>
+        <result column="clock_time" jdbcType="TIMESTAMP" property="clockTime"/>
+        <result column="adce_type" jdbcType="INTEGER" property="adceType"/>
+        <result column="late_reason" jdbcType="VARCHAR" property="lateReason"/>
+        <result column="status_" jdbcType="INTEGER" property="status"/>
+        <result column="outter_reason" jdbcType="VARCHAR" property="outterReason"/>
+        <result column="auto_flag" jdbcType="INTEGER" property="autoFlag"/>
+        <result column="lng" jdbcType="VARCHAR" property="lng"/>
+        <result column="lat" jdbcType="VARCHAR" property="lat"/>
+        <result column="location" jdbcType="VARCHAR" property="location"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <select id="findPageList" parameterType="map" resultMap="ExtBaseResultMap">
+        SELECT
+        f.id,
+        f.user_id,
+        f.clock_type,
+        f.clock_date,
+        f.clock_time,
+        f.adce_type,
+        f.late_reason,
+        f.status_,
+        f.outter_reason,
+        f.auto_flag,
+        f.lng,
+        f.lat,
+        f.location,
+        f.create_user,
+        f.create_time,
+        f.update_user,
+        f.update_time
+        FROM
+        b_punch_clock_his AS f
+        <where>
+            <if test="unitId != null and unitId !=''">
+                AND f.unit_id= #{unitId}
+            </if>
+            <if test="createUser != null">
+                AND f.create_user= #{createUser}
+            </if>
+            <if test="adceType != null and adceType !=''">
+                AND f.adce_type= #{adceType}
+            </if>
+            <if test="clockType != null and clockType !=''">
+                AND f.clock_type= #{clockType}
+            </if>
+            <if test="startCreateTime != null">
+                AND f.create_time >=#{startCreateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endCreateTime != null">
+                AND #{endCreateTime,jdbcType=TIMESTAMP}>=f.create_time
+            </if>
+        </where>
+        ORDER BY f.create_time DESC
+    </select>
+
+</mapper>

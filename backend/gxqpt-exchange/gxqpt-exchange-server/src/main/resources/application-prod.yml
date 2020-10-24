@@ -1,0 +1,73 @@
+gxqpt:
+  port:
+    nginx: 10086
+    eureka: 10030
+    gate: ${gxqpt.port.nginx}       # 正式环境使用nginx
+  hostname:
+    redis: 192.168.30.165
+    rabbitmq: 192.168.30.165
+    mysql: 192.168.30.167
+    nginx: 127.0.0.1
+    eureka: 192.168.30.89
+    gate: ${gxqpt.hostname.nginx}     # 正式环境使用nginx
+    exchange: 192.168.30.89
+  mysql:
+    exchange:
+      database: gxqpt_exchange_prod       # 根据环境更改
+      max-active: 100
+    port: 3218                  # 根据环境更改
+    username: gxqpt              # 数据库密码需要加密： System.out.println(ConfigTools.encrypt("your mysql password"));
+    password: CcxMZHY7Q/qIJvCrHrGr00UsZOpH0GaMQX7U42q93AL8i7X4n+Krlu4zLGGHpyOu/Ehxyt5sCkMfRYbtG00rOg==
+    jdbcpwd: Zkhy@8888gxqpt
+logging:
+  level:
+    console: WARN
+    service: WARN
+    impl: WARN
+    sql: WARN
+
+server:
+  undertow:
+    io-threads: 8 # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
+    worker-threads: 80  # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
+    buffer-size: 1024  # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理 , 每块buffer的空间大小,越小的空间被利用越充分
+    buffers-per-region: 1024  # 每个区分配的buffer数量 , 所以pool的大小是buffer-size * buffers-per-region
+    direct-buffers: true  # 是否分配的直接内存
+
+spring:
+  profiles:
+    active: prod
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq}
+    port: 5672               # 根据环境更改
+    password: gxqpt          # 根据环境更改
+    username: gxqpt          # 根据环境更改
+  redis:
+    host: ${gxqpt.hostname.redis}
+    port: 16379
+    password: SbtyMveYNfLzTks7H0apCmyStPzWJqjy
+    database: 1
+    pool:
+      max-active: 100
+      min-idle: 2
+      max-idle: 8
+      max-wait: 100
+    key-prefix: prod   # 根据环境更改
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+
+id-generator:
+  machine-code: 1  # id生成器机器掩码
+
+jdbc:
+  port: 3218
+  ip: 192.168.30.167
+  userName: gxqpt
+  pwd: Zkhy@8888gxqpt
+  dbName: gxqpt_data_warehouse
+app:
+  id: 35kj6100
+  name: 共享交换系统

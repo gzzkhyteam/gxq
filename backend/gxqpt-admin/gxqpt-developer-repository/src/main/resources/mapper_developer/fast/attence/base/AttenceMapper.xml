@@ -1,0 +1,896 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.fast.attence.dao.AttenceMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.developer.entity.fast.po.attence.Attence">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="in_time" jdbcType="TIMESTAMP" property="inTime" />
+    <result column="in_remark" jdbcType="VARCHAR" property="inRemark" />
+    <result column="in_picture" jdbcType="VARCHAR" property="inPicture" />
+    <result column="in_dept_id" jdbcType="VARCHAR" property="inDeptId" />
+    <result column="in_emp_id" jdbcType="VARCHAR" property="inEmpId" />
+    <result column="in_latitude" jdbcType="DOUBLE" property="inLatitude" />
+    <result column="in_longitude" jdbcType="DOUBLE" property="inLongitude" />
+    <result column="in_address" jdbcType="VARCHAR" property="inAddress" />
+    <result column="in_auto_sign" jdbcType="INTEGER" property="inAutoSign" />
+    <result column="userid" jdbcType="BIGINT" property="userid" />
+    <result column="in_sign_type" jdbcType="INTEGER" property="inSignType" />
+    <result column="in_handle_type" jdbcType="INTEGER" property="inHandleType" />
+    <result column="out_time" jdbcType="TIMESTAMP" property="outTime" />
+    <result column="out_remark" jdbcType="VARCHAR" property="outRemark" />
+    <result column="out_picture" jdbcType="VARCHAR" property="outPicture" />
+    <result column="out_dept_id" jdbcType="VARCHAR" property="outDeptId" />
+    <result column="out_emp_id" jdbcType="VARCHAR" property="outEmpId" />
+    <result column="out_latitude" jdbcType="DOUBLE" property="outLatitude" />
+    <result column="out_longtude" jdbcType="DOUBLE" property="outLongtude" />
+    <result column="out_address" jdbcType="VARCHAR" property="outAddress" />
+    <result column="out_sign_type" jdbcType="INTEGER" property="outSignType" />
+    <result column="out_handle_type" jdbcType="INTEGER" property="outHandleType" />
+    <result column="out_auto_sign" jdbcType="INTEGER" property="outAutoSign" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, app_id, in_time, in_remark, in_picture, in_dept_id, in_emp_id, in_latitude, in_longitude, 
+    in_address, in_auto_sign, userid, in_sign_type, in_handle_type, out_time, out_remark, 
+    out_picture, out_dept_id, out_emp_id, out_latitude, out_longtude, out_address, out_sign_type, 
+    out_handle_type, out_auto_sign, create_time, update_time, create_user, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.AttenceExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_attence
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_attence
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.AttenceExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_attence
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectByAppIdAndId" parameterType="map" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <include refid="Base_Column_List" />
+    from b_attence
+    where 1=1 and app_id = #{appId,jdbcType=VARCHAR} and id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAppIdById" parameterType="map" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_attence
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_attence
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.AttenceExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_attence
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_attence where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_attence
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_attence where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.Attence">
+    <!--
+    @mbggenerated
+    -->
+    update b_attence
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.Attence">
+    <!--
+    @mbggenerated
+    -->
+    update b_attence
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.Attence">
+    <!--
+    @mbggenerated
+    -->
+    update b_attence
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.Attence">
+    <!--
+    @mbggenerated
+    -->
+    update b_attence
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.Attence">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_attence (id, app_id, in_time, 
+      in_remark, in_picture, in_dept_id, 
+      in_emp_id, in_latitude, in_longitude, 
+      in_address, in_auto_sign, userid, 
+      in_sign_type, in_handle_type, out_time, 
+      out_remark, out_picture, out_dept_id, 
+      out_emp_id, out_latitude, out_longtude, 
+      out_address, out_sign_type, out_handle_type, 
+      out_auto_sign, create_time, update_time, 
+      create_user, update_user)
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{inTime,jdbcType=TIMESTAMP}, 
+      #{inRemark,jdbcType=VARCHAR}, #{inPicture,jdbcType=VARCHAR}, #{inDeptId,jdbcType=VARCHAR}, 
+      #{inEmpId,jdbcType=VARCHAR}, #{inLatitude,jdbcType=DOUBLE}, #{inLongitude,jdbcType=DOUBLE}, 
+      #{inAddress,jdbcType=VARCHAR}, #{inAutoSign,jdbcType=INTEGER}, #{userid,jdbcType=BIGINT}, 
+      #{inSignType,jdbcType=INTEGER}, #{inHandleType,jdbcType=INTEGER}, #{outTime,jdbcType=TIMESTAMP}, 
+      #{outRemark,jdbcType=VARCHAR}, #{outPicture,jdbcType=VARCHAR}, #{outDeptId,jdbcType=VARCHAR}, 
+      #{outEmpId,jdbcType=VARCHAR}, #{outLatitude,jdbcType=DOUBLE}, #{outLongtude,jdbcType=DOUBLE}, 
+      #{outAddress,jdbcType=VARCHAR}, #{outSignType,jdbcType=INTEGER}, #{outHandleType,jdbcType=INTEGER}, 
+      #{outAutoSign,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=BIGINT}, #{updateUser,jdbcType=BIGINT})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_attence (id, app_id, in_time, in_remark, in_picture, in_dept_id, in_emp_id, in_latitude, in_longitude, in_address, in_auto_sign, userid, in_sign_type, in_handle_type, out_time, out_remark, out_picture, out_dept_id, out_emp_id, out_latitude, out_longtude, out_address, out_sign_type, out_handle_type, out_auto_sign, create_time, update_time, create_user, update_user ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.appId,jdbcType=VARCHAR}, #{item.inTime,jdbcType=TIMESTAMP}, 
+        #{item.inRemark,jdbcType=VARCHAR}, #{item.inPicture,jdbcType=VARCHAR}, #{item.inDeptId,jdbcType=VARCHAR}, 
+        #{item.inEmpId,jdbcType=VARCHAR}, #{item.inLatitude,jdbcType=DOUBLE}, #{item.inLongitude,jdbcType=DOUBLE}, 
+        #{item.inAddress,jdbcType=VARCHAR}, #{item.inAutoSign,jdbcType=INTEGER}, #{item.userid,jdbcType=BIGINT}, 
+        #{item.inSignType,jdbcType=INTEGER}, #{item.inHandleType,jdbcType=INTEGER}, #{item.outTime,jdbcType=TIMESTAMP}, 
+        #{item.outRemark,jdbcType=VARCHAR}, #{item.outPicture,jdbcType=VARCHAR}, #{item.outDeptId,jdbcType=VARCHAR}, 
+        #{item.outEmpId,jdbcType=VARCHAR}, #{item.outLatitude,jdbcType=DOUBLE}, #{item.outLongtude,jdbcType=DOUBLE}, 
+        #{item.outAddress,jdbcType=VARCHAR}, #{item.outSignType,jdbcType=INTEGER}, #{item.outHandleType,jdbcType=INTEGER}, 
+        #{item.outAutoSign,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.createUser,jdbcType=BIGINT}, #{item.updateUser,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.Attence">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_attence
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="inTime != null">
+        in_time,
+      </if>
+      <if test="inRemark != null">
+        in_remark,
+      </if>
+      <if test="inPicture != null">
+        in_picture,
+      </if>
+      <if test="inDeptId != null">
+        in_dept_id,
+      </if>
+      <if test="inEmpId != null">
+        in_emp_id,
+      </if>
+      <if test="inLatitude != null">
+        in_latitude,
+      </if>
+      <if test="inLongitude != null">
+        in_longitude,
+      </if>
+      <if test="inAddress != null">
+        in_address,
+      </if>
+      <if test="inAutoSign != null">
+        in_auto_sign,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="inSignType != null">
+        in_sign_type,
+      </if>
+      <if test="inHandleType != null">
+        in_handle_type,
+      </if>
+      <if test="outTime != null">
+        out_time,
+      </if>
+      <if test="outRemark != null">
+        out_remark,
+      </if>
+      <if test="outPicture != null">
+        out_picture,
+      </if>
+      <if test="outDeptId != null">
+        out_dept_id,
+      </if>
+      <if test="outEmpId != null">
+        out_emp_id,
+      </if>
+      <if test="outLatitude != null">
+        out_latitude,
+      </if>
+      <if test="outLongtude != null">
+        out_longtude,
+      </if>
+      <if test="outAddress != null">
+        out_address,
+      </if>
+      <if test="outSignType != null">
+        out_sign_type,
+      </if>
+      <if test="outHandleType != null">
+        out_handle_type,
+      </if>
+      <if test="outAutoSign != null">
+        out_auto_sign,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="inTime != null">
+        #{inTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inRemark != null">
+        #{inRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="inPicture != null">
+        #{inPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="inDeptId != null">
+        #{inDeptId,jdbcType=VARCHAR},
+      </if>
+      <if test="inEmpId != null">
+        #{inEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="inLatitude != null">
+        #{inLatitude,jdbcType=DOUBLE},
+      </if>
+      <if test="inLongitude != null">
+        #{inLongitude,jdbcType=DOUBLE},
+      </if>
+      <if test="inAddress != null">
+        #{inAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="inAutoSign != null">
+        #{inAutoSign,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="inSignType != null">
+        #{inSignType,jdbcType=INTEGER},
+      </if>
+      <if test="inHandleType != null">
+        #{inHandleType,jdbcType=INTEGER},
+      </if>
+      <if test="outTime != null">
+        #{outTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="outRemark != null">
+        #{outRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="outPicture != null">
+        #{outPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="outDeptId != null">
+        #{outDeptId,jdbcType=VARCHAR},
+      </if>
+      <if test="outEmpId != null">
+        #{outEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="outLatitude != null">
+        #{outLatitude,jdbcType=DOUBLE},
+      </if>
+      <if test="outLongtude != null">
+        #{outLongtude,jdbcType=DOUBLE},
+      </if>
+      <if test="outAddress != null">
+        #{outAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="outSignType != null">
+        #{outSignType,jdbcType=INTEGER},
+      </if>
+      <if test="outHandleType != null">
+        #{outHandleType,jdbcType=INTEGER},
+      </if>
+      <if test="outAutoSign != null">
+        #{outAutoSign,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.developer.repository.fast.attence.example.AttenceExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_attence
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_attence
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inTime != null">
+        in_time = #{record.inTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.inRemark != null">
+        in_remark = #{record.inRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inPicture != null">
+        in_picture = #{record.inPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inDeptId != null">
+        in_dept_id = #{record.inDeptId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inEmpId != null">
+        in_emp_id = #{record.inEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inLatitude != null">
+        in_latitude = #{record.inLatitude,jdbcType=DOUBLE},
+      </if>
+      <if test="record.inLongitude != null">
+        in_longitude = #{record.inLongitude,jdbcType=DOUBLE},
+      </if>
+      <if test="record.inAddress != null">
+        in_address = #{record.inAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inAutoSign != null">
+        in_auto_sign = #{record.inAutoSign,jdbcType=INTEGER},
+      </if>
+      <if test="record.userid != null">
+        userid = #{record.userid,jdbcType=BIGINT},
+      </if>
+      <if test="record.inSignType != null">
+        in_sign_type = #{record.inSignType,jdbcType=INTEGER},
+      </if>
+      <if test="record.inHandleType != null">
+        in_handle_type = #{record.inHandleType,jdbcType=INTEGER},
+      </if>
+      <if test="record.outTime != null">
+        out_time = #{record.outTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.outRemark != null">
+        out_remark = #{record.outRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outPicture != null">
+        out_picture = #{record.outPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outDeptId != null">
+        out_dept_id = #{record.outDeptId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outEmpId != null">
+        out_emp_id = #{record.outEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outLatitude != null">
+        out_latitude = #{record.outLatitude,jdbcType=DOUBLE},
+      </if>
+      <if test="record.outLongtude != null">
+        out_longtude = #{record.outLongtude,jdbcType=DOUBLE},
+      </if>
+      <if test="record.outAddress != null">
+        out_address = #{record.outAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outSignType != null">
+        out_sign_type = #{record.outSignType,jdbcType=INTEGER},
+      </if>
+      <if test="record.outHandleType != null">
+        out_handle_type = #{record.outHandleType,jdbcType=INTEGER},
+      </if>
+      <if test="record.outAutoSign != null">
+        out_auto_sign = #{record.outAutoSign,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_attence
+    set id = #{record.id,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      in_time = #{record.inTime,jdbcType=TIMESTAMP},
+      in_remark = #{record.inRemark,jdbcType=VARCHAR},
+      in_picture = #{record.inPicture,jdbcType=VARCHAR},
+      in_dept_id = #{record.inDeptId,jdbcType=VARCHAR},
+      in_emp_id = #{record.inEmpId,jdbcType=VARCHAR},
+      in_latitude = #{record.inLatitude,jdbcType=DOUBLE},
+      in_longitude = #{record.inLongitude,jdbcType=DOUBLE},
+      in_address = #{record.inAddress,jdbcType=VARCHAR},
+      in_auto_sign = #{record.inAutoSign,jdbcType=INTEGER},
+      userid = #{record.userid,jdbcType=BIGINT},
+      in_sign_type = #{record.inSignType,jdbcType=INTEGER},
+      in_handle_type = #{record.inHandleType,jdbcType=INTEGER},
+      out_time = #{record.outTime,jdbcType=TIMESTAMP},
+      out_remark = #{record.outRemark,jdbcType=VARCHAR},
+      out_picture = #{record.outPicture,jdbcType=VARCHAR},
+      out_dept_id = #{record.outDeptId,jdbcType=VARCHAR},
+      out_emp_id = #{record.outEmpId,jdbcType=VARCHAR},
+      out_latitude = #{record.outLatitude,jdbcType=DOUBLE},
+      out_longtude = #{record.outLongtude,jdbcType=DOUBLE},
+      out_address = #{record.outAddress,jdbcType=VARCHAR},
+      out_sign_type = #{record.outSignType,jdbcType=INTEGER},
+      out_handle_type = #{record.outHandleType,jdbcType=INTEGER},
+      out_auto_sign = #{record.outAutoSign,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_user = #{record.updateUser,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.Attence">
+    <!--
+    @mbggenerated
+    -->
+    update b_attence
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="inTime != null">
+        in_time = #{inTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inRemark != null">
+        in_remark = #{inRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="inPicture != null">
+        in_picture = #{inPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="inDeptId != null">
+        in_dept_id = #{inDeptId,jdbcType=VARCHAR},
+      </if>
+      <if test="inEmpId != null">
+        in_emp_id = #{inEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="inLatitude != null">
+        in_latitude = #{inLatitude,jdbcType=DOUBLE},
+      </if>
+      <if test="inLongitude != null">
+        in_longitude = #{inLongitude,jdbcType=DOUBLE},
+      </if>
+      <if test="inAddress != null">
+        in_address = #{inAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="inAutoSign != null">
+        in_auto_sign = #{inAutoSign,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="inSignType != null">
+        in_sign_type = #{inSignType,jdbcType=INTEGER},
+      </if>
+      <if test="inHandleType != null">
+        in_handle_type = #{inHandleType,jdbcType=INTEGER},
+      </if>
+      <if test="outTime != null">
+        out_time = #{outTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="outRemark != null">
+        out_remark = #{outRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="outPicture != null">
+        out_picture = #{outPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="outDeptId != null">
+        out_dept_id = #{outDeptId,jdbcType=VARCHAR},
+      </if>
+      <if test="outEmpId != null">
+        out_emp_id = #{outEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="outLatitude != null">
+        out_latitude = #{outLatitude,jdbcType=DOUBLE},
+      </if>
+      <if test="outLongtude != null">
+        out_longtude = #{outLongtude,jdbcType=DOUBLE},
+      </if>
+      <if test="outAddress != null">
+        out_address = #{outAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="outSignType != null">
+        out_sign_type = #{outSignType,jdbcType=INTEGER},
+      </if>
+      <if test="outHandleType != null">
+        out_handle_type = #{outHandleType,jdbcType=INTEGER},
+      </if>
+      <if test="outAutoSign != null">
+        out_auto_sign = #{outAutoSign,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.Attence">
+    <!--
+    @mbggenerated
+    -->
+    update b_attence
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="inTime != null">
+        in_time = #{inTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inRemark != null">
+        in_remark = #{inRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="inPicture != null">
+        in_picture = #{inPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="inDeptId != null">
+        in_dept_id = #{inDeptId,jdbcType=VARCHAR},
+      </if>
+      <if test="inEmpId != null">
+        in_emp_id = #{inEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="inLatitude != null">
+        in_latitude = #{inLatitude,jdbcType=DOUBLE},
+      </if>
+      <if test="inLongitude != null">
+        in_longitude = #{inLongitude,jdbcType=DOUBLE},
+      </if>
+      <if test="inAddress != null">
+        in_address = #{inAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="inAutoSign != null">
+        in_auto_sign = #{inAutoSign,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="inSignType != null">
+        in_sign_type = #{inSignType,jdbcType=INTEGER},
+      </if>
+      <if test="inHandleType != null">
+        in_handle_type = #{inHandleType,jdbcType=INTEGER},
+      </if>
+      <if test="outTime != null">
+        out_time = #{outTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="outRemark != null">
+        out_remark = #{outRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="outPicture != null">
+        out_picture = #{outPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="outDeptId != null">
+        out_dept_id = #{outDeptId,jdbcType=VARCHAR},
+      </if>
+      <if test="outEmpId != null">
+        out_emp_id = #{outEmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="outLatitude != null">
+        out_latitude = #{outLatitude,jdbcType=DOUBLE},
+      </if>
+      <if test="outLongtude != null">
+        out_longtude = #{outLongtude,jdbcType=DOUBLE},
+      </if>
+      <if test="outAddress != null">
+        out_address = #{outAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="outSignType != null">
+        out_sign_type = #{outSignType,jdbcType=INTEGER},
+      </if>
+      <if test="outHandleType != null">
+        out_handle_type = #{outHandleType,jdbcType=INTEGER},
+      </if>
+      <if test="outAutoSign != null">
+        out_auto_sign = #{outAutoSign,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.Attence">
+    <!--
+    @mbggenerated
+    -->
+    update b_attence
+    set app_id = #{appId,jdbcType=VARCHAR},
+      in_time = #{inTime,jdbcType=TIMESTAMP},
+      in_remark = #{inRemark,jdbcType=VARCHAR},
+      in_picture = #{inPicture,jdbcType=VARCHAR},
+      in_dept_id = #{inDeptId,jdbcType=VARCHAR},
+      in_emp_id = #{inEmpId,jdbcType=VARCHAR},
+      in_latitude = #{inLatitude,jdbcType=DOUBLE},
+      in_longitude = #{inLongitude,jdbcType=DOUBLE},
+      in_address = #{inAddress,jdbcType=VARCHAR},
+      in_auto_sign = #{inAutoSign,jdbcType=INTEGER},
+      userid = #{userid,jdbcType=BIGINT},
+      in_sign_type = #{inSignType,jdbcType=INTEGER},
+      in_handle_type = #{inHandleType,jdbcType=INTEGER},
+      out_time = #{outTime,jdbcType=TIMESTAMP},
+      out_remark = #{outRemark,jdbcType=VARCHAR},
+      out_picture = #{outPicture,jdbcType=VARCHAR},
+      out_dept_id = #{outDeptId,jdbcType=VARCHAR},
+      out_emp_id = #{outEmpId,jdbcType=VARCHAR},
+      out_latitude = #{outLatitude,jdbcType=DOUBLE},
+      out_longtude = #{outLongtude,jdbcType=DOUBLE},
+      out_address = #{outAddress,jdbcType=VARCHAR},
+      out_sign_type = #{outSignType,jdbcType=INTEGER},
+      out_handle_type = #{outHandleType,jdbcType=INTEGER},
+      out_auto_sign = #{outAutoSign,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.attence.Attence">
+    <!--
+    @mbggenerated
+    -->
+    update b_attence
+    set app_id = #{appId,jdbcType=VARCHAR},
+      in_time = #{inTime,jdbcType=TIMESTAMP},
+      in_remark = #{inRemark,jdbcType=VARCHAR},
+      in_picture = #{inPicture,jdbcType=VARCHAR},
+      in_dept_id = #{inDeptId,jdbcType=VARCHAR},
+      in_emp_id = #{inEmpId,jdbcType=VARCHAR},
+      in_latitude = #{inLatitude,jdbcType=DOUBLE},
+      in_longitude = #{inLongitude,jdbcType=DOUBLE},
+      in_address = #{inAddress,jdbcType=VARCHAR},
+      in_auto_sign = #{inAutoSign,jdbcType=INTEGER},
+      userid = #{userid,jdbcType=BIGINT},
+      in_sign_type = #{inSignType,jdbcType=INTEGER},
+      in_handle_type = #{inHandleType,jdbcType=INTEGER},
+      out_time = #{outTime,jdbcType=TIMESTAMP},
+      out_remark = #{outRemark,jdbcType=VARCHAR},
+      out_picture = #{outPicture,jdbcType=VARCHAR},
+      out_dept_id = #{outDeptId,jdbcType=VARCHAR},
+      out_emp_id = #{outEmpId,jdbcType=VARCHAR},
+      out_latitude = #{outLatitude,jdbcType=DOUBLE},
+      out_longtude = #{outLongtude,jdbcType=DOUBLE},
+      out_address = #{outAddress,jdbcType=VARCHAR},
+      out_sign_type = #{outSignType,jdbcType=INTEGER},
+      out_handle_type = #{outHandleType,jdbcType=INTEGER},
+      out_auto_sign = #{outAutoSign,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_user = #{updateUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+</mapper>

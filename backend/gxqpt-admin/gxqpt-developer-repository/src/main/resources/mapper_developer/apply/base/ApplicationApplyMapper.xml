@@ -1,0 +1,1119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.apply.dao.ApplicationApplyMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.developer.entity.apply.po.ApplicationApply">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="app_secret" jdbcType="VARCHAR" property="appSecret" />
+    <result column="index_url" jdbcType="VARCHAR" property="indexUrl" />
+    <result column="name_" jdbcType="VARCHAR" property="name" />
+    <result column="logo_url" jdbcType="VARCHAR" property="logoUrl" />
+    <result column="desc_" jdbcType="VARCHAR" property="desc" />
+    <result column="code_" jdbcType="VARCHAR" property="code" />
+    <result column="order_no" jdbcType="INTEGER" property="orderNo" />
+    <result column="app_type" jdbcType="SMALLINT" property="appType" />
+    <result column="type_" jdbcType="VARCHAR" property="type" />
+    <result column="provider_" jdbcType="VARCHAR" property="provider" />
+    <result column="provider_id" jdbcType="BIGINT" property="providerId" />
+    <result column="status_" jdbcType="BIT" property="status" />
+    <result column="random_str" jdbcType="VARCHAR" property="randomStr" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="apply_status" jdbcType="SMALLINT" property="applyStatus" />
+    <result column="apply_user" jdbcType="BIGINT" property="applyUser" />
+    <result column="apply_user_name" jdbcType="VARCHAR" property="applyUserName" />
+    <result column="audit_user" jdbcType="BIGINT" property="auditUser" />
+    <result column="audit_user_name" jdbcType="VARCHAR" property="auditUserName" />
+    <result column="apply_desc" jdbcType="VARCHAR" property="applyDesc" />
+    <result column="audit_desc" jdbcType="VARCHAR" property="auditDesc" />
+    <result column="success_pass_app_id" jdbcType="BIGINT" property="successPassAppId" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="org_system_code" jdbcType="VARCHAR" property="orgSystemCode" />
+    <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+    <result column="reduce_time" jdbcType="DOUBLE" property="reduceTime" />
+    <result column="reduce_cost" jdbcType="INTEGER" property="reduceCost" />
+    <result column="original_time" jdbcType="DOUBLE" property="originalTime" />
+    <result column="original_cost" jdbcType="INTEGER" property="originalCost" />
+    <result column="reduce_build_cost" jdbcType="INTEGER" property="reduceBuildCost" />
+    <result column="reduce_use_cost" jdbcType="INTEGER" property="reduceUseCost" />
+    <result column="reduce_protect_cost" jdbcType="INTEGER" property="reduceProtectCost" />
+    <result column="public_is" jdbcType="BIT" property="publicIs" />
+    <result column="service_id" jdbcType="VARCHAR" property="serviceId" />
+    <result column="full_root_path" jdbcType="VARCHAR" property="fullRootPath" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, app_id, app_secret, index_url, name_, logo_url, desc_, code_, order_no, app_type, 
+    type_, provider_, status_, random_str, create_user, create_time, update_user, update_time, 
+    apply_status, apply_user, apply_user_name, audit_user, audit_user_name, apply_desc, 
+    audit_desc, success_pass_app_id, org_id, org_system_code, org_name, reduce_time, 
+    reduce_cost, original_time, original_cost, reduce_build_cost, reduce_use_cost, reduce_protect_cost, 
+    public_is, service_id, full_root_path,provider_id
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.developer.repository.apply.example.ApplicationApplyExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_application_apply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from c_application_apply
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.developer.repository.apply.example.ApplicationApplyExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from c_application_apply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectByAppIdAndId" parameterType="map" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <include refid="Base_Column_List" />
+    from c_application_apply
+    where 1=1 and app_id = #{appId,jdbcType=VARCHAR} and id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from c_application_apply
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_application_apply
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.developer.repository.apply.example.ApplicationApplyExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_application_apply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_application_apply where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from c_application_apply
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  c_application_apply where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach> 
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.developer.entity.apply.po.ApplicationApply">
+    <!--
+    @mbggenerated
+    -->
+    update c_application_apply
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_application_apply
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+    #{item}
+  </foreach>
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update c_application_apply
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_application_apply
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.developer.entity.apply.po.ApplicationApply">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_application_apply (id, app_id, app_secret, 
+      index_url, name_, logo_url, 
+      desc_, code_, order_no, 
+      app_type, type_, provider_, 
+      status_, random_str, create_user, 
+      create_time, update_user, update_time, 
+      apply_status, apply_user, apply_user_name, 
+      audit_user, audit_user_name, apply_desc, 
+      audit_desc, success_pass_app_id, org_id, 
+      org_system_code, org_name, reduce_time, 
+      reduce_cost, original_time, original_cost, 
+      reduce_build_cost, reduce_use_cost, reduce_protect_cost, 
+      public_is, service_id, full_root_path ,provider_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR}, 
+      #{indexUrl,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{logoUrl,jdbcType=VARCHAR}, 
+      #{desc,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{orderNo,jdbcType=INTEGER}, 
+      #{appType,jdbcType=SMALLINT}, #{type,jdbcType=VARCHAR}, #{provider,jdbcType=VARCHAR}, 
+      #{status,jdbcType=BIT}, #{randomStr,jdbcType=VARCHAR}, #{createUser,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{applyStatus,jdbcType=SMALLINT}, #{applyUser,jdbcType=BIGINT}, #{applyUserName,jdbcType=VARCHAR}, 
+      #{auditUser,jdbcType=BIGINT}, #{auditUserName,jdbcType=VARCHAR}, #{applyDesc,jdbcType=VARCHAR}, 
+      #{auditDesc,jdbcType=VARCHAR}, #{successPassAppId,jdbcType=BIGINT}, #{orgId,jdbcType=VARCHAR}, 
+      #{orgSystemCode,jdbcType=VARCHAR}, #{orgName,jdbcType=VARCHAR}, #{reduceTime,jdbcType=DOUBLE}, 
+      #{reduceCost,jdbcType=INTEGER}, #{originalTime,jdbcType=DOUBLE}, #{originalCost,jdbcType=INTEGER}, 
+      #{reduceBuildCost,jdbcType=INTEGER}, #{reduceUseCost,jdbcType=INTEGER}, #{reduceProtectCost,jdbcType=INTEGER}, 
+      #{publicIs,jdbcType=BIT}, #{serviceId,jdbcType=VARCHAR}, #{fullRootPath,jdbcType=VARCHAR} ,#{providerId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_application_apply (id, app_id, app_secret, index_url, name_, logo_url, desc_, code_, order_no, app_type, type_, provider_, status_, random_str, create_user, create_time, update_user, update_time, apply_status, apply_user, apply_user_name, audit_user, audit_user_name, apply_desc, audit_desc, success_pass_app_id, org_id, org_system_code, org_name, reduce_time, reduce_cost, original_time, original_cost, reduce_build_cost, reduce_use_cost, reduce_protect_cost, public_is, service_id, full_root_path ,provider_id) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.appId,jdbcType=VARCHAR}, #{item.appSecret,jdbcType=VARCHAR}, 
+        #{item.indexUrl,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.logoUrl,jdbcType=VARCHAR}, 
+        #{item.desc,jdbcType=VARCHAR}, #{item.code,jdbcType=VARCHAR}, #{item.orderNo,jdbcType=INTEGER}, 
+        #{item.appType,jdbcType=SMALLINT}, #{item.type,jdbcType=VARCHAR}, #{item.provider,jdbcType=VARCHAR}, 
+        #{item.status,jdbcType=BIT}, #{item.randomStr,jdbcType=VARCHAR}, #{item.createUser,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.applyStatus,jdbcType=SMALLINT}, #{item.applyUser,jdbcType=BIGINT}, #{item.applyUserName,jdbcType=VARCHAR}, 
+        #{item.auditUser,jdbcType=BIGINT}, #{item.auditUserName,jdbcType=VARCHAR}, #{item.applyDesc,jdbcType=VARCHAR}, 
+        #{item.auditDesc,jdbcType=VARCHAR}, #{item.successPassAppId,jdbcType=BIGINT}, #{item.orgId,jdbcType=VARCHAR}, 
+        #{item.orgSystemCode,jdbcType=VARCHAR}, #{item.orgName,jdbcType=VARCHAR}, #{item.reduceTime,jdbcType=DOUBLE}, 
+        #{item.reduceCost,jdbcType=INTEGER}, #{item.originalTime,jdbcType=DOUBLE}, #{item.originalCost,jdbcType=INTEGER}, 
+        #{item.reduceBuildCost,jdbcType=INTEGER}, #{item.reduceUseCost,jdbcType=INTEGER}, 
+        #{item.reduceProtectCost,jdbcType=INTEGER}, #{item.publicIs,jdbcType=BIT}, #{item.serviceId,jdbcType=VARCHAR}, 
+        #{item.fullRootPath,jdbcType=VARCHAR},#{providerId,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.developer.entity.apply.po.ApplicationApply">
+    <!--
+    @mbggenerated
+    -->
+    insert into c_application_apply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="appSecret != null">
+        app_secret,
+      </if>
+      <if test="indexUrl != null">
+        index_url,
+      </if>
+      <if test="name != null">
+        name_,
+      </if>
+      <if test="logoUrl != null">
+        logo_url,
+      </if>
+      <if test="desc != null">
+        desc_,
+      </if>
+      <if test="code != null">
+        code_,
+      </if>
+      <if test="orderNo != null">
+        order_no,
+      </if>
+      <if test="appType != null">
+        app_type,
+      </if>
+      <if test="type != null">
+        type_,
+      </if>
+      <if test="provider != null">
+        provider_,
+      </if>
+      <if test="status != null">
+        status_,
+      </if>
+      <if test="randomStr != null">
+        random_str,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="applyStatus != null">
+        apply_status,
+      </if>
+      <if test="applyUser != null">
+        apply_user,
+      </if>
+      <if test="applyUserName != null">
+        apply_user_name,
+      </if>
+      <if test="auditUser != null">
+        audit_user,
+      </if>
+      <if test="auditUserName != null">
+        audit_user_name,
+      </if>
+      <if test="applyDesc != null">
+        apply_desc,
+      </if>
+      <if test="auditDesc != null">
+        audit_desc,
+      </if>
+      <if test="successPassAppId != null">
+        success_pass_app_id,
+      </if>
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="orgSystemCode != null">
+        org_system_code,
+      </if>
+      <if test="orgName != null">
+        org_name,
+      </if>
+      <if test="reduceTime != null">
+        reduce_time,
+      </if>
+      <if test="reduceCost != null">
+        reduce_cost,
+      </if>
+      <if test="originalTime != null">
+        original_time,
+      </if>
+      <if test="originalCost != null">
+        original_cost,
+      </if>
+      <if test="reduceBuildCost != null">
+        reduce_build_cost,
+      </if>
+      <if test="reduceUseCost != null">
+        reduce_use_cost,
+      </if>
+      <if test="reduceProtectCost != null">
+        reduce_protect_cost,
+      </if>
+      <if test="publicIs != null">
+        public_is,
+      </if>
+      <if test="serviceId != null">
+        service_id,
+      </if>
+      <if test="fullRootPath != null">
+        full_root_path,
+      </if>
+      <if test="providerId != null">
+        provider_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appSecret != null">
+        #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="indexUrl != null">
+        #{indexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null">
+        #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="appType != null">
+        #{appType,jdbcType=SMALLINT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="provider != null">
+        #{provider,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="randomStr != null">
+        #{randomStr,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyStatus != null">
+        #{applyStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="applyUser != null">
+        #{applyUser,jdbcType=BIGINT},
+      </if>
+      <if test="applyUserName != null">
+        #{applyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="auditUser != null">
+        #{auditUser,jdbcType=BIGINT},
+      </if>
+      <if test="auditUserName != null">
+        #{auditUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDesc != null">
+        #{applyDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDesc != null">
+        #{auditDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="successPassAppId != null">
+        #{successPassAppId,jdbcType=BIGINT},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgSystemCode != null">
+        #{orgSystemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="reduceTime != null">
+        #{reduceTime,jdbcType=DOUBLE},
+      </if>
+      <if test="reduceCost != null">
+        #{reduceCost,jdbcType=INTEGER},
+      </if>
+      <if test="originalTime != null">
+        #{originalTime,jdbcType=DOUBLE},
+      </if>
+      <if test="originalCost != null">
+        #{originalCost,jdbcType=INTEGER},
+      </if>
+      <if test="reduceBuildCost != null">
+        #{reduceBuildCost,jdbcType=INTEGER},
+      </if>
+      <if test="reduceUseCost != null">
+        #{reduceUseCost,jdbcType=INTEGER},
+      </if>
+      <if test="reduceProtectCost != null">
+        #{reduceProtectCost,jdbcType=INTEGER},
+      </if>
+      <if test="publicIs != null">
+        #{publicIs,jdbcType=BIT},
+      </if>
+      <if test="serviceId != null">
+        #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="fullRootPath != null">
+        #{fullRootPath,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null">
+        #{providerId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.developer.repository.apply.example.ApplicationApplyExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from c_application_apply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_application_apply
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appSecret != null">
+        app_secret = #{record.appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="record.indexUrl != null">
+        index_url = #{record.indexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name_ = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logoUrl != null">
+        logo_url = #{record.logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.desc != null">
+        desc_ = #{record.desc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.code != null">
+        code_ = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderNo != null">
+        order_no = #{record.orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.appType != null">
+        app_type = #{record.appType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.type != null">
+        type_ = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.provider != null">
+        provider_ = #{record.provider,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status_ = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.randomStr != null">
+        random_str = #{record.randomStr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.applyStatus != null">
+        apply_status = #{record.applyStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="record.applyUser != null">
+        apply_user = #{record.applyUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.applyUserName != null">
+        apply_user_name = #{record.applyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditUser != null">
+        audit_user = #{record.auditUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.auditUserName != null">
+        audit_user_name = #{record.auditUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyDesc != null">
+        apply_desc = #{record.applyDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditDesc != null">
+        audit_desc = #{record.auditDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.successPassAppId != null">
+        success_pass_app_id = #{record.successPassAppId,jdbcType=BIGINT},
+      </if>
+      <if test="record.orgId != null">
+        org_id = #{record.orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgSystemCode != null">
+        org_system_code = #{record.orgSystemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgName != null">
+        org_name = #{record.orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reduceTime != null">
+        reduce_time = #{record.reduceTime,jdbcType=DOUBLE},
+      </if>
+      <if test="record.reduceCost != null">
+        reduce_cost = #{record.reduceCost,jdbcType=INTEGER},
+      </if>
+      <if test="record.originalTime != null">
+        original_time = #{record.originalTime,jdbcType=DOUBLE},
+      </if>
+      <if test="record.originalCost != null">
+        original_cost = #{record.originalCost,jdbcType=INTEGER},
+      </if>
+      <if test="record.reduceBuildCost != null">
+        reduce_build_cost = #{record.reduceBuildCost,jdbcType=INTEGER},
+      </if>
+      <if test="record.reduceUseCost != null">
+        reduce_use_cost = #{record.reduceUseCost,jdbcType=INTEGER},
+      </if>
+      <if test="record.reduceProtectCost != null">
+        reduce_protect_cost = #{record.reduceProtectCost,jdbcType=INTEGER},
+      </if>
+      <if test="record.publicIs != null">
+        public_is = #{record.publicIs,jdbcType=BIT},
+      </if>
+      <if test="record.serviceId != null">
+        service_id = #{record.serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fullRootPath != null">
+        full_root_path = #{record.fullRootPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.providerId != null">
+        provider_id = #{record.providerId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update c_application_apply
+    set id = #{record.id,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      app_secret = #{record.appSecret,jdbcType=VARCHAR},
+      index_url = #{record.indexUrl,jdbcType=VARCHAR},
+      name_ = #{record.name,jdbcType=VARCHAR},
+      logo_url = #{record.logoUrl,jdbcType=VARCHAR},
+      desc_ = #{record.desc,jdbcType=VARCHAR},
+      code_ = #{record.code,jdbcType=VARCHAR},
+      order_no = #{record.orderNo,jdbcType=INTEGER},
+      app_type = #{record.appType,jdbcType=SMALLINT},
+      type_ = #{record.type,jdbcType=VARCHAR},
+      provider_ = #{record.provider,jdbcType=VARCHAR},
+      status_ = #{record.status,jdbcType=BIT},
+      random_str = #{record.randomStr,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      apply_status = #{record.applyStatus,jdbcType=SMALLINT},
+      apply_user = #{record.applyUser,jdbcType=BIGINT},
+      apply_user_name = #{record.applyUserName,jdbcType=VARCHAR},
+      audit_user = #{record.auditUser,jdbcType=BIGINT},
+      audit_user_name = #{record.auditUserName,jdbcType=VARCHAR},
+      apply_desc = #{record.applyDesc,jdbcType=VARCHAR},
+      audit_desc = #{record.auditDesc,jdbcType=VARCHAR},
+      success_pass_app_id = #{record.successPassAppId,jdbcType=BIGINT},
+      org_id = #{record.orgId,jdbcType=VARCHAR},
+      org_system_code = #{record.orgSystemCode,jdbcType=VARCHAR},
+      org_name = #{record.orgName,jdbcType=VARCHAR},
+      reduce_time = #{record.reduceTime,jdbcType=DOUBLE},
+      reduce_cost = #{record.reduceCost,jdbcType=INTEGER},
+      original_time = #{record.originalTime,jdbcType=DOUBLE},
+      original_cost = #{record.originalCost,jdbcType=INTEGER},
+      reduce_build_cost = #{record.reduceBuildCost,jdbcType=INTEGER},
+      reduce_use_cost = #{record.reduceUseCost,jdbcType=INTEGER},
+      reduce_protect_cost = #{record.reduceProtectCost,jdbcType=INTEGER},
+      public_is = #{record.publicIs,jdbcType=BIT},
+      service_id = #{record.serviceId,jdbcType=VARCHAR},
+      full_root_path = #{record.fullRootPath,jdbcType=VARCHAR},
+      provider_id = #{record.providerId,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.developer.entity.apply.po.ApplicationApply">
+    <!--
+    @mbggenerated
+    -->
+    update c_application_apply
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appSecret != null">
+        app_secret = #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="indexUrl != null">
+        index_url = #{indexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null">
+        logo_url = #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        desc_ = #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code_ = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="appType != null">
+        app_type = #{appType,jdbcType=SMALLINT},
+      </if>
+      <if test="type != null">
+        type_ = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="provider != null">
+        provider_ = #{provider,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=BIT},
+      </if>
+      <if test="randomStr != null">
+        random_str = #{randomStr,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyStatus != null">
+        apply_status = #{applyStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="applyUser != null">
+        apply_user = #{applyUser,jdbcType=BIGINT},
+      </if>
+      <if test="applyUserName != null">
+        apply_user_name = #{applyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="auditUser != null">
+        audit_user = #{auditUser,jdbcType=BIGINT},
+      </if>
+      <if test="auditUserName != null">
+        audit_user_name = #{auditUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDesc != null">
+        apply_desc = #{applyDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDesc != null">
+        audit_desc = #{auditDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="successPassAppId != null">
+        success_pass_app_id = #{successPassAppId,jdbcType=BIGINT},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgSystemCode != null">
+        org_system_code = #{orgSystemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        org_name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="reduceTime != null">
+        reduce_time = #{reduceTime,jdbcType=DOUBLE},
+      </if>
+      <if test="reduceCost != null">
+        reduce_cost = #{reduceCost,jdbcType=INTEGER},
+      </if>
+      <if test="originalTime != null">
+        original_time = #{originalTime,jdbcType=DOUBLE},
+      </if>
+      <if test="originalCost != null">
+        original_cost = #{originalCost,jdbcType=INTEGER},
+      </if>
+      <if test="reduceBuildCost != null">
+        reduce_build_cost = #{reduceBuildCost,jdbcType=INTEGER},
+      </if>
+      <if test="reduceUseCost != null">
+        reduce_use_cost = #{reduceUseCost,jdbcType=INTEGER},
+      </if>
+      <if test="reduceProtectCost != null">
+        reduce_protect_cost = #{reduceProtectCost,jdbcType=INTEGER},
+      </if>
+      <if test="publicIs != null">
+        public_is = #{publicIs,jdbcType=BIT},
+      </if>
+      <if test="serviceId != null">
+        service_id = #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="fullRootPath != null">
+        full_root_path = #{fullRootPath,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null">
+        provider_id = #{providerId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.developer.entity.apply.po.ApplicationApply">
+    <!--
+    @mbggenerated
+    -->
+    update c_application_apply
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="appSecret != null">
+        app_secret = #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="indexUrl != null">
+        index_url = #{indexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name_ = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null">
+        logo_url = #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        desc_ = #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code_ = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="appType != null">
+        app_type = #{appType,jdbcType=SMALLINT},
+      </if>
+      <if test="type != null">
+        type_ = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="provider != null">
+        provider_ = #{provider,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=BIT},
+      </if>
+      <if test="randomStr != null">
+        random_str = #{randomStr,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyStatus != null">
+        apply_status = #{applyStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="applyUser != null">
+        apply_user = #{applyUser,jdbcType=BIGINT},
+      </if>
+      <if test="applyUserName != null">
+        apply_user_name = #{applyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="auditUser != null">
+        audit_user = #{auditUser,jdbcType=BIGINT},
+      </if>
+      <if test="auditUserName != null">
+        audit_user_name = #{auditUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDesc != null">
+        apply_desc = #{applyDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDesc != null">
+        audit_desc = #{auditDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="successPassAppId != null">
+        success_pass_app_id = #{successPassAppId,jdbcType=BIGINT},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgSystemCode != null">
+        org_system_code = #{orgSystemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        org_name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="reduceTime != null">
+        reduce_time = #{reduceTime,jdbcType=DOUBLE},
+      </if>
+      <if test="reduceCost != null">
+        reduce_cost = #{reduceCost,jdbcType=INTEGER},
+      </if>
+      <if test="originalTime != null">
+        original_time = #{originalTime,jdbcType=DOUBLE},
+      </if>
+      <if test="originalCost != null">
+        original_cost = #{originalCost,jdbcType=INTEGER},
+      </if>
+      <if test="reduceBuildCost != null">
+        reduce_build_cost = #{reduceBuildCost,jdbcType=INTEGER},
+      </if>
+      <if test="reduceUseCost != null">
+        reduce_use_cost = #{reduceUseCost,jdbcType=INTEGER},
+      </if>
+      <if test="reduceProtectCost != null">
+        reduce_protect_cost = #{reduceProtectCost,jdbcType=INTEGER},
+      </if>
+      <if test="publicIs != null">
+        public_is = #{publicIs,jdbcType=BIT},
+      </if>
+      <if test="serviceId != null">
+        service_id = #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="fullRootPath != null">
+        full_root_path = #{fullRootPath,jdbcType=VARCHAR},
+      </if>
+      <if test="providerId != null">
+        provider_id = #{providerId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.developer.entity.apply.po.ApplicationApply">
+    <!--
+    @mbggenerated
+    -->
+    update c_application_apply
+    set app_id = #{appId,jdbcType=VARCHAR},
+      app_secret = #{appSecret,jdbcType=VARCHAR},
+      index_url = #{indexUrl,jdbcType=VARCHAR},
+      name_ = #{name,jdbcType=VARCHAR},
+      logo_url = #{logoUrl,jdbcType=VARCHAR},
+      desc_ = #{desc,jdbcType=VARCHAR},
+      code_ = #{code,jdbcType=VARCHAR},
+      order_no = #{orderNo,jdbcType=INTEGER},
+      app_type = #{appType,jdbcType=SMALLINT},
+      type_ = #{type,jdbcType=VARCHAR},
+      provider_ = #{provider,jdbcType=VARCHAR},
+      status_ = #{status,jdbcType=BIT},
+      random_str = #{randomStr,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      apply_status = #{applyStatus,jdbcType=SMALLINT},
+      apply_user = #{applyUser,jdbcType=BIGINT},
+      apply_user_name = #{applyUserName,jdbcType=VARCHAR},
+      audit_user = #{auditUser,jdbcType=BIGINT},
+      audit_user_name = #{auditUserName,jdbcType=VARCHAR},
+      apply_desc = #{applyDesc,jdbcType=VARCHAR},
+      audit_desc = #{auditDesc,jdbcType=VARCHAR},
+      success_pass_app_id = #{successPassAppId,jdbcType=BIGINT},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      org_system_code = #{orgSystemCode,jdbcType=VARCHAR},
+      org_name = #{orgName,jdbcType=VARCHAR},
+      reduce_time = #{reduceTime,jdbcType=DOUBLE},
+      reduce_cost = #{reduceCost,jdbcType=INTEGER},
+      original_time = #{originalTime,jdbcType=DOUBLE},
+      original_cost = #{originalCost,jdbcType=INTEGER},
+      reduce_build_cost = #{reduceBuildCost,jdbcType=INTEGER},
+      reduce_use_cost = #{reduceUseCost,jdbcType=INTEGER},
+      reduce_protect_cost = #{reduceProtectCost,jdbcType=INTEGER},
+      public_is = #{publicIs,jdbcType=BIT},
+      service_id = #{serviceId,jdbcType=VARCHAR},
+      provider_id = #{providerId,jdbcType=BIGINT},
+      full_root_path = #{fullRootPath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.developer.entity.apply.po.ApplicationApply">
+    <!--
+    @mbggenerated
+    -->
+    update c_application_apply
+    set app_id = #{appId,jdbcType=VARCHAR},
+      app_secret = #{appSecret,jdbcType=VARCHAR},
+      index_url = #{indexUrl,jdbcType=VARCHAR},
+      name_ = #{name,jdbcType=VARCHAR},
+      logo_url = #{logoUrl,jdbcType=VARCHAR},
+      desc_ = #{desc,jdbcType=VARCHAR},
+      code_ = #{code,jdbcType=VARCHAR},
+      order_no = #{orderNo,jdbcType=INTEGER},
+      app_type = #{appType,jdbcType=SMALLINT},
+      type_ = #{type,jdbcType=VARCHAR},
+      provider_ = #{provider,jdbcType=VARCHAR},
+      status_ = #{status,jdbcType=BIT},
+      random_str = #{randomStr,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      apply_status = #{applyStatus,jdbcType=SMALLINT},
+      apply_user = #{applyUser,jdbcType=BIGINT},
+      apply_user_name = #{applyUserName,jdbcType=VARCHAR},
+      audit_user = #{auditUser,jdbcType=BIGINT},
+      audit_user_name = #{auditUserName,jdbcType=VARCHAR},
+      apply_desc = #{applyDesc,jdbcType=VARCHAR},
+      audit_desc = #{auditDesc,jdbcType=VARCHAR},
+      success_pass_app_id = #{successPassAppId,jdbcType=BIGINT},
+      org_id = #{orgId,jdbcType=VARCHAR},
+      org_system_code = #{orgSystemCode,jdbcType=VARCHAR},
+      org_name = #{orgName,jdbcType=VARCHAR},
+      reduce_time = #{reduceTime,jdbcType=DOUBLE},
+      reduce_cost = #{reduceCost,jdbcType=INTEGER},
+      original_time = #{originalTime,jdbcType=DOUBLE},
+      original_cost = #{originalCost,jdbcType=INTEGER},
+      reduce_build_cost = #{reduceBuildCost,jdbcType=INTEGER},
+      reduce_use_cost = #{reduceUseCost,jdbcType=INTEGER},
+      reduce_protect_cost = #{reduceProtectCost,jdbcType=INTEGER},
+      public_is = #{publicIs,jdbcType=BIT},
+      service_id = #{serviceId,jdbcType=VARCHAR},
+      provider_id = #{providerId,jdbcType=BIGINT},
+      full_root_path = #{fullRootPath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+     and app_id = #{appId,jdbcType=VARCHAR}
+  </update>
+</mapper>

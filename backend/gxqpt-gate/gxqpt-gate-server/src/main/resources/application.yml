@@ -1,0 +1,311 @@
+gxqpt:
+  port:
+    nginx: ${server.port}
+    eureka: 10030
+  hostname:
+    redis: 127.0.0.1
+    rabbitmq: 127.0.0.1
+    nginx: 127.0.0.1      # 测试不走nginx 就填写本机
+    eureka: 127.0.0.1     # 根据环境更改
+    gate: 127.0.0.1     # eureka 实例界面实现的 statu链接
+  context-path:
+    eureka: /gxqpt-eureka
+  auth:
+    enabled: true
+logging:
+  path: ./logs/gxqpt-gate-server
+
+spring:
+  profiles:
+    active: dev
+#  mvc:
+     #设定静态文件路径，js,css等
+#    static-path-pattern: classpath:/**
+#    view:
+#      suffix: .html
+  freemarker:
+    template-loader-path: classpath:/templates
+    cache: false
+    charset: UTF-8
+    suffix: .html
+  http:
+    multipart:
+      max-file-size: 512Mb      # Max file size，默认1M
+      max-request-size: 512Mb   # Max request size，默认10M
+  application:
+    name: gxqpt-gate-server
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+  redis:
+    database: 1
+    host: ${gxqpt.hostname.redis}
+    port: 6379
+    pool:
+      max-active: 20   # 最大活跃数量
+      min-idle: 10     # 最小闲置
+      max-idle: 30     # 最大闲置
+      max-wait: 60000    # 最长等待
+    key-prefix: dev   # 前缀
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq}
+    port: 5672
+    password: guest
+    username: guest
+  sleuth:
+    sampler:
+      percentage: 0.1            # 采集比率 0-100  表示一百个请求     会记录多少请求调用跟踪链
+    integration:
+      enabled: false             # 集成
+    scheduled:
+      skip-pattern: "^org.*HystrixStreamTask$"
+  zipkin:
+    locator:
+      discovery:
+        enabled: true
+    service:
+      name: appid-gate   #zikpin中的endpoint-service-name   请设置为appid
+server:
+  port: 10003
+  context-path: /api
+  servlet-path: /gate
+
+# eureka实例的状态页面和健康监控默认为/info和/health，这是spring boot actuator提供的默认终端点。当应用不使用默认的上下文(context path或servlet path，比如配置server.servletPath=/test），或者管理zhongduan路径（比如配置management.contextPath=/admin）。
+eureka:
+  instance:
+    # 获取此实例状态页的URL路径，然后构造出主机名，安全端口等，默认为/info
+    status-page-url-path: ${server.context-path}${management.context-path}/info
+    # 获取此实例的相对健康检查URL路径，默认为/health
+    health-check-url-path: ${server.context-path}${management.context-path}/health
+    #   获取此实例绝对状态页的URL路径，为其他服务提供信息时来找到这个实例的状态的路径，默认为null
+    status-page-url: http://${gxqpt.hostname.nginx}:${gxqpt.port.nginx}${server.context-path}/mgmt/info
+    # 是否采用ip
+    prefer-ip-address: true
+    # ip地址
+    ip-address: ${gxqpt.hostname.gate}
+    # 实例id
+    instance-id: ${gxqpt.hostname.gate}:${server.port}${server.context-path}
+    # 远数据
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+      management.context-path: ${management.context-path}
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+
+management:
+  security:
+    enabled: true
+  context-path: /mgmt   # 管理端点前缀
+
+security:
+  basic:
+    enabled: true  # 启动 安全策略
+    path: ${server.context-path}${management.context-path}  # 安全路径前缀
+  user:
+    name: admin   # 用户密码
+    password: gxqptadmin
+endpoints:
+  health:      # 是否启用 health端点
+    enabled: true
+    sensitive: true  #actuator的health接口是否需要安全保证
+
+zuul:
+  servlet-path: /         # 默认是/zuul , 上传文件需要加/zuul前缀才不会出现乱码，这个改成/ 即可不加前缀
+  ignored-services: "*"   # 忽略eureka上的所有服务
+  sensitive-headers:  # 一些比较敏感的请求头，不想通过zuul传递过去， 可以通过该属性进行设置
+#  prefix: /api #为zuul设置一个公共的前缀
+#  strip-prefix: false     #对于代理前缀默认会被移除   故加入false  表示不要移除
+  ratelimit: # 网关限流
+    key-prefix: gate_rate
+    enabled: true
+    repository: REDIS #REDIS, JPA, IN_MEMORY
+    behind-proxy: true   # ip 是否代理
+    default-policy: #optional - will apply unless specific policy exists
+      cycle-type: 1
+      limit: 10     # 接口限制次数
+      refresh-interval: 60  # 阀值限制时间 (in seconds)
+      type: #optional
+        - APP
+        - URL
+  routes:  # 路由配置方式
+    admin:  # 其中 admin 是路由名称，可以随便定义，但是path和service-id需要一一对应
+      path: /admin/**
+      serviceId: gxqpt-admin-server
+    developer:  # 其中 admin 是路由名称，可以随便定义，但是path和service-id需要一一对应
+      path: /developer/**
+      serviceId: gxqpt-admin-server
+    auth:    # 其中 auth 是路由名称，可以随便定义，但是path和service-id需要一一对应
+      path: /auth/**
+      serviceId: gxqpt-auth-server
+    file:
+      path: /file/**
+      serviceId: gxqpt-file-server
+    msgs:
+      path: /msgs/**
+      serviceId: gxqpt-msgs-server
+    mail:
+      path: /mail/**
+      serviceId: gxqpt-msgs-server
+    sms:
+      path: /sms/**
+      serviceId: gxqpt-msgs-server
+    logs:
+      path: /logs/**
+      serviceId: gxqpt-file-server
+    piping:
+      path: /piping/**
+      serviceId: gxqpt-piping-server
+    warn:
+      path: /warn/**
+      serviceId: gxqpt-piping-server
+    standard:
+      path: /standard/**
+      serviceId: gxqpt-standard-server
+    modular:
+      path: /modular/**
+      serviceId: gxqpt-standard-server
+    search:
+      path: /search/**
+      serviceId: gxqpt-search-server
+    exchange:
+      path: /exchange/**
+      serviceId: gxqpt-exchange-server
+    zipkin:
+      path: /zipkin/**
+      service-id: gxqpt-zipkin
+    mt:
+      path: /mt/**
+      service-id: gxqpt-pt-server
+    security:
+      path: /security/**
+      service-id: gxqpt-pt-server
+    hardware:
+      path: /hardware/**
+      service-id: gxqpt-pt-server
+    ops:
+      path: /ops/**
+      service-id: gxqpt-pt-server
+    supervise:
+      path: /supervise/**
+      service-id: gxqpt-piping-server
+
+
+
+
+# 网关忽略拦截前缀（自定义）
+gate:
+  ignore:
+    start-with-list:
+      - /static
+      - /error
+      - /mgmt/**
+      - /gate/**
+#      - /auth/app
+#      - /api/admin/p/login
+#      - /auth/client
+      - /**/swagger-ui.html
+      - /**/webjars/**
+      - /**/v2/api-docs/**
+      - /**/swagger-resources/**
+      - /auth/**
+      - /mt/userConfi/mtMoveLogin
+      - /mt/clientVersion/downloadapp
+      - /file/file/download
+      - /file/file/downloadpackage
+      - /file/share/**
+      - /admin/gxqpt/dpm/downloadTemplet
+      - /admin/emp/downloadTemplet
+      - /admin/emp/downloadEmpList
+      - /admin/gxqpt/org/downLoadTemplet
+      - /admin/loginLog/add
+      - /admin/loginLog/saveLogoutLog
+      - /admin/p/resource/findcanoperatemenu
+      - /developer/moduleUse/save
+      - /developer/element/get
+      - /developer/element/getElementChangeList
+      - /exchange/apiTest/**
+      - /exchange/p/api/sharedataapiopen/**  #api外部访问接口
+      - /exchange/p/api/findbusinfo/*  #api外部访问接口
+      - /hardware/serverstatistics/**  #api外部访问接口-服务器指标监控
+      - /supervise/storagesupervise/updateScript  #api外部访问接口-服务器各项空间使用情况
+
+#      - /file/swagger-ui.html
+#      - /file/webjars
+#      - /file/v2/api-docs
+#      - /file/swagger-resources
+#      - /admin/swagger-ui.html
+#      - /admin/webjars
+#      - /admin/v2/api-docs
+#      - /admin/swagger-resources
+#      - /standard/swagger-ui.html
+#      - /standard/webjars
+#      - /standard/v2/api-docs
+#      - /standard/swagger-resources
+#      - /logs/swagger-ui.html
+#      - /logs/webjars
+#      - /logs/v2/api-docs
+#      - /logs/swagger-resources
+#      - /msgs/swagger-ui.html
+#      - /msgs/webjars
+#      - /msgs/v2/api-docs
+#      - /msgs/swagger-resources
+
+feign:
+  hystrix:
+    enabled: true   # feign 熔断机制是否开启
+    #支持压缩的mime types
+  compression:  # 请求压缩
+    request:
+      enabled: true
+      mime-types: text/xml,application/xml,application/json
+      min-request-size: 2048
+    response:  # 响应压缩
+      enabled: true
+
+ribbon:
+  eureka:
+    enabled: true
+  ReadTimeout: 60000     #
+  ConnectTimeout: 60000  # [ribbon超时时间]大于[熔断超时],那么会先走熔断，相当于你配的ribbon超时就不生效了  ribbon和hystrix是同时生效的，哪个值小哪个生效
+#  ReadTimeout: 5000
+#  ConnectTimeout: 5000
+  MaxAutoRetries: 0             # 最大自动重试
+  MaxAutoRetriesNextServer: 1   # 最大自动像下一个服务重试
+  OkToRetryOnAllOperations: false  #无论是请求超时或者socket read timeout都进行重试，
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 1000 # #并发执行的最大线程数，默认10
+      maxQueueSize: 1000 # #BlockingQueue的最大队列数
+      queueSizeRejectionThreshold: 500 # #即使maxQueueSize没有达到，达到queueSizeRejectionThreshold该值后，请求也会被拒绝
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+#            timeoutInMilliseconds: 5000  # [熔断超时]  ribbon和hystrix是同时生效的，哪个值小哪个生效
+            timeoutInMilliseconds: 60000  # 熔断超时
+  propagate:
+    request-attribute:
+      enabled: true
+
+auth:
+  serviceId: gxqpt-auth-server
+  app:
+    token-header: token # 其三方应用token
+    pub-key:  # 服务端公钥路径
+      path: app/pub.key
+  client:
+    id: gxqpt-gate-server  #不填则默认读取spring.application.name
+    secret: 123456
+    token-header: token
+    admin-header: _isAdmin
+    user-id: _user_id
+    user-name: _user_name
+    pub-key: # 客服端公钥路径
+      path: client/pub.key
+

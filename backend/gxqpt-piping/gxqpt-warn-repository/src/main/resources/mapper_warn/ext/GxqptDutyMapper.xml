@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.warn.repository.dao.GxqptDutyMapper">
+  <resultMap id="FindSurveyMap" type="com.hengyunsoft.platform.warn.entity.domain.GxqptPublicFindSurveyDO">
+    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+  </resultMap>
+  <resultMap id="FindPublicSuperviseStatusMap" type="com.hengyunsoft.platform.warn.entity.domain.GxqptPublicSuperviseStatusDO">
+    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="processed" jdbcType="INTEGER" property="processed" />
+    <result column="untreated" jdbcType="INTEGER" property="untreated" />
+    <result column="newThisYear" jdbcType="INTEGER" property="newThisYear" />
+  </resultMap>
+    <resultMap id="FindPublicHandle" type="com.hengyunsoft.platform.warn.entity.domain.GxqptPublicHandleDO">
+        <result column="id" jdbcType="VARCHAR" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="confirmed_hours" jdbcType="FLOAT" property="confirmedHours" />
+        <result column="processed_hours" jdbcType="FLOAT" property="processedHours" />
+    </resultMap>
+    <resultMap id="FindPublicLevel" type="com.hengyunsoft.platform.warn.entity.domain.GxqptPublicLevelDO">
+        <result column="id" jdbcType="VARCHAR" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="commonly" jdbcType="INTEGER" property="commonly" />
+        <result column="heavier" jdbcType="INTEGER" property="heavier" />
+        <result column="serious" jdbcType="INTEGER" property="serious" />
+        <result column="very_serious" jdbcType="INTEGER" property="verySerious" />
+    </resultMap>
+    <resultMap id="FindPublicContrast" type="com.hengyunsoft.platform.warn.entity.domain.GxqptPublicContrastDO">
+        <result column="num" jdbcType="FLOAT" property="num" />
+        <result column="avg" jdbcType="FLOAT" property="avg" />
+        <result column="type_id" jdbcType="VARCHAR" property="typeId" />
+        <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+    </resultMap>
+    <resultMap id="FindPublicContrastLevel" type="com.hengyunsoft.platform.warn.entity.domain.GxqptPublicContrastLevelDO">
+        <result column="num" jdbcType="INTEGER" property="num" />
+        <result column="avg" jdbcType="FLOAT" property="avg" />
+        <result column="level" jdbcType="VARCHAR" property="level" />
+    </resultMap>
+    <resultMap id="depMap" type="com.hengyunsoft.platform.supervise.dto.analysis.DepSurveyResDTO">
+        <result column="department_id" jdbcType="VARCHAR" property="id" />
+        <result column="department_name" jdbcType="VARCHAR" property="name" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="warnTypesMap" type="com.hengyunsoft.platform.supervise.dto.analysis.WarnTypeResDTO">
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="warnLevelsMap" type="com.hengyunsoft.platform.supervise.dto.analysis.DepWarnLevelResDTO">
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="depsWarnLevelMap" type="com.hengyunsoft.platform.supervise.dto.analysis.WarnLevelResDTO">
+        <result column="department_id" jdbcType="VARCHAR" property="id" />
+        <result column="department_name" jdbcType="VARCHAR" property="name" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="empsWarnLevelMap" type="com.hengyunsoft.platform.supervise.dto.analysis.EmpsWarnLevelResDTO">
+        <result column="user_id" jdbcType="VARCHAR" property="id" />
+        <result column="emp_name" jdbcType="VARCHAR" property="name" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="empWarnTypesMap" type="com.hengyunsoft.platform.supervise.dto.analysis.EmpWarnTypeResDTO">
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="warnLevelMap" type="com.hengyunsoft.platform.supervise.dto.analysis.EmpWarnLevelResDTO">
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="departmentWarnTypes" type="com.hengyunsoft.platform.supervise.dto.analysis.WarnTypesResDTO">
+        <result column="department_id" jdbcType="VARCHAR" property="id" />
+        <result column="department_name" jdbcType="VARCHAR" property="name" />
+        <result column="type_id" jdbcType="BIGINT" property="typeId" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="orgWarnTypesMap" type="com.hengyunsoft.platform.supervise.dto.analysis.WarnTypesResDTO">
+        <result column="org_id" jdbcType="VARCHAR" property="id" />
+        <result column="org_name" jdbcType="VARCHAR" property="name" />
+        <result column="type_id" jdbcType="BIGINT" property="typeId" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="orgsWarnLevelMap" type="com.hengyunsoft.platform.supervise.dto.analysis.WarnLevelResDTO">
+        <result column="org_id" jdbcType="VARCHAR" property="id" />
+        <result column="org_name" jdbcType="VARCHAR" property="name" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="empsWarnTypeMap" type="com.hengyunsoft.platform.supervise.dto.analysis.WarnTypesResDTO">
+        <result column="user_id" jdbcType="VARCHAR" property="id" />
+        <result column="emp_name" jdbcType="VARCHAR" property="name" />
+        <result column="type_id" jdbcType="BIGINT" property="typeId" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="appsWarnTypeMap" type="com.hengyunsoft.platform.supervise.dto.analysis.WarnTypesResDTO">
+        <result column="app_id" jdbcType="VARCHAR" property="id" />
+        <result column="app_name" jdbcType="VARCHAR" property="name" />
+        <result column="type_id" jdbcType="BIGINT" property="typeId" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="appsWarnLevelMap" type="com.hengyunsoft.platform.supervise.dto.analysis.WarnLevelResDTO">
+        <result column="app_id" jdbcType="VARCHAR" property="id" />
+        <result column="app_name" jdbcType="VARCHAR" property="name" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+  <!--根据单位id集合查询各个单位未处理预警的信息-4：已处理-->
+  <select id="findSurvey"  resultMap="FindSurveyMap">
+    SELECT
+    ${map.property}_id id,
+    ${map.propertyName}_name name,
+    COUNT(
+      ${map.property}_id
+    ) num
+    FROM
+    (
+    SELECT
+    ${map.property}_id,
+    ${map.propertyName}_name,
+    b_warn.`status`
+    FROM
+    b_duty
+    JOIN b_warn ON b_warn.id = b_duty.warn_id
+      <if test="map.empDpmId != null and map.empDpmId !=''">
+          AND b_duty.department_id = #{map.empDpmId}
+      </if>
+    AND ${map.property}_id IN
+    <foreach collection="map.ids" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    AND YEAR(b_warn.warntime) = YEAR(#{map.date,jdbcType=TIMESTAMP}))
+    ${map.property}s
+    GROUP BY
+    ${map.property}s.${map.property}_id  ORDER BY num desc
+  </select>
+  <!--查询公共状态统计-4：已处理-->
+  <select id="findPublicSuperviseStatus" resultMap="FindPublicSuperviseStatusMap">
+    SELECT
+    b_duty.${map.property}_id id,
+    b_duty.${map.propertyName}_name name,
+    COUNT(
+
+    IF (
+    b_warn.`status` = '4',
+    b_duty.${map.property}_id,
+    NULL
+    )
+    ) processed,
+    COUNT(
+
+    IF (
+    b_warn.`status` != '4'
+    OR b_warn.`status` IS NULL,
+    b_duty.${map.property}_id,
+    NULL
+    )
+    ) untreated,
+    COUNT(
+
+    IF (
+    DATE_FORMAT(b_warn.warntime, '%Y') = DATE_FORMAT(CURDATE(), '%Y'),
+    b_duty.${map.property}_id,
+    NULL
+    )
+    ) newThisYear
+    FROM
+    b_warn
+    JOIN b_duty ON b_duty.warn_id = b_warn.id
+      <if test="map.empDpmId != null and map.empDpmId !=''">
+          AND b_duty.department_id = #{map.empDpmId}
+      </if>
+    AND b_duty.${map.property}_id IN
+    <foreach collection="map.ids" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    AND YEAR(b_warn.warntime) = YEAR(#{map.date,jdbcType=TIMESTAMP})
+    GROUP BY
+    b_duty.${map.property}_id
+  </select>
+  <!--查询公共处理情况统计-2：已确认;3：已处理-->
+  <select id="findPublicHandle" resultMap="FindPublicHandle">
+    SELECT
+	b_duty.${map.property}_id id,
+	b_duty.${map.propertyName}_name name,
+      IFNULL(
+      AVG(
+
+      IF (
+      b_warn.confirm_cost_time != 0,
+      b_warn.confirm_cost_time,
+      NULL
+      )
+      ),
+      0
+      ) confirmed_hours,
+      IFNULL(
+      AVG(
+
+      IF (
+      b_warn.handle_cost_time != 0,
+      b_warn.handle_cost_time,
+      NULL
+      )
+      ),
+      0
+      ) processed_hours
+    FROM
+        b_warn
+    JOIN b_duty ON b_duty.warn_id = b_warn.id
+      <if test="map.empDpmId != null and map.empDpmId !=''">
+          AND b_duty.department_id = #{map.empDpmId}
+      </if>
+    AND b_duty.${map.property}_id IN
+    <foreach collection="map.ids" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    AND YEAR(b_warn.warntime) = YEAR(#{map.date,jdbcType=TIMESTAMP})
+    GROUP BY
+	id
+  </select>
+    <!--公用级别统计-1:一般预警;2:较重预警;3:严重预警;4:非常严重预警-->
+    <select id="findPublicLevel" resultMap="FindPublicLevel">
+      SELECT
+        b_duty.${map.property}_id id,
+        b_duty.${map.propertyName}_name name,
+        COUNT(
+
+            IF (
+                b_warn.`level` = '1',
+                b_duty.${map.property}_id,
+                NULL
+            )
+        ) commonly,
+        COUNT(
+
+            IF (
+                b_warn.`level` = '2',
+                b_duty.${map.property}_id,
+                NULL
+            )
+        ) heavier,
+        COUNT(
+
+            IF (
+                b_warn.`level` = '3',
+                b_duty.${map.property}_id,
+                NULL
+            )
+        ) serious,
+        COUNT(
+
+            IF (
+                b_warn.`level` = '4',
+                b_duty.${map.property}_id,
+                NULL
+            )
+        ) very_serious
+    FROM
+        b_warn
+    JOIN b_duty ON b_duty.warn_id = b_warn.id
+        <if test="map.empDpmId != null and map.empDpmId !=''">
+            AND b_duty.department_id = #{map.empDpmId}
+        </if>
+    AND b_duty.org_id IN
+        <foreach collection="map.ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    AND YEAR(b_warn.warntime) = YEAR(#{map.date,jdbcType=TIMESTAMP})
+    GROUP BY
+	b_duty.${map.property}_id
+    </select>
+    <!--各预警类型处理水平对比分析 部门处理平均水平  公用对比分析(类型)-->
+    <select id="findPublicContrast" resultMap="FindPublicContrast">
+      SELECT
+        /*个人处理平均时长*/
+        ROUND(avg(IF (
+        bs.${map.property}_id = #{map.id},
+        TIMESTAMPDIFF( SECOND, bs.create_time,bs.update_time),
+        NULL
+        ))/3600,2) num,
+        /*部门处理平均时长*/
+        ROUND(
+        AVG(TIMESTAMPDIFF(SECOND,bs.create_time,bs.update_time)) / 3600,
+        2
+        ) avg,
+        b_warntype.id type_id,
+        b_warntype.type_name
+        FROM
+        (select count(DISTINCT bsd.${map.property}_id) num from b_sendee bsd where bsd.rec_type = 3 and  bsd.who_handle in (0,1)) alls,
+        (select * from b_warntype where b_warntype.code not in ('warn_root', 'person_warn', 'dept_warn', 'app_warn'))  b_warntype
+        LEFT JOIN b_warn ON b_warntype.id = b_warn.type_id
+        AND YEAR(b_warn.warntime) = YEAR(#{map.date,jdbcType=TIMESTAMP})
+        LEFT JOIN b_sendee bs ON b_warn.id = bs.warn_id  and bs.rec_type = 3 and bs.who_handle in (0,1)
+        <if test="map.empDpmId != null and map.empDpmId !=''">
+            AND bs.department_id = #{map.empDpmId}
+        </if>
+        GROUP BY
+        b_warntype.id
+    </select>
+    <!--公用对比分析(级别)-->
+    <select id="findPublicContrastLevel" resultMap="FindPublicContrastLevel">
+        <foreach collection="levels" item="level">
+        <if test="level != 1">
+            UNION ALL
+        </if>
+        SELECT
+            #{level} level,
+            COUNT(
+
+                IF (
+                    b_duty.${map.property}_id = #{map.id},
+                    b_duty.${map.property}_id,
+                    NULL
+                )
+            ) num,
+            FORMAT(IFNULL(
+                COUNT(b_warn.id) / alls.num,
+                0
+            ),2) avg,
+            COUNT(b_warn.id),
+            alls.num
+        FROM
+            (
+                SELECT
+                    count(DISTINCT b_duty.${map.property}_id) num
+                FROM
+                    b_duty
+            ) alls,
+            b_warn
+        LEFT JOIN b_duty ON b_warn.id = b_duty.warn_id
+        <if test="map.empDpmId != null and map.empDpmId !=''">
+            AND b_duty.department_id = #{map.empDpmId}
+        </if>
+        WHERE
+            YEAR (b_warn.warntime) = YEAR (#{map.date,jdbcType=TIMESTAMP})
+            AND b_warn.`level` = #{level}
+        </foreach>
+    </select>
+
+   <!-- 查询各部门预警情况列表 -->
+   <select id="getDepartmentWarns" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.SurveyReqDTO" resultMap="depMap">
+	  select department_id,department_name,count(id) as count
+	  from b_sendee where rec_type = 3 and who_handle in (0,1)
+	  AND department_id in
+	  <foreach close=")" collection="surveyReqDTO.ids" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
+	  <if test="surveyReqDTO.startTime != null">
+        and create_time &gt; #{surveyReqDTO.startTime}
+      </if>
+	  <if test="surveyReqDTO.endTime != null">
+        and create_time &lt; #{surveyReqDTO.endTime}
+      </if>
+		group by department_id,department_name
+  </select>
+  <!-- 查询单个部门预警类型情况 -->
+  <select id="getWarnTypes" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.DepWarnCheckDTO" resultMap="warnTypesMap">
+	  select bw.type,count(bd.id) as count
+	  from b_warn bw left join  b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 3 and bd.who_handle in (0,1)
+	  where 1=1	  
+	  <if test="depWarnCheckDTO.departmentId != null">
+        and bd.department_id = #{depWarnCheckDTO.departmentId}
+      </if>
+	  <if test="depWarnCheckDTO.startTime != null">
+        and bd.create_time &gt; #{depWarnCheckDTO.startTime}
+      </if>
+	  <if test="depWarnCheckDTO.endTime != null">
+        and bd.create_time &lt; #{depWarnCheckDTO.endTime}
+      </if>
+	  group by bw.type
+  </select>
+  <!-- 查询单个部门预警级别情况 -->
+  <select id="getWarnLevels" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.DepWarnCheckDTO" resultMap="warnLevelsMap">
+	  select bw.level,count(bd.id) as count
+      /*2019-4-25 有 b_duty 改为sendee 目的获取最终的责任人*/
+      from b_warn bw left join  b_sendee bd on bd.warn_id = bw.id and bd.rec_type = 3 and bd.who_handle in (0,1)
+	  where 1=1	  
+	  <if test="depWarnCheckDTO.departmentId != null">
+        and bd.department_id = #{depWarnCheckDTO.departmentId}
+      </if>
+	  <if test="depWarnCheckDTO.startTime != null">
+        and bd.create_time &gt; #{depWarnCheckDTO.startTime}
+      </if>
+	  <if test="depWarnCheckDTO.endTime != null">
+        and bd.create_time &lt; #{depWarnCheckDTO.endTime}
+      </if>
+	  group by bw.level
+  </select>
+  <!-- 查询各部门预警级别情况 -->
+  <select id="getDepartmentWarnLevels" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.SurveyReqDTO" resultMap="depsWarnLevelMap">
+	  select bd.department_id,bd.department_name,bw.level,count(bd.id) as count
+	  from b_warn bw left join  b_sendee bd on bd.warn_id = bw.id and bd.rec_type =3 and bd.who_handle in (0,1)
+	  where
+	  bd.department_id in
+	  <foreach close=")" collection="surveyReqDTO.ids" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
+	  <if test="surveyReqDTO.startTime != null">
+        and bd.create_time &gt; #{surveyReqDTO.startTime}
+      </if>
+	  <if test="surveyReqDTO.endTime != null">
+        and bd.create_time &lt; #{surveyReqDTO.endTime}
+      </if>
+	  group by bw.level,bd.department_id
+  </select>
+  <!-- 查询各人员预警级别情况 -->
+  <select id="getEmpWarnLevels" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.EmpSurveyReqDTO" resultMap="empsWarnLevelMap">
+	  select bd.user_id,bd.emp_name,bw.level,count(bd.id) as count
+	  from b_warn bw left join  b_sendee bd on bd.warn_id = bw.id and bd.rec_type =3 and bd.who_handle in (0,1)
+	  where bd.user_id in
+	  <foreach close=")" collection="empSurveyReqDTO.ids" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
+      <if test="empSurveyReqDTO.depId != null">
+        and bd.department_id = #{empSurveyReqDTO.depId}
+      </if>
+	  <if test="empSurveyReqDTO.startTime != null">
+        and bd.create_time &gt; #{empSurveyReqDTO.startTime}
+      </if>
+	  <if test="empSurveyReqDTO.endTime != null">
+        and bd.create_time &lt; #{empSurveyReqDTO.endTime}
+      </if>
+	  group by bw.level,bd.user_id
+  </select>
+  <!-- 查询单个人员预警类型情况 -->
+  <select id="getEmpWarnTypes" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.EmpWarnCheckDTO" resultMap="empWarnTypesMap">
+	  select bw.type,count(bd.id) as count
+	  from b_warn bw left join  b_sendee bd on bd.warn_id = bw.id and bd.rec_type =3 and bd.who_handle in (0,1)
+	  where bd.user_id = #{empWarnTypeCheckDTO.empId}
+	  <if test="empWarnTypeCheckDTO.depId != null">
+        and bd.department_id = #{empWarnTypeCheckDTO.depId}
+      </if>
+	  <if test="empWarnTypeCheckDTO.startTime != null">
+        and bd.create_time &gt; #{empWarnTypeCheckDTO.startTime}
+      </if>
+	  <if test="empWarnTypeCheckDTO.endTime != null">
+        and bd.create_time &lt; #{empWarnTypeCheckDTO.endTime}
+      </if>
+	  group by bw.type
+  </select>
+  <!-- 查询单个人员预警级别情况 -->
+  <select id="getEmpWarnLevel" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.EmpWarnCheckDTO" resultMap="warnLevelMap">
+	  select bw.level,count(bd.id) as count
+	  from b_warn bw left join  b_sendee bd on bd.warn_id = bw.id and bd.rec_type =3 and bd.who_handle in (0,1)
+	  where bd.user_id = #{empWarnCheckDTO.empId}
+	  <if test="empWarnCheckDTO.depId != null">
+        and bd.department_id = #{empWarnCheckDTO.depId}
+      </if>
+	  <if test="empWarnCheckDTO.startTime != null">
+        and bd.create_time &gt; #{empWarnCheckDTO.startTime}
+      </if>
+	  <if test="empWarnCheckDTO.endTime != null">
+        and bd.create_time &lt; #{empWarnCheckDTO.endTime}
+      </if>
+	  group by bw.level
+  </select>
+  <!-- 查询各部门预警类型情况 -->
+  <select id="getDepartmentWarnTypes" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.SurveyReqDTO" resultMap="departmentWarnTypes">
+	  select bd.department_id,bd.department_name,bw.type_id,bw.type,count(bd.id) as count
+	  from b_duty bd left join b_warn bw on bd.warn_id=bw.id
+	  where bd.department_id in
+	  <foreach close=")" collection="surveyReqDTO.ids" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach> and bw.type_id in
+      <foreach close=")" collection="surveyReqDTO.typeIds" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
+      <if test="surveyReqDTO.startTime != null">
+        and bd.create_time &gt; #{surveyReqDTO.startTime}
+      </if>
+	  <if test="surveyReqDTO.endTime != null">
+        and bd.create_time &lt; #{surveyReqDTO.endTime}
+      </if>
+	  group by bw.type_id,bw.type,bd.department_id,bd.department_name
+  </select>
+  <!-- 查询各单位预警类型情况 -->
+  <select id="getOrgartmentWarnTypes" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.SurveyReqDTO" resultMap="orgWarnTypesMap">
+	  select bd.org_id,bd.org_name,bw.type_id,bw.type,count(bd.id) as count
+	  from b_duty bd left join b_warn bw on bd.warn_id=bw.id
+	  where bd.org_id in
+	  <foreach close=")" collection="surveyReqDTO.ids" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach> and bw.type_id in
+      <foreach close=")" collection="surveyReqDTO.typeIds" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
+      <if test="surveyReqDTO.startTime != null">
+        and bd.create_time &gt; #{surveyReqDTO.startTime}
+      </if>
+	  <if test="surveyReqDTO.endTime != null">
+        and bd.create_time &lt; #{surveyReqDTO.endTime}
+      </if>
+	  group by bw.type_id,bw.type,bd.org_id,bd.org_name
+  </select>
+  <!-- 查询各单位预警级别情况 -->
+  <select id="getOrgartmentWarnLevels" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.SurveyReqDTO" resultMap="orgsWarnLevelMap">
+	  select bd.org_id,bd.org_name,bw.level,count(bd.id) as count
+	  from b_duty bd left join b_warn bw on bd.warn_id = bw.id
+	  where
+	  bd.org_id in
+	  <foreach close=")" collection="surveyReqDTO.ids" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
+	  <if test="surveyReqDTO.startTime != null">
+        and bd.create_time &gt; #{surveyReqDTO.startTime}
+      </if>
+	  <if test="surveyReqDTO.endTime != null">
+        and bd.create_time &lt; #{surveyReqDTO.endTime}
+      </if>
+	  group by bw.level,bd.org_id,bd.org_name
+  </select>
+  <!-- 查询单个单位预警类型情况 -->
+  <select id="getOrgWarnTypes" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.OrgWarnCheckDTO" resultMap="warnTypesMap">
+	  select bw.type,count(bd.id) as count
+	  from b_duty bd left join b_warn bw on bd.warn_id = bw.id
+	  where
+	  bd.org_id = #{orgWarnCheckDTO.orgId}
+	  <if test="orgWarnCheckDTO.startTime != null">
+        and bd.create_time &gt; #{orgWarnCheckDTO.startTime}
+      </if>
+	  <if test="orgWarnCheckDTO.endTime != null">
+        and bd.create_time &lt; #{orgWarnCheckDTO.endTime}
+      </if>
+	  group by bw.type
+  </select>
+  <!-- 查询单个单位预警级别情况 -->
+  <select id="getOrgWarnLevels" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.OrgWarnCheckDTO" resultMap="warnLevelsMap">
+	  select bw.level,count(bd.id) as count
+	  from b_duty bd join b_warn bw on bd.warn_id = bw.id
+	  where
+	  bd.org_id = #{orgWarnCheckDTO.orgId}
+	  <if test="orgWarnCheckDTO.startTime != null">
+        and bd.create_time &gt; #{orgWarnCheckDTO.startTime}
+      </if>
+	  <if test="orgWarnCheckDTO.endTime != null">
+        and bd.create_time &lt; #{orgWarnCheckDTO.endTime}
+      </if>
+	  group by bw.level
+  </select>
+  <!-- 查询各人员预警类型情况 -->
+  <select id="getEmpsWarnTypes" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.SurveyReqDTO" resultMap="empsWarnTypeMap">
+	  select bd.user_id,bd.emp_name,bw.type_id,bw.type,count(bd.id) as count
+	  from b_duty bd left join b_warn bw on bd.warn_id=bw.id
+	  where bd.department_id = #{surveyReqDTO.depId}	  
+	  and bd.user_id in
+	  <foreach close=")" collection="surveyReqDTO.ids" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach> and bw.type_id in
+      <foreach close=")" collection="surveyReqDTO.typeIds" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
+      <if test="surveyReqDTO.startTime != null">
+        and bd.create_time &gt; #{surveyReqDTO.startTime}
+      </if>
+	  <if test="surveyReqDTO.endTime != null">
+        and bd.create_time &lt; #{surveyReqDTO.endTime}
+      </if>
+	  group by bw.type_id,bw.type,bd.user_id,bd.emp_name
+  </select>
+  <!-- 查询各应用预警类型情况 -->
+  <select id="getAppsWarnTypes" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.SurveyReqDTO" resultMap="appsWarnTypeMap">
+	  select bd.app_id,bd.app_name,bw.type_id,bw.type,count(bd.id) as count
+	  from b_duty bd left join b_warn bw on bd.warn_id=bw.id
+	  where bd.app_id in
+	  <foreach close=")" collection="surveyReqDTO.ids" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach> and bw.type_id in
+      <foreach close=")" collection="surveyReqDTO.typeIds" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
+      <if test="surveyReqDTO.startTime != null">
+        and bd.create_time &gt; #{surveyReqDTO.startTime}
+      </if>
+	  <if test="surveyReqDTO.endTime != null">
+        and bd.create_time &lt; #{surveyReqDTO.endTime}
+      </if>
+	  group by bw.type_id,bw.type,bd.app_id,bd.app_name
+  </select>
+  <!-- 查询各应用预警级别情况 -->
+  <select id="getAppsWarnLevels" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.SurveyReqDTO" resultMap="appsWarnLevelMap">
+	  select bd.app_id,bd.app_name,bw.level,count(bd.id) as count
+	  from b_duty bd left join b_warn bw on bd.warn_id = bw.id
+	  where
+	  bd.app_id in
+	  <foreach close=")" collection="surveyReqDTO.ids" index="index" item="item" open="(" separator=",">
+        #{item}
+      </foreach>
+	  <if test="surveyReqDTO.startTime != null">
+        and bd.create_time &gt; #{surveyReqDTO.startTime}
+      </if>
+	  <if test="surveyReqDTO.endTime != null">
+        and bd.create_time &lt; #{surveyReqDTO.endTime}
+      </if>
+	  group by bw.level,bd.app_id,bd.app_name
+  </select>
+  <!-- 单个应用预警类型统计分析 -->
+  <select id="getAppWarnTypes" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.AppWarnCheckDTO" resultMap="warnTypesMap">
+	  select bw.type,count(bd.id) as count
+	  from b_duty bd left join b_warn bw on bd.warn_id = bw.id
+	  where
+	  bd.app_id = #{appWarnCheckDTO.appId}
+	  <if test="appWarnCheckDTO.startTime != null">
+        and bd.create_time &gt; #{appWarnCheckDTO.startTime}
+      </if>
+	  <if test="appWarnCheckDTO.endTime != null">
+        and bd.create_time &lt; #{appWarnCheckDTO.endTime}
+      </if>
+	  group by bw.type
+  </select>
+  <!-- 查询单个应用预警级别情况 -->
+  <select id="getAppWarnLevels" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.AppWarnCheckDTO" resultMap="warnLevelsMap">
+	  select bw.level,count(bd.id) as count
+	  from b_duty bd left join b_warn bw on bd.warn_id = bw.id
+	  where
+	  bd.app_id = #{appWarnCheckDTO.orgId}
+	  <if test="appWarnCheckDTO.startTime != null">
+        and bd.create_time &gt; #{appWarnCheckDTO.startTime}
+      </if>
+	  <if test="appWarnCheckDTO.endTime != null">
+        and bd.create_time &lt; #{appWarnCheckDTO.endTime}
+      </if>
+	  group by bw.level
+  </select>
+    <!--关联规则挖掘-->
+    <select id="findAssociationRules" resultType="com.hengyunsoft.platform.warn.entity.domain.GxqptPublicRulesDO">
+        SELECT
+        app_name source,
+        GROUP_CONCAT(DISTINCT type_name) target,
+        SUM(b_warn.confirm_cost_time) confirmed,
+        SUM(b_warn.handle_cost_time) processed
+        FROM
+        b_warntype
+        JOIN b_warn ON b_warntype.id = b_warn.type_id
+        AND YEAR(b_warn.warntime) = YEAR(#{map.date,jdbcType=TIMESTAMP})
+        JOIN b_duty ON b_warn.id = b_duty.warn_id
+        AND b_duty.app_id IN
+        <foreach collection="map.ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        group by b_duty.app_id,b_duty.department_id,b_warn.warntime
+    </select>
+
+    <select id="findAssociationChildRules" resultType="com.hengyunsoft.platform.warn.entity.domain.GxqptPublicRulesDO">
+        SELECT
+        app_name source,
+        GROUP_CONCAT(DISTINCT type_name) target,
+        SUM(b_warn.confirm_cost_time) confirmed,
+        SUM(b_warn.handle_cost_time) processed
+        FROM
+        b_warntype
+        JOIN b_warn ON b_warntype.id = b_warn.type_id
+        AND YEAR(b_warn.warntime) = YEAR(#{map.date,jdbcType=TIMESTAMP})
+        JOIN b_duty ON b_warn.id = b_duty.warn_id
+        AND b_duty.app_id = #{map.id}
+        group by b_duty.department_id,b_warn.warntime
+    </select>
+    <!-- 全部应用预警类型平均值统计分析 -->
+	<select id="getAppWarnTypeAvg" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.AppWarnCheckDTO" resultMap="warnTypesMap">
+		select ad.type,avg(ad.count) as count from (
+			select bd.app_id,bw.type,count(bd.id) as count
+		  	from b_duty bd left join b_warn bw on bd.warn_id = bw.id
+		  	where 1=1		  
+		    <if test="appWarnCheckDTO.startTime != null">
+	          and bd.create_time &gt; #{appWarnCheckDTO.startTime}
+	        </if>
+		    <if test="appWarnCheckDTO.endTime != null">
+	          and bd.create_time &lt; #{appWarnCheckDTO.endTime}
+	        </if>
+			group by bd.app_id,bw.type) ad			
+		GROUP BY ad.type 
+	</select>
+	<!-- 全部应用预警级别平均值统计分析 -->
+    <select id="getAppWarnLevelAvg" parameterType="com.hengyunsoft.platform.supervise.dto.analysis.AppWarnCheckDTO" resultMap="warnLevelsMap">
+		select ad.level,avg(ad.count) as count from (  
+		  select bd.app_id,bw.level,count(bd.id) as count
+		  from b_duty bd left join b_warn bw on bd.warn_id = bw.id
+		  where 1=1
+		  <if test="appWarnCheckDTO.startTime != null">
+	        and bd.create_time &gt; #{appWarnCheckDTO.startTime}
+	      </if>
+		  <if test="appWarnCheckDTO.endTime != null">
+	        and bd.create_time &lt; #{appWarnCheckDTO.endTime}
+	      </if>
+		  group by bd.app_id,bw.level) ad 
+		GROUP BY ad.level  
+    </select>
+    <select id="getDutyList" parameterType="java.lang.Long" resultType="map">
+        SELECT biz_id,biz_type,name_,duty_type app_id,app_name,app_type,user_id,department_id,department_name,org_id,org_name FROM b_duty WHERE warn_id = #{warnId,jdbcType=BIGINT}
+    </select>
+
+
+
+
+
+
+    <resultMap id="personalMap" type="com.hengyunsoft.platform.warn.entity.domain.WarnPersonalCountDO">
+        <result column="name_" jdbcType="VARCHAR" property="name" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="departmentMap" type="com.hengyunsoft.platform.warn.entity.domain.WarnDepartmentCountDO">
+        <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <resultMap id="appMap" type="com.hengyunsoft.platform.warn.entity.domain.WarnAppCountDO">
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+    </resultMap>
+    <select id="getCountByDepartment" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnParamDO" resultMap="personalMap">
+        select name_,count(id) as count
+        from b_duty where 1=1
+        <if test="warnParamDTO.appId != null">
+            and app_id = #{warnParamDTO.appId}
+        </if>
+        <if test="warnParamDTO.orgId != null">
+            and org_id = #{warnParamDTO.orgId}
+        </if>
+        <if test="warnParamDTO.departmentId != null">
+            and department_id = #{warnParamDTO.departmentId}
+        </if>
+        <if test="warnParamDTO.startTime != null">
+            and create_time &gt; #{warnParamDTO.startTime}
+        </if>
+        <if test="warnParamDTO.endTime != null">
+            and create_time &lt; #{warnParamDTO.endTime}
+        </if>
+        group by user_id,name_ order by count desc
+    </select>
+    <select id="getDepartmentByCompany" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnParamDO" resultMap="departmentMap">
+        select department_name,count(id) as count
+        from b_duty where 1=1
+        <if test="warnParamDTO.appId != null">
+            and app_id = #{warnParamDTO.appId}
+        </if>
+        <if test="warnParamDTO.orgId != null">
+            and org_id = #{warnParamDTO.orgId}
+        </if>
+        <if test="warnParamDTO.startTime != null">
+            and create_time &gt; #{warnParamDTO.startTime}
+        </if>
+        <if test="warnParamDTO.endTime != null">
+            and create_time &lt; #{warnParamDTO.endTime}
+        </if>
+        group by department_id,department_name order by count desc
+    </select>
+    <select id="getByApp" parameterType="com.hengyunsoft.platform.warn.entity.domain.WarnParamDO" resultMap="appMap">
+        select app_name,count(id) as count
+        from b_duty where 1=1
+        <if test="warnParamDTO.appId != null">
+            and app_id = #{warnParamDTO.appId}
+        </if>
+        <if test="warnParamDTO.startTime != null">
+            and create_time &gt; #{warnParamDTO.startTime}
+        </if>
+        <if test="warnParamDTO.endTime != null">
+            and create_time &lt; #{warnParamDTO.endTime}
+        </if>
+        group by app_id,app_name order by count desc
+    </select>
+    <resultMap id="relationshipMap" type="com.hengyunsoft.platform.warn.entity.domain.FairRelationshipDO">
+        <result column="department_id" jdbcType="VARCHAR" property="departmentId" />
+        <result column="department_name" jdbcType="VARCHAR" property="department" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="count" jdbcType="INTEGER" property="count" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+    </resultMap>
+    <resultMap id="fairDepartmentMap" type="com.hengyunsoft.platform.warn.entity.domain.FairDepartmentDO">
+        <result column="department_id" jdbcType="VARCHAR" property="departmentId" />
+        <result column="department_name" jdbcType="VARCHAR" property="department" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="timeSlot" jdbcType="DOUBLE" property="timeSlot" />
+    </resultMap>
+
+    <!--2019-05-06 mdengb 如果是预警系统首页数据  就查询自己应用下的所有的部门的预警数量   如果查询统一监管的数据则 查询所有部门的数据-->
+    <select id="getRelationshipApp" parameterType="com.hengyunsoft.platform.warn.entity.po.GxqptSendee"  resultMap="relationshipMap">
+        SELECT
+            bs.department_id AS department_id,
+            bs.department_name AS department_name,
+            bw.level ,
+            count(bw.id) AS count
+        FROM
+            b_warn AS bw
+        LEFT JOIN b_sendee bs ON bs.warn_id = bw.id
+        AND bs.rec_type = 3
+        WHERE 1=1
+        <if test="gxqptSendee.orgId != null and gxqptSendee.orgId != ''">
+            AND bs.org_id = #{gxqptSendee.orgId, jdbcType=VARCHAR}
+        </if>
+        GROUP BY department_id, level
+    </select>
+    <select id="getRelationship" parameterType="java.util.Date" resultMap="fairDepartmentMap">
+        select bd.department_id,bd.department_name,bw.title,bw.level,TIMESTAMPDIFF(HOUR, bw.create_time, NOW()) as timeSlot
+        from b_duty bd
+        left join (select id,title,level,create_time from b_warn where status='未处理') as bw on bd.warn_id = bw.id
+        where biz_type ='部门'
+        group by bd.department_id,bd.department_name,bw.title,bw.level
+    </select>
+    <select id="getInnerAppByAppId" resultMap="appMap">
+        select app_name,count(id) as count from b_duty
+        where app_type != 'jryy'
+        group by app_id order by count desc limit 10
+    </select>
+    <select id="getOuterAppByAppId" resultMap="appMap">
+        select app_name,count(id) as count from b_duty
+        where app_type = 'jryy'
+        group by app_id order by count desc limit 10
+    </select>
+</mapper>

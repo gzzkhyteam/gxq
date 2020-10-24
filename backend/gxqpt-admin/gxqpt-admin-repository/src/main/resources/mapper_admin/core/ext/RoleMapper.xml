@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.admin.repository.core.dao.RoleMapper">
+  <resultMap id="baseOrgInfoResultMap" type="com.hengyunsoft.platform.admin.entity.core.po.OrgBaseInfo">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sysCode" jdbcType="VARCHAR" property="sysCode" />
+  </resultMap>
+  <select id="selectBaseOrgInfo" resultMap="baseOrgInfoResultMap" parameterType="java.lang.String">
+    SELECT id id,name_ name ,'sdzzww' sysCode FROM c_sdzzww_org
+    UNION
+    SELECT o.id,o.name_ name_,'gxqpt' sysCode FROM c_data_share_to_app s
+    INNER JOIN c_gxqpt_org o ON s.biz_id = o.id
+    WHERE  s.biz_type ='ORG' AND o.isdelete = 0 AND app_id = #{appId}
+  </select>
+  <!--根据主机id查询角色id-->
+  <select id="findRoleIdByBizFlag" parameterType="Integer" resultMap="BaseResultMap">
+    SELECT cr.id from c_role cr
+   <if test="hostId != null and hostId != ''">
+     <where>
+     cr.biz_flag=#{hostId} and cr.code_="host"
+     </where>
+   </if>
+  </select>
+  
+  <sql id="Example_Where_Clause_Ext">
+    <!--
+    @mbggenerated
+    -->
+
+      <foreach collection="roleExample.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+  </sql>
+  
+  <select id="selectUserRole" resultMap="BaseResultMap">
+  	  select *
+	  from c_role 
+	  where id in (
+	              select role_id
+	              from c_assign_role
+	              where user_id = #{userId}
+	  ) 
+	  <trim prefix=" and (" suffix=")">
+
+	  	<include refid="Example_Where_Clause_Ext"/>
+
+	  </trim>
+
+  </select>
+  
+  <select id="findUsers" parameterType="com.hengyunsoft.platform.admin.repository.core.example.RoleExample" resultType="long">
+  	  select DISTINCT  user_id
+	  from c_assign_role 
+	  where role_id in (
+	              select id
+	              from c_role
+	              <include refid="Example_Where_Clause" />
+	  ) 
+  </select>
+</mapper>

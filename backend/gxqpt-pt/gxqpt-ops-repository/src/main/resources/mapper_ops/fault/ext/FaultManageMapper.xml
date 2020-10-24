@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.ops.repository.fault.dao.FaultManageMapper">
+  <resultMap id="PageResultMap" type="com.hengyunsoft.platform.ops.entity.fault.po.FaultManage">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="fault_name" jdbcType="VARCHAR" property="faultName" />
+    <result column="fault_type" jdbcType="VARCHAR" property="faultType" />
+    <result column="fault_level" jdbcType="VARCHAR" property="faultLevel" />
+    <result column="system_id" jdbcType="VARCHAR" property="systemId" />
+    <result column="system_name" jdbcType="VARCHAR" property="systemName" />
+    <result column="fault_host" jdbcType="VARCHAR" property="faultHost" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="happen_time" jdbcType="TIMESTAMP" property="happenTime" />
+    <result column="fault_info" jdbcType="VARCHAR" property="faultInfo" />
+    <result column="is_true" jdbcType="VARCHAR" property="isTrue" />
+    <result column="deal_opinion" jdbcType="VARCHAR" property="dealOpinion" />
+    <result column="deal_time" jdbcType="TIMESTAMP" property="dealTime" />
+    <result column="deal_process" jdbcType="VARCHAR" property="dealProcess" />
+    <result column="result" jdbcType="VARCHAR" property="result" />
+    <result column="advice" jdbcType="VARCHAR" property="advice" />
+    <result column="is_join_knowledge" jdbcType="INTEGER" property="isJoinKnowledge" />
+  </resultMap>
+  <!--查询故障产生时间最新记录信息-->
+  <select id="findMaxHappenTimeEntity"  parameterType="java.util.Map" resultMap="PageResultMap" >
+    SELECT    id, create_user, create_time, update_user, update_time, fault_name, fault_type, fault_level,
+    system_id, system_name, fault_host, status, happen_time, fault_info, is_true, deal_opinion,
+    deal_time, deal_process, result, advice, is_join_knowledge
+    FROM b_yw_fault_manage
+    where update_time=(select max(update_time) from b_yw_fault_manage where  system_id =#{systemId,jdbcType=VARCHAR} and `status`=1)
+    and system_id =#{systemId,jdbcType=VARCHAR} and `status`=1
+  </select>
+  <!--查询故障分页信息-->
+  <select id="getPageList"  parameterType="java.util.Map" resultMap="PageResultMap">
+    SELECT    id, create_user, create_time, update_user, update_time, fault_name, fault_type, fault_level,
+    system_id, system_name, fault_host, status, happen_time, fault_info, is_true, deal_opinion,
+    deal_time, deal_process, result, advice, is_join_knowledge
+    FROM b_yw_fault_manage
+    <where>
+      <if test="faultName!= null and faultName!=''">
+          AND fault_name LIKE CONCAT('%',#{faultName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="faultType!= null and faultType!=''">
+          AND   fault_type =#{faultType,jdbcType=VARCHAR}
+      </if>
+      <if test="faultLevel!= null and faultLevel!=''">
+          AND   fault_level =#{faultLevel,jdbcType=VARCHAR}
+      </if>
+      <if test="startTime!= null">
+        AND happen_time>=#{startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime!= null ">
+        AND #{endTime,jdbcType=TIMESTAMP}>=happen_time
+      </if>
+      <if test="status!= null and status!=''">
+        AND  status =#{status,jdbcType=INTEGER}
+      </if>
+      <if test="isTrue!= null and isTrue!=''">
+        AND is_true =#{isTrue,jdbcType=VARCHAR}
+      </if>
+      <if test="faultHost!= null and faultHost!=''">
+        AND fault_host LIKE CONCAT('%',#{faultHost,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="systemId!= null and systemId!=''">
+        AND   system_id =#{systemId,jdbcType=VARCHAR}
+      </if>
+    </where>
+    order by happen_time desc
+  </select>
+  <!--查询故障分页信息-->
+  <select id="pageMyFaultList"  parameterType="java.util.Map" resultMap="PageResultMap">
+    SELECT    id, create_user, create_time, update_user, update_time, fault_name, fault_type, fault_level,
+    system_id, system_name, fault_host, status, happen_time, fault_info, is_true, deal_opinion,
+    deal_time, deal_process, result, advice, is_join_knowledge
+    FROM b_yw_fault_manage
+    <where>
+      <if test="faultName!= null and faultName!=''">
+        AND fault_name LIKE CONCAT('%',#{faultName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="faultType!= null and faultType!=''">
+        AND   fault_type =#{faultType,jdbcType=VARCHAR}
+      </if>
+      <if test="faultLevel!= null and faultLevel!=''">
+        AND   fault_level =#{faultLevel,jdbcType=VARCHAR}
+      </if>
+      <if test="startTime!= null ">
+        AND happen_time>=#{startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime!= null ">
+        AND #{endTime,jdbcType=TIMESTAMP}>=happen_time
+      </if>
+      <if test="status!= null and status!=''">
+        AND status =#{status,jdbcType=INTEGER}
+      </if>
+      <if test="faultHost!= null and faultHost!=''">
+        AND fault_host LIKE CONCAT('%',#{faultHost,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="systemId!= null and systemId!=''">
+        AND   system_id =#{systemId,jdbcType=VARCHAR}
+      </if>
+      <if test="userId!= null and userId!=''">
+        AND   system_id in (SELECT system_id FROM b_yw_charge_system where p_id=#{userId} )
+      </if>
+    </where>
+    order by happen_time desc
+  </select>
+
+  <resultMap id="KnowledgePageResultMap" type="com.hengyunsoft.platform.ops.entity.fault.domain.FaultManageDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="fault_name" jdbcType="VARCHAR" property="faultName" />
+    <result column="fault_type" jdbcType="VARCHAR" property="faultType" />
+    <result column="fault_level" jdbcType="VARCHAR" property="faultLevel" />
+    <result column="system_id" jdbcType="VARCHAR" property="systemId" />
+    <result column="system_name" jdbcType="VARCHAR" property="systemName" />
+    <result column="fault_host" jdbcType="VARCHAR" property="faultHost" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="happen_time" jdbcType="TIMESTAMP" property="happenTime" />
+    <result column="fault_info" jdbcType="VARCHAR" property="faultInfo" />
+    <result column="is_true" jdbcType="VARCHAR" property="isTrue" />
+    <result column="deal_opinion" jdbcType="VARCHAR" property="dealOpinion" />
+    <result column="deal_time" jdbcType="TIMESTAMP" property="dealTime" />
+    <result column="deal_process" jdbcType="VARCHAR" property="dealProcess" />
+    <result column="result" jdbcType="VARCHAR" property="result" />
+    <result column="advice" jdbcType="VARCHAR" property="advice" />
+    <result column="is_join_knowledge" jdbcType="INTEGER" property="isJoinKnowledge" />
+  </resultMap>
+  <!--查询故障-知识库分页信息-->
+  <select id="pageKnowledgeBase"  parameterType="java.util.Map" resultMap="KnowledgePageResultMap">
+    SELECT    id, create_user,create_time, update_user, update_time, fault_name,
+    fault_type, fault_level,system_id, system_name, fault_host, status,
+    happen_time, fault_info, is_true, deal_opinion,
+    deal_time, deal_process, result, advice, is_join_knowledge
+    FROM b_yw_fault_manage a
+      where is_join_knowledge=1 and status=3
+      <if test="faultName!= null and faultName!=''">
+        AND fault_name LIKE #{faultName,typeHandler=fullLike}
+      </if>
+      <if test="faultType!= null and faultType!=''">
+        AND   fault_type =#{faultType,jdbcType=VARCHAR}
+      </if>
+      <if test="faultLevel!= null and faultLevel!=''">
+        AND   fault_level =#{faultLevel,jdbcType=VARCHAR}
+      </if>
+      <if test="startTime!= null">
+        AND create_time>=#{startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime!= null">
+        AND #{endTime,jdbcType=TIMESTAMP}>=create_time
+      </if>
+    order by create_time desc
+  </select>
+
+  <!--查询故障产生时间最新记录信息-->
+  <select id="findMaxHappenTime"  resultType="java.util.Date">
+    SELECT    MAX(happen_time) as happen_time
+    FROM b_yw_fault_manage
+  </select>
+  <resultMap id="FaultCountResultMap" type="com.hengyunsoft.platform.ops.entity.fault.domain.FaultMonitoringDO">
+  <result column="count" jdbcType="INTEGER" property="count" />
+  <result column="hour" jdbcType="INTEGER" property="hour" />
+  </resultMap>
+  <!--故障处理平均时长-->
+  <select id="findCountAndHour"   resultMap="FaultCountResultMap" >
+    SELECT count(system_id) as count,SUM(TIMESTAMPDIFF(HOUR,happen_time,deal_time)) as hour
+    from b_yw_fault_manage ;
+  </select>
+
+  <!--查询故障产生时间最早记录信息-->
+  <select id="findMinHappenTime"  resultType="java.util.Date">
+    SELECT    min(happen_time) as happen_time
+    FROM b_yw_fault_manage
+  </select>
+
+  <!--查询已处理故障数量年记录信息-->
+  <resultMap id="YearCountResultMap" type="com.hengyunsoft.platform.ops.entity.fault.domain.OperationReportDO">
+    <result column="yearMonth" jdbcType="VARCHAR" property="yearMonth" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+  </resultMap>
+  <select id="getReport"  resultMap="YearCountResultMap">
+     SELECT count(*) number,DATE_FORMAT(happen_time,'%m') yearMonth
+      from  b_yw_fault_manage
+      where status=3 AND  DATE_FORMAT(happen_time,'%Y') = YEAR(NOW())
+     GROUP BY DATE_FORMAT(happen_time,'%Y-%m')
+  </select>
+  <!--查询未处理故障数量年记录信息-->
+  <select id="getWclReport"  resultMap="YearCountResultMap">
+    SELECT count(*) number,DATE_FORMAT(happen_time,'%m') yearMonth
+    from  b_yw_fault_manage
+    where  status=1 and  DATE_FORMAT(happen_time,'%Y') = YEAR(NOW())
+    GROUP BY DATE_FORMAT(happen_time,'%Y-%m')
+  </select>
+  <!--查询故障数量TOP5记录信息-->
+  <resultMap id="TopCountResultMap" type="com.hengyunsoft.platform.ops.entity.fault.domain.ReportTopDO">
+    <result column="systemName" jdbcType="VARCHAR" property="systemName" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+  </resultMap>
+  <select id="getReportTop"  resultMap="TopCountResultMap">
+     SELECT * from (SELECT system_name as systemName, count(system_id) as count
+      from  b_yw_fault_manage
+      GROUP BY system_id) s ORDER BY s.count desc LIMIT 5;
+  </select>
+  <!--查询本年每月运维服务数量信息-->
+  <select id="getYearServiceReport"  resultMap="YearCountResultMap">
+    SELECT count(*) number,DATE_FORMAT(report_time,'%Y-%m') yearMonth
+    from  b_yw_service_manage
+    where status=4 AND   DATE_FORMAT(report_time,'%Y-%m')>
+     DATE_FORMAT(date_sub(curdate(), interval 12 month),'%Y-%m')
+    GROUP BY DATE_FORMAT(report_time,'%Y-%m')
+  </select>
+
+  <!--查询近12个月故障数量信息-->
+  <select id="getYearFaultReport"  resultMap="YearCountResultMap">
+     SELECT count(*) number,DATE_FORMAT(happen_time,'%Y-%m') yearMonth
+      from  b_yw_fault_manage
+      where  DATE_FORMAT(happen_time,'%Y-%m')>
+     DATE_FORMAT(date_sub(curdate(), interval 12 month),'%Y-%m')
+     GROUP BY DATE_FORMAT(happen_time,'%Y-%m')
+  </select>
+  <!--查询近12个月已处理故障数量信息-->
+  <select id="getMonthFaultReport"  resultMap="YearCountResultMap">
+    SELECT count(*) number,DATE_FORMAT(happen_time,'%Y-%m') yearMonth
+    from  b_yw_fault_manage
+    where status=3 AND   DATE_FORMAT(happen_time,'%Y-%m')>
+     DATE_FORMAT(date_sub(curdate(), interval 12 month),'%Y-%m')
+    GROUP BY DATE_FORMAT(happen_time,'%Y-%m')
+  </select>
+  <!--查询故障数量信息-->
+  <resultMap id="FaultReportResultMap" type="com.hengyunsoft.platform.ops.entity.fault.domain.FaultReportTopDO">
+    <result column="systemName" jdbcType="VARCHAR" property="systemName" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="wclCount" jdbcType="INTEGER" property="wclCount" />
+  </resultMap>
+  <select id="getFaultReportTop"  resultMap="FaultReportResultMap">
+    SELECT * from(SELECT system_name as systemName,count(id) as count,
+    COUNT(IF(`status`=1,1,null)) as wclCount
+    FROM b_yw_fault_manage
+    WHERE  DATE_FORMAT(happen_time,'%Y-%m') = YEAR(NOW())
+    GROUP BY system_id) s order by s.count desc LIMIT 5;
+  </select>
+
+  <select id="getApplicationRatioSum" resultType="java.lang.Integer">
+    SELECT COUNT(*)FROM(SELECT
+    *
+    FROM
+    `b_yw_fault_manage`
+    WHERE system_id IN
+    <foreach collection="appIdList" item="appId" index="index" open="(" close=")" separator=",">
+      #{appId}
+    </foreach>
+    AND create_time <![CDATA[ <= ]]> #{endDate,jdbcType=TIMESTAMP}
+    AND create_time <![CDATA[ >= ]]> #{startDate,jdbcType=TIMESTAMP}
+    GROUP BY system_id) a
+  </select>
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.system.dao.ShareDictMapper">
+  <resultMap id="DictListResultMap" type="com.hengyunsoft.platform.exchange.entity.system.domain.DictDO">
+    <!--
+    @mbggenerated
+    -->
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="dictName" jdbcType="VARCHAR" property="dictName" />
+    <result column="dictCode" jdbcType="VARCHAR" property="dictCode" />
+    <result column="pDictName" jdbcType="VARCHAR" property="pDictName" />
+    <result column="pDictCode" jdbcType="VARCHAR" property="pDictCode" />
+    <result column="describe" jdbcType="VARCHAR" property="describe" />
+    <result column="p_id" jdbcType="VARCHAR" property="pId" />
+    <result column="level_" jdbcType="INTEGER" property="level" />
+    <result column="index_no" jdbcType="INTEGER" property="indexNo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+  </resultMap>
+  <select id="queryDict" parameterType="java.lang.String" resultMap="DictListResultMap">
+    SELECT
+      a.id,
+      a.dict_name AS dictName,
+      a.dict_code AS dictCode,
+      a.p_id,
+      b.dict_code AS pDictCode,
+      b.dict_name AS pDictName,
+      a.level_,
+      a.`describe`,
+      a.index_no,
+      a.create_time,
+      a.create_user,
+      a.update_time,
+      a.update_user
+    FROM
+      b_share_dict a
+      LEFT JOIN b_share_dict b
+        ON a.p_id = b.dict_code
+    WHERE 1 = 1
+    <if test="pId != null" >
+      and  a.p_id = #{pId,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <select id="getCurrIndexNo" resultType="java.lang.Integer">
+    SELECT
+      a.index_no
+    FROM
+      b_share_dict a
+     ORDER BY a.index_no DESC LIMIT 1
+  </select>
+
+  <select id="getPidCurrLevel" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT a.level_ FROM b_share_dict a WHERE a.p_id = #{pId,jdbcType=VARCHAR} LIMIT 1
+  </select>
+</mapper>

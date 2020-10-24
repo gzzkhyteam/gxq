@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+
+    <!-- 权限系统start -->
+    <appender name="ROOT_APPENDER_ADMIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/root_admin.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/root_admin-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SERVICE_APPENDER_ADMIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/service_admin.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/service_admin-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="IMPL_APPENDER_ADMIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/impl_admin.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/impl_admin-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="SQL_APPENDER_ADMIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/sql_admin.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一归档 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/sql_admin-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!-- 单个日志文件最多 100MB, 60天的日志周期，最大不能超过20GB -->
+            <maxFileSize>32MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${common-pattern}</pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- 权限 -->
+    <root level="${log.level.console}">
+        <appender-ref ref="CONSOLE_APPENDER"/>
+        <appender-ref ref="ROOT_APPENDER_ADMIN"/>
+    </root>
+    <logger name="com.hengyunsoft.platform.admin.repository" additivity="true" level="${log.level.service}">
+        <appender-ref ref = "SERVICE_APPENDER_ADMIN"/>
+    </logger>
+    <logger name="com.hengyunsoft.platform.admin.impl" additivity="true" level="${log.level.impl}">
+        <appender-ref ref = "IMPL_APPENDER_ADMIN"/>
+    </logger>
+
+    <logger name="com.hengyunsoft.platform.admin.repository.account.dao" additivity="false" level="${log.level.sql}">
+        <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+        <appender-ref ref = "SQL_APPENDER_ADMIN"/>
+    </logger>
+    <logger name="com.hengyunsoft.platform.admin.repository.authority.dao" additivity="false" level="${log.level.sql}">
+        <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+        <appender-ref ref = "SQL_APPENDER_ADMIN"/>
+    </logger>
+
+    <logger name="com.hengyunsoft.platform.admin.repository.application.dao" additivity="false" level="${log.level.sql}">
+        <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+        <appender-ref ref = "SQL_APPENDER_ADMIN"/>
+    </logger>
+    <logger name="com.hengyunsoft.platform.admin.repository.org.gxqpt.dao" additivity="false" level="${log.level.sql}">
+        <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+        <appender-ref ref = "SQL_APPENDER_ADMIN"/>
+    </logger>
+    <logger name="com.hengyunsoft.platform.admin.repository.core.dao" additivity="false" level="${log.level.sql}">
+        <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+        <appender-ref ref = "SQL_APPENDER_ADMIN"/>
+    </logger>
+    <logger name="com.hengyunsoft.platform.admin.repository.base.dao" additivity="false" level="${log.level.sql}">
+        <appender-ref ref = "CONSOLE_SQL_APPENDER"/>
+        <appender-ref ref = "SQL_APPENDER_ADMIN"/>
+    </logger>
+
+
+</included>

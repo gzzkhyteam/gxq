@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.service.dao.ServiceResourceMapper">
+  <!--根据模块Id查找所有-->
+  <select id="getByModuleId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+     @mbggenerated
+     -->
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM c_service_resource
+    WHERE module_id = #{moduleId}
+  </select>
+  
+  <select id="getServiceResourceOfAppUsable" parameterType="map" resultMap="BaseResultMap">
+	  	select res.*
+		from c_service_resource res join c_service_module modul on res.module_id = modul.id
+		where modul.public_is=#{publicIs} and modul.status_!=20 and modul.app_id= #{appId}
+  </select>
+  
+  <select id="getServiceResourceOfAppConsumer" resultMap="BaseResultMap">
+  	  select  <include refid="Base_Column_List"/>
+		from c_service_resource 
+		where module_id in (
+		   select sm.id
+		   from c_service_module sm left join c_service_assign_module sam on sm.id = sam.module_id 
+		   where sm.public_is = true or sam.app_id in (
+				<foreach collection="appIds" item="appId" separator=",">
+					#{appId}
+				</foreach>
+		   )
+	    )
+	    <if test="likeResourceName != null">
+	        and name_ like #{likeResourceName,typeHandler=fullLike}
+	    </if>
+  </select>
+</mapper>

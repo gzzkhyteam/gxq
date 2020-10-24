@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.service.dao.ServiceModuleMapper">
+  <resultMap id="CountResultMap" type="com.hengyunsoft.platform.developer.entity.service.po.domain.ModuleCountDO">
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="typeName" jdbcType="VARCHAR" property="typeName" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+  </resultMap>
+
+    <!--根据接口类型进行分类查询数量统计-->
+    <select id="getModuleCount" resultMap="CountResultMap">
+        SELECT
+            count(*) num,
+            module.name_ `name`,
+            dic.`name` typeName
+        FROM
+            c_service_module module
+          LEFT JOIN b_dictionary dic on module.module_type=dic.`code` and dic.dictionary_type_code='module.type'
+        WHERE
+            1 = 1
+        AND module.status_ = 1
+        GROUP BY
+            module.module_type  ORDER BY num desc
+          <if test="top != null and top !=''">
+              LIMIT #{top}
+          </if>
+    </select>
+
+    <!--查询功能应用关系-力引导布局数据-->
+    <select id="getNodesDate" resultType="com.hengyunsoft.platform.developer.entity.service.po.domain.ModuleRelationDO">
+        SELECT  org_id id ,org_name `name` ,0 category ,true draggable  from c_application where 1=1 and status_=1
+        UNION ALL
+        SELECT id ,name_ `name` ,1 category ,true draggable  from c_application where 1=1 and status_=1
+        UNION ALL
+        SELECT id ,name_ `name`,2 category ,true draggable  from c_service_module where 1=1 and status_=1
+        UNION ALL
+        select t.id ,module.name_ `name`,3 category ,true draggable  from c_service_assign_module t
+        join c_service_module module on t.module_id = module.id where 1=1 and t.status_=1
+    </select>
+    <!--查询功能应用关系-力引导布局数据 links-->
+    <select id="getLinksDate" resultType="com.hengyunsoft.platform.developer.entity.service.po.domain.ModuleRelationLinksDO">
+        SELECT app.id target,module.id source,'属于' `value` from c_application app
+        JOIN c_service_module module on app.app_id = module.app_id
+        where 1=1 and app.status_=1
+        UNION ALL
+        SELECT module.id target,asmodule.id source,'调用' `value` from c_service_assign_module asmodule
+        JOIN c_service_module module on asmodule.module_id = module.id
+        where 1=1 and asmodule.status_=1
+        UNION ALL
+        SELECT t.producer_id target,t.consume_id source ,'关联' `value` from c_depend_relation t
+        UNION ALL
+        SELECT  id target ,org_id source ,'管理' `value` from c_application where 1=1 and status_=1
+    </select>
+
+  <!--查询模块名称（用于大屏）-->
+  <select id="findModuleName" parameterType="Integer" resultMap="BaseResultMap">
+    SELECT cm.name_ FROM c_service_module cm left JOIN c_service_assign_module cam on cm.id=cam.module_id ORDER BY COUNT(cam.module_id) desc
+    <if test="pageSize != null and pageSize !=''">
+      limit 0,#{pageSize}
+    </if>
+    <if test="pageSize == null or pageSize ==''">
+      limit 0,7
+    </if>
+  </select>
+
+  <!--  farglory 降本提质-获取功能模块数-->
+  <select id="findComponentEstimatedValue" parameterType="map" resultType="map">
+	select
+		t1.name_,
+		t1.reduce_time,
+		t1.reduce_cost
+	from
+		c_service_module t1
+	order by
+		t1.name_ desc
+	limit 5
+  </select>
+  <!--  farglory 降本提质-总数统计-->
+  <select id="findTotalStatistics" parameterType="map" resultType="map">
+	select count(*) module_total, sum(reduce_time), sum(reduce_cost) from c_service_module
+  </select>
+
+    <!--查询热门功能-->
+    <resultMap id="HotModuleResultMap" type="com.hengyunsoft.platform.developer.entity.service.po.ServiceModule">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="logo_" jdbcType="VARCHAR" property="logo" />
+        <result column="name_" jdbcType="VARCHAR" property="name" />
+        <result column="code_" jdbcType="VARCHAR" property="code" />
+        <result column="desc_" jdbcType="VARCHAR" property="desc" />
+        <result column="status_" jdbcType="SMALLINT" property="status" />
+        <result column="email_" jdbcType="VARCHAR" property="email" />
+        <result column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="module_type" jdbcType="VARCHAR" property="moduleType" />
+        <result column="create_user" jdbcType="BIGINT" property="createUser" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="public_is" jdbcType="BIT" property="publicIs" />
+        <result column="public_look" jdbcType="BIT" property="publicLook" />
+        <result column="api_sync_url" jdbcType="VARCHAR" property="apiSyncUrl" />
+        <result column="resource_num" jdbcType="INTEGER" property="resourceNum" />
+        <result column="stop_time" jdbcType="TIMESTAMP" property="stopTime" />
+        <result column="advice_module" jdbcType="BIGINT" property="adviceModule" />
+        <result column="reduce_time" jdbcType="DOUBLE" property="reduceTime" />
+        <result column="reduce_cost" jdbcType="INTEGER" property="reduceCost" />
+    </resultMap>
+    <select id="hotModule" resultMap="HotModuleResultMap">
+      SELECT
+        count(asmodule.id) count,module.id,module.logo_,module.name_,module.code_,module.desc_,
+      module.status_,module.email_,module.app_id,module.module_type,
+      module.public_is,module.public_look,module.api_sync_url,module.resource_num,module.
+      stop_time,module.advice_module,module.reduce_time,module.reduce_cost
+      FROM
+      c_service_assign_module asmodule
+      JOIN c_service_module module ON asmodule.module_id = module.id and module.status_=1
+      where asmodule.status_=1
+            <if test="isLogin == false">
+	        	and module.public_look = 1
+	        </if>
+      GROUP BY asmodule.module_id ORDER BY count desc
+      <if test="top !=null and top !='' ">
+        LIMIT #{top}
+      </if>
+    </select>
+
+
+    <!--2018-5-30增加返回模块类型名称-->
+    <resultMap id="AllServiceModuleBaseResultMap" extends="BaseResultMap"
+               type="com.hengyunsoft.platform.developer.entity.service.po.domain.ServiceModuleDo">
+        <result column="moduleTypeName" jdbcType="VARCHAR" property="moduleTypeName" />
+    </resultMap>
+    <select id="findAllServiceModule" resultMap="AllServiceModuleBaseResultMap">
+         SELECT module.id,module.logo_,module.name_,module.code_,module.desc_,module.status_,module.email_,module.app_id,module.module_type,module.create_user,module.
+         create_time,module.update_user,module.update_time,module.public_is,module.public_look,module.api_sync_url,module.resource_num,module.
+         stop_time,module.advice_module,module.reduce_time,module.reduce_cost,dic.`name` as moduleTypeName
+        from c_service_module module
+        LEFT JOIN b_dictionary dic on module.module_type = dic.`code` and dic.dictionary_type_code='module.type'
+        <where>
+	        <if test="serviceModule.code !=null and serviceModule.code !=''">
+	            and module.code_ = #{serviceModule.code}
+	        </if>
+	
+	        <if test="serviceModule.status !=null and serviceModule.status !=''">
+	            and module.status_ = #{serviceModule.status}
+	        </if>
+	
+	        <if test="serviceModule.name !=null and serviceModule.name !=''">
+	            and module.name_  LIKE #{serviceModule.name,typeHandler=fullLike}
+	        </if>
+	
+	        <if test="serviceModule.moduleType !=null and serviceModule.moduleType !=''">
+	            and module.module_type = #{serviceModule.moduleType}
+	        </if>
+	        <if test="isLogin == false">
+	        	and module.public_look = 1
+	        </if>
+        </where>
+        ORDER BY module.status_
+    </select>
+
+    
+    <select id="getServerUseTop" resultType="java.util.HashMap">
+        SELECT
+          a.serverId,
+          a.serverName,
+          a.totalNum
+        FROM
+          (SELECT
+            ca.id AS serverId,
+            ca.name_ AS serverName,
+            (SELECT
+              MAX(smu.total_num)
+            FROM
+              c_module_use_info smu
+            WHERE smu.app_id = ca.app_id) AS totalNum
+          FROM
+            c_application ca
+          WHERE app_type IN (2, 3)) a
+        ORDER BY a.totalNum DESC
+        LIMIT 10
+    </select>
+    <select id="getMonthInvokingTop" resultType="java.util.HashMap">
+        SELECT
+          csm.id AS moduleId,
+          csm.name_ AS moduleName,
+          csm.api_sync_url AS moduleApiUrl,
+          (SELECT
+            MAX(smu.total_num)
+          FROM
+            c_module_use_info smu
+          WHERE smu.module_id = csm.id) AS totalNum
+        FROM
+          c_service_module csm
+        ORDER BY totalNum DESC
+        LIMIT 5
+    </select>
+    <select id="getMonthAppTop" resultType="java.util.HashMap">
+        SELECT
+          csm.id AS moduleId,
+          csm.name_ AS moduleName,
+          csm.api_sync_url AS moduleApiUrl,
+          (SELECT
+            MAX(smu.total_num)
+          FROM
+            c_module_use_info smu
+          WHERE smu.module_id = csm.id) AS totalNum
+        FROM
+          c_service_module csm WHERE csm.app_id IN (SELECT ca.app_id FROM c_application ca WHERE ca.app_type IN(1,3))
+        ORDER BY totalNum DESC
+        LIMIT 5
+    </select>
+</mapper>

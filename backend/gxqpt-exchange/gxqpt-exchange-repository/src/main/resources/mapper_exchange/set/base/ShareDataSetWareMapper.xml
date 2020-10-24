@@ -1,0 +1,822 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.set.dao.ShareDataSetWareMapper">
+  <resultMap id="BaseResultMap" type="com.hengyunsoft.platform.exchange.entity.set.po.ShareDataSetWare">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_code" jdbcType="VARCHAR" property="applyCode" />
+    <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+    <result column="set_name" jdbcType="VARCHAR" property="setName" />
+    <result column="set_code" jdbcType="VARCHAR" property="setCode" />
+    <result column="set_type" jdbcType="INTEGER" property="setType" />
+    <result column="data_count" jdbcType="REAL" property="dataCount" />
+    <result column="update_rate" jdbcType="INTEGER" property="updateRate" />
+    <result column="api_name" jdbcType="VARCHAR" property="apiName" />
+    <result column="api_url" jdbcType="LONGVARCHAR" property="apiUrl" />
+    <result column="api_data_type" jdbcType="INTEGER" property="apiDataType" />
+    <result column="acq_time" jdbcType="TIMESTAMP" property="acqTime" />
+    <result column="update_type" jdbcType="INTEGER" property="updateType" />
+    <result column="set_mode" jdbcType="INTEGER" property="setMode" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="sql_code" jdbcType="LONGVARCHAR" property="sqlCode" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
+    <result column="reason" jdbcType="LONGVARCHAR" property="reason" />
+    <result column="db_id" jdbcType="BIGINT" property="dbId" />
+    <result column="status_" jdbcType="INTEGER" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="BIGINT" property="updateUser" />
+    <result column="source_db_code" jdbcType="VARCHAR" property="sourceDbCode" />
+    <result column="formal_table_code" jdbcType="VARCHAR" property="formalTableCode" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+    @mbggenerated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+    @mbggenerated
+    -->
+    id, apply_code, unit_id, set_name, set_code, set_type, data_count, update_rate, api_name, 
+    api_url, api_data_type, acq_time, update_type, set_mode, table_code, sql_code, data_type, 
+    reason, db_id, status_, create_time, create_user, update_time, update_user, source_db_code, 
+    formal_table_code
+  </sql>
+  <select id="selectByExample" parameterType="com.hengyunsoft.platform.exchange.repository.set.example.ShareDataSetWareExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_share_data_set_ware
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitValue != null">
+      limit ${limitValue}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from b_share_data_set_ware
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectEntity" parameterType="com.hengyunsoft.platform.exchange.repository.set.example.ShareDataSetWareExample" resultMap="BaseResultMap">
+    <!--
+    @mbggenerated
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_share_data_set_ware
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="groupByClause != null">
+      group by ${groupByClause}
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1 
+  </select>
+  <select id="selectAppIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+    <!--
+    @mbggenerated
+    -->
+    select app_id 
+    from b_share_data_set_ware
+    where 1=1 and id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_set_ware
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hengyunsoft.platform.exchange.repository.set.example.ShareDataSetWareExample">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_set_ware
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteByIds" parameterType="list">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_share_data_set_ware where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <delete id="deleteByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from b_share_data_set_ware
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    delete from  b_share_data_set_ware where id in 
+    <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+      #{item}
+    </foreach> 
+  </delete>
+  <update id="removeByExample" parameterType="com.hengyunsoft.platform.exchange.entity.set.po.ShareDataSetWare">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_set_ware
+    set is_delete = 1 
+
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="removeByAppIdAndIds" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_set_ware
+    set is_delete = 1 
+ where 1=1 and id in 
+ <foreach collection="list" open="(" close=")" index="index" item="item" separator=",">
+    #{item}
+  </foreach>
+  </update>
+  <update id="removeByPrimaryKey" parameterType="java.lang.Long">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_set_ware
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="removeByAppIdAndId" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_set_ware
+    set is_delete = 1 
+
+     where 1=1 and id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.hengyunsoft.platform.exchange.entity.set.po.ShareDataSetWare">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_set_ware (id, apply_code, unit_id, 
+      set_name, set_code, set_type, 
+      data_count, update_rate, api_name, 
+      api_url, api_data_type, acq_time, 
+      update_type, set_mode, table_code, 
+      sql_code, data_type, reason, 
+      db_id, status_, create_time, 
+      create_user, update_time, update_user, 
+      source_db_code, formal_table_code)
+    values (#{id,jdbcType=BIGINT}, #{applyCode,jdbcType=VARCHAR}, #{unitId,jdbcType=VARCHAR}, 
+      #{setName,jdbcType=VARCHAR}, #{setCode,jdbcType=VARCHAR}, #{setType,jdbcType=INTEGER}, 
+      #{dataCount,jdbcType=REAL}, #{updateRate,jdbcType=INTEGER}, #{apiName,jdbcType=VARCHAR}, 
+      #{apiUrl,jdbcType=LONGVARCHAR}, #{apiDataType,jdbcType=INTEGER}, #{acqTime,jdbcType=TIMESTAMP}, 
+      #{updateType,jdbcType=INTEGER}, #{setMode,jdbcType=INTEGER}, #{tableCode,jdbcType=VARCHAR}, 
+      #{sqlCode,jdbcType=LONGVARCHAR}, #{dataType,jdbcType=INTEGER}, #{reason,jdbcType=LONGVARCHAR}, 
+      #{dbId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=BIGINT}, 
+      #{sourceDbCode,jdbcType=VARCHAR}, #{formalTableCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_set_ware (id, apply_code, unit_id, set_name, set_code, set_type, data_count, update_rate, api_name, api_url, api_data_type, acq_time, update_type, set_mode, table_code, sql_code, data_type, reason, db_id, status_, create_time, create_user, update_time, update_user, source_db_code, formal_table_code ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.applyCode,jdbcType=VARCHAR}, #{item.unitId,jdbcType=VARCHAR}, 
+        #{item.setName,jdbcType=VARCHAR}, #{item.setCode,jdbcType=VARCHAR}, #{item.setType,jdbcType=INTEGER}, 
+        #{item.dataCount,jdbcType=REAL}, #{item.updateRate,jdbcType=INTEGER}, #{item.apiName,jdbcType=VARCHAR}, 
+        #{item.apiUrl,jdbcType=LONGVARCHAR}, #{item.apiDataType,jdbcType=INTEGER}, #{item.acqTime,jdbcType=TIMESTAMP}, 
+        #{item.updateType,jdbcType=INTEGER}, #{item.setMode,jdbcType=INTEGER}, #{item.tableCode,jdbcType=VARCHAR}, 
+        #{item.sqlCode,jdbcType=LONGVARCHAR}, #{item.dataType,jdbcType=INTEGER}, #{item.reason,jdbcType=LONGVARCHAR}, 
+        #{item.dbId,jdbcType=BIGINT}, #{item.status,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.createUser,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=BIGINT}, 
+        #{item.sourceDbCode,jdbcType=VARCHAR}, #{item.formalTableCode,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengyunsoft.platform.exchange.entity.set.po.ShareDataSetWare">
+    <!--
+    @mbggenerated
+    -->
+    insert into b_share_data_set_ware
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="applyCode != null">
+        apply_code,
+      </if>
+      <if test="unitId != null">
+        unit_id,
+      </if>
+      <if test="setName != null">
+        set_name,
+      </if>
+      <if test="setCode != null">
+        set_code,
+      </if>
+      <if test="setType != null">
+        set_type,
+      </if>
+      <if test="dataCount != null">
+        data_count,
+      </if>
+      <if test="updateRate != null">
+        update_rate,
+      </if>
+      <if test="apiName != null">
+        api_name,
+      </if>
+      <if test="apiUrl != null">
+        api_url,
+      </if>
+      <if test="apiDataType != null">
+        api_data_type,
+      </if>
+      <if test="acqTime != null">
+        acq_time,
+      </if>
+      <if test="updateType != null">
+        update_type,
+      </if>
+      <if test="setMode != null">
+        set_mode,
+      </if>
+      <if test="tableCode != null">
+        table_code,
+      </if>
+      <if test="sqlCode != null">
+        sql_code,
+      </if>
+      <if test="dataType != null">
+        data_type,
+      </if>
+      <if test="reason != null">
+        reason,
+      </if>
+      <if test="dbId != null">
+        db_id,
+      </if>
+      <if test="status != null">
+        status_,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="sourceDbCode != null">
+        source_db_code,
+      </if>
+      <if test="formalTableCode != null">
+        formal_table_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="applyCode != null">
+        #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="setName != null">
+        #{setName,jdbcType=VARCHAR},
+      </if>
+      <if test="setCode != null">
+        #{setCode,jdbcType=VARCHAR},
+      </if>
+      <if test="setType != null">
+        #{setType,jdbcType=INTEGER},
+      </if>
+      <if test="dataCount != null">
+        #{dataCount,jdbcType=REAL},
+      </if>
+      <if test="updateRate != null">
+        #{updateRate,jdbcType=INTEGER},
+      </if>
+      <if test="apiName != null">
+        #{apiName,jdbcType=VARCHAR},
+      </if>
+      <if test="apiUrl != null">
+        #{apiUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="apiDataType != null">
+        #{apiDataType,jdbcType=INTEGER},
+      </if>
+      <if test="acqTime != null">
+        #{acqTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateType != null">
+        #{updateType,jdbcType=INTEGER},
+      </if>
+      <if test="setMode != null">
+        #{setMode,jdbcType=INTEGER},
+      </if>
+      <if test="tableCode != null">
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sqlCode != null">
+        #{sqlCode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dataType != null">
+        #{dataType,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dbId != null">
+        #{dbId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="sourceDbCode != null">
+        #{sourceDbCode,jdbcType=VARCHAR},
+      </if>
+      <if test="formalTableCode != null">
+        #{formalTableCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hengyunsoft.platform.exchange.repository.set.example.ShareDataSetWareExample" resultType="java.lang.Integer">
+    <!--
+    @mbggenerated
+    -->
+    select count(*) from b_share_data_set_ware
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_set_ware
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.applyCode != null">
+        apply_code = #{record.applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitId != null">
+        unit_id = #{record.unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.setName != null">
+        set_name = #{record.setName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.setCode != null">
+        set_code = #{record.setCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.setType != null">
+        set_type = #{record.setType,jdbcType=INTEGER},
+      </if>
+      <if test="record.dataCount != null">
+        data_count = #{record.dataCount,jdbcType=REAL},
+      </if>
+      <if test="record.updateRate != null">
+        update_rate = #{record.updateRate,jdbcType=INTEGER},
+      </if>
+      <if test="record.apiName != null">
+        api_name = #{record.apiName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apiUrl != null">
+        api_url = #{record.apiUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.apiDataType != null">
+        api_data_type = #{record.apiDataType,jdbcType=INTEGER},
+      </if>
+      <if test="record.acqTime != null">
+        acq_time = #{record.acqTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateType != null">
+        update_type = #{record.updateType,jdbcType=INTEGER},
+      </if>
+      <if test="record.setMode != null">
+        set_mode = #{record.setMode,jdbcType=INTEGER},
+      </if>
+      <if test="record.tableCode != null">
+        table_code = #{record.tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sqlCode != null">
+        sql_code = #{record.sqlCode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.dataType != null">
+        data_type = #{record.dataType,jdbcType=INTEGER},
+      </if>
+      <if test="record.reason != null">
+        reason = #{record.reason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.dbId != null">
+        db_id = #{record.dbId,jdbcType=BIGINT},
+      </if>
+      <if test="record.status != null">
+        status_ = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="record.sourceDbCode != null">
+        source_db_code = #{record.sourceDbCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.formalTableCode != null">
+        formal_table_code = #{record.formalTableCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_set_ware
+    set id = #{record.id,jdbcType=BIGINT},
+      apply_code = #{record.applyCode,jdbcType=VARCHAR},
+      unit_id = #{record.unitId,jdbcType=VARCHAR},
+      set_name = #{record.setName,jdbcType=VARCHAR},
+      set_code = #{record.setCode,jdbcType=VARCHAR},
+      set_type = #{record.setType,jdbcType=INTEGER},
+      data_count = #{record.dataCount,jdbcType=REAL},
+      update_rate = #{record.updateRate,jdbcType=INTEGER},
+      api_name = #{record.apiName,jdbcType=VARCHAR},
+      api_url = #{record.apiUrl,jdbcType=LONGVARCHAR},
+      api_data_type = #{record.apiDataType,jdbcType=INTEGER},
+      acq_time = #{record.acqTime,jdbcType=TIMESTAMP},
+      update_type = #{record.updateType,jdbcType=INTEGER},
+      set_mode = #{record.setMode,jdbcType=INTEGER},
+      table_code = #{record.tableCode,jdbcType=VARCHAR},
+      sql_code = #{record.sqlCode,jdbcType=LONGVARCHAR},
+      data_type = #{record.dataType,jdbcType=INTEGER},
+      reason = #{record.reason,jdbcType=LONGVARCHAR},
+      db_id = #{record.dbId,jdbcType=BIGINT},
+      status_ = #{record.status,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=BIGINT},
+      source_db_code = #{record.sourceDbCode,jdbcType=VARCHAR},
+      formal_table_code = #{record.formalTableCode,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengyunsoft.platform.exchange.entity.set.po.ShareDataSetWare">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_set_ware
+    <set>
+      <if test="applyCode != null">
+        apply_code = #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="setName != null">
+        set_name = #{setName,jdbcType=VARCHAR},
+      </if>
+      <if test="setCode != null">
+        set_code = #{setCode,jdbcType=VARCHAR},
+      </if>
+      <if test="setType != null">
+        set_type = #{setType,jdbcType=INTEGER},
+      </if>
+      <if test="dataCount != null">
+        data_count = #{dataCount,jdbcType=REAL},
+      </if>
+      <if test="updateRate != null">
+        update_rate = #{updateRate,jdbcType=INTEGER},
+      </if>
+      <if test="apiName != null">
+        api_name = #{apiName,jdbcType=VARCHAR},
+      </if>
+      <if test="apiUrl != null">
+        api_url = #{apiUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="apiDataType != null">
+        api_data_type = #{apiDataType,jdbcType=INTEGER},
+      </if>
+      <if test="acqTime != null">
+        acq_time = #{acqTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateType != null">
+        update_type = #{updateType,jdbcType=INTEGER},
+      </if>
+      <if test="setMode != null">
+        set_mode = #{setMode,jdbcType=INTEGER},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sqlCode != null">
+        sql_code = #{sqlCode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dataType != null">
+        data_type = #{dataType,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null">
+        reason = #{reason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dbId != null">
+        db_id = #{dbId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="sourceDbCode != null">
+        source_db_code = #{sourceDbCode,jdbcType=VARCHAR},
+      </if>
+      <if test="formalTableCode != null">
+        formal_table_code = #{formalTableCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndIdSelective" parameterType="com.hengyunsoft.platform.exchange.entity.set.po.ShareDataSetWare">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_set_ware
+    <set>
+      <if test="applyCode != null">
+        apply_code = #{applyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="setName != null">
+        set_name = #{setName,jdbcType=VARCHAR},
+      </if>
+      <if test="setCode != null">
+        set_code = #{setCode,jdbcType=VARCHAR},
+      </if>
+      <if test="setType != null">
+        set_type = #{setType,jdbcType=INTEGER},
+      </if>
+      <if test="dataCount != null">
+        data_count = #{dataCount,jdbcType=REAL},
+      </if>
+      <if test="updateRate != null">
+        update_rate = #{updateRate,jdbcType=INTEGER},
+      </if>
+      <if test="apiName != null">
+        api_name = #{apiName,jdbcType=VARCHAR},
+      </if>
+      <if test="apiUrl != null">
+        api_url = #{apiUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="apiDataType != null">
+        api_data_type = #{apiDataType,jdbcType=INTEGER},
+      </if>
+      <if test="acqTime != null">
+        acq_time = #{acqTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateType != null">
+        update_type = #{updateType,jdbcType=INTEGER},
+      </if>
+      <if test="setMode != null">
+        set_mode = #{setMode,jdbcType=INTEGER},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sqlCode != null">
+        sql_code = #{sqlCode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dataType != null">
+        data_type = #{dataType,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null">
+        reason = #{reason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dbId != null">
+        db_id = #{dbId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status_ = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=BIGINT},
+      </if>
+      <if test="sourceDbCode != null">
+        source_db_code = #{sourceDbCode,jdbcType=VARCHAR},
+      </if>
+      <if test="formalTableCode != null">
+        formal_table_code = #{formalTableCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengyunsoft.platform.exchange.entity.set.po.ShareDataSetWare">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_set_ware
+    set apply_code = #{applyCode,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=VARCHAR},
+      set_name = #{setName,jdbcType=VARCHAR},
+      set_code = #{setCode,jdbcType=VARCHAR},
+      set_type = #{setType,jdbcType=INTEGER},
+      data_count = #{dataCount,jdbcType=REAL},
+      update_rate = #{updateRate,jdbcType=INTEGER},
+      api_name = #{apiName,jdbcType=VARCHAR},
+      api_url = #{apiUrl,jdbcType=LONGVARCHAR},
+      api_data_type = #{apiDataType,jdbcType=INTEGER},
+      acq_time = #{acqTime,jdbcType=TIMESTAMP},
+      update_type = #{updateType,jdbcType=INTEGER},
+      set_mode = #{setMode,jdbcType=INTEGER},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      sql_code = #{sqlCode,jdbcType=LONGVARCHAR},
+      data_type = #{dataType,jdbcType=INTEGER},
+      reason = #{reason,jdbcType=LONGVARCHAR},
+      db_id = #{dbId,jdbcType=BIGINT},
+      status_ = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      source_db_code = #{sourceDbCode,jdbcType=VARCHAR},
+      formal_table_code = #{formalTableCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByAppIdAndId" parameterType="com.hengyunsoft.platform.exchange.entity.set.po.ShareDataSetWare">
+    <!--
+    @mbggenerated
+    -->
+    update b_share_data_set_ware
+    set apply_code = #{applyCode,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=VARCHAR},
+      set_name = #{setName,jdbcType=VARCHAR},
+      set_code = #{setCode,jdbcType=VARCHAR},
+      set_type = #{setType,jdbcType=INTEGER},
+      data_count = #{dataCount,jdbcType=REAL},
+      update_rate = #{updateRate,jdbcType=INTEGER},
+      api_name = #{apiName,jdbcType=VARCHAR},
+      api_url = #{apiUrl,jdbcType=LONGVARCHAR},
+      api_data_type = #{apiDataType,jdbcType=INTEGER},
+      acq_time = #{acqTime,jdbcType=TIMESTAMP},
+      update_type = #{updateType,jdbcType=INTEGER},
+      set_mode = #{setMode,jdbcType=INTEGER},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      sql_code = #{sqlCode,jdbcType=LONGVARCHAR},
+      data_type = #{dataType,jdbcType=INTEGER},
+      reason = #{reason,jdbcType=LONGVARCHAR},
+      db_id = #{dbId,jdbcType=BIGINT},
+      status_ = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      source_db_code = #{sourceDbCode,jdbcType=VARCHAR},
+      formal_table_code = #{formalTableCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

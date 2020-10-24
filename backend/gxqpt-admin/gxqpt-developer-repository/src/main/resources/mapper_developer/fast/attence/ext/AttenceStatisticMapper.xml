@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.developer.repository.fast.attence.dao.AttenceStatisticMapper">
+  <resultMap id="queryStatisticMap" type="com.hengyunsoft.platform.developer.entity.fast.po.domain.AttenceStatisticDO">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="userId" jdbcType="BIGINT" property="userId" />
+    <result column="workDate" property="workDate"/>
+    <result column="userName" property="userName"/>
+    <result column="extraworkHour" property="extraworkHour"/>
+    <result column="actualHour" property="actualHour"/>
+    <result column="outsideHour" property="outsideHour"/>
+    <result column="lateHour" property="lateHour"/>
+    <result column="neglectHour" property="neglectHour"/>
+    <result column="earlyHour" property="earlyHour"/>
+    <result column="leaveHour" property="leaveHour"/>
+    <result column="businessHour" property="businessHour"/>
+  </resultMap>
+  <select id="queryStatistic" parameterType="com.hengyunsoft.platform.developer.entity.fast.po.domain.AttenceStatisticDO"
+          resultMap="queryStatisticMap">
+    SELECT * FROM(SELECT bas.id,cu.id AS userId, cu.name_ AS userName,bas.work_date AS workDate,
+    ROUND(SUM(IFNULL(bas.extra_work,0)),2) extraworkHour,
+    ROUND(SUM(IFNULL(bas.actual_hour,0)),2) actualHour,
+    ROUND(SUM(IFNULL(bas.outside_hour,0)),2) outsideHour,
+    ROUND(SUM(IFNULL(bas.late_hour,0)),2) lateHour,
+    ROUND(SUM(IFNULL(bas.early_hour,0)),2) earlyHour,
+    ROUND(SUM(IFNULL(bas.business_hour,0)),2) businessHour,
+    ROUND(SUM(IFNULL(bas.sick_leave,0)+
+    IFNULL(bas.affair_leave,0)+
+    IFNULL(bas.annual_leave,0)+
+    IFNULL(bas.home_leave,0)+
+    IFNULL(bas.marital_leave,0)+
+    IFNULL(bas.funeral_leave ,0)+
+    IFNULL(bas.maternity_leave,0)),2) leaveHour,0 AS neglectHour
+    FROM b_attence_statistic bas LEFT JOIN c_user cu ON bas.user_id = cu.id WHERE app_id = #{appId}) a
+    <where>
+      <if test="userName != null and userName != ''">
+        AND userName LIKE #{userName,typeHandler=fullLike}
+      </if>
+      <if test="startDate != null">
+        AND DATE_FORMAT(workDate,'%Y-%m-%d') >= DATE_FORMAT( #{startDate},'%Y-%m-%d')
+      </if>
+      <if test="endDate != null">
+        AND DATE_FORMAT(#{endDate},'%Y-%m-%d') >= DATE_FORMAT(workDate,'%Y-%m-%d')
+      </if>
+      <if test="extraworkCondition !=  null">
+        <choose>
+          <when test="extraworkCondition == 1">
+            AND extraworkHour > #{extraworkHour}
+          </when>
+          <when test="extraworkCondition == 2">
+            AND extraworkHour = #{extraworkHour}
+          </when>
+          <when test="extraworkCondition == 3">
+            AND #{extraworkHour}> extraworkHour
+          </when>
+        </choose>
+      </if>
+      <if test="leaveCondition !=  null">
+        <choose>
+          <when test="leaveCondition == 1">
+            AND leaveHour >#{leaveHour}
+          </when>
+          <when test="leaveCondition == 2">
+            AND leaveHour =#{leaveHour}
+          </when>
+          <when test="leaveCondition == 3">
+            AND #{leaveHour} > leaveHour
+          </when>
+        </choose>
+      </if>
+      <if test="lateCondition !=  null">
+        <choose>
+          <when test="lateCondition == 1">
+            AND lateHour >#{lateHour}
+          </when>
+          <when test="lateCondition == 2">
+            AND lateHour =#{lateHour}
+          </when>
+          <when test="lateCondition == 3">
+            AND #{lateHour} > lateHour
+          </when>
+        </choose>
+      </if>
+      <if test="earlyCondition !=  null">
+        <choose>
+          <when test="earlyCondition == 1">
+            AND earlyHour >#{earlyHour}
+          </when>
+          <when test="earlyCondition == 2">
+            AND earlyHour =#{earlyHour}
+          </when>
+          <when test="earlyCondition == 3">
+            AND #{earlyHour} > earlyHour
+          </when>
+        </choose>
+      </if>
+    </where>
+
+  </select>
+
+
+</mapper>

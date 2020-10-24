@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.sms.repository.template.dao.SmsChannelOwnerMapper">
+    <!--账号管理名称修改后名称联查-->
+  <select id="getOwnerChannerl" resultMap="BaseResultMap" parameterType="com.hengyunsoft.platform.sms.entity.template.po.SmsChannelOwner">
+      SELECT ms.id, ms.account, ms.app_id, ms.app_name, ms.channel_id,
+        channel.name channel_name, ms.channel_server, ms.create_time,
+        ms.create_user, ms.update_time from msgs_sms_channel_owner ms
+		join msgs_channel channel on ms.channel_id = channel.id
+		where 1=1
+          <if test="appId != null and appId !=''">
+             and ms.app_id = #{appId,jdbcType=VARCHAR}
+          </if>
+  </select>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.logs.repository.logs.dao.LogWarnRuleMapper">
+    <!--分页查询告警规则-->
+    <select id="pageQueryWarnRule" resultMap="BaseResultMap"
+            parameterType="com.hengyunsoft.platform.logs.repository.logs.example.LogWarnRuleExample">
+        select id, app_id, log_type, code, name, case warn_type when 'KEY' then '关键字告警'
+        when 'QUANTITY' then '数量告警' when 'RESPONSE' then '响应时长告警' end as warn_type,
+        case warn_level when '1' then '一级' when '2' then '二级' when '3' then '三级'
+        end as warn_level, warn_description, key_content,
+        quantity_time_interval, quantity_log_level, quantity_upper_limit, response_duration,
+        is_enable, is_delete, create_time, create_user, create_user_name, update_time, update_user,
+        update_user_name
+        from log_warn_rule
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+</mapper>

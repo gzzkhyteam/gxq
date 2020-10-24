@@ -1,0 +1,194 @@
+gxqpt:
+  port:
+    nginx: ${server.port}
+    eureka: 10030
+    gate: ${gxqpt.port.nginx}
+  hostname:
+    redis: 127.0.0.1
+    rabbitmq: 127.0.0.1
+    mysql: 127.0.0.1
+    nginx: 127.0.0.1
+    eureka: 127.0.0.1
+    gate: ${gxqpt.hostname.nginx}
+    file: 127.0.0.1
+    zipkin: 127.0.0.1
+  context-path:
+    eureka: /gxqpt-eureka
+    gate: /api
+  mysql:
+    standard:
+      database: gxqpt_standard_dev       # 根据环境更改
+      driverClassName: ${gxqpt.mysql.driverClassName}
+      host: ${gxqpt.hostname.mysql}
+      password: ${gxqpt.mysql.password}
+      port: ${gxqpt.mysql.port}
+      url: jdbc:mysql://${gxqpt.mysql.standard.host}:${gxqpt.mysql.standard.port}/${gxqpt.mysql.standard.database}?serverTimezone=CTT&characterEncoding=utf8&useUnicode=true
+      username: ${gxqpt.mysql.username}
+    driverClassName: com.mysql.jdbc.Driver
+    port: 3306                  # 根据环境更改
+    username: root              # 根据环境更改
+    password: bNVOqb7WKLX5Bjnw+LMv92taj25KOxDimXxILPQjw42wgv+1lHzOH8kr97xDwWdhpY67QuYCS7sWN4W46YbkFA==
+  standard-web:
+    app-id: 25kj6354
+    app-secret: standar25kj6354
+
+
+logging:
+  path: ./logs/gxqpt-standard-server
+
+dozer:
+  mappingFiles: classpath*:dozer/*.dozer.xml
+
+server:
+  context-path:
+  port: 10048
+  tomcat:
+    uri-encoding: utf-8
+
+spring:
+  application:
+    name: gxqpt-standard-server
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+    multipart:
+      max-file-size: 512Mb      # Max file size，默认1M
+      max-request-size: 512Mb   # Max request size，默认10M
+  profiles:
+    active: test
+  rabbitmq:
+    host: ${gxqpt.hostname.rabbitmq:gxqpt.rabbitmq}
+    port: 5672               # 根据环境更改
+    password: guest          # 根据环境更改
+    username: guest          # 根据环境更改
+  redis:
+    host: ${gxqpt.hostname.redis:gxqpt.redis}
+    port: 6379
+    database: 1
+    pool:
+      max-active: 2
+      min-idle: 1
+      max-idle: 2
+      max-wait: 60
+    key-prefix: dev
+  sleuth:
+    sampler:
+      percentage: 0  #采样率  采用率由网关去控制
+    integration:
+      enabled: false
+    scheduled:
+      skip-pattern: "^org.*HystrixStreamTask$"
+  zipkin:
+#    base-url: http://${gxqpt.hostname.zipkin}:9800
+    locator:
+      discovery:
+        enabled: true
+
+eureka:
+  instance:
+    status-page-url-path: ${server.context-path}${management.context-path}/info
+    health-check-url-path: ${server.context-path}${management.context-path}/health
+    status-page-url: http://${gxqpt.hostname.gate}:${gxqpt.port.gate}${gxqpt.context-path.gate}/standard${server.context-path}/swagger-ui.html
+    preferIpAddress: true
+    ip-address: ${gxqpt.hostname.standard}
+    instance-id: ${gxqpt.hostname.standard}:${server.port}${server.context-path}
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+      management.context-path: ${management.context-path}
+  client:
+    serviceUrl:
+      defaultZone: http://${gxqpt.hostname.eureka}:${gxqpt.port.eureka}${gxqpt.context-path.eureka}/eureka/
+
+management:
+  security:
+    enabled: true
+  context-path: ${server.context-path}/mgmt
+
+security:
+  basic:
+    enabled: true
+    path: ${management.context-path}
+  user:
+    name: admin
+    password: gxqptadmin
+endpoints:
+  health:
+    enabled: true
+    sensitive: true  #actuator的health接口是否需要安全保证
+
+
+hystrix:
+  config:
+    stream:
+      maxConcurrentConnections: 50
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+  propagate:
+    request-attribute:
+      enabled: true
+
+swagger2:
+  standard-map:
+    title: 标准服务
+    description: 高新区一体化平台项目，标准服务接口
+    base-path: ${gxqpt.context-path.gate}/standard
+    impl-package: com.hengyunsoft.platform.standard.impl
+    open-package: com.hengyunsoft.platform.standard.open
+  modular-map:
+    title: 模块服务
+    description: 高新区一体化平台项目，模块服务接口
+    base-path: ${gxqpt.context-path.gate}/modular
+    impl-package: com.hengyunsoft.platform.modular.impl
+    open-package: com.hengyunsoft.platform.modular.open
+  contact-name: 中科恒运
+  contact-url: http://www.hengyunsoft.com/
+  contact-email: zkhy@hengyunsoft.com
+  host: ${gxqpt.hostname.gate}:${gxqpt.port.gate}
+
+auth:
+  serviceId: gxqpt-auth-server
+  app:
+    token-header: token # 其三方应用token
+    pub-key:
+      path: app/pub.key
+  client:
+    id: gxqpt-standard-server
+    secret: 123456
+    token-header: token
+    admin-header: _isAdmin
+    user-id: _user_id
+    user-name: _user_name
+    pub-key:
+      path: client/pub.key
+
+id-generator:
+  machine-code: 1  # id生成器机器掩码
+
+info:
+  contact:
+    email: xxx@hengyunsoft.com
+  app: 标准服务
+
+feign:
+  hystrix:
+    enabled: true
+  compression:
+    request:
+      enabled: true
+      mime-types: text/xml,application/xml,application/json
+      min-request-size: 2048
+    response:
+      enabled: true
+
+nexus:
+  serverUrl: http://127.0.0.1:8081
+  username: YWRtaW4=
+  password: YWRtaW4xMjM=
+  logDir: /usr/local/nexus/sonatype-work/nexus3/log

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.exchange.repository.system.dao.ShareSystemMapper">
+
+  <select id="findSystemList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT  id, unit_id, sys_name, contractor, cont_name, cont_tel, status_, url, user_reft,
+    network, has_key, has_vpn, sys_arch, account, password, lange_frwork, has_instruction,
+    sys_run_envent, data_address, db_type, data_count, has_dict, share_chain, data_demand,
+    major_data, sys_purpose, create_time, create_user, update_time, update_user
+    FROM  b_share_system
+    <where>
+      <if test="status!=null and status!='' ">and status_=#{status}</if>
+      <if test="sysArch!=null and sysArch!='' ">and sys_arch=#{sysArch}</if>
+      <if test="majorData!=null and majorData!='' ">and  major_data LIKE  #{majorData,typeHandler=fullLike} </if>
+      <if test="sysName!=null and sysName!='' ">and  sys_name LIKE  #{sysName,typeHandler=fullLike} </if>
+      <if test="contractor!=null and contractor!='' ">and contractor LIKE  #{contractor,typeHandler=fullLike} </if>
+      <if test="orgId!=null and orgId!='' ">and org_id=#{orgId} </if>
+    </where>
+      ORDER  BY  create_time DESC
+
+
+  </select>
+
+
+
+</mapper>

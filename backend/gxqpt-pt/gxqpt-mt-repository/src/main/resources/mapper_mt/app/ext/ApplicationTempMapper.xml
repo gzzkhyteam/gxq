@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.mt.repository.app.dao.ApplicationTempMapper">
+    <resultMap id="AllResultMap" type="com.hengyunsoft.platform.mt.entity.app.po.ApplicationTemp">
+        <!--
+        @mbggenerated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="app_name" jdbcType="VARCHAR" property="appName"/>
+        <result column="app_type" jdbcType="INTEGER" property="appType"/>
+        <result column="icon_path" jdbcType="VARCHAR" property="iconPath"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="app_path" jdbcType="VARCHAR" property="appPath"/>
+        <result column="app_desc" jdbcType="LONGVARCHAR" property="appDesc"/>
+        <result column="is_show" jdbcType="INTEGER" property="isShow"/>
+        <result column="app_order" jdbcType="INTEGER" property="appOrder"/>
+        <result column="create_type" jdbcType="INTEGER" property="createType"/>
+        <result column="create_emp" jdbcType="VARCHAR" property="createEmp"/>
+        <result column="audit_user" jdbcType="BIGINT" property="auditUser"/>
+        <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime"/>
+        <result column="audit_content" jdbcType="VARCHAR" property="auditContent"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+    </resultMap>
+    <select id="findAppList" parameterType="map" resultMap="AllResultMap">
+        SELECT
+            s.id,
+            s.app_name,
+            s.app_type,
+            s.icon_path,
+            s.state,
+            s.app_path,
+            s.app_desc,
+            s.is_show,
+            s.app_order,
+            s.create_type,
+            s.create_emp,
+            s.audit_user,
+            s.audit_time,
+            s.audit_content,
+            s.create_user,
+            s.create_time
+        FROM
+            b_application_temp AS s
+        <where>
+            AND s.parent_id = -1
+            <if test="appName != null and appName !=''">
+                AND s.app_name LIKE CONCAT('%',#{appName},'%')
+            </if>
+            <if test="createUser != null and createUser !=''">
+                AND s.create_user = #{createUser}
+            </if>
+            <if test="isShow != null and isShow !=''">
+                AND s.is_show= #{isShow}
+            </if>
+            <if test="status != null and status !=''">
+                AND s.state= #{status}
+            </if>
+            <if test="startCreateTime != null">
+                AND s.create_time >=#{startCreateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endCreateTime != null">
+                AND #{endCreateTime,jdbcType=TIMESTAMP}>=s.create_time
+            </if>
+        </where>
+        ORDER BY s.app_order DESC
+    </select>
+</mapper>

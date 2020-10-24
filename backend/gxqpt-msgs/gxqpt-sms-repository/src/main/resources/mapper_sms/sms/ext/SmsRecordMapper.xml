@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hengyunsoft.platform.sms.repository.template.dao.SmsRecordMapper">
+
+  <resultMap id="ExtResultMap" type="com.hengyunsoft.platform.sms.entity.template.dos.SmsRecordDO">
+    <!--
+    @mbggenerated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="msg_id" jdbcType="VARCHAR" property="msgId" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="module_id" jdbcType="BIGINT" property="moduleId" />
+    <result column="app_name" jdbcType="VARCHAR" property="appName" />
+    <result column="sender" jdbcType="VARCHAR" property="sender" />
+    <result column="sender_name" jdbcType="VARCHAR" property="senderName" />
+    <result column="receiver" jdbcType="LONGVARCHAR" property="receiver" />
+    <result column="topic" jdbcType="VARCHAR" property="topic" />
+    <result column="channel_id" jdbcType="VARCHAR" property="channelId" />
+    <result column="draft" jdbcType="INTEGER" property="draft" />
+    <result column="source_type" jdbcType="VARCHAR" property="sourceType" />
+    <result column="template_id" jdbcType="BIGINT" property="templateId" />
+    <result column="template_params" jdbcType="VARCHAR" property="templateParams" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="delete_is" jdbcType="BIT" property="deleteIs" />
+    <result column="start_time" jdbcType="VARCHAR" property="startTime" />
+    <result column="end_time" jdbcType="VARCHAR" property="endTime" />
+    <result column="context" jdbcType="VARCHAR" property="context" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="sendStatus" jdbcType="VARCHAR" property="sendStatus" />
+  </resultMap>
+
+  <update id="updateByMsgId" parameterType="com.hengyunsoft.platform.sms.entity.template.po.SmsRecord">
+    update msgs_sms_record
+    set msg_id = #{msgId,jdbcType=VARCHAR},
+    app_id = #{appId,jdbcType=VARCHAR},
+    app_name = #{appName,jdbcType=VARCHAR},
+    sender = #{sender,jdbcType=VARCHAR},
+    sender_name = #{senderName,jdbcType=VARCHAR},
+    receiver = #{receiver,jdbcType=VARCHAR},
+    topic = #{topic,jdbcType=VARCHAR},
+    channel_id = #{channelId,jdbcType=VARCHAR},
+    draft = #{draft,jdbcType=INTEGER},
+    template_id = #{templateId,jdbcType=BIGINT},
+    template_params = #{templateParams,jdbcType=VARCHAR},
+    start_time = #{startTime,jdbcType=VARCHAR},
+    end_time = #{endTime,jdbcType=VARCHAR},
+    context = #{context,jdbcType=VARCHAR},
+    create_time = #{createTime,jdbcType=DATE},
+    update_time = #{updateTime,jdbcType=DATE}
+    where msg_id = #{msgId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByMsgId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from msgs_sms_record
+    where msg_id = #{msgId,jdbcType=VARCHAR}
+  </select>
+  <select id="getIdByMsgId" parameterType="java.lang.String" resultType="java.lang.Long">
+    select id from msgs_sms_record where msg_id = #{msgId,jdbcType=VARCHAR}
+  </select>
+  <delete id="batchDeleteDraft" parameterType="java.util.List">
+    <![CDATA[
+        delete from msgs_sms_record where draft = 1 and id in
+        ]]>
+    <foreach close=")" collection="idItem" item="idItems" open="(" separator=",">
+      #{idItems}
+    </foreach>
+  </delete>
+  <resultMap id="appMap" type="com.hengyunsoft.platform.sms.dto.AppCountResultDTO">
+    <result column="appName" jdbcType="VARCHAR" property="appName" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+  </resultMap>
+  <resultMap id="senderMap" type="com.hengyunsoft.platform.sms.dto.PersonalCountResultDTO">
+    <result column="sender" jdbcType="VARCHAR" property="sender" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+  </resultMap>
+  <resultMap id="templateMap" type="com.hengyunsoft.platform.sms.dto.TemplateCountDTO">
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+  </resultMap>
+  <select id="getCountByApp" resultMap="appMap">
+    select app_name as appName,count(id) as count
+    from msgs_sms_record where 1=1
+    <if test="startTime != null and startTime != ''">
+      and send_time &gt; #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and send_time &lt; #{endTime}
+    </if>
+    group by app_id,app_name order by count desc limit 6
+  </select>
+  <select id="getCountByPersonal" resultMap="senderMap">
+    select sender,count(id) as count
+    from msgs_sms_record where 1=1
+    <if test="startTime != null and startTime != ''">
+      and send_time &gt; #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and send_time &lt; #{endTime}
+    </if>
+    group by sender order by count desc limit 6
+  </select>
+  <select id="getCountByTemplate" resultMap="templateMap">
+    select st.name,count(sm.id) as count
+    from msgs_sms_record sm
+    left join sms_template st on sm.template_id = st.id
+    where 1=1
+    <if test="startTime != null and startTime != ''">
+      and sm.send_time &gt; #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and sm.send_time &lt; #{endTime}
+    </if>
+    group by sm.template_id,st.name order by count desc limit 6
+  </select>
+
+
+
+  <resultMap id="smsMonthAcount" type="com.hengyunsoft.platform.sms.entity.template.dos.SmsMonthAcountDO">
+    <result column="year_" jdbcType="VARCHAR" property="year" />
+    <result column="month_" jdbcType="VARCHAR" property="month" />
+    <result column="day_" jdbcType="VARCHAR" property="day" />
+    <result column="success" jdbcType="INTEGER" property="success" />
+    <result column="fail" jdbcType="INTEGER" property="fail" />
+  </resultMap>
+  <resultMap id="smsYearAcount" type="com.hengyunsoft.platform.sms.entity.template.dos.SmsYearAcountDO">
+    <result column="year_" jdbcType="VARCHAR" property="year" />
+    <result column="month_" jdbcType="VARCHAR" property="month" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+  </resultMap>
+  <resultMap id="templateTop10" type="com.hengyunsoft.platform.sms.entity.template.dos.SmsTemplateTop10DO">
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+  </resultMap>
+  <resultMap id="applicationsCountMap" type="com.hengyunsoft.platform.sms.entity.template.dos.AnalysisRespondsDO">
+    <result column="app_name" jdbcType="VARCHAR" property="name" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+  </resultMap>
+  <resultMap id="scaleMap" type="com.hengyunsoft.platform.sms.entity.template.dos.SmsTimeStampCountDO">
+    <result column="year_" jdbcType="VARCHAR" property="year" />
+    <result column="month_" jdbcType="VARCHAR" property="month" />
+    <result column="week_" jdbcType="VARCHAR" property="week" />
+    <result column="day_" jdbcType="VARCHAR" property="day" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+  </resultMap>
+
+  <!-- 近一月短信使用情况 -->
+  <select id="getSmsMonthAcount" parameterType="com.hengyunsoft.platform.sms.entity.template.dos.SmsRequestDO" resultMap="smsMonthAcount">
+    select date_.year_,date_.month_,date_.day_,sum(case date_.send_status when 1 then 1 else 0 end) as success,sum(case date_.send_status when 2 then 1 else 0 end) as fail
+    from (select YEAR(msr.create_time) year_,month(msr.create_time) month_,day(msr.create_time) day_,msss.send_status
+    from msgs_sms_record msr left join msgs_sms_send_status msss on msr.msg_id=msss.msg_id
+    where (msr.create_time BETWEEN date_sub(now(),interval 1 month) and now())
+    and msr.sender=#{smsRequestDTO.userId} and msr.source_type=#{smsRequestDTO.sourceType}
+    and msr.draft=0
+    ) date_
+    GROUP BY date_.year_,date_.month_,date_.day_
+    order by date_.year_,date_.month_,date_.day_
+  </select>
+  <!-- 近一年短信使用情况 -->
+  <select id="getSmsYearAcount" parameterType="com.hengyunsoft.platform.sms.entity.template.dos.SmsRequestDO" resultMap="smsYearAcount">
+    select date_.year_,date_.month_,count(*) as count from
+    (select YEAR(msr.create_time) year_,month(msr.create_time) month_
+    from msgs_sms_record msr left join msgs_sms_send_status msss on msr.msg_id=msss.msg_id
+    where msr.create_time BETWEEN date_sub(now(),interval 1 year) and now()
+    and msr.draft=0 and msr.sender=#{smsRequestDTO.userId} and msr.source_type=#{smsRequestDTO.sourceType}
+    and msss.send_status=1
+    ) date_
+    GROUP BY date_.year_,date_.month_
+    order by date_.year_,date_.month_
+  </select>
+  <!-- 模板使用TOP10 -->
+  <select id="getTemplateTop10" parameterType="com.hengyunsoft.platform.sms.entity.template.dos.SmsRequestDO" resultMap="templateTop10">
+    select mst.name,count(msr.id) as count from
+    msgs_sms_record msr left join msgs_sms_template mst on msr.template_id = mst.id
+    where msr.draft=0 and msr.sender=#{smsRequestDTO.userId} and msr.source_type=#{smsRequestDTO.sourceType}
+    group by msr.template_id
+    order by count desc limit 10
+  </select>
+  <!-- 各应用使用情况分析 -->
+  <select id="getApplicationsCount" parameterType="java.lang.Long" resultMap="applicationsCountMap">
+    select msr.app_name,count(msr.id) as count from
+    msgs_sms_record msr left join msgs_sms_send_status msss on msr.msg_id=msss.msg_id
+    where msr.source_type LIKE CONCAT('%','APP','%') and msss.send_status=1
+    and msr.draft=0 and msr.channel_id in
+    <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    group by msr.app_id
+  </select>
+  <!-- 各服务使用情况分析 -->
+  <select id="getServicesCount" parameterType="java.lang.Long" resultMap="applicationsCountMap">
+    select msr.app_name,count(msr.id) as count from
+    msgs_sms_record msr left join msgs_sms_send_status msss on msr.msg_id=msss.msg_id
+    where msr.source_type LIKE CONCAT('%','SERVICE','%') and msss.send_status=1
+    and msr.draft=0 and msr.channel_id in
+    <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    group by msr.app_id
+  </select>
+  <!-- 一年内我发送短信量 -->
+  <select id="getYearCount" parameterType="com.hengyunsoft.platform.sms.entity.template.dos.ScaleRequestDO" resultMap="scaleMap">
+    select date_.year_,date_.month_,count(*) as count from
+    (select YEAR(msr.create_time) year_,month(msr.create_time) month_
+    from msgs_sms_record msr left join msgs_sms_send_status msss on msr.msg_id=msss.msg_id
+    where msr.create_time BETWEEN #{scaleDTO.startTime} and #{scaleDTO.endTime}
+    and msr.sender =#{scaleDTO.userId} and msr.draft=0
+    and msss.send_status=1
+    ) date_
+    GROUP BY date_.year_,date_.month_
+    order by date_.year_,date_.month_
+  </select>
+  <!-- 近半年内我发送短信量 -->
+  <select id="getHarfYearCount" parameterType="com.hengyunsoft.platform.sms.entity.template.dos.ScaleRequestDO" resultMap="scaleMap">
+    select date_.year_,date_.month_,count(*) as count from
+    (select YEAR(msr.create_time) year_,month(msr.create_time) month_
+    from msgs_sms_record msr left join msgs_sms_send_status msss on msr.msg_id=msss.msg_id
+    where msr.create_time BETWEEN date_sub(now(),interval 6 month) and now()
+    and msr.sender =#{scaleDTO.userId} and msr.draft=0
+    and msss.send_status=1
+    ) date_
+    GROUP BY date_.year_,date_.month_
+    order by date_.year_,date_.month_
+  </select>
+  <!-- 三个月内我发送短信量 -->
+  <select id="getWeekCount" parameterType="com.hengyunsoft.platform.sms.entity.template.dos.ScaleRequestDO" resultMap="scaleMap">
+    select date_.year_,date_.week_,count(*) as count from
+    (select YEAR(msr.create_time) year_,week(msr.create_time) week_
+    from msgs_sms_record msr left join msgs_sms_send_status msss on msr.msg_id=msss.msg_id
+    where msr.create_time BETWEEN #{scaleDTO.startTime} and #{scaleDTO.endTime}
+    and msr.sender =#{scaleDTO.userId} and msr.draft=0
+    and msss.send_status=1
+    ) date_
+    GROUP BY date_.year_,date_.week_
+    order by date_.year_,date_.week_
+  </select>
+  <!-- 一个月内我发送短信量 -->
+  <select id="getDayCount" parameterType="com.hengyunsoft.platform.sms.entity.template.dos.ScaleRequestDO" resultMap="scaleMap">
+    select date_.year_,date_.month_,date_.day_,count(*) as count from
+    (select YEAR(msr.create_time) year_,month(msr.create_time) month_,day(msr.create_time) day_
+    from msgs_sms_record msr left join msgs_sms_send_status msss on msr.msg_id=msss.msg_id
+    where msr.create_time BETWEEN #{scaleDTO.startTime} and #{scaleDTO.endTime}
+    and msr.sender = #{scaleDTO.userId}	and msr.draft=0
+    and msss.send_status=1
+    ) date_
+    GROUP BY date_.year_,date_.month_,date_.day_
+    order by date_.year_,date_.month_,date_.day_
+  </select>
+  <!-- 一个月内我发送短信量 -->
+  <select id="getSendNum" resultType="java.lang.Integer">
+    select count(msr.id) from
+    msgs_sms_record msr left join msgs_sms_send_status msss on msr.msg_id = msss.msg_id
+    where msr.sender=#{userId} and msr.draft=0 and msr.source_type='APP' and msss.send_status=1
+  </select>
+
+  <select id="pageSmsRecordList" parameterType="com.hengyunsoft.platform.sms.entity.template.dos.QuerySmsRecordDO" resultMap="ExtResultMap">
+    select
+     smsRecord.id, smsRecord.msg_id, smsRecord.app_id, smsRecord.module_id, smsRecord.app_name,
+     smsRecord.sender, smsRecord.sender_name, smsRecord.receiver, smsRecord.topic, smsRecord.channel_id,
+     smsRecord.draft, smsRecord.source_type, smsRecord.template_id, smsRecord.template_params,
+     smsRecord.send_time, smsRecord.delete_is, smsRecord.start_time,smsRecord.end_time, smsRecord.context,
+     smsRecord.create_time, smsRecord.update_time, 	smsStatus.send_status sendStatus
+    from msgs_sms_record smsRecord
+    left join (select distinct s.msg_id,s.send_status from msgs_sms_send_status s) smsStatus
+        on smsRecord.msg_id = smsStatus.msg_id
+    where 1=1
+      <if test="querySmsRecordDO.sender != null and querySmsRecordDO.sender != ''">
+          and smsRecord.sender = #{querySmsRecordDO.sender}
+      </if>
+      <if test="querySmsRecordDO.channelId != null and querySmsRecordDO.channelId != ''">
+          and smsRecord.channel_id = #{querySmsRecordDO.channelId}
+      </if>
+      <if test="querySmsRecordDO.draft != null">
+          and smsRecord.draft = #{querySmsRecordDO.draft}
+      </if>
+      <if test="querySmsRecordDO.appId != null and querySmsRecordDO.appId != ''">
+          and smsRecord.app_id = #{querySmsRecordDO.appId}
+      </if>
+      <if test="querySmsRecordDO.topic != null and querySmsRecordDO.topic != ''">
+          and smsRecord.topic like #{querySmsRecordDO.topic,typeHandler=fullLike}
+      </if>
+      <if test="querySmsRecordDO.sourceType != null and querySmsRecordDO.sourceType != ''">
+          and smsRecord.source_type = #{querySmsRecordDO.sourceType}
+      </if>
+
+      <if test="querySmsRecordDO.draft != null and querySmsRecordDO.draft == 1">
+          <if test="querySmsRecordDO.startTime != null">
+              and smsRecord.create_time &gt;= #{querySmsRecordDO.startTime}
+          </if>
+          <if test="querySmsRecordDO.endTime != null">
+              and smsRecord.create_time &lt;= #{querySmsRecordDO.endTime}
+          </if>
+      </if>
+
+      <if test="querySmsRecordDO.draft != null and querySmsRecordDO.draft == 0">
+          <if test="querySmsRecordDO.startTime != null">
+              and smsRecord.send_time &gt;= #{querySmsRecordDO.startTime}
+          </if>
+          <if test="querySmsRecordDO.endTime != null">
+              and smsRecord.send_time &lt;= #{querySmsRecordDO.endTime}
+          </if>
+      </if>
+      order by smsRecord.create_time desc
+  </select>
+</mapper>
