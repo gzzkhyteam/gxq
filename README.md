@@ -321,4 +321,5 @@ nohup java -Xms512M -Xmx512M -Xss512k -XX:MetaspaceSize=128M -XX:MaxMetaspaceSiz
 
 
 
-# wz
+# 如果对你有帮助,可以打赏请作者喝杯咖啡
+![image](https://github.com/gzzkhyteam/gxq/wgj.png)
