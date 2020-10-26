@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    
+    <util:properties id="casProperties" location="classpath:cas.properties"/>
+    <util:properties id="sysProperties" location="classpath:sys.properties"/>
+
+    <!-- <util:properties id="dbProperties" location="classpath:db.properties"/> -->
+    <util:properties id="dubboProperties" location="classpath:dubbo.properties"/>
+
+	<bean id="propertyConfigurerForDatasource"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="propertiesArray">
+			<array>
+				<ref bean="casProperties"/>
+				 <ref bean="sysProperties"/>
+				<ref bean="dubboProperties"/>
+			</array>
+		</property>
+		
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+
+    <bean id="SSOConfig" class="com.hengyunsoft.sso.authentication.SSOConfig">
+    	<property name="loadUserApi" value="${loaduserapi}" />
+    	<property name="randomStr" value="${randomstr}" />
+    </bean>
+</beans>
