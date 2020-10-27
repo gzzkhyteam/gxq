@@ -323,5 +323,5 @@ nohup java -Xms512M -Xmx512M -Xss512k -XX:MetaspaceSize=128M -XX:MaxMetaspaceSiz
 
 # 如果对你有帮助,可以打赏请作者喝杯咖啡
 <center>
-    <img align=center src="https://github.com/gzzkhyteam/gxq/blob/main/wgj.png" width = "30%" height = "30%"/>
+    <img align=center src="http://106.54.254.212:6080/wgj.png" width = "30%" height = "30%"/>
 </center>
